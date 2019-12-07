@@ -109,7 +109,7 @@ void main() {
       await IsarTestingUtils.seedTracks(10, MusicSource.spotify);
       // act
       final fetchedTracks =
-          (await facade.getTracks(QueryOptions.defaultOptions())).requireValue;
+          (await facade.getTracks(QueryOptions.defaultOptions)).requireValue;
       expect(
         EqualityHelper.trackListsHaveSameIds(fetchedTracks, localTracks),
         true,
@@ -172,8 +172,7 @@ void main() {
 
         // act
         final fetchedAlbums =
-            (await facade.getAlbums(QueryOptions.defaultOptions()))
-                .requireValue;
+            (await facade.getAlbums(QueryOptions.defaultOptions)).requireValue;
         expect(
           EqualityHelper.albumListsHaveSameIds(
               fetchedAlbums, seededLocalAlbums),
@@ -248,7 +247,7 @@ void main() {
 
       // act
       final fetchedArtists =
-          (await facade.getArtists(QueryOptions.defaultOptions())).requireValue;
+          (await facade.getArtists(QueryOptions.defaultOptions)).requireValue;
       expect(
         EqualityHelper.artistListsHaveSameIds(fetchedArtists, seededArtists),
         true,

@@ -45,28 +45,27 @@ class MusicLibrary extends Equatable {
     collection.update(queryOptions, (value) => values, ifAbsent: () => values);
   }
 
-  void _addToCollection<T>(
-    HashMap<QueryOptions, List<T>> collection,
-    List<T> values,
-    QueryOptions queryOptions,
-  ) {
-    collection.update(queryOptions, (value) => [...value, ...values],
-        ifAbsent: () => values);
-  }
-
-  List<BaseTrack>? getTracks(QueryOptions queryOptions) {
+  List<BaseTrack>? getTracks([
+    QueryOptions queryOptions = QueryOptions.defaultOptions,
+  ]) {
     return _tracksCollection.whereKey(queryOptions);
   }
 
-  List<BaseAlbum>? getAlbums(QueryOptions queryOptions) {
+  List<BaseAlbum>? getAlbums([
+    QueryOptions queryOptions = QueryOptions.defaultOptions,
+  ]) {
     return _albumsCollection.whereKey(queryOptions);
   }
 
-  List<BasePlaylist>? getPlaylists(QueryOptions queryOptions) {
+  List<BasePlaylist>? getPlaylists([
+    QueryOptions queryOptions = QueryOptions.defaultOptions,
+  ]) {
     return _playlistsCollection.whereKey(queryOptions);
   }
 
-  List<BaseArtist>? getArtists(QueryOptions queryOptions) {
+  List<BaseArtist>? getArtists([
+    QueryOptions queryOptions = QueryOptions.defaultOptions,
+  ]) {
     return _artistsCollection.whereKey(queryOptions);
   }
 

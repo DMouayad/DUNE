@@ -67,7 +67,7 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
     );
   }
 
-  TrackFactory withAlbum({FakeAlbum? album}) {
+  TrackFactory withAlbum([FakeAlbum? album]) {
     return _copyWith(shouldCreateAlbum: true, album: album);
   }
 

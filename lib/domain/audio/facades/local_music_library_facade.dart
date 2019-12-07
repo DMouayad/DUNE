@@ -18,7 +18,9 @@ class LocalMusicLibraryFacade {
   /// Loads local library from the local database.
   /// the [queryOptions] will be used to load this library media(tracks, artists,
   /// albums, playlists).
-  FutureOrResult<MusicLibrary> loadLibrary(QueryOptions queryOptions) async {
+  FutureOrResult<MusicLibrary> loadLibrary([
+    QueryOptions queryOptions = QueryOptions.defaultOptions,
+  ]) async {
     final library = MusicLibrary();
 
     await _trackRepository
@@ -58,7 +60,7 @@ class LocalMusicLibraryFacade {
     if (savingTracks.isFailure) {
       return savingTracks.mapFailure((error) => error);
     }
-    return await loadLibrary(QueryOptions.defaultOptions());
+    return await loadLibrary();
   }
 
   FutureOrResult<List<BaseArtist>> getArtists(QueryOptions queryOptions) async {
