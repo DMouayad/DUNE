@@ -2,6 +2,9 @@ import 'package:dune/support/enums/sort_type.dart';
 import 'package:equatable/equatable.dart';
 
 class QueryOptions extends Equatable {
+  static const defaultOptions = QueryOptions(
+      sortBy: SortType.alphabetically, sortDescending: false, page: 1);
+
   const QueryOptions({
     this.sortBy = SortType.alphabetically,
     this.sortDescending = false,
@@ -15,11 +18,6 @@ class QueryOptions extends Equatable {
   final int page;
 
   int get offset => page * limit;
-
-  factory QueryOptions.defaultOptions() {
-    return const QueryOptions(
-        sortBy: SortType.alphabetically, sortDescending: false, page: 1);
-  }
 
   QueryOptions copyWith({
     SortType? sortBy,
