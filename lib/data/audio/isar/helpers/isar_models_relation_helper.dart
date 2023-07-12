@@ -109,7 +109,9 @@ final class IsarModelsRelationHelper {
         return trackRecord.asResult;
       } else {
         return (await loadRelationsForTrack(track)).mapSuccess(
-          (value) => trackRecord.copyWith(track: track),
+          (trackWithRelations) {
+            return trackRecord.copyWith(track: trackWithRelations);
+          },
         );
       }
     });
@@ -205,7 +207,8 @@ final class IsarModelsRelationHelper {
           artistsOfTrack = fetchingArtistsResult.asSuccess.value;
         }
       }
-      if (track.album != null || track.albumId == null) {
+
+      if (track.albumId == null) {
         return track.copyWith(artists: artistsOfTrack).asResult;
       }
       return (await _albumDataSource.find(track.albumId!)).mapSuccess((album) {
