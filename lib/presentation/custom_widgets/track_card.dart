@@ -37,6 +37,8 @@ class TrackCardMainContent extends StatelessWidget {
     super.key,
     required this.track,
     this.alwaysCenterTitle = false,
+    this.showAlbumName = true,
+    this.showArtistsNames = true,
     this.onThumbnailPressed,
     this.crossAxisAlignment,
   });
@@ -45,6 +47,8 @@ class TrackCardMainContent extends StatelessWidget {
   final bool alwaysCenterTitle;
   final void Function()? onThumbnailPressed;
   final CrossAxisAlignment? crossAxisAlignment;
+  final bool showArtistsNames;
+  final bool showAlbumName;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +75,11 @@ class TrackCardMainContent extends StatelessWidget {
             parentWidgetBuilder: (child) {
               return InkWell(
                 onTap: onThumbnailPressed,
-                child: Tooltip(message: 'Tap to play', child: child),
+                child: Tooltip(
+                  message: 'Tap to play',
+                  waitDuration: const Duration(milliseconds: 1000),
+                  child: child,
+                ),
               );
             },
             childWidget: TrackThumbnail(
@@ -96,7 +104,8 @@ class TrackCardMainContent extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: titleTextStyle,
               ),
-              if (track.artistsNames.isNotEmpty || !alwaysCenterTitle) ...[
+              if (showArtistsNames &&
+                  (track.artistsNames.isNotEmpty || !alwaysCenterTitle)) ...[
                 const SizedBox(height: 3),
                 Text(
                   track.artistsNames,
@@ -107,7 +116,7 @@ class TrackCardMainContent extends StatelessWidget {
           ),
         ),
         wideSpacer,
-        if (track.album != null)
+        if (track.album != null && showAlbumName)
           ...() {
             final text = track.album!.title +
                 (track.album?.releaseDate != null

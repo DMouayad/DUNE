@@ -87,9 +87,11 @@ class TrackRecordCard extends ConsumerWidget {
             left: 0,
             right: 0,
             child: SizedBox(
-              height: 50,
+              height: 60,
               child: TrackCardMainContent(
                 track: track,
+                showAlbumName: false,
+                showArtistsNames: false,
                 alwaysCenterTitle: true,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 onThumbnailPressed: () {

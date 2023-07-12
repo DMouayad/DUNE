@@ -30,7 +30,7 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
             ),
           )
         : ListView.builder(
-            itemExtent: 360.0,
+            itemExtent: 300.0,
             scrollDirection: Axis.vertical,
             itemCount: listeningHistoryState.isLoading
                 ? 1

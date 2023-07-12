@@ -98,7 +98,7 @@ class TrackCardWrapper extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                   child: child,
                 ),
               ),
