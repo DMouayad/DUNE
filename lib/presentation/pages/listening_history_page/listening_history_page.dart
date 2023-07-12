@@ -1,3 +1,4 @@
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,9 +48,27 @@ class _ListeningHistoryPageState extends ConsumerState<ListeningHistoryPage>
         Positioned(
           top: 0,
           left: 0,
-          child: Text(
-            "Your listening history",
-            style: context.pageHeaderTextStyle,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Your listening history",
+                style: context.pageHeaderTextStyle,
+              ),
+              IconButton(
+                onPressed: () {
+                  ref
+                      .read(listeningHistoryControllerProvider.notifier)
+                      .loadListeningHistoryOverLastWeek();
+                },
+                icon: Icon(
+                  Icons.refresh,
+                  size: 20,
+                  color: context.colorScheme.secondary,
+                ),
+              ),
+            ],
           ),
         ),
         Positioned.fill(
