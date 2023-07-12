@@ -36,13 +36,8 @@ class DuneErrorWidget extends StatelessWidget {
               size: context.isDesktop ? 28 : 28,
             ),
             const SizedBox(height: 12),
-            Container(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                // color: context.colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: context.colorScheme.error),
-              ),
               child: Text(
                 errorInfo.$1,
                 style: context.textTheme.titleMedium?.copyWith(
