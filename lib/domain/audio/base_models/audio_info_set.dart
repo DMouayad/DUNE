@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
@@ -21,27 +22,26 @@ class AudioInfoSet extends Equatable {
             : []);
   }
 
-  TrackAudioInfo? whereQuality(AudioStreamingQuality quality) {
-    final sameQualityInfo = items.firstWhereOrNull((e) => e.quality == quality);
-    if (sameQualityInfo != null) return sameQualityInfo;
+  TrackAudioInfo? whereQuality(
+    AudioStreamingQuality quality,
+    MusicSource source,
+  ) {
+    final itemsWithSameSource = List<TrackAudioInfo>.from(
+        items.takeWhile((value) => value.musicSource == source));
+    if (itemsWithSameSource.isEmpty) return null;
+    final itemWithSameQuality =
+        itemsWithSameSource.firstWhereOrNull((e) => e.quality == quality);
+    if (itemWithSameQuality != null) return itemWithSameQuality;
     return AudioStreamingQuality.lowQualityGroup.contains(quality)
-        ? items.firstWhereAnyOrNull((element) => [
+        ? itemsWithSameSource.firstWhereAnyOrNull((element) => [
               element.quality == AudioStreamingQuality.low,
               element.quality == AudioStreamingQuality.lowest,
               element.quality == AudioStreamingQuality.balanced,
             ])
-        : items.firstWhereAnyOrNull((element) => [
+        : itemsWithSameSource.firstWhereAnyOrNull((element) => [
               element.quality == AudioStreamingQuality.high,
               element.quality == AudioStreamingQuality.best,
             ]);
-  }
-
-  TrackAudioInfo? get any {
-    return whereQuality(AudioStreamingQuality.balanced) ??
-        whereQuality(AudioStreamingQuality.low) ??
-        whereQuality(AudioStreamingQuality.high) ??
-        whereQuality(AudioStreamingQuality.lowest) ??
-        whereQuality(AudioStreamingQuality.best);
   }
 
   factory AudioInfoSet.fromListWithUnknownQuality(

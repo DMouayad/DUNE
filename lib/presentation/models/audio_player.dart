@@ -6,6 +6,7 @@ import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/presentation/utils/listening_history_helper.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/extensions.dart';
 
@@ -198,6 +199,7 @@ abstract class AudioPlayer {
     BasePlaylist playlist, {
     BaseTrack? track,
     bool shuffle = false,
+    MusicSource? musicSource,
   }) async {
     final (BaseTrack trackToPlay, int index) trackData = shuffle
         ? playlist.tracks.randomElementWithIndex()
@@ -210,16 +212,19 @@ abstract class AudioPlayer {
       playlistCurrentTrackIndex: trackData.$2,
     ));
 
-    await _playTrack(trackData.$1);
+    await _playTrack(trackData.$1, musicSource: musicSource);
     toggleShuffle(enabled: shuffle);
   }
 
-  Future<void> playSingleTrack(BaseTrack track) async {
+  Future<void> playSingleTrack(
+    BaseTrack track, {
+    MusicSource? musicSource,
+  }) async {
     _stateStreamController.add(state.copyWith(currentPlaylist: null));
-    _playTrack(track);
+    _playTrack(track, musicSource: musicSource);
   }
 
-  Future<void> _playTrack(BaseTrack track) async {
+  Future<void> _playTrack(BaseTrack track, {MusicSource? musicSource}) async {
     if (state.currentTrack?.id == track.id) {
       startOrPause();
       return;
@@ -234,9 +239,10 @@ abstract class AudioPlayer {
       await jumpToTrackInPlaylist(track);
     } else {
       // or else add the track to player playlist
-      String? trackUrl = await _getTrackUrl(track);
-      if (trackUrl != null) {
-        await addTrackToPlayerPlaylist(trackUrl, track);
+      final TrackAudioInfo? trackAudio =
+          await _getTrackAudio(track, musicSource);
+      if (trackAudio != null) {
+        await addTrackToPlayerPlaylist(trackAudio, track);
       }
       _listeningHistoryHelper.addPlaylistToListeningHistory(state);
     }
@@ -250,16 +256,26 @@ abstract class AudioPlayer {
   Future<void> jumpToTrackInPlaylist(BaseTrack track);
 
   Future<void> addTrackToPlayerPlaylist(
-    String trackUrl,
+    TrackAudioInfo trackAudioInfo,
     BaseTrack track,
   );
 
   AudioStreamingQuality get streamingQuality;
 
-  Future<String?> _getTrackUrl(BaseTrack track) async {
-    return (await MusicFacade.tracks.getTrackAudioInfo(track)).mapTo(
+  Future<TrackAudioInfo?> _getTrackAudio(
+    BaseTrack track,
+    MusicSource? musicSource,
+  ) async {
+    return (await MusicFacade.tracks.getTrackAudioInfo(
+      track,
+      musicSource: musicSource,
+    ))
+        .mapTo(
       onSuccess: (audioInfo) {
-        return audioInfo.whereQuality(streamingQuality)?.url;
+        return audioInfo.whereQuality(
+          streamingQuality,
+          musicSource ?? track.source,
+        );
       },
       onFailure: (error) {
         Log.e(error);

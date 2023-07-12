@@ -10,9 +10,13 @@ final class TrackFacade {
   })  : _youtubeTrackRepository = youtubeTrackRepository,
         _localTrackRepository = localTrackRepository;
 
-  FutureResult<AudioInfoSet> getTrackAudioInfo(BaseTrack track) async {
+  FutureResult<AudioInfoSet> getTrackAudioInfo(
+    BaseTrack track, {
+    MusicSource? musicSource,
+  }) async {
     if (track.audioInfoSet != null) return track.audioInfoSet!.asResult;
-    return (await _getMusicSourceRepo(track.source).getTrackAudioInfo(track))
+    return (await _getMusicSourceRepo(musicSource ?? track.source)
+            .getTrackAudioInfo(track))
         .fold(ifSuccess: (audioInfo) {
       _localTrackRepository.saveTrackAudioInfo(track, audioInfo);
     });

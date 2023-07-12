@@ -23,19 +23,25 @@ const IsarTrackAudioInfoSchema = Schema(
       name: r'format',
       type: IsarType.string,
     ),
-    r'quality': PropertySchema(
+    r'musicSource': PropertySchema(
       id: 2,
+      name: r'musicSource',
+      type: IsarType.byte,
+      enumMap: _IsarTrackAudioInfomusicSourceEnumValueMap,
+    ),
+    r'quality': PropertySchema(
+      id: 3,
       name: r'quality',
       type: IsarType.byte,
       enumMap: _IsarTrackAudioInfoqualityEnumValueMap,
     ),
     r'totalBytes': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'totalBytes',
       type: IsarType.long,
     ),
     r'url': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'url',
       type: IsarType.string,
     )
@@ -75,9 +81,10 @@ void _isarTrackAudioInfoSerialize(
 ) {
   writer.writeDouble(offsets[0], object.bitrateInKb);
   writer.writeString(offsets[1], object.format);
-  writer.writeByte(offsets[2], object.quality.index);
-  writer.writeLong(offsets[3], object.totalBytes);
-  writer.writeString(offsets[4], object.url);
+  writer.writeByte(offsets[2], object.musicSource.index);
+  writer.writeByte(offsets[3], object.quality.index);
+  writer.writeLong(offsets[4], object.totalBytes);
+  writer.writeString(offsets[5], object.url);
 }
 
 IsarTrackAudioInfo _isarTrackAudioInfoDeserialize(
@@ -90,10 +97,10 @@ IsarTrackAudioInfo _isarTrackAudioInfoDeserialize(
     bitrateInKb: reader.readDoubleOrNull(offsets[0]),
     format: reader.readStringOrNull(offsets[1]),
     quality: _IsarTrackAudioInfoqualityValueEnumMap[
-            reader.readByteOrNull(offsets[2])] ??
+            reader.readByteOrNull(offsets[3])] ??
         AudioStreamingQuality.undefined,
-    totalBytes: reader.readLongOrNull(offsets[3]),
-    url: reader.readStringOrNull(offsets[4]),
+    totalBytes: reader.readLongOrNull(offsets[4]),
+    url: reader.readStringOrNull(offsets[5]),
   );
   return object;
 }
@@ -110,18 +117,34 @@ P _isarTrackAudioInfoDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (_IsarTrackAudioInfomusicSourceValueEnumMap[
+              reader.readByteOrNull(offset)] ??
+          MusicSource.youtube) as P;
+    case 3:
       return (_IsarTrackAudioInfoqualityValueEnumMap[
               reader.readByteOrNull(offset)] ??
           AudioStreamingQuality.undefined) as P;
-    case 3:
-      return (reader.readLongOrNull(offset)) as P;
     case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
+const _IsarTrackAudioInfomusicSourceEnumValueMap = {
+  'youtube': 0,
+  'spotify': 1,
+  'local': 2,
+  'unknown': 3,
+};
+const _IsarTrackAudioInfomusicSourceValueEnumMap = {
+  0: MusicSource.youtube,
+  1: MusicSource.spotify,
+  2: MusicSource.local,
+  3: MusicSource.unknown,
+};
 const _IsarTrackAudioInfoqualityEnumValueMap = {
   'undefined': 0,
   'lowest': 1,
@@ -375,6 +398,62 @@ extension IsarTrackAudioInfoQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'format',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      musicSourceEqualTo(MusicSource value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'musicSource',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      musicSourceGreaterThan(
+    MusicSource value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'musicSource',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      musicSourceLessThan(
+    MusicSource value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'musicSource',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      musicSourceBetween(
+    MusicSource lower,
+    MusicSource upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'musicSource',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }

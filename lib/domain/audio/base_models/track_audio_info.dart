@@ -1,4 +1,6 @@
 import 'package:dune/support/enums/audio_streaming_quality.dart';
+import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
 
 base class TrackAudioInfo extends Equatable {
@@ -16,13 +18,30 @@ base class TrackAudioInfo extends Equatable {
   final int? totalBytes;
   final AudioStreamingQuality quality;
 
+  /// The original source from which this audio info was obtained.
+  /// Defaults to [MusicSource.unknown] but should be set accordingly.
+  final MusicSource musicSource;
+
   const TrackAudioInfo({
     this.format,
     this.url,
     this.totalBytes,
     this.bitrateInKb,
     this.quality = AudioStreamingQuality.undefined,
+    this.musicSource = MusicSource.unknown,
   });
+
+  factory TrackAudioInfo.fromMap(Map<String, dynamic> map) {
+    return TrackAudioInfo(
+      url: map.whereKey('url') as String?,
+      format: map.whereKey('format') as String?,
+      bitrateInKb: map.whereKey('bitrateInKb') as double?,
+      totalBytes: map.whereKey('totalBytes') as int?,
+      musicSource: map.whereKey('musicSource') is String
+          ? MusicSource.values.byName(map.whereKey('musicSource'))
+          : MusicSource.unknown,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -30,20 +49,13 @@ base class TrackAudioInfo extends Equatable {
       'format': format,
       'bitrateInKb': bitrateInKb,
       'totalBytes': totalBytes,
+      'musicSource': musicSource.name,
     };
   }
 
-  factory TrackAudioInfo.fromMap(Map<String, dynamic> map) {
-    return TrackAudioInfo(
-      url: map['url'] as String?,
-      format: map['format'] as String?,
-      bitrateInKb: map['bitrateInKb'] as double?,
-      totalBytes: map['totalBytes'] as int?,
-    );
-  }
-
   @override
-  List<Object?> get props => [url, format, bitrateInKb, totalBytes];
+  List<Object?> get props =>
+      [url, format, bitrateInKb, totalBytes, musicSource];
 
   TrackAudioInfo copyWith({
     String? url,
@@ -51,6 +63,7 @@ base class TrackAudioInfo extends Equatable {
     double? bitrateInKb,
     int? totalBytes,
     AudioStreamingQuality? quality,
+    MusicSource? musicSource,
   }) {
     return TrackAudioInfo(
       url: url ?? this.url,
@@ -58,6 +71,7 @@ base class TrackAudioInfo extends Equatable {
       bitrateInKb: bitrateInKb ?? this.bitrateInKb,
       totalBytes: totalBytes ?? this.totalBytes,
       quality: quality ?? this.quality,
+      musicSource: musicSource ?? this.musicSource,
     );
   }
 }
