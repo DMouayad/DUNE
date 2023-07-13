@@ -13,6 +13,7 @@ class CustomCard extends StatefulWidget {
     required this.onTap,
     required this.thumbnails,
     this.width = 250.0,
+    this.thumbImagePlaceholder,
   });
 
   final String tag;
@@ -22,6 +23,7 @@ class CustomCard extends StatefulWidget {
   final ThumbnailsSet thumbnails;
   final void Function() onTap;
   final double width;
+  final Widget? thumbImagePlaceholder;
 
   @override
   State<CustomCard> createState() => _CustomCardState();
@@ -76,6 +78,7 @@ class _CustomCardState extends State<CustomCard> {
                     child: ThumbnailWidget(
                       thumbnailsSet: widget.thumbnails,
                       dimension: widget.width,
+                      placeholder: widget.thumbImagePlaceholder,
                     ),
                   ),
                 ),

@@ -42,6 +42,7 @@ class ScrollableCardsView extends StatelessWidget {
               titleText: itemsState.valueOrNull?.title,
               title: titleWidget,
             ),
+            const SizedBox(height: 10),
             if (displayAsGrid)
               Expanded(
                 flex: 0,

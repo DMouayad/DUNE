@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
+import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/utils/navigation_helper.dart';
@@ -93,6 +94,7 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
           thumbnails: playlist.thumbnails,
           title: playlist.title!,
           shape: BoxShape.rectangle,
+          thumbImagePlaceholder: const PlaylistCoverPlaceholder(),
           onTap: () {
             NavigationHelper.onPlaylistItemCardPressed(
               context,

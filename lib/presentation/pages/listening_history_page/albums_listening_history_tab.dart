@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
+import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -90,8 +91,9 @@ class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
           tag: album.id ?? album.title,
           thumbnails: album.thumbnails,
           width: cardWidth,
-          title:
-              album.title + '\n ${album.artists.map((e) => e.name).join(", ")}',
+          thumbImagePlaceholder: const AlbumCoverPlaceholder(),
+          title: album.title,
+          subtitle: album.artists.map((e) => e.name).join(", "),
           shape: BoxShape.rectangle,
           onTap: () {
             // NavigationHelper.onPlaylistItemCardPressed(

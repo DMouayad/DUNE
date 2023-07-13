@@ -7,6 +7,7 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
+import 'placeholders.dart';
 import 'track_card_wrapper.dart';
 
 class TrackCard extends StatelessWidget {
@@ -86,6 +87,7 @@ class TrackCardMainContent extends StatelessWidget {
               thumbnailsSet: track.thumbnails,
               dimension: imageDimension,
               cacheNetworkImage: true,
+              placeholder: const TrackCoverPlaceholder(),
             ),
           ),
         ),
