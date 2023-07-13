@@ -10,6 +10,7 @@ part 'isar_thumbnails_set.g.dart';
   'props',
   'derived',
   'any',
+  'onlyLocalThumbnailsSet',
 })
 class IsarThumbnailsSet extends ThumbnailsSet {
   @override
@@ -41,6 +42,7 @@ class IsarThumbnail extends BaseThumbnail {
     super.url = '',
     super.width = 0,
     super.quality = ThumbnailQuality.standard,
+    super.isNetwork = true,
   });
 
   @override
@@ -56,6 +58,7 @@ class IsarThumbnail extends BaseThumbnail {
       height: map.whereKey('height'),
       url: map.whereKey('url'),
       width: map.whereKey('width'),
+      isNetwork: map.whereKey('isNetwork'),
       quality: ThumbnailQuality.values
               .asNameMap()
               .whereKey(map.whereKey('quality')) ??

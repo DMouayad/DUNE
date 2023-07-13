@@ -16,7 +16,7 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
     final listeningHistoryState = ref
         .watch(listeningHistoryControllerProvider)
         .whenData(
-            (value) => value.takeWhile((history) => history.albums.isNotEmpty));
+            (value) => value.where((history) => history.albums.isNotEmpty));
     return (listeningHistoryState.valueOrNull?.isEmpty ?? false)
         ? Center(
             child: Text(
@@ -85,11 +85,13 @@ class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
         loading: (state) => const AsyncLoading(),
       ),
       childBuilder: (double cardWidth, int index) {
-        final playlist = widget.albums.value!.elementAt(index);
+        final album = widget.albums.value!.elementAt(index);
         return CustomCard(
-          tag: playlist.id ?? playlist.title,
-          thumbnails: playlist.thumbnails,
-          title: playlist.title,
+          tag: album.id ?? album.title,
+          thumbnails: album.thumbnails,
+          width: cardWidth,
+          title:
+              album.title + '\n ${album.artists.map((e) => e.name).join(", ")}',
           shape: BoxShape.rectangle,
           onTap: () {
             // NavigationHelper.onPlaylistItemCardPressed(

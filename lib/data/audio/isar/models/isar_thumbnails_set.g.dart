@@ -435,19 +435,24 @@ const IsarThumbnailSchema = Schema(
       name: r'height',
       type: IsarType.double,
     ),
-    r'quality': PropertySchema(
+    r'isNetwork': PropertySchema(
       id: 1,
+      name: r'isNetwork',
+      type: IsarType.bool,
+    ),
+    r'quality': PropertySchema(
+      id: 2,
       name: r'quality',
       type: IsarType.byte,
       enumMap: _IsarThumbnailqualityEnumValueMap,
     ),
     r'url': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'url',
       type: IsarType.string,
     ),
     r'width': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'width',
       type: IsarType.double,
     )
@@ -475,9 +480,10 @@ void _isarThumbnailSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.height);
-  writer.writeByte(offsets[1], object.quality.index);
-  writer.writeString(offsets[2], object.url);
-  writer.writeDouble(offsets[3], object.width);
+  writer.writeBool(offsets[1], object.isNetwork);
+  writer.writeByte(offsets[2], object.quality.index);
+  writer.writeString(offsets[3], object.url);
+  writer.writeDouble(offsets[4], object.width);
 }
 
 IsarThumbnail _isarThumbnailDeserialize(
@@ -488,11 +494,12 @@ IsarThumbnail _isarThumbnailDeserialize(
 ) {
   final object = IsarThumbnail(
     height: reader.readDoubleOrNull(offsets[0]),
+    isNetwork: reader.readBoolOrNull(offsets[1]) ?? true,
     quality:
-        _IsarThumbnailqualityValueEnumMap[reader.readByteOrNull(offsets[1])] ??
+        _IsarThumbnailqualityValueEnumMap[reader.readByteOrNull(offsets[2])] ??
             ThumbnailQuality.standard,
-    url: reader.readStringOrNull(offsets[2]) ?? '',
-    width: reader.readDoubleOrNull(offsets[3]),
+    url: reader.readStringOrNull(offsets[3]) ?? '',
+    width: reader.readDoubleOrNull(offsets[4]),
   );
   return object;
 }
@@ -507,12 +514,14 @@ P _isarThumbnailDeserializeProp<P>(
     case 0:
       return (reader.readDoubleOrNull(offset)) as P;
     case 1:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 2:
       return (_IsarThumbnailqualityValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ThumbnailQuality.standard) as P;
-    case 2:
-      return (reader.readStringOrNull(offset) ?? '') as P;
     case 3:
+      return (reader.readStringOrNull(offset) ?? '') as P;
+    case 4:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -616,6 +625,16 @@ extension IsarThumbnailQueryFilter
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarThumbnail, IsarThumbnail, QAfterFilterCondition>
+      isNetworkEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isNetwork',
+        value: value,
       ));
     });
   }

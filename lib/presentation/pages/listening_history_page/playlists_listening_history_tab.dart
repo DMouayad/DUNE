@@ -16,8 +16,8 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final listeningHistoryState = ref
         .watch(listeningHistoryControllerProvider)
-        .whenData((value) =>
-            value.takeWhile((history) => history.playlists.isNotEmpty));
+        .whenData(
+            (value) => value.where((history) => history.playlists.isNotEmpty));
     return (listeningHistoryState.valueOrNull?.isEmpty ?? false)
         ? Center(
             child: Text(
@@ -88,6 +88,7 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
       childBuilder: (double cardWidth, int index) {
         final playlist = widget.playlists.value!.elementAt(index);
         return CustomCard(
+          width: cardWidth,
           tag: playlist.id ?? playlist.title!,
           thumbnails: playlist.thumbnails,
           title: playlist.title!,
