@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OverviewListeningHistoryTab extends StatelessWidget {
-  const OverviewListeningHistoryTab({super.key});
+class ListeningHistorySummaryTab extends StatelessWidget {
+  const ListeningHistorySummaryTab({super.key});
 
   @override
   Widget build(BuildContext context) {

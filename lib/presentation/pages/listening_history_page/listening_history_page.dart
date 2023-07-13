@@ -8,7 +8,7 @@ import 'package:dune/support/extensions/context_extensions.dart';
 
 import 'albums_listening_history_tab.dart';
 import 'playlists_listening_history_tab.dart';
-import 'overview_listening_history_tab.dart';
+import 'listening_history_summary_tab.dart';
 import 'tracks_listening_history_tab.dart';
 
 class ListeningHistoryPage extends ConsumerStatefulWidget {
@@ -101,7 +101,7 @@ class _ListeningHistoryPageState extends ConsumerState<ListeningHistoryPage>
                 child: TabBarView(
                   controller: tabController,
                   children: const [
-                    OverviewListeningHistoryTab(),
+                    ListeningHistorySummaryTab(),
                     TracksListeningHistoryTab(),
                     AlbumsListeningHistoryTab(),
                     PlaylistsListeningHistoryTab(),
