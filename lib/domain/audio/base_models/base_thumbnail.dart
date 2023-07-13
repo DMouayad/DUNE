@@ -5,6 +5,7 @@ class BaseThumbnail extends Equatable {
   const BaseThumbnail({
     required this.url,
     required this.quality,
+    required this.isNetwork,
     this.height,
     this.width,
   });
@@ -13,10 +14,12 @@ class BaseThumbnail extends Equatable {
   final double? width;
   final double? height;
   final ThumbnailQuality quality;
+  final bool isNetwork;
 
   Map<String, dynamic> toMap() {
     return {
       'url': url,
+      'isNetwork': isNetwork,
       'quality': quality.name,
       if (width != null) 'width': width,
       if (height != null) 'height': height
@@ -25,7 +28,8 @@ class BaseThumbnail extends Equatable {
 
   factory BaseThumbnail.fromMap(Map<String, dynamic> map) {
     return BaseThumbnail(
-      url: map['url'],
+      url: map.whereKey('url'),
+      isNetwork: map.whereKey('isNetwork'),
       quality: ThumbnailQuality.values
               .asNameMap()
               .keys
@@ -51,12 +55,14 @@ class BaseThumbnail extends Equatable {
     double? width,
     double? height,
     ThumbnailQuality? quality,
+    bool? isNetwork,
   }) {
     return BaseThumbnail(
       url: url ?? this.url,
       width: width ?? this.width,
       height: height ?? this.height,
       quality: quality ?? this.quality,
+      isNetwork: isNetwork ?? this.isNetwork,
     );
   }
 
@@ -66,7 +72,7 @@ class BaseThumbnail extends Equatable {
   }
 
   @override
-  List<Object?> get props => [width, height, url, quality];
+  List<Object?> get props => [width, height, url, quality, isNetwork];
 }
 
 enum ThumbnailQuality { standard, low, medium, high, max }

@@ -38,10 +38,25 @@ mixin YoutubeExplodeProxy {
   static ThumbnailsSet _getThumbnailsSet(ThumbnailSet set) {
     return ThumbnailsSet(thumbnails: [
       BaseThumbnail(
-          url: set.standardResUrl, quality: ThumbnailQuality.standard),
-      BaseThumbnail(url: set.mediumResUrl, quality: ThumbnailQuality.medium),
-      BaseThumbnail(url: set.highResUrl, quality: ThumbnailQuality.high),
-      BaseThumbnail(url: set.maxResUrl, quality: ThumbnailQuality.max),
+        isNetwork: true,
+        url: set.standardResUrl,
+        quality: ThumbnailQuality.standard,
+      ),
+      BaseThumbnail(
+        isNetwork: true,
+        url: set.mediumResUrl,
+        quality: ThumbnailQuality.medium,
+      ),
+      BaseThumbnail(
+        isNetwork: true,
+        url: set.highResUrl,
+        quality: ThumbnailQuality.high,
+      ),
+      BaseThumbnail(
+        isNetwork: true,
+        url: set.maxResUrl,
+        quality: ThumbnailQuality.max,
+      ),
     ]);
   }
 }

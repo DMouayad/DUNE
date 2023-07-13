@@ -27,12 +27,29 @@ class ThumbnailsSet extends Equatable {
     return thumbnails.firstWhereOrNull((e) => e.quality == quality);
   }
 
+  ThumbnailsSet get onlyLocalThumbnailsSet {
+    return ThumbnailsSet(
+        thumbnails: thumbnails.where((value) => !value.isNetwork).toList());
+  }
+
   BaseThumbnail byOrder(ThumbnailQualitiesOrderOption orderOption) {
     for (ThumbnailQuality quality in orderOption.qualities) {
       final thumb = thumbnails.firstWhereOrNull((e) => e.quality == quality);
       if (thumb != null) return thumb;
     }
     return any;
+  }
+
+  BaseThumbnail? byOrderOrNull(
+    ThumbnailQualitiesOrderOption orderOption, {
+    bool networkImagesOnly = false,
+  }) {
+    for (ThumbnailQuality quality in orderOption.qualities) {
+      final thumb = thumbnails.firstWhereOrNull((e) =>
+          e.quality == quality && (networkImagesOnly ? e.isNetwork : true));
+      if (thumb != null) return thumb;
+    }
+    return null;
   }
 
   BaseThumbnail get any {
@@ -42,13 +59,17 @@ class ThumbnailsSet extends Equatable {
         whereQuality(ThumbnailQuality.max) ??
         whereQuality(ThumbnailQuality.low) ??
         const BaseThumbnail(
-            url: kCoverImagePlaceHolderUrl, quality: ThumbnailQuality.standard);
+          url: kCoverImagePlaceHolderUrl,
+          quality: ThumbnailQuality.standard,
+          isNetwork: true,
+        );
   }
 
   List<String> get thumbnailUrls => thumbnails.map((e) => e.url).toList();
 
   factory ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
-      List<BaseThumbnail> list) {
+    List<BaseThumbnail> list,
+  ) {
     List<BaseThumbnail> _thumbnails = [];
     BaseThumbnail? lowQualityThumb;
     BaseThumbnail? mediumQualityThumb;

@@ -27,7 +27,7 @@ class AudioInfoSet extends Equatable {
     MusicSource source,
   ) {
     final itemsWithSameSource = List<TrackAudioInfo>.from(
-        items.takeWhile((value) => value.musicSource == source));
+        items.where((value) => value.musicSource == source));
     if (itemsWithSameSource.isEmpty) return null;
     final itemWithSameQuality =
         itemsWithSameSource.firstWhereOrNull((e) => e.quality == quality);

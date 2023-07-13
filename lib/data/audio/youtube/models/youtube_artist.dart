@@ -35,6 +35,7 @@ class YoutubeArtist extends BaseArtist {
                         quality: ThumbnailQuality.standard,
                         width: _parseDoubleFromMap(e, "width"),
                         height: _parseDoubleFromMap(e, "height"),
+                        isNetwork: true,
                       ))
                   .toList(),
             )

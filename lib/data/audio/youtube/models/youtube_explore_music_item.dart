@@ -87,16 +87,19 @@ class YoutubeExploreMusicItem extends BaseExploreMusicItem {
       thumbnails: [
         if (map.containsKey('imageStandard'))
           BaseThumbnail(
+            isNetwork: true,
             url: map.whereKey('imageStandard'),
             quality: ThumbnailQuality.standard,
           ),
         if (map.containsKey('imageMax'))
           BaseThumbnail(
+            isNetwork: true,
             url: map.whereKey('imageMax'),
             quality: ThumbnailQuality.max,
           ),
         if (map.containsKey('imageMedium'))
           BaseThumbnail(
+            isNetwork: true,
             url: map.whereKey('imageMedium'),
             quality: ThumbnailQuality.medium,
           ),
