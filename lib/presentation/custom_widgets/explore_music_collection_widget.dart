@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
+import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'explore_music_item_card.dart';
+import 'custom_card.dart';
 import 'scrollable_cards_view.dart';
 
 class ExploreMusicCollectionWidget extends ConsumerWidget {
@@ -64,6 +66,47 @@ class ExploreMusicCollectionWidget extends ConsumerWidget {
                 itemBoxWidth: itemCardWidth,
                 item: item,
               );
+      },
+    );
+  }
+}
+
+class ExploreMusicItemCard extends ConsumerWidget {
+  final BaseExploreMusicItem item;
+  final double itemBoxWidth;
+
+  const ExploreMusicItemCard({
+    super.key,
+    required this.item,
+    required this.itemBoxWidth,
+  });
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return CustomCard(
+      tag: item.title,
+      width: itemBoxWidth,
+      title: item.title,
+      subtitle: item.type.isVideo
+          ? '${item.count} | ${item.description}'
+          : '${item.count} Tracks | ${item.description}',
+      shape: BoxShape.rectangle,
+      thumbnails: item.thumbnails!,
+      onTap: () {
+        if (item.type.isVideo) {
+          if (item.track != null) {
+            ref
+                .read(playbackControllerProvider.notifier)
+                .player
+                .playSingleTrack(item.track!);
+          }
+        } else {
+          NavigationHelper.onPlaylistItemCardPressed(
+            context,
+            ref,
+            exploreItem: item,
+          );
+        }
       },
     );
   }
