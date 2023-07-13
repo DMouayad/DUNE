@@ -9,6 +9,7 @@ class CustomCard extends StatefulWidget {
     super.key,
     required this.tag,
     required this.title,
+    this.subtitle,
     required this.shape,
     required this.onTap,
     required this.thumbnails,
@@ -17,6 +18,7 @@ class CustomCard extends StatefulWidget {
 
   final String tag;
   final String? title;
+  final String? subtitle;
   final BoxShape shape;
   final ThumbnailsSet thumbnails;
   final void Function() onTap;
@@ -86,7 +88,7 @@ class _CustomCardState extends State<CustomCard> {
                   widget.title ?? '',
                   textAlign: TextAlign.center,
                   softWrap: false,
-                  style: context.textTheme.bodyMedium?.copyWith(
+                  style: context.textTheme.bodyLarge?.copyWith(
                     color: context.colorScheme.onBackground,
                     fontWeight: FontWeight.w500,
                   ),
@@ -94,6 +96,19 @@ class _CustomCardState extends State<CustomCard> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              if (widget.subtitle != null)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15, left: 5, right: 5),
+                  child: Text(
+                    widget.subtitle!,
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
