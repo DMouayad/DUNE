@@ -7,23 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'search_result_items_grid.dart';
 import '../../../custom_widgets/custom_card.dart';
 
-class ArtistCard extends StatelessWidget {
-  const ArtistCard({Key? key, required this.artist}) : super(key: key);
-
-  final BaseArtist artist;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomCard(
-      tag: artist.id ?? artist.browseId ?? artist.hashCode.toString(),
-      title: artist.name,
-      thumbnails: artist.thumbnails,
-      shape: BoxShape.circle,
-      onTap: () {},
-    );
-  }
-}
-
 const maxCardHeight = 180.0;
 
 class ArtistsSearchResults extends ConsumerWidget {
@@ -39,7 +22,17 @@ class ArtistsSearchResults extends ConsumerWidget {
         return results.when(
           error: (err, stack) => Text('error $err'),
           loading: () => const _ArtistsShimmer(),
-          data: (artists) => ArtistCard(artist: artists[index]),
+          data: (artists) {
+            final artist = artists.elementAt(index);
+            return CustomCard(
+              width: maxCardHeight,
+              tag: artist.id ?? artist.browseId ?? artist.hashCode.toString(),
+              title: artist.name,
+              thumbnails: artist.thumbnails,
+              shape: BoxShape.circle,
+              onTap: () {},
+            );
+          },
         );
       },
     );

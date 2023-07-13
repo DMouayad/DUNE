@@ -2,7 +2,7 @@ import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
-import 'package:dune/presentation/custom_widgets/track_thumbnail.dart';
+import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -82,8 +82,8 @@ class TrackCardMainContent extends StatelessWidget {
                 ),
               );
             },
-            childWidget: TrackThumbnail(
-              track: track,
+            childWidget: ThumbnailWidget(
+              thumbnailsSet: track.thumbnails,
               dimension: imageDimension,
               cacheNetworkImage: true,
             ),

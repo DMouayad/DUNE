@@ -8,23 +8,6 @@ import 'search_result_items_grid.dart';
 
 const _maxAlbumCardHeight = 250.0;
 
-class AlbumCard extends StatelessWidget {
-  const AlbumCard({Key? key, required this.album}) : super(key: key);
-  final BaseAlbum album;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomCard(
-      tag: album.id ?? album.title,
-      thumbnails: album.thumbnails,
-      title: album.title +
-          (album.releaseDate != null ? '\n(${album.releaseDate!.year})' : ''),
-      shape: BoxShape.rectangle,
-      onTap: () {},
-    );
-  }
-}
-
 class AlbumsResultWidget extends StatelessWidget {
   const AlbumsResultWidget(this.result, {super.key});
 
@@ -39,7 +22,20 @@ class AlbumsResultWidget extends StatelessWidget {
         return result.when(
           error: (err, stack) => Text('error $err'),
           loading: () => const _AlbumsShimmer(),
-          data: (albums) => AlbumCard(album: albums[index]),
+          data: (albums) {
+            final album = albums.elementAt(index);
+            return CustomCard(
+              tag: album.id ?? album.title,
+              width: _maxAlbumCardHeight,
+              thumbnails: album.thumbnails,
+              title: album.title +
+                  (album.releaseDate != null
+                      ? '\n(${album.releaseDate!.year})'
+                      : ''),
+              shape: BoxShape.rectangle,
+              onTap: () {},
+            );
+          },
         );
       },
     );

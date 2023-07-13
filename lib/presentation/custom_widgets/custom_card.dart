@@ -1,7 +1,6 @@
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +12,7 @@ class CustomCard extends StatefulWidget {
     required this.shape,
     required this.onTap,
     required this.thumbnails,
+    this.width = 250.0,
   });
 
   final String tag;
@@ -20,6 +20,7 @@ class CustomCard extends StatefulWidget {
   final BoxShape shape;
   final ThumbnailsSet thumbnails;
   final void Function() onTap;
+  final double width;
 
   @override
   State<CustomCard> createState() => _CustomCardState();
@@ -71,21 +72,10 @@ class _CustomCardState extends State<CustomCard> {
                         ? RoundedRectangleBorder(
                             borderRadius: rectangleBorderRadius)
                         : const CircleBorder(),
-                    child: Consumer(builder: (context, ref, _) {
-                      return ExtendedImage.network(
-                        widget.thumbnails
-                            .byOrder(ref
-                                .watch(appPreferencesController)
-                                .thumbnailQualitiesOrder)
-                            .url,
-                        fit: BoxFit.cover,
-                        cache: false,
-                        shape: widget.shape,
-                        borderRadius: widget.shape == BoxShape.rectangle
-                            ? rectangleBorderRadius
-                            : null,
-                      );
-                    }),
+                    child: ThumbnailWidget(
+                      thumbnailsSet: widget.thumbnails,
+                      dimension: widget.width,
+                    ),
                   ),
                 ),
               ),
