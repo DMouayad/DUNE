@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/controllers/explore_music_categories_controller.dart';
 import 'package:dune/presentation/custom_widgets/cards_grid_view.dart';
@@ -32,13 +33,19 @@ class _ExploreMusicCategoryPageState
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (ref.watch(exploreMusicCategoriesControllerProvider).hasValue &&
-        ref.watch(exploreMusicCategoriesControllerProvider).value?.categoryId ==
-            widget.categoryId &&
-        playlists.isEmpty) {
-      playlistState = ref.watch(exploreMusicCategoriesControllerProvider);
-      playlists = playlistState.value!.playlists;
-      updateKeepAlive();
+    if (ref.watch(exploreMusicCategoriesControllerProvider).hasValue) {
+      final newCategoryPlaylists =
+          ref.watch(exploreMusicCategoriesControllerProvider).value;
+      if (newCategoryPlaylists?.categoryId == widget.categoryId) {
+        if (_hasSamePlaylists(newCategoryPlaylists?.playlists, playlists)) {
+          playlistState = AsyncData(playlistState.value!);
+          updateKeepAlive();
+        } else {
+          playlistState = ref.watch(exploreMusicCategoriesControllerProvider);
+          playlists = playlistState.value!.playlists;
+          updateKeepAlive();
+        }
+      }
     }
     final itemCardWidth =
         min(250.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
@@ -52,6 +59,15 @@ class _ExploreMusicCategoryPageState
 
   @override
   bool get wantKeepAlive => true;
+
+  bool _hasSamePlaylists(
+    List<BasePlaylist>? playlists,
+    List<BasePlaylist> playlists2,
+  ) {
+    final firstIds = playlists?.map((e) => e.id).toList();
+    final secondIds = playlists2.map((e) => e.id).toList();
+    return const ListEquality().equals(firstIds, secondIds);
+  }
 }
 
 class _PlaylistCard extends ConsumerWidget {

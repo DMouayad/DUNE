@@ -42,14 +42,15 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
 
     if (ref.watch(playlistControllerProvider).hasValue) {
       final newPlaylist = ref.watch(playlistControllerProvider).value;
-
-      if (!(playlist?.hasSameTracksAsOther(newPlaylist) ?? false)) {
-        playlistState = ref.watch(playlistControllerProvider);
-        playlist = playlistState.value;
-        updateKeepAlive();
-      } else {
-        playlistState = AsyncData(playlistState.value);
-        updateKeepAlive();
+      if (newPlaylist?.id == widget.playlistId) {
+        if (playlist?.hasSameTracksAsOther(newPlaylist) ?? true) {
+          playlistState = AsyncData(playlistState.value);
+          updateKeepAlive();
+        } else {
+          playlistState = ref.watch(playlistControllerProvider);
+          playlist = playlistState.value;
+          updateKeepAlive();
+        }
       }
     }
     return SingleChildScrollView(
