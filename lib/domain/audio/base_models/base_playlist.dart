@@ -65,8 +65,9 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
   }
 
   bool hasSameTracksAsOther(BasePlaylist? other) {
-    final firstTracksIds = tracks.map((e) => e.id).toList();
-    final secondTracksIds = other?.tracks.map((e) => e.id).toList();
+    final firstTracksIds = tracks.map((e) => (e.id, e.album?.id)).toList();
+    final secondTracksIds =
+        other?.tracks.map((e) => (e.id, e.album?.id)).toList();
     return const ListEquality().equals(firstTracksIds, secondTracksIds);
   }
 }
