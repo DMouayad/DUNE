@@ -23,12 +23,23 @@ class DesktopHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _DesktopHomeScreenState extends ConsumerState<DesktopHomeScreen> {
+  late final WindowListener appWindowSizeListener;
+
   @override
   void initState() {
+    appWindowSizeListener = AppWindowSizeListener(ref);
     if (isDesktopNotWebPlatform) {
-      windowManager.addListener(AppWindowSizeListener(ref));
+      windowManager.addListener(appWindowSizeListener);
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (isDesktopNotWebPlatform) {
+      windowManager.removeListener(appWindowSizeListener);
+    }
+    super.dispose();
   }
 
   @override

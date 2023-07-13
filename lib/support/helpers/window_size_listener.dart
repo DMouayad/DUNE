@@ -15,6 +15,7 @@ class AppWindowSizeListener extends WindowListener {
     if (_shouldSaveLastWindowSize) {
       _saveWindowSize(newSize);
     }
+    super.onWindowResized();
   }
 
   bool get _shouldSaveLastWindowSize =>
