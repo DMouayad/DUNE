@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-import 'optional_parent_widget.dart';
 import 'shimmer_widget.dart';
 
 class ScrollableCardsView extends StatelessWidget {
@@ -45,9 +44,9 @@ class ScrollableCardsView extends StatelessWidget {
                 flex: 0,
                 child: SizedBox(
                   height: height ?? itemWidth,
-                  width: double.infinity,
+                  // width: double.infinity,
                   child: GridView.builder(
-                    shrinkWrap: true,
+                    // shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: itemWidth,
                       crossAxisSpacing: (height ?? 0) > itemWidth ? 8 : 0,
@@ -75,25 +74,18 @@ class ScrollableCardsView extends StatelessWidget {
             else
               Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
                   itemExtent: itemWidth,
                   controller: scrollController,
                   physics: context.isDesktopPlatform
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: isLoading ? 5 : itemsState.requireValue.itemCount,
                   itemBuilder: (context, index) {
-                    return OptionalParentWidget(
-                      parentWidgetBuilder: (child) {
-                        return Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          child: child,
-                        );
-                      },
-                      condition: isLoading,
-                      childWidget: _itemBuilder(index, isLoading, itemWidth),
+                    return Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 8),
+                      child: _itemBuilder(index, isLoading, itemWidth),
                     );
                   },
                 ),

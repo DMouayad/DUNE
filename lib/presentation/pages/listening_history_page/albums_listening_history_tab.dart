@@ -73,10 +73,9 @@ class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
   @override
   Widget build(BuildContext context) {
     final itemCardWidth =
-        min(250.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
+        min(200.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
     return ScrollableCardsView(
       itemWidth: itemCardWidth,
-      height: 360,
       scrollController: scrollController,
       titleWidget: widget.date.hasValue && widget.albums.hasValue
           ? ListeningHistoryDateSectionHeader(
