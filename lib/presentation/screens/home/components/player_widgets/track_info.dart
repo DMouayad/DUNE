@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/presentation/custom_widgets/image_gesture_detector.dart';
+import 'package:dune/presentation/custom_widgets/image_place_holder.dart';
+import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -16,31 +17,13 @@ class TrackPlayerBarImage extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final currentTrackThumbs = ref.watch(playbackControllerProvider
         .select((playerState) => playerState.currentTrack?.thumbnails));
-    final acrylicWindowEffectEnabled = ref.watch(appThemeControllerProvider
-        .select((value) => value.acrylicWindowEffectEnabled));
 
-    return currentTrackThumbs == null
-        ? Container(
-            decoration: BoxDecoration(
-              color: acrylicWindowEffectEnabled
-                  ? context.colorScheme.background
-                  : context.colorScheme.surfaceVariant,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            height: imageDimension,
-            width: imageDimension,
-            child: Icon(
-              Icons.music_note_outlined,
-              color: context.colorScheme.secondary,
-              size: context.isMobile || context.isPortraitTablet ? 24 : 60,
-            ),
-          )
-        : ImageGestureDetector(
-            thumbnailsSet: currentTrackThumbs,
-            constraints: BoxConstraints(
-                maxWidth: imageDimension, maxHeight: imageDimension),
-          );
+    return ThumbnailWithGesturesWidget(
+      thumbnailsSet: currentTrackThumbs,
+      placeholder: const ImagePlaceHolder(),
+      constraints:
+          BoxConstraints(maxWidth: imageDimension, maxHeight: imageDimension),
+    );
   }
 }
 

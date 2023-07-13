@@ -2,7 +2,6 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CustomCard extends StatefulWidget {
   const CustomCard({
@@ -81,7 +80,6 @@ class _CustomCardState extends State<CustomCard> {
                   ),
                 ),
               ),
-              // const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(

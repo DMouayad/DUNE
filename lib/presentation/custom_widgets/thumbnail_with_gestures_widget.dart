@@ -1,26 +1,28 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
-import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ImageGestureDetector extends StatelessWidget {
-  const ImageGestureDetector({
+import 'thumbnail_widget.dart';
+
+class ThumbnailWithGesturesWidget extends StatelessWidget {
+  const ThumbnailWithGesturesWidget({
     super.key,
     required this.constraints,
     required this.thumbnailsSet,
+    required this.placeholder,
   });
 
   final BoxConstraints constraints;
-  final ThumbnailsSet thumbnailsSet;
+  final ThumbnailsSet? thumbnailsSet;
+  final Widget placeholder;
 
   @override
   Widget build(BuildContext context) {
+    if (thumbnailsSet == null) return placeholder;
     final highQualityThumb =
-        thumbnailsSet.byOrder(ThumbnailQualitiesOrderOption.best);
+        thumbnailsSet!.byOrder(ThumbnailQualitiesOrderOption.best, true);
     return InkWell(
       onTap: () {
         fluent.showDialog(
@@ -33,7 +35,7 @@ class ImageGestureDetector extends StatelessWidget {
                 width: highQualityThumb.width,
                 height: highQualityThumb.height,
                 fit: BoxFit.cover,
-                cache: true,
+                cache: false,
                 mode: ExtendedImageMode.gesture,
                 initGestureConfigHandler: (state) {
                   return GestureConfig(
@@ -56,30 +58,10 @@ class ImageGestureDetector extends StatelessWidget {
           },
         );
       },
-      child: Consumer(builder: (context, ref, _) {
-        final url = thumbnailsSet
-            .byOrder(
-                ref.watch(appPreferencesController).thumbnailQualitiesOrder)
-            .url;
-        return ExtendedImage.network(
-          url,
-          constraints: constraints,
-          fit: BoxFit.fill,
-          cache: true,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10),
-          loadStateChanged: (state) {
-            return switch (state.extendedImageLoadState) {
-              LoadState.loading => ShimmerWidget(
-                  enabled: true,
-                  shimmerSize: constraints.biggest,
-                  direction: const ShimmerDirection.fromTopToBottom(),
-                ),
-              _ => null,
-            };
-          },
-        );
-      }),
+      child: ThumbnailWidget(
+        thumbnailsSet: thumbnailsSet!,
+        dimension: constraints.maxWidth,
+      ),
     );
   }
 }

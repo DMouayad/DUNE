@@ -55,7 +55,8 @@ class _TrendingHeaderState extends ConsumerState<TrendingHeader> {
         final imageProvider = ExtendedNetworkImageProvider(
           widget.items[index].thumbnails!
               .byOrder(
-                  ref.watch(appPreferencesController).thumbnailQualitiesOrder)
+                  ref.watch(appPreferencesController).thumbnailQualitiesOrder,
+                  true)
               .url,
           cache: true,
           retries: 2,

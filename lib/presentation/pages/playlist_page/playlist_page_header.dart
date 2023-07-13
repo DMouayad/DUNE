@@ -1,5 +1,5 @@
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/presentation/custom_widgets/image_gesture_detector.dart';
+import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
 import 'package:dune/presentation/custom_widgets/image_place_holder.dart';
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -53,15 +53,14 @@ class PlaylistPageHeader extends StatelessWidget {
                   Card(
                     color: Colors.transparent,
                     elevation: 3,
-                    child: thumbnailsSet == null
-                        ? ImagePlaceHolder(size: imageSize)
-                        : Hero(
-                            tag: title,
-                            child: ImageGestureDetector(
-                              constraints: BoxConstraints.tight(imageSize),
-                              thumbnailsSet: thumbnailsSet!,
-                            ),
-                          ),
+                    child: Hero(
+                      tag: title,
+                      child: ThumbnailWithGesturesWidget(
+                        constraints: BoxConstraints.tight(imageSize),
+                        thumbnailsSet: thumbnailsSet!,
+                        placeholder: const ImagePlaceHolder(),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
