@@ -58,7 +58,7 @@ class IsarThumbnail extends BaseThumbnail {
       height: map.whereKey('height'),
       url: map.whereKey('url'),
       width: map.whereKey('width'),
-      isNetwork: map.whereKey('isNetwork'),
+      isNetwork: map.whereKey('isNetwork') ?? false,
       quality: ThumbnailQuality.values
               .asNameMap()
               .whereKey(map.whereKey('quality')) ??

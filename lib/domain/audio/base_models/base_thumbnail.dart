@@ -29,7 +29,7 @@ class BaseThumbnail extends Equatable {
   factory BaseThumbnail.fromMap(Map<String, dynamic> map) {
     return BaseThumbnail(
       url: map.whereKey('url'),
-      isNetwork: map.whereKey('isNetwork'),
+      isNetwork: map.whereKey('isNetwork') ?? false,
       quality: ThumbnailQuality.values
               .asNameMap()
               .keys
