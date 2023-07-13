@@ -1,4 +1,5 @@
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
+import 'package:dune/presentation/custom_widgets/error_widget.dart';
 import 'package:dune/presentation/pages/search_page/search_result_widgets/artists_result_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/models/search_state.dart';
@@ -35,95 +36,96 @@ class SearchResultsWidget extends ConsumerWidget {
           ),
           clipBehavior: Clip.hardEdge,
           primary: true,
-          child: Column(
-            children: AnimationConfiguration.toStaggeredList(
-              childAnimationBuilder: (widget) {
-                return SlideAnimation(
-                  horizontalOffset: 50.0,
-                  child: FadeInAnimation(child: widget),
-                );
-              },
-              children: [
-                if (searchFilter.hasSongs)
-                  _SearchResultCategorySection(
-                    isLoading: searchState.isLoading,
-                    category: SearchFilter.songs,
-                    title: "Songs",
-                    error: stateError,
-                    isLoadingMoreForCategory: searchState
-                        .valueOrNull?.loadingMoreOf
-                        .contains(SearchFilter.songs),
-                    content: TracksListView(
-                      searchState.isLoading &&
-                              searchState
-                                  .requireValue.songsSearchResult.data.isEmpty
-                          ? const AsyncValue.loading()
-                          : AsyncValue.data(
-                              searchState.requireValue.songsSearchResult.data,
-                            ),
-                    ),
+          child: stateError != null
+              ? DuneErrorWidget(stateError)
+              : Column(
+                  children: AnimationConfiguration.toStaggeredList(
+                    childAnimationBuilder: (widget) {
+                      return SlideAnimation(
+                        horizontalOffset: 50.0,
+                        child: FadeInAnimation(child: widget),
+                      );
+                    },
+                    children: [
+                      if (searchFilter.hasSongs)
+                        _SearchResultCategorySection(
+                          isLoading: searchState.isLoading,
+                          category: SearchFilter.songs,
+                          title: "Songs",
+                          isLoadingMoreForCategory: searchState
+                              .valueOrNull?.loadingMoreOf
+                              .contains(SearchFilter.songs),
+                          content: TracksListView(
+                            searchState.isLoading &&
+                                    searchState.requireValue.songsSearchResult
+                                        .data.isEmpty
+                                ? const AsyncValue.loading()
+                                : AsyncValue.data(
+                                    searchState
+                                        .requireValue.songsSearchResult.data,
+                                  ),
+                          ),
+                        ),
+                      if (searchFilter.hasArtists)
+                        _SearchResultCategorySection(
+                          isLoading: searchState.isLoading,
+                          category: SearchFilter.artists,
+                          isLoadingMoreForCategory: searchState
+                              .valueOrNull?.loadingMoreOf
+                              .contains(SearchFilter.artists),
+                          title: "Artists",
+                          content: ArtistsSearchResults(
+                            searchState.isLoading &&
+                                    searchState.requireValue.artistsSearchResult
+                                        .data.isEmpty
+                                ? const AsyncValue.loading()
+                                : AsyncValue.data(
+                                    searchState
+                                        .requireValue.artistsSearchResult.data,
+                                  ),
+                          ),
+                        ),
+                      if (searchFilter.hasAlbums)
+                        _SearchResultCategorySection(
+                          isLoading: searchState.isLoading,
+                          category: SearchFilter.albums,
+                          isLoadingMoreForCategory: searchState
+                              .valueOrNull?.loadingMoreOf
+                              .contains(SearchFilter.albums),
+                          title: "Albums",
+                          content: AlbumsResultWidget(
+                            searchState.isLoading &&
+                                    searchState.requireValue.albumsSearchResult
+                                        .data.isEmpty
+                                ? const AsyncValue.loading()
+                                : AsyncValue.data(
+                                    searchState
+                                        .requireValue.albumsSearchResult.data,
+                                  ),
+                          ),
+                        ),
+                      if (searchFilter.hasPlaylists)
+                        _SearchResultCategorySection(
+                          isLoading: searchState.isLoading,
+                          category: SearchFilter.playlists,
+                          isLoadingMoreForCategory: searchState
+                              .valueOrNull?.loadingMoreOf
+                              .contains(SearchFilter.playlists),
+                          title: "Community Playlists",
+                          content: PlaylistsResultWidget(
+                            searchState.isLoading &&
+                                    searchState.requireValue
+                                        .playlistsSearchResult.data.isEmpty
+                                ? const AsyncValue.loading()
+                                : AsyncValue.data(
+                                    searchState.requireValue
+                                        .playlistsSearchResult.data,
+                                  ),
+                          ),
+                        ),
+                    ],
                   ),
-                if (searchFilter.hasArtists)
-                  _SearchResultCategorySection(
-                    isLoading: searchState.isLoading,
-                    category: SearchFilter.artists,
-                    isLoadingMoreForCategory: searchState
-                        .valueOrNull?.loadingMoreOf
-                        .contains(SearchFilter.artists),
-                    title: "Artists",
-                    error: stateError,
-                    content: ArtistsSearchResults(
-                      searchState.isLoading &&
-                              searchState
-                                  .requireValue.artistsSearchResult.data.isEmpty
-                          ? const AsyncValue.loading()
-                          : AsyncValue.data(
-                              searchState.requireValue.artistsSearchResult.data,
-                            ),
-                    ),
-                  ),
-                if (searchFilter.hasAlbums)
-                  _SearchResultCategorySection(
-                    isLoading: searchState.isLoading,
-                    category: SearchFilter.albums,
-                    error: stateError,
-                    isLoadingMoreForCategory: searchState
-                        .valueOrNull?.loadingMoreOf
-                        .contains(SearchFilter.albums),
-                    title: "Albums",
-                    content: AlbumsResultWidget(
-                      searchState.isLoading &&
-                              searchState
-                                  .requireValue.albumsSearchResult.data.isEmpty
-                          ? const AsyncValue.loading()
-                          : AsyncValue.data(
-                              searchState.requireValue.albumsSearchResult.data,
-                            ),
-                    ),
-                  ),
-                if (searchFilter.hasPlaylists)
-                  _SearchResultCategorySection(
-                    isLoading: searchState.isLoading,
-                    category: SearchFilter.playlists,
-                    isLoadingMoreForCategory: searchState
-                        .valueOrNull?.loadingMoreOf
-                        .contains(SearchFilter.playlists),
-                    title: "Community Playlists",
-                    error: stateError,
-                    content: PlaylistsResultWidget(
-                      searchState.isLoading &&
-                              searchState.requireValue.playlistsSearchResult
-                                  .data.isEmpty
-                          ? const AsyncValue.loading()
-                          : AsyncValue.data(
-                              searchState
-                                  .requireValue.playlistsSearchResult.data,
-                            ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+                ),
         ),
       ),
     );
@@ -137,7 +139,6 @@ class _SearchResultCategorySection extends ConsumerWidget {
     required this.isLoading,
     required this.category,
     required this.isLoadingMoreForCategory,
-    this.error,
   });
 
   final String title;
@@ -145,7 +146,6 @@ class _SearchResultCategorySection extends ConsumerWidget {
   final bool isLoading;
   final SearchFilter category;
   final bool? isLoadingMoreForCategory;
-  final AppError? error;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -163,9 +163,7 @@ class _SearchResultCategorySection extends ConsumerWidget {
               ),
             ),
             Expanded(flex: 0, child: content),
-            if (!isLoading &&
-                !(isLoadingMoreForCategory ?? false) &&
-                error == null)
+            if (!isLoading && !(isLoadingMoreForCategory ?? false))
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -182,16 +180,6 @@ class _SearchResultCategorySection extends ConsumerWidget {
                       color: context.colorScheme.secondary,
                     ),
                   ),
-                ),
-              ),
-            if (error != null)
-              ListTile(
-                tileColor: context.colorScheme.errorContainer,
-                leading: Icon(Icons.error, color: context.colorScheme.error),
-                title: Text(
-                  error!.appException?.message ??
-                      error!.description ??
-                      "Failed to load ${category.name}",
                 ),
               ),
             if (isLoadingMoreForCategory ?? false)
