@@ -39,7 +39,7 @@ class YoutubeTrack extends BaseTrack {
       likeStatus: map.whereKey('likeStatus'),
       thumbnails: ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
         (map.whereKey('thumbnails') as List)
-            .map((e) => BaseThumbnail.fromMap(e))
+            .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
             .toList(),
       ),
       title: map.whereKey('title'),

@@ -26,10 +26,13 @@ class BaseThumbnail extends Equatable {
     };
   }
 
-  factory BaseThumbnail.fromMap(Map<String, dynamic> map) {
+  factory BaseThumbnail.fromMap(
+    Map<String, dynamic> map, {
+    required bool isNetwork,
+  }) {
     return BaseThumbnail(
       url: map.whereKey('url'),
-      isNetwork: map.whereKey('isNetwork') ?? false,
+      isNetwork: isNetwork,
       quality: ThumbnailQuality.values
               .asNameMap()
               .keys
@@ -45,9 +48,12 @@ class BaseThumbnail extends Equatable {
     );
   }
 
-  static BaseThumbnail? tryFromMap(Map<String, dynamic>? map) {
+  static BaseThumbnail? tryFromMap(
+    Map<String, dynamic>? map, {
+    required bool isNetwork,
+  }) {
     if (map == null) return null;
-    return BaseThumbnail.fromMap(map);
+    return BaseThumbnail.fromMap(map, isNetwork: isNetwork);
   }
 
   BaseThumbnail copyWith({

@@ -15,11 +15,18 @@ class ThumbnailsSet extends Equatable {
     return {'thumbnails': thumbnails.map((e) => e.toMap()).toList()};
   }
 
-  factory ThumbnailsSet.fromMap(Map<String, dynamic> map) {
+  factory ThumbnailsSet.fromMap(
+    Map<String, dynamic> map, {
+    required bool isNetwork,
+  }) {
     final thumbsList = map.whereKey('thumbnails');
     return ThumbnailsSet(
         thumbnails: (thumbsList is Iterable<Map<String, dynamic>>)
-            ? thumbsList.map((e) => BaseThumbnail.fromMap(e)).toList()
+            ? thumbsList
+                .map(
+                  (e) => BaseThumbnail.fromMap(e, isNetwork: isNetwork),
+                )
+                .toList()
             : []);
   }
 
