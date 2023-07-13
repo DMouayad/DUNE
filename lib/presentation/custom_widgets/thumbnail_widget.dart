@@ -28,7 +28,7 @@ class ThumbnailWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final String? localThumbUrl = thumbnailsSet.onlyLocalThumbnailsSet
-        .byOrderOrNull(ThumbnailQualitiesOrderOption.best)
+        .byOrderOrNull(ThumbnailQualitiesOrderOption.best, isNetwork: false)
         ?.url;
     ImageProvider? imageProvider;
     try {
@@ -39,12 +39,13 @@ class ThumbnailWidget extends ConsumerWidget {
         }
       } else {
         final networkImageUrl = thumbnailsSet
-            .byOrderOrNull(
-              ref.watch(appPreferencesController
-                  .select((value) => value.thumbnailQualitiesOrder)),
-              networkImagesOnly: true,
-            )
-            ?.url;
+                .byOrderOrNull(
+                  ref.watch(appPreferencesController
+                      .select((value) => value.thumbnailQualitiesOrder)),
+                  isNetwork: true,
+                )
+                ?.url ??
+            thumbnailsSet.any(isNetwork: true)?.url;
         if (networkImageUrl != null) {
           final uri = Uri.tryParse(networkImageUrl);
           final isValidUri = uri != null;

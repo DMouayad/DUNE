@@ -23,46 +23,51 @@ class ThumbnailsSet extends Equatable {
             : []);
   }
 
-  BaseThumbnail? whereQuality(ThumbnailQuality quality) {
-    return thumbnails.firstWhereOrNull((e) => e.quality == quality);
+  BaseThumbnail? whereQuality(ThumbnailQuality quality, bool isNetwork) {
+    return thumbnails.firstWhereOrNull(
+        (e) => e.quality == quality && e.isNetwork == isNetwork);
   }
 
   ThumbnailsSet get onlyLocalThumbnailsSet {
     return ThumbnailsSet(
-        thumbnails: thumbnails.where((value) => !value.isNetwork).toList());
+      thumbnails: List.from(thumbnails.where((thumb) => !thumb.isNetwork)),
+    );
   }
 
-  BaseThumbnail byOrder(ThumbnailQualitiesOrderOption orderOption) {
+  BaseThumbnail byOrder(
+    ThumbnailQualitiesOrderOption orderOption,
+    bool isNetwork,
+  ) {
     for (ThumbnailQuality quality in orderOption.qualities) {
       final thumb = thumbnails.firstWhereOrNull((e) => e.quality == quality);
       if (thumb != null) return thumb;
     }
-    return any;
-  }
-
-  BaseThumbnail? byOrderOrNull(
-    ThumbnailQualitiesOrderOption orderOption, {
-    bool networkImagesOnly = false,
-  }) {
-    for (ThumbnailQuality quality in orderOption.qualities) {
-      final thumb = thumbnails.firstWhereOrNull((e) =>
-          e.quality == quality && (networkImagesOnly ? e.isNetwork : true));
-      if (thumb != null) return thumb;
-    }
-    return null;
-  }
-
-  BaseThumbnail get any {
-    return whereQuality(ThumbnailQuality.standard) ??
-        whereQuality(ThumbnailQuality.medium) ??
-        whereQuality(ThumbnailQuality.high) ??
-        whereQuality(ThumbnailQuality.max) ??
-        whereQuality(ThumbnailQuality.low) ??
+    return any(isNetwork: isNetwork) ??
         const BaseThumbnail(
           url: kCoverImagePlaceHolderUrl,
           quality: ThumbnailQuality.standard,
           isNetwork: true,
         );
+  }
+
+  BaseThumbnail? byOrderOrNull(
+    ThumbnailQualitiesOrderOption orderOption, {
+    required bool isNetwork,
+  }) {
+    for (ThumbnailQuality quality in orderOption.qualities) {
+      final thumb = thumbnails.firstWhereOrNull(
+          (e) => e.quality == quality && e.isNetwork == isNetwork);
+      if (thumb != null) return thumb;
+    }
+    return null;
+  }
+
+  BaseThumbnail? any({required bool isNetwork}) {
+    return whereQuality(ThumbnailQuality.standard, isNetwork) ??
+        whereQuality(ThumbnailQuality.medium, isNetwork) ??
+        whereQuality(ThumbnailQuality.high, isNetwork) ??
+        whereQuality(ThumbnailQuality.max, isNetwork) ??
+        whereQuality(ThumbnailQuality.low, isNetwork);
   }
 
   List<String> get thumbnailUrls => thumbnails.map((e) => e.url).toList();
