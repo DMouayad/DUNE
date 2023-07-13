@@ -27,15 +27,10 @@ class WideHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _WideHomeScreenState extends ConsumerState<WideHomeScreen> {
-  bool showBackButton() {
-    RegExp exp = RegExp(r'/\w[^/]');
-    return exp.allMatches(AppRouter.currentLocation).length != 1;
-  }
-
   @override
   void initState() {
     GoRouter.of(context).routerDelegate.addListener(() {
-      final shouldShowBackButton = showBackButton();
+      final shouldShowBackButton = AppRouter.canPop();
       if (shouldShowBackButton != ref.watch(showBackButtonProvider)) {
         ref
             .read(showBackButtonProvider.notifier)

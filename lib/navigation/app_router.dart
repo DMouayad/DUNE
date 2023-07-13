@@ -130,4 +130,9 @@ class AppRouter {
         ),
     };
   }
+
+  static bool canPop() {
+    RegExp exp = RegExp(r'/\w[^/]');
+    return exp.allMatches(AppRouter.currentLocation).length != 1;
+  }
 }
