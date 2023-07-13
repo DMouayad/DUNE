@@ -13,25 +13,9 @@ const IsarThumbnailsSetSchema = Schema(
   name: r'IsarThumbnailsSet',
   id: -8661044366606144861,
   properties: {
-    r'hashCode': PropertySchema(
-      id: 0,
-      name: r'hashCode',
-      type: IsarType.long,
-    ),
-    r'stringify': PropertySchema(
-      id: 1,
-      name: r'stringify',
-      type: IsarType.bool,
-    ),
     r'thumbnails': PropertySchema(
-      id: 2,
+      id: 0,
       name: r'thumbnails',
-      type: IsarType.objectList,
-      target: r'IsarThumbnail',
-    ),
-    r'thumbnailsList': PropertySchema(
-      id: 3,
-      name: r'thumbnailsList',
       type: IsarType.objectList,
       target: r'IsarThumbnail',
     )
@@ -57,15 +41,6 @@ int _isarThumbnailsSetEstimateSize(
           IsarThumbnailSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  bytesCount += 3 + object.thumbnailsList.length * 3;
-  {
-    final offsets = allOffsets[IsarThumbnail]!;
-    for (var i = 0; i < object.thumbnailsList.length; i++) {
-      final value = object.thumbnailsList[i];
-      bytesCount +=
-          IsarThumbnailSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
   return bytesCount;
 }
 
@@ -75,19 +50,11 @@ void _isarThumbnailsSetSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.hashCode);
-  writer.writeBool(offsets[1], object.stringify);
   writer.writeObjectList<IsarThumbnail>(
-    offsets[2],
+    offsets[0],
     allOffsets,
     IsarThumbnailSchema.serialize,
     object.thumbnails,
-  );
-  writer.writeObjectList<IsarThumbnail>(
-    offsets[3],
-    allOffsets,
-    IsarThumbnailSchema.serialize,
-    object.thumbnailsList,
   );
 }
 
@@ -97,15 +64,7 @@ IsarThumbnailsSet _isarThumbnailsSetDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = IsarThumbnailsSet(
-    thumbnailsList: reader.readObjectList<IsarThumbnail>(
-          offsets[3],
-          IsarThumbnailSchema.deserialize,
-          allOffsets,
-          IsarThumbnail(),
-        ) ??
-        const [],
-  );
+  final object = IsarThumbnailsSet();
   return object;
 }
 
@@ -117,10 +76,6 @@ P _isarThumbnailsSetDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
-    case 1:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 2:
       return (reader.readObjectList<IsarThumbnail>(
             offset,
             IsarThumbnailSchema.deserialize,
@@ -128,14 +83,6 @@ P _isarThumbnailsSetDeserializeProp<P>(
             IsarThumbnail(),
           ) ??
           []) as P;
-    case 3:
-      return (reader.readObjectList<IsarThumbnail>(
-            offset,
-            IsarThumbnailSchema.deserialize,
-            allOffsets,
-            IsarThumbnail(),
-          ) ??
-          const []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -143,90 +90,6 @@ P _isarThumbnailsSetDeserializeProp<P>(
 
 extension IsarThumbnailsSetQueryFilter
     on QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QFilterCondition> {
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      hashCodeEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'hashCode',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      hashCodeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'hashCode',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      hashCodeLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'hashCode',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      hashCodeBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'hashCode',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      stringifyIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'stringify',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      stringifyIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'stringify',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      stringifyEqualTo(bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'stringify',
-        value: value,
-      ));
-    });
-  }
-
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
       thumbnailsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
@@ -315,95 +178,6 @@ extension IsarThumbnailsSetQueryFilter
       );
     });
   }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'thumbnailsList',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
 }
 
 extension IsarThumbnailsSetQueryObject
@@ -412,13 +186,6 @@ extension IsarThumbnailsSetQueryObject
       thumbnailsElement(FilterQuery<IsarThumbnail> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'thumbnails');
-    });
-  }
-
-  QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsListElement(FilterQuery<IsarThumbnail> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'thumbnailsList');
     });
   }
 }

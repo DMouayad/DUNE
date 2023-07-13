@@ -11,6 +11,9 @@ part 'isar_thumbnails_set.g.dart';
   'derived',
   'any',
   'onlyLocalThumbnailsSet',
+  'hashCode',
+  'stringify',
+  'thumbnailsList',
 })
 class IsarThumbnailsSet extends ThumbnailsSet {
   @override
