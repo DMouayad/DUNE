@@ -2,6 +2,7 @@ import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart'
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -31,6 +32,7 @@ final class YoutubeTrackDataSource implements BaseRemoteTrackDataSource {
                 format: e.container.name,
                 bitrateInKb: e.bitrate.kiloBitsPerSecond,
                 totalBytes: e.size.totalBytes,
+                musicSource: MusicSource.youtube,
               ))
           .toList();
       ytExplode.close();
