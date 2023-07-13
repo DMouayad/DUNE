@@ -13,9 +13,9 @@ const IsarThumbnailsSetSchema = Schema(
   name: r'IsarThumbnailsSet',
   id: -8661044366606144861,
   properties: {
-    r'thumbnails': PropertySchema(
+    r'thumbnailsList': PropertySchema(
       id: 0,
-      name: r'thumbnails',
+      name: r'thumbnailsList',
       type: IsarType.objectList,
       target: r'IsarThumbnail',
     )
@@ -32,11 +32,11 @@ int _isarThumbnailsSetEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.thumbnails.length * 3;
+  bytesCount += 3 + object.thumbnailsList.length * 3;
   {
     final offsets = allOffsets[IsarThumbnail]!;
-    for (var i = 0; i < object.thumbnails.length; i++) {
-      final value = object.thumbnails[i];
+    for (var i = 0; i < object.thumbnailsList.length; i++) {
+      final value = object.thumbnailsList[i];
       bytesCount +=
           IsarThumbnailSchema.estimateSize(value, offsets, allOffsets);
     }
@@ -54,7 +54,7 @@ void _isarThumbnailsSetSerialize(
     offsets[0],
     allOffsets,
     IsarThumbnailSchema.serialize,
-    object.thumbnails,
+    object.thumbnailsList,
   );
 }
 
@@ -64,7 +64,15 @@ IsarThumbnailsSet _isarThumbnailsSetDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = IsarThumbnailsSet();
+  final object = IsarThumbnailsSet(
+    thumbnailsList: reader.readObjectList<IsarThumbnail>(
+          offsets[0],
+          IsarThumbnailSchema.deserialize,
+          allOffsets,
+          IsarThumbnail(),
+        ) ??
+        const [],
+  );
   return object;
 }
 
@@ -82,7 +90,7 @@ P _isarThumbnailsSetDeserializeProp<P>(
             allOffsets,
             IsarThumbnail(),
           ) ??
-          []) as P;
+          const []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -91,10 +99,10 @@ P _isarThumbnailsSetDeserializeProp<P>(
 extension IsarThumbnailsSetQueryFilter
     on QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QFilterCondition> {
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsLengthEqualTo(int length) {
+      thumbnailsListLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         length,
         true,
         length,
@@ -104,10 +112,10 @@ extension IsarThumbnailsSetQueryFilter
   }
 
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsIsEmpty() {
+      thumbnailsListIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         0,
         true,
         0,
@@ -117,10 +125,10 @@ extension IsarThumbnailsSetQueryFilter
   }
 
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsIsNotEmpty() {
+      thumbnailsListIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         0,
         false,
         999999,
@@ -130,13 +138,13 @@ extension IsarThumbnailsSetQueryFilter
   }
 
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsLengthLessThan(
+      thumbnailsListLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         0,
         true,
         length,
@@ -146,13 +154,13 @@ extension IsarThumbnailsSetQueryFilter
   }
 
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsLengthGreaterThan(
+      thumbnailsListLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         length,
         include,
         999999,
@@ -162,7 +170,7 @@ extension IsarThumbnailsSetQueryFilter
   }
 
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsLengthBetween(
+      thumbnailsListLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -170,7 +178,7 @@ extension IsarThumbnailsSetQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'thumbnails',
+        r'thumbnailsList',
         lower,
         includeLower,
         upper,
@@ -183,9 +191,9 @@ extension IsarThumbnailsSetQueryFilter
 extension IsarThumbnailsSetQueryObject
     on QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QFilterCondition> {
   QueryBuilder<IsarThumbnailsSet, IsarThumbnailsSet, QAfterFilterCondition>
-      thumbnailsElement(FilterQuery<IsarThumbnail> q) {
+      thumbnailsListElement(FilterQuery<IsarThumbnail> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'thumbnails');
+      return query.object(q, r'thumbnailsList');
     });
   }
 }
