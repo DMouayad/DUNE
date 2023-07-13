@@ -41,9 +41,8 @@ class YoutubePlaylist extends BasePlaylist {
               .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
               .toList()),
       title: map["title"],
-      tracks: tracksDataList is Iterable
-          ? tracksDataList.map((e) => YoutubeTrack.fromMap(e)).toList()
-          : [],
+      tracks:
+          tracksDataList is Iterable ? _getPlaylistTracks(tracksDataList) : [],
       createdAt: () {
         if (map.whereKey("year") != null) {
           final year = int.tryParse(map["year"]);
@@ -51,5 +50,16 @@ class YoutubePlaylist extends BasePlaylist {
         }
       }(),
     );
+  }
+
+  static List<YoutubeTrack> _getPlaylistTracks(Iterable tracksDataList) {
+    final List<YoutubeTrack> tracks = [];
+    for (var trackMap in tracksDataList) {
+      if (trackMap is Map<String, dynamic> &&
+          trackMap.whereKey('videoId') != null) {
+        tracks.add(YoutubeTrack.fromMap(trackMap));
+      }
+    }
+    return tracks;
   }
 }
