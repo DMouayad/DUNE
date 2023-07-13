@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +12,7 @@ class ScrollableCardsView extends StatelessWidget {
     required this.scrollController,
     required this.childBuilder,
     required this.itemsState,
-    required this.itemWidth,
+    this.itemWidth,
     this.height,
     this.titleWidget,
     this.displayAsGrid = false,
@@ -20,7 +22,7 @@ class ScrollableCardsView extends StatelessWidget {
   final ScrollController? scrollController;
   final Widget Function(double cardWidth, int index) childBuilder;
   final double? height;
-  final double itemWidth;
+  final double? itemWidth;
   final bool displayAsGrid;
   final AsyncValue<({int itemCount, String? title})> itemsState;
   final Widget? titleWidget;
@@ -29,6 +31,8 @@ class ScrollableCardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLoading = itemsState.isLoading;
 
+    final itemCardWidth = itemWidth ??
+        min(220.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
     return Stack(
       children: [
         Column(
@@ -38,18 +42,17 @@ class ScrollableCardsView extends StatelessWidget {
               titleText: itemsState.valueOrNull?.title,
               title: titleWidget,
             ),
-            const SizedBox(height: 12),
             if (displayAsGrid)
               Expanded(
                 flex: 0,
                 child: SizedBox(
-                  height: height ?? itemWidth,
+                  height: height ?? itemCardWidth,
                   // width: double.infinity,
                   child: GridView.builder(
                     // shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: itemWidth,
-                      crossAxisSpacing: (height ?? 0) > itemWidth ? 8 : 0,
+                      maxCrossAxisExtent: itemCardWidth,
+                      crossAxisSpacing: (height ?? 0) > itemCardWidth ? 8 : 0,
                     ),
                     controller: scrollController,
                     physics: context.isDesktopPlatform
@@ -63,7 +66,7 @@ class ScrollableCardsView extends StatelessWidget {
                       return _itemBuilder(
                         index,
                         isLoading,
-                        itemWidth,
+                        itemCardWidth,
                         showDuration: const Duration(milliseconds: 200),
                         delayDuration: const Duration(milliseconds: 80),
                       );
@@ -74,7 +77,7 @@ class ScrollableCardsView extends StatelessWidget {
             else
               Expanded(
                 child: ListView.builder(
-                  itemExtent: itemWidth,
+                  itemExtent: itemCardWidth,
                   controller: scrollController,
                   physics: context.isDesktopPlatform
                       ? const NeverScrollableScrollPhysics()
@@ -85,7 +88,7 @@ class ScrollableCardsView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsetsDirectional.only(end: 8),
-                      child: _itemBuilder(index, isLoading, itemWidth),
+                      child: _itemBuilder(index, isLoading, itemCardWidth),
                     );
                   },
                 ),
@@ -103,25 +106,27 @@ class ScrollableCardsView extends StatelessWidget {
                 onNext: () {
                   // first calculate the number of visible cards
                   final currentDisplayedItemsCount =
-                      (scrollController!.position.viewportDimension / itemWidth)
+                      (scrollController!.position.viewportDimension /
+                              itemCardWidth)
                           .floor();
                   // change the scrollController position to be after the position
                   // of all visible cards which is equal to:
-                  // (itemWidth * currentDisplayedItemsCount)
+                  // (itemCardWidth * currentDisplayedItemsCount)
                   scrollController!.animateTo(
                     scrollController!.position.pixels +
-                        (itemWidth * currentDisplayedItemsCount),
+                        (itemCardWidth * currentDisplayedItemsCount),
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.ease,
                   );
                 },
                 onPrevious: () {
                   final currentDisplayedItemCount =
-                      (scrollController!.position.viewportDimension / itemWidth)
+                      (scrollController!.position.viewportDimension /
+                              itemCardWidth)
                           .floor();
                   scrollController!.animateTo(
                     scrollController!.position.pixels -
-                        (itemWidth * currentDisplayedItemCount),
+                        (itemCardWidth * currentDisplayedItemCount),
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.ease,
                   );

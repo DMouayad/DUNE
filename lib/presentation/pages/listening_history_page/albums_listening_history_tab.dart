@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
@@ -72,10 +70,7 @@ class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCardWidth =
-        min(200.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
     return ScrollableCardsView(
-      itemWidth: itemCardWidth,
       scrollController: scrollController,
       titleWidget: widget.date.hasValue && widget.albums.hasValue
           ? ListeningHistoryDateSectionHeader(

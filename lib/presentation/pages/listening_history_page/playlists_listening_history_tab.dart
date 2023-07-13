@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
@@ -30,7 +28,7 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
             ),
           )
         : ListView.builder(
-            itemExtent: 300.0,
+            itemExtent: 360.0,
             scrollDirection: Axis.vertical,
             itemCount: listeningHistoryState.isLoading
                 ? 1
@@ -73,11 +71,7 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCardWidth =
-        min(250.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
     return ScrollableCardsView(
-      itemWidth: itemCardWidth,
-      height: 360,
       scrollController: scrollController,
       titleWidget: widget.date.hasValue && widget.playlists.hasValue
           ? ListeningHistoryDateSectionHeader(
