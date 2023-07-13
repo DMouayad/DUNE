@@ -44,7 +44,7 @@ dependencies:
   equatable: ^2.0.5
   collection: ^1.17.1
   path_provider:
-  unleash: ^0.4.1
+  flagsmith: ^4.0.0
   metadata_god:
     path: ./external/metadata_god
 
@@ -75,7 +75,7 @@ flutter:
 
 msix_config:
   display_name: DUNE
-  publisher_display_name: Mouayad Alhamwi
+  publisher_display_name: DoraGon
   identity_name: mouayad.dune-music
   msix_version: 1.0.0.0
   logo_path:
