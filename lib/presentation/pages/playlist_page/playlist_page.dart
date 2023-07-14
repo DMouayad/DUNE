@@ -1,5 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/enums/music_source.dart';
@@ -43,7 +45,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
     if (ref.watch(playlistControllerProvider).hasValue) {
       final newPlaylist = ref.watch(playlistControllerProvider).value;
       if (newPlaylist?.id == widget.playlistId) {
-        if (playlist?.hasSameTracksAsOther(newPlaylist) ?? true) {
+        if (playlist?.hasSameTracksAsOther(newPlaylist) ?? false) {
           playlistState = AsyncData(playlistState.value);
           updateKeepAlive();
         } else {
@@ -70,6 +72,11 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
                     : null) ??
                 playlist?.tracks.length,
             onShuffle: playlistState.valueOrNull != null ? () {} : null,
+          ),
+          SelectionToolBar(
+            controller: ref.read(tracksSelectionControllerProvider.notifier),
+            selectionState: ref.watch(tracksSelectionControllerProvider),
+            onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
           ),
           Expanded(
             flex: 0,
@@ -99,4 +106,10 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
 
   @override
   bool get wantKeepAlive => true;
+
+  void _onSelectAllTracks(WidgetRef ref, List<BaseTrack>? tracks) {
+    ref.read(tracksSelectionControllerProvider.notifier).selectAll(
+          Map.fromEntries(tracks?.map((e) => MapEntry(e.id, e)) ?? []),
+        );
+  }
 }

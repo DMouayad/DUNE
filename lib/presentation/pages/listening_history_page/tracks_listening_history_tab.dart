@@ -22,19 +22,12 @@ class TracksListeningHistoryTab extends ConsumerWidget {
     return Column(
       children: [
         Consumer(builder: (context, ref, _) {
-          final selectionModeEnabled = ref.watch(
-              tracksSelectionControllerProvider
-                  .select((v) => v.selectionEnabled));
-
-          return selectionModeEnabled
-              ? SelectionToolBar(
-                  controller:
-                      ref.read(tracksSelectionControllerProvider.notifier),
-                  selectionState: ref.watch(tracksSelectionControllerProvider),
-                  onSelectAll: () => _onSelectAllTracks(
-                      ref, listeningHistoryState.valueOrNull),
-                )
-              : const SizedBox.shrink();
+          return SelectionToolBar(
+            controller: ref.read(tracksSelectionControllerProvider.notifier),
+            selectionState: ref.watch(tracksSelectionControllerProvider),
+            onSelectAll: () =>
+                _onSelectAllTracks(ref, listeningHistoryState.valueOrNull),
+          );
         }),
         Expanded(
           flex: 0,

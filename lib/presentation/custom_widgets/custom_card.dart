@@ -30,8 +30,8 @@ class CustomCard extends StatefulWidget {
 }
 
 class _CustomCardState extends State<CustomCard> {
-  late final defaultImagePadding = const EdgeInsets.all(6);
-  final expandedImagePadding = EdgeInsets.zero;
+  late final defaultImagePadding = const EdgeInsets.all(8);
+  final expandedImagePadding = const EdgeInsets.all(2);
   late EdgeInsets imagePadding;
 
   @override
@@ -65,21 +65,25 @@ class _CustomCardState extends State<CustomCard> {
           child: Column(
             children: [
               Expanded(
-                child: AnimatedPadding(
+                child: AnimatedContainer(
                   padding: imagePadding,
                   duration: const Duration(milliseconds: 150),
-                  child: Card(
-                    elevation: 4,
-                    clipBehavior: Clip.antiAlias,
-                    shape: widget.shape == BoxShape.rectangle
-                        ? RoundedRectangleBorder(
-                            borderRadius: rectangleBorderRadius)
-                        : const CircleBorder(),
-                    child: ThumbnailWidget(
-                      thumbnailsSet: widget.thumbnails,
-                      dimension: widget.width,
-                      placeholder: widget.thumbImagePlaceholder,
-                    ),
+                  margin: EdgeInsets.zero,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.colorScheme.onSurface.withOpacity(.1),
+                        spreadRadius: 2,
+                      )
+                    ],
+                    borderRadius: rectangleBorderRadius,
+                    shape: widget.shape,
+                  ),
+                  child: ThumbnailWidget(
+                    thumbnailsSet: widget.thumbnails,
+                    dimension: widget.width,
+                    placeholder: widget.thumbImagePlaceholder,
                   ),
                 ),
               ),

@@ -37,70 +37,64 @@ class TrackCardWrapper extends ConsumerWidget {
     final tappingEnabled = onPlayTrack != null || isSelected;
     return fluent.FlyoutTarget(
       controller: flyoutController,
-      child: MediaQuery(
-        data: context.mediaQuery.copyWith(
-          textScaleFactor: context.isDesktop ? 1.1 : 1.0,
-        ),
-        child: OptionalParentWidget(
-          parentWidgetBuilder: (child) {
-            return Tooltip(
-              message: isSelected ? "Tap to unselect" : "Tap to play",
-              waitDuration: const Duration(milliseconds: 500),
-              child: child,
-            );
-          },
-          condition: tappingEnabled,
-          childWidget: Material(
-            color: cardColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: isSelected
-                  ? BorderSide(
-                      color: context.colorScheme.onPrimaryContainer
-                          .withOpacity(.7),
-                      // strokeAlign: BorderSide.strokeAlignOutside,
-                      width: 1.3,
-                    )
-                  : BorderSide.none,
-            ),
-            borderOnForeground: true,
-            child: DraggableTrackCard(
-              child: InkWell(
-                onSecondaryTapUp: (tapDetails) {
-                  if (!context.isDesktopPlatform || isSelected) return;
-                  // This calculates the position of the flyout according to the parent navigator
-                  final box = context.findRenderObject() as RenderBox;
-                  final position = box.localToGlobal(
-                    tapDetails.localPosition,
-                    ancestor: Navigator.of(context).context.findRenderObject(),
-                  );
-                  flyoutController.showFlyout(
-                    barrierColor: Colors.transparent,
-                    position: position,
-                    builder: (context) {
-                      return TrackPopupMenu(
-                        track,
-                        onDelete: onDelete,
-                        onDownload: onDownload,
-                      );
-                    },
-                  );
-                },
-                hoverColor: tappingEnabled
-                    ? context.colorScheme.primaryContainer
-                    : context.colorScheme.surfaceVariant,
-                mouseCursor: tappingEnabled ? null : MouseCursor.defer,
-                focusColor: context.colorScheme.primaryContainer,
-                customBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                onTap: () => onTap(ref),
+      child: OptionalParentWidget(
+        parentWidgetBuilder: (child) {
+          return Tooltip(
+            message: isSelected ? "Tap to unselect" : "Tap to play",
+            waitDuration: const Duration(milliseconds: 1000),
+            child: child,
+          );
+        },
+        condition: tappingEnabled,
+        childWidget: Material(
+          color: cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: isSelected
+                ? BorderSide(
+                    color:
+                        context.colorScheme.onPrimaryContainer.withOpacity(.9),
+                    // strokeAlign: BorderSide.strokeAlignOutside,
+                    width: 1.3,
+                  )
+                : BorderSide.none,
+          ),
+          borderOnForeground: true,
+          child: DraggableTrackCard(
+            child: InkWell(
+              onSecondaryTapUp: (tapDetails) {
+                if (!context.isDesktopPlatform || isSelected) return;
+                // This calculates the position of the flyout according to the parent navigator
+                final box = context.findRenderObject() as RenderBox;
+                final position = box.localToGlobal(
+                  tapDetails.localPosition,
+                  ancestor: Navigator.of(context).context.findRenderObject(),
+                );
+                flyoutController.showFlyout(
+                  barrierColor: Colors.transparent,
+                  position: position,
+                  builder: (context) {
+                    return TrackPopupMenu(
+                      track,
+                      onDelete: onDelete,
+                      onDownload: onDownload,
+                    );
+                  },
+                );
+              },
+              hoverColor: tappingEnabled
+                  ? context.colorScheme.primaryContainer
+                  : context.colorScheme.surfaceVariant,
+              mouseCursor: tappingEnabled ? null : MouseCursor.defer,
+              focusColor: context.colorScheme.primaryContainer,
+              customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                  child: child,
-                ),
+              ),
+              onTap: () => onTap(ref),
+              borderRadius: BorderRadius.circular(10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                child: child,
               ),
             ),
           ),
