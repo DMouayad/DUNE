@@ -3,6 +3,7 @@ import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
+import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,16 @@ class TrackCard extends StatelessWidget {
     required this.track,
     required this.color,
     required this.onPlayTrack,
+    required this.selectionState,
+    required this.onSelected,
   });
 
   final BaseTrack track;
   final Color color;
   final void Function() onPlayTrack;
+
+  final SelectionState<BaseTrack> selectionState;
+  final void Function(BaseTrack) onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +34,8 @@ class TrackCard extends StatelessWidget {
       track: track,
       onPlayTrack: onPlayTrack,
       cardColor: color,
+      selectionState: selectionState,
+      onSelected: onSelected,
       child: TrackCardMainContent(track: track),
     );
   }

@@ -1,12 +1,19 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_record.dart';
+import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/track_card.dart';
 import 'package:dune/presentation/custom_widgets/track_card_wrapper.dart';
+import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+final tracksRecordsSelectionControllerProvider = StateNotifierProvider<
+    SelectionController<BaseTrack>, SelectionState<BaseTrack>>(
+  (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
+);
 
 class TracksRecordsListView extends ConsumerWidget {
   final List<BaseTrackRecord> tracksRecordsState;
@@ -79,6 +86,12 @@ class TrackRecordCard extends ConsumerWidget {
     );
     return TrackCardWrapper(
       track: track,
+      selectionState: ref.watch(tracksRecordsSelectionControllerProvider),
+      onSelected: (track) {
+        ref
+            .read(tracksRecordsSelectionControllerProvider.notifier)
+            .toggleSelectionForItem(track.id, track);
+      },
       cardColor: color,
       child: Stack(
         children: [

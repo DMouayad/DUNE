@@ -1,8 +1,10 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
+import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -37,6 +39,10 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
     with AutomaticKeepAliveClientMixin<PlaylistPage> {
   AsyncValue<BasePlaylist?> playlistState = const AsyncValue.loading();
   BasePlaylist? playlist;
+
+  late final selectionController = TracksSelectionControllerProvider(
+    (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +80,14 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
             onShuffle: playlistState.valueOrNull != null ? () {} : null,
           ),
           SelectionToolBar(
-            controller: ref.read(tracksSelectionControllerProvider.notifier),
-            selectionState: ref.watch(tracksSelectionControllerProvider),
+            controller: ref.read(selectionController.notifier),
+            selectionState: ref.watch(selectionController),
             onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
           ),
           Expanded(
             flex: 0,
             child: TracksListView(
+              selectionControllerProvider: selectionController,
               playlistState.map(
                 data: (playlistState) =>
                     AsyncValue.data(playlistState.value?.tracks ?? []),
@@ -108,7 +115,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
   bool get wantKeepAlive => true;
 
   void _onSelectAllTracks(WidgetRef ref, List<BaseTrack>? tracks) {
-    ref.read(tracksSelectionControllerProvider.notifier).selectAll(
+    ref.read(selectionController.notifier).selectAll(
           Map.fromEntries(tracks?.map((e) => MapEntry(e.id, e)) ?? []),
         );
   }

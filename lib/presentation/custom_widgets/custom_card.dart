@@ -54,11 +54,10 @@ class _CustomCardState extends State<CustomCard> {
         onTap: widget.onTap,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: widget.shape == BoxShape.rectangle
-                ? rectangleBorderRadius
-                : null,
+            borderRadius:
+                widget.shape == BoxShape.circle ? null : rectangleBorderRadius,
             color: widget.shape == BoxShape.rectangle
-                ? context.colorScheme.surfaceVariant
+                ? context.colorScheme.surfaceVariant.withOpacity(.7)
                 : null,
             shape: widget.shape,
           ),
@@ -77,10 +76,13 @@ class _CustomCardState extends State<CustomCard> {
                         spreadRadius: 2,
                       )
                     ],
-                    borderRadius: rectangleBorderRadius,
+                    borderRadius: widget.shape == BoxShape.circle
+                        ? null
+                        : rectangleBorderRadius,
                     shape: widget.shape,
                   ),
                   child: ThumbnailWidget(
+                    shape: widget.shape,
                     thumbnailsSet: widget.thumbnails,
                     dimension: widget.width,
                     placeholder: widget.thumbImagePlaceholder,

@@ -1,3 +1,4 @@
+import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/models/selection_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,10 +35,13 @@ class SelectionController<V extends Object>
   }
 
   void cancelSelection() {
-    state = state.initialState();
+    state = SelectionState.initialState();
   }
 
   void clearSelections() {
     state = SelectionState(true, {});
   }
 }
+
+typedef TracksSelectionControllerProvider = AutoDisposeStateNotifierProvider<
+    SelectionController<BaseTrack>, SelectionState<BaseTrack>>;

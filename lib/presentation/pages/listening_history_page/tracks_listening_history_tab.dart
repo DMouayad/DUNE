@@ -23,8 +23,9 @@ class TracksListeningHistoryTab extends ConsumerWidget {
       children: [
         Consumer(builder: (context, ref, _) {
           return SelectionToolBar(
-            controller: ref.read(tracksSelectionControllerProvider.notifier),
-            selectionState: ref.watch(tracksSelectionControllerProvider),
+            controller:
+                ref.read(tracksRecordsSelectionControllerProvider.notifier),
+            selectionState: ref.watch(tracksRecordsSelectionControllerProvider),
             onSelectAll: () =>
                 _onSelectAllTracks(ref, listeningHistoryState.valueOrNull),
           );
@@ -72,7 +73,7 @@ class TracksListeningHistoryTab extends ConsumerWidget {
     WidgetRef ref,
     List<BaseListeningHistory>? histories,
   ) {
-    ref.read(tracksSelectionControllerProvider.notifier).selectAll(
+    ref.read(tracksRecordsSelectionControllerProvider.notifier).selectAll(
           Map.fromEntries(
             histories
                     ?.map((e) => e.tracks)

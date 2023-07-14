@@ -1,5 +1,8 @@
+import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/presentation/custom_widgets/error_widget.dart';
+import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/pages/search_page/search_result_widgets/artists_result_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/models/search_state.dart';
@@ -14,6 +17,11 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../custom_widgets/tracks_list_view.dart';
 import 'albums_result_widget.dart';
 import 'playlists_result_widget.dart';
+
+final searchResultTracksSelectionControllerProvider =
+    TracksSelectionControllerProvider(
+  (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
+);
 
 class SearchResultsWidget extends ConsumerWidget {
   const SearchResultsWidget({super.key});
@@ -56,6 +64,8 @@ class SearchResultsWidget extends ConsumerWidget {
                               .valueOrNull?.loadingMoreOf
                               .contains(SearchFilter.songs),
                           content: TracksListView(
+                            selectionControllerProvider:
+                                searchResultTracksSelectionControllerProvider,
                             searchState.isLoading &&
                                     searchState.requireValue.songsSearchResult
                                         .data.isEmpty

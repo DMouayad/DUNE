@@ -5,8 +5,8 @@ class SelectionState<T extends Object> {
 
   SelectionState(this.selectionEnabled, this.selectedValues);
 
-  SelectionState<T> initialState() {
-    return SelectionState(false, {});
+  static SelectionState<F> initialState<F extends Object>() {
+    return SelectionState<F>(false, {});
   }
 
   SelectionState<T> copyWith({

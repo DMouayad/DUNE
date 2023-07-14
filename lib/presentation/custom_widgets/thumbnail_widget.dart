@@ -16,6 +16,7 @@ class ThumbnailWidget extends ConsumerWidget {
     required this.thumbnailsSet,
     required this.dimension,
     this.placeholder,
+    this.shape = BoxShape.rectangle,
     this.cacheNetworkImage = true,
     super.key,
   });
@@ -24,6 +25,7 @@ class ThumbnailWidget extends ConsumerWidget {
   final bool cacheNetworkImage;
   final double dimension;
   final Widget? placeholder;
+  final BoxShape shape;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -66,6 +68,7 @@ class ThumbnailWidget extends ConsumerWidget {
         child: ExtendedImage(
           image: imageProvider,
           fit: BoxFit.cover,
+          shape: shape,
           width: dimension,
           height: dimension,
           loadStateChanged: (state) {

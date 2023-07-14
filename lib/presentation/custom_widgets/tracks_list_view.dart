@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/error_widget.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/custom_widgets/track_card.dart';
@@ -15,9 +16,11 @@ class TracksListView extends ConsumerWidget {
   final EdgeInsets? itemPadding;
   final BasePlaylist? playlist;
   final void Function()? onRetryWhenErrorLoadingTracks;
+  final TracksSelectionControllerProvider selectionControllerProvider;
 
   const TracksListView(
     this.tracksState, {
+    required this.selectionControllerProvider,
     this.listPadding,
     this.itemPadding,
     this.playlist,
@@ -45,6 +48,13 @@ class TracksListView extends ConsumerWidget {
                       child: Padding(
                         padding: itemPadding ?? _getCardPadding(context),
                         child: TrackCard(
+                          selectionState:
+                              ref.watch(selectionControllerProvider),
+                          onSelected: (track) {
+                            ref
+                                .read(selectionControllerProvider.notifier)
+                                .toggleSelectionForItem(track.id, track);
+                          },
                           onPlayTrack: () {
                             if (playlist != null) {
                               ref
