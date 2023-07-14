@@ -57,7 +57,7 @@ class _CustomCardState extends State<CustomCard> {
             borderRadius:
                 widget.shape == BoxShape.circle ? null : rectangleBorderRadius,
             color: widget.shape == BoxShape.rectangle
-                ? context.colorScheme.surfaceVariant.withOpacity(.7)
+                ? context.colorScheme.surfaceVariant.withOpacity(.5)
                 : null,
             shape: widget.shape,
           ),
@@ -68,12 +68,12 @@ class _CustomCardState extends State<CustomCard> {
                   padding: imagePadding,
                   duration: const Duration(milliseconds: 150),
                   margin: EdgeInsets.zero,
+                  constraints: const BoxConstraints.expand(),
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: context.colorScheme.onSurface.withOpacity(.1),
-                        spreadRadius: 2,
+                        color: context.colorScheme.onSurface.withOpacity(.07),
                       )
                     ],
                     borderRadius: widget.shape == BoxShape.circle

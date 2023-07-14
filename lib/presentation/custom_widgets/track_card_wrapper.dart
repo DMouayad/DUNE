@@ -140,6 +140,16 @@ class TrackPopupMenu extends StatelessWidget {
           text: const Text('Select'),
           onPressed: onSelectTrack,
         ),
+        fluent.MenuFlyoutItem(
+          leading: const Icon(Icons.person, size: 12),
+          text: const Text('Go to artist page'),
+          onPressed: () {},
+        ),
+        fluent.MenuFlyoutItem(
+          leading: const Icon(Icons.album_outlined, size: 12),
+          text: const Text('Go to album page'),
+          onPressed: () {},
+        ),
         if (onDownload != null)
           fluent.MenuFlyoutItem(
             leading: const Icon(fluent.FluentIcons.download),
