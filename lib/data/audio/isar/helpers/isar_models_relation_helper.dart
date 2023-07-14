@@ -46,17 +46,26 @@ final class IsarModelsRelationHelper {
     List<int> ignoredTracksIds = const [],
     List<int> ignoredPlaylistsIds = const [],
   }) async {
+    final List<IsarPlaylist> playlists;
     final playlistsIds = List<int>.from(history.isarPlaylistsIds);
-    playlistsIds.removeWhere((e) => ignoredPlaylistsIds.contains(e));
-    final fetchingPlaylistsResult =
-        await _playlistDataSource.getWhereIsarId(playlistsIds);
-    if (fetchingPlaylistsResult.isFailure) {
-      return fetchingPlaylistsResult.mapFailure((error) => error);
+
+    if (playlistsIds.isNotEmpty) {
+      playlistsIds.removeWhere((e) => ignoredPlaylistsIds.contains(e));
+      final fetchingPlaylistsResult =
+          await _playlistDataSource.getWhereIsarId(playlistsIds);
+      if (fetchingPlaylistsResult.isFailure) {
+        return fetchingPlaylistsResult.mapFailure((error) => error);
+      }
+      playlists = fetchingPlaylistsResult.requireValue;
+    } else {
+      playlists = const [];
     }
 
     final tracksRecordsIds = List<int>.from(history.isarTrackRecordsIds);
     tracksRecordsIds.removeWhere((e) => ignoredTracksIds.contains(e));
-
+    if (tracksRecordsIds.isEmpty) {
+      return history.copyWith(playlists: playlists).asResult;
+    }
     final fetchingTracksRecordsResult =
         await _listeningHistoryDataSource.getTrackRecords(tracksRecordsIds);
     if (fetchingTracksRecordsResult.isFailure) {
@@ -65,10 +74,7 @@ final class IsarModelsRelationHelper {
     final tracksRecords = fetchingTracksRecordsResult.requireValue;
 
     return (await loadRelationsForTracksRecords(tracksRecords)).mapSuccess(
-      (value) => history.copyWith(
-        tracks: value,
-        playlists: fetchingPlaylistsResult.requireValue,
-      ),
+      (value) => history.copyWith(tracks: value, playlists: playlists),
     );
   }
 
@@ -186,6 +192,7 @@ final class IsarModelsRelationHelper {
   FutureResult<IsarTrack> loadRelationsForTrack(
     IsarTrack track, {
     String? artistIdToIgnore,
+    String? albumIdToIgnore,
   }) async {
     return await Result.fromAnother(() async {
       final List<IsarArtist> artistsOfTrack;
@@ -207,13 +214,25 @@ final class IsarModelsRelationHelper {
           artistsOfTrack = fetchingArtistsResult.asSuccess.value;
         }
       }
-
-      if (track.albumId == null) {
+      if (track.albumId == null || track.albumId == albumIdToIgnore) {
         return track.copyWith(artists: artistsOfTrack).asResult;
       }
-      return (await _albumDataSource.find(track.albumId!)).mapSuccess((album) {
-        // return the track with acquired artists and album.
-        return track.copyWith(album: album, artists: artistsOfTrack);
+      return (await _albumDataSource.find(track.albumId!))
+          .flatMapSuccessAsync((album) async {
+        if (album == null) {
+          return track.copyWith(artists: artistsOfTrack).asResult;
+        }
+        return (await loadRelationsForAlbum(
+          album,
+          trackIdToIgnore: track.id,
+          withTracks: false,
+        ))
+            .mapSuccess((albumWithRelations) {
+          return track.copyWith(
+            album: albumWithRelations,
+            artists: artistsOfTrack,
+          );
+        });
       });
     });
   }
@@ -221,11 +240,14 @@ final class IsarModelsRelationHelper {
   FutureResult<List<IsarTrack>> loadRelationsForTracks(
     List<IsarTrack> tracks, {
     String? artistIdToIgnore,
+    String? albumIdToIgnore,
   }) async {
     return await _loadRelationsForMany(
       tracks,
-      (t) => loadRelationsForTrack(t, artistIdToIgnore: artistIdToIgnore),
-      itemRelationsAlreadyLoaded: (track) => track.artists.isNotEmpty,
+      (t) => loadRelationsForTrack(t,
+          artistIdToIgnore: artistIdToIgnore, albumIdToIgnore: albumIdToIgnore),
+      itemRelationsAlreadyLoaded: (track) =>
+          track.artists.isNotEmpty && track.album != null,
     );
   }
 
@@ -251,7 +273,65 @@ final class IsarModelsRelationHelper {
     });
   }
 
-  FutureResult<IsarAlbum> loadRelationsForAlbum(IsarAlbum value) async {
-    throw UnimplementedError();
+  FutureResult<IsarAlbum> loadRelationsForAlbum(
+    IsarAlbum album, {
+    bool withArtists = true,
+    bool withTracks = true,
+    String? artistIdToIgnore,
+    String? trackIdToIgnore,
+  }) async {
+    return await Result.fromAnother(() async {
+      if (!withArtists && !withArtists) return album.asResult;
+
+      final List<IsarArtist> artistsOfAlbum;
+      final List<IsarTrack> tracksOfAlbum;
+      if (withArtists) {
+        // check if artists relation has already been loaded
+        if (album.artists.isNotEmpty && album.artists is List<IsarArtist>) {
+          artistsOfAlbum = album.artists as List<IsarArtist>;
+        } else {
+          final artistsIds = List<String>.from(album.featuredArtistsIds);
+          if (album.albumArtistId != null) {
+            artistsIds.add(album.albumArtistId!);
+          }
+          artistsIds.remove(artistIdToIgnore);
+          if (artistsIds.isEmpty) {
+            // no artists to load so the artists list is empty
+            artistsOfAlbum = const [];
+          } else {
+            final fetchingArtistsResult =
+                await _artistDataSource.getWhereIds(artistsIds);
+            if (fetchingArtistsResult.isFailure) {
+              return fetchingArtistsResult.mapFailure((error) => error);
+            }
+            artistsOfAlbum = fetchingArtistsResult.asSuccess.value;
+          }
+        }
+      } else {
+        artistsOfAlbum = const [];
+      }
+      if (withTracks) {
+        if (album.tracksIds.isEmpty) {
+          return album.copyWith(artists: artistsOfAlbum).asResult;
+        }
+        return (await _trackDataSource.getWhereIds(album.tracksIds))
+            .flatMapSuccessAsync((tracks) async {
+          if (tracks.isEmpty) {
+            return album.copyWith(artists: artistsOfAlbum).asResult;
+          }
+          return (await loadRelationsForTracks(tracks,
+                  albumIdToIgnore: album.id))
+              .mapSuccess((tracksWithRelations) {
+            return album.copyWith(
+                tracks: tracksWithRelations, artists: artistsOfAlbum);
+          });
+        });
+      } else {
+        tracksOfAlbum = const [];
+        return album
+            .copyWith(artists: artistsOfAlbum, tracks: tracksOfAlbum)
+            .asResult;
+      }
+    });
   }
 }
