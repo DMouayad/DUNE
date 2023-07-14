@@ -57,9 +57,9 @@ base class ListeningHistoryHelper {
   }
 
   void addPlaylistToListeningHistory(PlayerState state) {
-    // if (state.currentPlaylistNotNull) {
-    //   addPlaylistToTodayListeningHistory(state.currentPlaylist!);
-    // }
+    if (state.currentPlaylistNotNull) {
+      addPlaylistToTodayListeningHistory(state.currentPlaylist!);
+    }
   }
 
   void onBufferingStateChanged(bool value, PlayerState state) {

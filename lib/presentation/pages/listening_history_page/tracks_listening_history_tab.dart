@@ -2,6 +2,7 @@ import 'package:dune/domain/audio/base_models/base_play_history.dart';
 import 'package:dune/domain/audio/base_models/base_track_record.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,10 +15,24 @@ class TracksListeningHistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final listeningHistoryState = ref.watch(listeningHistoryControllerProvider);
+    final listeningHistoryState = ref
+        .watch(listeningHistoryControllerProvider)
+        .whenData(
+            (value) => value.where((history) => history.tracks.isNotEmpty));
     if (!listeningHistoryState.isLoading && !listeningHistoryState.hasValue) {
       return const Center(
           child: Text("Failed Loading songs listening history"));
+    }
+    if (listeningHistoryState.hasValue &&
+        (listeningHistoryState.value?.isEmpty ?? false)) {
+      return Center(
+        child: Text(
+          "You haven't played any playlists recently...",
+          style: context.textTheme.titleSmall?.copyWith(
+            color: context.colorScheme.secondary,
+          ),
+        ),
+      );
     }
     return Column(
       children: [
@@ -26,8 +41,8 @@ class TracksListeningHistoryTab extends ConsumerWidget {
             controller:
                 ref.read(tracksRecordsSelectionControllerProvider.notifier),
             selectionState: ref.watch(tracksRecordsSelectionControllerProvider),
-            onSelectAll: () =>
-                _onSelectAllTracks(ref, listeningHistoryState.valueOrNull),
+            onSelectAll: () => _onSelectAllTracks(
+                ref, listeningHistoryState.valueOrNull?.toList()),
           );
         }),
         Expanded(
