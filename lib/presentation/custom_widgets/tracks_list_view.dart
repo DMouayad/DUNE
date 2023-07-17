@@ -16,7 +16,8 @@ class TracksListView extends ConsumerWidget {
   final EdgeInsets? itemPadding;
   final BasePlaylist? playlist;
   final void Function()? onRetryWhenErrorLoadingTracks;
-  final TracksSelectionControllerProvider selectionControllerProvider;
+  final AutoDisposeStateNotifierProvider<SelectionController<BaseTrack>,
+      SelectionState<BaseTrack>> selectionControllerProvider;
 
   const TracksListView(
     this.tracksState, {

@@ -2,7 +2,6 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/presentation/custom_widgets/error_widget.dart';
-import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/pages/search_page/search_result_widgets/artists_result_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/models/search_state.dart';
@@ -19,7 +18,8 @@ import 'albums_result_widget.dart';
 import 'playlists_result_widget.dart';
 
 final searchResultTracksSelectionControllerProvider =
-    TracksSelectionControllerProvider(
+    AutoDisposeStateNotifierProvider<SelectionController<BaseTrack>,
+        SelectionState<BaseTrack>>(
   (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
 );
 

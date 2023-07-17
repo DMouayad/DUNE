@@ -1,6 +1,6 @@
-import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/presentation/models/selection_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dune/presentation/models/selection_state.dart';
+export 'package:dune/presentation/models/selection_state.dart';
 
 class SelectionController<V extends Object>
     extends StateNotifier<SelectionState<V>> {
@@ -42,6 +42,3 @@ class SelectionController<V extends Object>
     state = SelectionState(true, {});
   }
 }
-
-typedef TracksSelectionControllerProvider = AutoDisposeStateNotifierProvider<
-    SelectionController<BaseTrack>, SelectionState<BaseTrack>>;

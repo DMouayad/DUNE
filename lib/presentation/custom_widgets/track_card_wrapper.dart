@@ -87,9 +87,8 @@ class TrackCardWrapper extends StatelessWidget {
                   },
                 );
               },
-              hoverColor: tappingEnabled
-                  ? context.colorScheme.primaryContainer
-                  : context.colorScheme.surfaceVariant,
+              hoverColor:
+                  tappingEnabled ? context.colorScheme.primaryContainer : null,
               mouseCursor: tappingEnabled ? null : MouseCursor.defer,
               focusColor: context.colorScheme.primaryContainer,
               customBorder: RoundedRectangleBorder(
