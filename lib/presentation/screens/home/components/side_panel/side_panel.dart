@@ -28,7 +28,7 @@ class SidePanel extends ConsumerWidget {
         .watch(appThemeControllerProvider.select((value) => value.cardColor));
     final maxWidth = context.maxNavRailWidth;
 
-    final railWidth = ref.watch(navigationRailSizeProvider) ?? maxWidth;
+    final railWidth = ref.watch(navigationRailSizeProvider) ?? minWidth;
     final extended = railWidth > 180;
     final playerState = ref.watch(playbackControllerProvider);
 
