@@ -53,6 +53,11 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
   Widget build(BuildContext context) {
     super.build(context);
 
+    if (ref.watch(playlistControllerProvider).hasError) {
+      playlistState = ref.watch(playlistControllerProvider);
+      playlist = null;
+      updateKeepAlive();
+    }
     if (ref.watch(playlistControllerProvider).hasValue) {
       final newPlaylist = ref.watch(playlistControllerProvider).value;
       if (newPlaylist?.id == widget.playlistId) {
@@ -66,6 +71,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
         }
       }
     }
+
     return SingleChildScrollView(
       primary: false,
       padding: const EdgeInsets.only(bottom: 50),
@@ -93,13 +99,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
             flex: 0,
             child: TracksListView(
               selectionControllerProvider: selectionController,
-              playlistState.map(
-                data: (playlistState) =>
-                    AsyncValue.data(playlistState.value?.tracks ?? []),
-                error: (errorState) =>
-                    AsyncValue.error(errorState.error, errorState.stackTrace),
-                loading: (_) => const AsyncValue.loading(),
-              ),
+              playlistState.whenData((data) => data?.tracks ?? []),
               playlist: playlistState.whenData((value) => value).valueOrNull,
               onRetryWhenErrorLoadingTracks: () {
                 if (widget.musicSource != null) {
