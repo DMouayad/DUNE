@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 
 part 'isar_material_color.g.dart';
 
-@Embedded(ignore: {'swatch'})
+@Embedded(ignore: {'swatch', 'toMaterialColor'})
 class IsarMaterialColor {
   final int? primary;
 
@@ -51,18 +51,24 @@ class IsarMaterialColor {
     this.shade900,
   });
 
-  Map<int, Color> get swatch => {
-        50: Color(shade50!),
-        100: Color(shade100!),
-        200: Color(shade200!),
-        300: Color(shade300!),
-        400: Color(shade400!),
-        500: Color(shade500!),
-        600: Color(shade600!),
-        700: Color(shade700!),
-        800: Color(shade800!),
-        900: Color(shade900!),
-      };
+  Map<int, Color> get swatch {
+    return {
+      50: Color(shade50!),
+      100: Color(shade100!),
+      200: Color(shade200!),
+      300: Color(shade300!),
+      400: Color(shade400!),
+      500: Color(shade500!),
+      600: Color(shade600!),
+      700: Color(shade700!),
+      800: Color(shade800!),
+      900: Color(shade900!),
+    };
+  }
+
+  MaterialColor get toMaterialColor {
+    return MaterialColor(primary!, swatch);
+  }
 
   static IsarMaterialColor? fromMaterialColor(MaterialColor? primaryColor) {
     if (primaryColor == null) return null;

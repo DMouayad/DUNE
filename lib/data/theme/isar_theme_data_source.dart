@@ -4,6 +4,8 @@ import 'package:dune/domain/theme/base_theme_data_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:isar/isar.dart';
 
+import 'isar_material_color.dart';
+
 class IsarThemeDataSource extends BaseThemeDataSource {
   const IsarThemeDataSource(this._isar, super.fallbackAccentColor);
 
@@ -25,7 +27,8 @@ class IsarThemeDataSource extends BaseThemeDataSource {
         await _isar.isarAppThemes.put(IsarAppTheme(
           themeMode: instance.themeMode,
           windowEffect: instance.windowEffect,
-          primaryColor: instance.primaryColor,
+          isarPrimaryColor:
+              IsarMaterialColor.fromMaterialColor(instance.primaryColor),
         ));
       });
       return SuccessResult.voidResult();

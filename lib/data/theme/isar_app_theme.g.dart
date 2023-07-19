@@ -17,14 +17,20 @@ const IsarAppThemeSchema = CollectionSchema(
   name: r'IsarAppTheme',
   id: 930812106080800971,
   properties: {
-    r'themeMode': PropertySchema(
+    r'isarPrimaryColor': PropertySchema(
       id: 0,
+      name: r'isarPrimaryColor',
+      type: IsarType.object,
+      target: r'IsarMaterialColor',
+    ),
+    r'themeMode': PropertySchema(
+      id: 1,
       name: r'themeMode',
       type: IsarType.byte,
       enumMap: _IsarAppThemethemeModeEnumValueMap,
     ),
     r'windowEffect': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'windowEffect',
       type: IsarType.byte,
       enumMap: _IsarAppThemewindowEffectEnumValueMap,
@@ -37,7 +43,7 @@ const IsarAppThemeSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'IsarMaterialColor': IsarMaterialColorSchema},
   getId: _isarAppThemeGetId,
   getLinks: _isarAppThemeGetLinks,
   attach: _isarAppThemeAttach,
@@ -50,6 +56,14 @@ int _isarAppThemeEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.isarPrimaryColor;
+    if (value != null) {
+      bytesCount += 3 +
+          IsarMaterialColorSchema.estimateSize(
+              value, allOffsets[IsarMaterialColor]!, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
@@ -59,8 +73,14 @@ void _isarAppThemeSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeByte(offsets[0], object.themeMode.index);
-  writer.writeByte(offsets[1], object.windowEffect.index);
+  writer.writeObject<IsarMaterialColor>(
+    offsets[0],
+    allOffsets,
+    IsarMaterialColorSchema.serialize,
+    object.isarPrimaryColor,
+  );
+  writer.writeByte(offsets[1], object.themeMode.index);
+  writer.writeByte(offsets[2], object.windowEffect.index);
 }
 
 IsarAppTheme _isarAppThemeDeserialize(
@@ -71,11 +91,16 @@ IsarAppTheme _isarAppThemeDeserialize(
 ) {
   final object = IsarAppTheme(
     id: id,
+    isarPrimaryColor: reader.readObjectOrNull<IsarMaterialColor>(
+      offsets[0],
+      IsarMaterialColorSchema.deserialize,
+      allOffsets,
+    ),
     themeMode:
-        _IsarAppThemethemeModeValueEnumMap[reader.readByteOrNull(offsets[0])] ??
+        _IsarAppThemethemeModeValueEnumMap[reader.readByteOrNull(offsets[1])] ??
             ThemeMode.system,
     windowEffect: _IsarAppThemewindowEffectValueEnumMap[
-            reader.readByteOrNull(offsets[1])] ??
+            reader.readByteOrNull(offsets[2])] ??
         WindowEffect.solid,
   );
   return object;
@@ -89,10 +114,16 @@ P _isarAppThemeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readObjectOrNull<IsarMaterialColor>(
+        offset,
+        IsarMaterialColorSchema.deserialize,
+        allOffsets,
+      )) as P;
+    case 1:
       return (_IsarAppThemethemeModeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ThemeMode.system) as P;
-    case 1:
+    case 2:
       return (_IsarAppThemewindowEffectValueEnumMap[
               reader.readByteOrNull(offset)] ??
           WindowEffect.solid) as P;
@@ -321,6 +352,24 @@ extension IsarAppThemeQueryFilter
   }
 
   QueryBuilder<IsarAppTheme, IsarAppTheme, QAfterFilterCondition>
+      isarPrimaryColorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isarPrimaryColor',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppTheme, IsarAppTheme, QAfterFilterCondition>
+      isarPrimaryColorIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isarPrimaryColor',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppTheme, IsarAppTheme, QAfterFilterCondition>
       themeModeEqualTo(ThemeMode value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -434,7 +483,14 @@ extension IsarAppThemeQueryFilter
 }
 
 extension IsarAppThemeQueryObject
-    on QueryBuilder<IsarAppTheme, IsarAppTheme, QFilterCondition> {}
+    on QueryBuilder<IsarAppTheme, IsarAppTheme, QFilterCondition> {
+  QueryBuilder<IsarAppTheme, IsarAppTheme, QAfterFilterCondition>
+      isarPrimaryColor(FilterQuery<IsarMaterialColor> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'isarPrimaryColor');
+    });
+  }
+}
 
 extension IsarAppThemeQueryLinks
     on QueryBuilder<IsarAppTheme, IsarAppTheme, QFilterCondition> {}
@@ -527,6 +583,13 @@ extension IsarAppThemeQueryProperty
   QueryBuilder<IsarAppTheme, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<IsarAppTheme, IsarMaterialColor?, QQueryOperations>
+      isarPrimaryColorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isarPrimaryColor');
     });
   }
 

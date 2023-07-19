@@ -12,28 +12,19 @@ class AppThemeController extends StateNotifier<AppTheme> {
   final ThemeRepository themeRepository;
 
   Future<FutureOr<void>> setThemeMode(ThemeMode themeMode) async {
-    await _getNewState(
-        ((currentTheme) => currentTheme.copyWith(themeMode: themeMode)));
+    await _getNewState(state.copyWith(themeMode: themeMode));
   }
 
   Future<FutureOr<void>> setAccentColor(MaterialColor primaryColor) async {
-    await _getNewState(
-      ((currentTheme) => currentTheme.copyWith(primaryColor: primaryColor)),
-    );
+    await _getNewState(state.copyWith(primaryColor: primaryColor));
   }
 
   Future<FutureOr<void>> setWindowEffect(WindowEffect windowEffect) async {
-    await _getNewState(
-      ((currentTheme) => currentTheme.copyWith(windowEffect: windowEffect)),
-    );
+    await _getNewState(state.copyWith(windowEffect: windowEffect));
   }
 
-  Future<void> _getNewState(
-    AppTheme Function(AppTheme currentTheme) newThemeBuilder,
-  ) async {
+  Future<void> _getNewState(AppTheme newAppTheme) async {
     state = await () async {
-      final currentAppTheme = state;
-      final newAppTheme = newThemeBuilder(currentAppTheme);
       await themeRepository.updateAppTheme(newAppTheme);
       return newAppTheme;
     }();

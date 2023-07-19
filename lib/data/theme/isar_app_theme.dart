@@ -13,22 +13,13 @@ class IsarAppTheme extends AppTheme {
   factory IsarAppTheme.fromDefaultValues() {
     return IsarAppTheme(
       themeMode: ThemeMode.system,
-      primaryColor: kDefaultPrimaryColor,
+      isarPrimaryColor:
+          IsarMaterialColor.fromMaterialColor(kDefaultPrimaryColor),
       windowEffect: WindowEffect.solid,
     );
   }
 
   final Id? id;
-
-  @override
-  MaterialColor get primaryColor {
-    return _isarPrimaryColor != null
-        ? MaterialColor(
-            _isarPrimaryColor!.primary!,
-            _isarPrimaryColor!.swatch,
-          )
-        : kDefaultPrimaryColor;
-  }
 
   @override
   @enumerated
@@ -37,13 +28,15 @@ class IsarAppTheme extends AppTheme {
   @override
   @enumerated
   WindowEffect get windowEffect => super.windowEffect;
-  late final IsarMaterialColor? _isarPrimaryColor;
+  final IsarMaterialColor? isarPrimaryColor;
 
   IsarAppTheme({
-    super.themeMode = ThemeMode.system,
-    MaterialColor? primaryColor,
-    super.windowEffect,
     this.id,
-  })  : _isarPrimaryColor = IsarMaterialColor.fromMaterialColor(primaryColor),
-        super(primaryColor: primaryColor ?? kDefaultPrimaryColor);
+    this.isarPrimaryColor,
+    super.themeMode = ThemeMode.system,
+    super.windowEffect,
+  }) : super(
+          primaryColor:
+              isarPrimaryColor?.toMaterialColor ?? kDefaultPrimaryColor,
+        );
 }
