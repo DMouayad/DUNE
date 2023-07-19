@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/utils/error/app_error.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreMusicController
@@ -11,34 +12,41 @@ class ExploreMusicController
     state =
         const AsyncValue<ExploreMusicState>.loading().copyWithPrevious(state);
 
-    state =
-        (await MusicFacade.exploreMusic.getExploreMusicMainItems(source)).mapTo(
-            onSuccess: (collections) {
-              if (state.hasValue) {
-                return AsyncValue.data(
-                  state.requireValue.copyWith(homeCollections: collections),
-                );
-              } else {
-                return AsyncData(
-                  ExploreMusicState(homeCollections: collections),
-                );
-              }
-            },
-            onFailure: (error) => AsyncValue.error(error, error.stackTrace));
+    (await MusicFacade.exploreMusic.getExploreMusicMainItems(source)).fold(
+      onSuccess: (collections) {
+        state = AsyncValue.data(
+          state.valueOrNull?.copyWith(homeCollections: collections) ??
+              ExploreMusicState(homeCollections: collections),
+        );
+      },
+      onFailure: _handleError,
+    );
   }
 
   Future<void> loadMoodsAndGenresCollections(MusicSource source) async {
     state =
         const AsyncValue<ExploreMusicState>.loading().copyWithPrevious(state);
+    final dataResult = await MusicFacade.exploreMusic
+        .getExploreMusicItemsByMoodsAndGenres(source);
+    dataResult.fold(
+      onSuccess: (collections) {
+        state = AsyncValue.data(
+          state.valueOrNull?.copyWith(moodsAndGenresCollections: collections) ??
+              ExploreMusicState(moodsAndGenresCollections: collections),
+        );
+      },
+      onFailure: _handleError,
+    );
+  }
 
-    state = (await MusicFacade.exploreMusic
-            .getExploreMusicItemsByMoodsAndGenres(source))
-        .mapTo(onSuccess: (collections) {
-      return AsyncValue.data(
-          state.requireValue.copyWith(moodsAndGenresCollections: collections));
-    }, onFailure: (error) {
-      return AsyncValue.error(error, error.stackTrace);
-    });
+  void _handleError(AppError error) {
+    final errorState =
+        AsyncValue<ExploreMusicState>.error(error, error.stackTrace);
+    if (state.hasValue) {
+      state = errorState.copyWithPrevious(AsyncData(state.requireValue));
+    } else {
+      state = errorState;
+    }
   }
 
   Future<void> fetchAll(MusicSource musicSource) async {
