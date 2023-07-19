@@ -29,6 +29,8 @@ class PrimaryColorSettingComponent extends StatelessWidget {
       ),
       children: [
         Wrap(
+          spacing: 6,
+          runSpacing: 10,
           children: [
             ...Colors.primaries.map((color) {
               return _ColorBlock(
@@ -74,8 +76,8 @@ class _ColorBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4),
       child: fluent.Button(
         onPressed: onSelected,
         style: fluent.ButtonStyle(
