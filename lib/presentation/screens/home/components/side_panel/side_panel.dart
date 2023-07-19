@@ -26,76 +26,75 @@ class SidePanel extends ConsumerWidget {
 
     final cardColor = ref
         .watch(appThemeControllerProvider.select((value) => value.cardColor));
-    final maxWidth = context.maxNavRailWidth;
 
     final railWidth = ref.watch(navigationRailSizeProvider) ?? minWidth;
     final extended = railWidth > 180;
-    final playerState = ref.watch(playbackControllerProvider);
 
-    return Container(
-      constraints: BoxConstraints.loose(Size.fromWidth(railWidth)),
-      decoration: BoxDecoration(color: cardColor),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              if (extended)
-                Expanded(
-                  flex: 0,
-                  child: DragToMoveArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'DUNE',
-                            textAlign: TextAlign.center,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              color: context.colorScheme.secondary,
-                              fontFamily: 'bruno_ace',
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxWidth = context.maxNavRailWidth;
+
+      return Container(
+        constraints: BoxConstraints.loose(Size.fromWidth(railWidth)),
+        decoration: BoxDecoration(color: cardColor),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                if (extended)
+                  Expanded(
+                    flex: 0,
+                    child: DragToMoveArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'DUNE',
+                              textAlign: TextAlign.center,
+                              style: context.textTheme.titleMedium?.copyWith(
+                                color: context.colorScheme.secondary,
+                                fontFamily: 'bruno_ace',
+                              ),
                             ),
-                          ),
-                          const SettingsButton(),
-                        ],
+                            const SettingsButton(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              Expanded(
-                child: NavigationRail(
-                  backgroundColor: Colors.transparent,
-                  extended: extended,
-                  destinations: destinations,
-                  minWidth: minWidth,
-                  trailing: extended ? null : const SettingsButton(),
-                  labelType: NavigationRailLabelType.none,
-                  selectedIndex:
-                      currentBranchIsADestination ? selectedIndex : null,
-                  onDestinationSelected: (index) =>
-                      _onDestinationSelected(index, ref, selectedIndex),
-                ),
-              ),
-              // UserPlaylistsSection(),
-              if (extended &&
-                  (playerState.isLoading || playerState.currentTrack != null))
                 Expanded(
-                  child: SidePanelNowPlayingSection(railWidth),
+                  child: NavigationRail(
+                    backgroundColor: Colors.transparent,
+                    extended: extended,
+                    destinations: destinations,
+                    minWidth: minWidth,
+                    trailing: extended ? null : const SettingsButton(),
+                    labelType: NavigationRailLabelType.none,
+                    selectedIndex:
+                        currentBranchIsADestination ? selectedIndex : null,
+                    onDestinationSelected: (index) =>
+                        _onDestinationSelected(index, ref, selectedIndex),
+                  ),
                 ),
-            ],
-          ),
-          Positioned(
-            top: context.screenHeight * .4,
-            right: 0,
-            child: NavRailResizer(
-              maxWidth: maxWidth,
-              minWidth: minWidth,
-              railWidth: railWidth,
+                // UserPlaylistsSection(),
+                if (extended)
+                  const Expanded(child: SidePanelNowPlayingSection()),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+            Positioned(
+              top: context.screenHeight * .4,
+              right: 0,
+              child: NavRailResizer(
+                maxWidth: maxWidth,
+                minWidth: minWidth,
+                railWidth: railWidth,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   void _onDestinationSelected(int index, WidgetRef ref, int? selectedIndex) {
