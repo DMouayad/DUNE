@@ -35,24 +35,24 @@ void registerAudioPlayer(Ref ref) {
         .read(listeningHistoryControllerProvider.notifier)
         .addToTodayTrackUncompletedListensDuration,
   );
-
-  GetIt.instance.registerSingleton<AudioPlayer>(
-    MediaKitAudioPlayer(
-      mediaKit.Player(
-        configuration: const mediaKit.PlayerConfiguration(
-          vo: null,
-          title: 'DUNE',
-          logLevel: mediaKit.MPVLogLevel.debug,
+  final notAlreadyRegistered = !GetIt.instance.isRegistered<AudioPlayer>();
+  if (notAlreadyRegistered) {
+    GetIt.instance.registerSingleton<AudioPlayer>(
+      MediaKitAudioPlayer(
+        mediaKit.Player(
+          configuration: const mediaKit.PlayerConfiguration(
+            vo: null,
+            title: 'DUNE',
+            logLevel: mediaKit.MPVLogLevel.debug,
+          ),
         ),
+        PlayerState.initial(),
+        listeningHistoryHelper,
+        () => ref.watch(
+            appPreferencesController.select((value) => value.volumeStep)),
       ),
-      PlayerState.initial(),
-      listeningHistoryHelper,
-      () => ref.watch(appPreferencesController
-          .select((value) => value.audioStreamingQuality)),
-      () => ref
-          .watch(appPreferencesController.select((value) => value.volumeStep)),
-    ),
-  );
+    );
+  }
 }
 
 void registerControllersProviders() {
@@ -104,8 +104,7 @@ Future<BaseAppPreferences> registerAppPreferencesControllerProvider(
   );
 
   appPreferencesController = StateNotifierProvider(
-    (ref) => AppPreferencesController(dataSource, prefs),
-  );
+      (ref) => AppPreferencesController(dataSource, prefs));
   return prefs;
 }
 

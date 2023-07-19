@@ -82,7 +82,8 @@ abstract class AudioPlayer {
 
     streams.completed.listen((value) {
       _stateStreamController.add(
-        state.copyWith(isCompleted: value, isPlaying: !value),
+        state.copyWith(
+            isCompleted: value, isPlaying: state.isPlaying ? !value : null),
       );
 
       Log.i("completed: $value");
@@ -260,8 +261,6 @@ abstract class AudioPlayer {
     BaseTrack track,
   );
 
-  AudioStreamingQuality get streamingQuality;
-
   Future<TrackAudioInfo?> _getTrackAudio(
     BaseTrack track,
     MusicSource? musicSource,
@@ -273,7 +272,7 @@ abstract class AudioPlayer {
         .mapTo(
       onSuccess: (audioInfo) {
         return audioInfo.whereQuality(
-          streamingQuality,
+          state.streamingQuality,
           musicSource ?? track.source,
         );
       },
@@ -286,6 +285,10 @@ abstract class AudioPlayer {
 
   Future<void> disposePlayer() async {
     _statesSub.cancel();
+  }
+
+  void setAudioStreamingQuality(AudioStreamingQuality value) {
+    _stateStreamController.add(state.copyWith(streamingQuality: value));
   }
 }
 

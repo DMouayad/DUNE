@@ -20,6 +20,16 @@ class _DuneWindowsApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(
+        appPreferencesController.select((value) => value.audioStreamingQuality),
+        (previous, next) {
+      if (previous != next) {
+        ref
+            .read(playbackControllerProvider.notifier)
+            .player
+            .setAudioStreamingQuality(next);
+      }
+    });
     final appTheme = ref.watch(appThemeControllerProvider);
     return FluentApp.router(
       routerConfig: AppRouter.instance.router,

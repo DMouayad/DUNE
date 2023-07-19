@@ -1,12 +1,12 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:equatable/equatable.dart';
 
 class PlayerState extends Equatable {
   final double volume;
   final Duration position;
   final Duration duration;
-
   final Duration buffer;
   final bool isPlaying;
   final bool isBuffering;
@@ -19,6 +19,7 @@ class PlayerState extends Equatable {
   final BasePlaylist? currentPlaylist;
   final BaseTrack? currentTrack;
   final int? playlistCurrentTrackIndex;
+  final AudioStreamingQuality streamingQuality;
 
   bool get currentPlaylistNotNull => currentPlaylist != null;
 
@@ -42,6 +43,7 @@ class PlayerState extends Equatable {
     this.currentPlaylist,
     this.currentTrack,
     this.playlistCurrentTrackIndex,
+    this.streamingQuality = AudioStreamingQuality.balanced,
   });
 
   factory PlayerState.initial() {
@@ -76,10 +78,12 @@ class PlayerState extends Equatable {
     bool? autoPlayNext,
     int? playlistCurrentTrackIndex,
     BasePlaylist? currentPlaylist,
+    AudioStreamingQuality? streamingQuality,
     BaseTrack? currentTrack,
   }) {
     return PlayerState(
       volume: volume ?? this.volume,
+      streamingQuality: streamingQuality ?? this.streamingQuality,
       position: position ?? this.position,
       duration: duration ?? this.duration,
       buffer: buffer ?? this.buffer,

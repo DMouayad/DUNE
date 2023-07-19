@@ -13,14 +13,12 @@ import 'audio_player.dart';
 
 final class MediaKitAudioPlayer extends AudioPlayer {
   final mediakit.Player _player;
-  final AudioStreamingQuality Function() getStreamingQuality;
   final double Function() getUserSpecifiedVolumeStep;
 
   MediaKitAudioPlayer(
     this._player,
     PlayerState initialState,
     ListeningHistoryHelper listeningHistoryHelper,
-    this.getStreamingQuality,
     this.getUserSpecifiedVolumeStep,
   ) : super(
           initialState,
@@ -101,8 +99,6 @@ final class MediaKitAudioPlayer extends AudioPlayer {
   @override
   void startOrPause() => _player.playOrPause();
 
-  @override
-  AudioStreamingQuality get streamingQuality => getStreamingQuality();
 
   @override
   bool trackExistsInCurrentPlaylist(BaseTrack<BaseAlbum, BaseArtist> track) {
