@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -54,9 +55,7 @@ class _TrendingHeaderState extends ConsumerState<TrendingHeader> {
       itemBuilder: (context, index) {
         final imageProvider = ExtendedNetworkImageProvider(
           widget.items[index].thumbnails!
-              .byOrder(
-                  ref.watch(appPreferencesController).thumbnailQualitiesOrder,
-                  true)
+              .byOrder(ThumbnailQualitiesOrderOption.best, true)
               .url,
           cache: true,
           retries: 2,
