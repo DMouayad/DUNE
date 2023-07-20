@@ -2,31 +2,20 @@ import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.da
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/support/utils/result/result.dart';
 
-abstract base class PlaylistRepository<T extends BasePlaylistDataSource>
-    with PlaylistUseCases {
+abstract base class PlaylistRepository<T extends BasePlaylistDataSource> {
   final T _dataSource;
 
   PlaylistRepository(this._dataSource);
 
-  @override
   FutureOrResult<BasePlaylist?> getById(String id) async {
     return await _dataSource.find(id);
   }
 
-  @override
   FutureOrResult<List<BasePlaylist>?> getCategoryPlaylists(
     String categoryId,
   ) async {
     return await _dataSource.getCategoryPlaylists(categoryId);
   }
-}
-
-mixin PlaylistUseCases {
-  FutureOrResult<BasePlaylist?> getById(String id);
-
-  FutureOrResult<List<BasePlaylist>?> getCategoryPlaylists(
-    String categoryId,
-  );
 }
 
 abstract base class SavablePlaylistRepository<

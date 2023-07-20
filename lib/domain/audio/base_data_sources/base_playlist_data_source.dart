@@ -11,10 +11,10 @@ abstract class BasePlaylistDataSource<T extends BasePlaylist> {
 
 abstract class BaseSavablePlaylistDataSource<T extends BasePlaylist>
     extends BasePlaylistDataSource<T> {
-  FutureOrResult<T> save(BasePlaylist playlist);
+  FutureOrResult<T> save(T playlist);
 
   FutureOrResult<List<T>> saveCategoryPlaylists(
     String categoryId,
-    List<BasePlaylist> playlists,
+    List<T> playlists,
   );
 }
