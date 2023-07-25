@@ -25,7 +25,6 @@ mixin YoutubeExplodeProxy {
   static YoutubeTrack videoToYoutubeTrack(Video video) {
     return YoutubeTrack(
       id: video.id.value,
-      likeStatus: '',
       thumbnails: _getThumbnailsSet(video.thumbnails),
       title: video.title,
       year: video.publishDate?.year.toString(),

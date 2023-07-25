@@ -54,7 +54,6 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     this.albumId,
     this.artistsIds = const [],
     super.id = '',
-    super.likeStatus = '',
     this.thumbnails = const IsarThumbnailsSet(),
     super.title = '',
     super.year = '',
@@ -81,7 +80,9 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       artists: artistsMap is List
           ? artistsMap.map((e) => IsarArtist.fromMap(e)).toList()
           : [],
-      likeStatus: map.whereKey('likeStatus'),
+      isarAudioInfoSet: map.whereKey('audioInfoSet') is Map<String, dynamic>
+          ? IsarAudioInfoSet.fromMap(map.whereKey('audioInfoSet'))
+          : null,
       title: map.whereKey('title'),
       year: map.whereKey('year'),
       views: map.whereKey('views'),
@@ -97,7 +98,6 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
   IsarTrack copyWith({
     Id? isarId,
     String? id,
-    String? likeStatus,
     String? title,
     String? year,
     IsarAudioInfoSet? isarAudioInfoSet,
@@ -117,10 +117,10 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       id: id ?? this.id,
       title: title ?? this.title,
       album: album ?? this.album,
-      likeStatus: likeStatus ?? this.likeStatus,
       isarDuration: isarDuration ?? this.isarDuration,
-      artistsIds: artistsIds ?? this.artistsIds,
-      albumId: albumId ?? this.albumId,
+      artistsIds:
+          artistsIds ?? artists?.map((e) => e.id!).toList() ?? this.artistsIds,
+      albumId: albumId ?? album?.id ?? this.albumId,
       artists: artists ?? this.artists,
       views: views ?? this.views,
       thumbnails: thumbnails ?? this.thumbnails,

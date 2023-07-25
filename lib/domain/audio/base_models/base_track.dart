@@ -12,7 +12,6 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
     required this.id,
     required this.album,
     required this.artists,
-    required this.likeStatus,
     required this.thumbnails,
     required this.title,
     required this.year,
@@ -30,7 +29,6 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
   final AlbumType? album;
   final List<ArtistType> artists;
   final Duration duration;
-  final String? likeStatus;
   final String title;
   final String? year;
   final int? views;
@@ -46,7 +44,6 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
       'id': id,
       'album': album?.toMap(),
       'length': duration.inSeconds,
-      'likeStatus': likeStatus,
       'title': title,
       'year': year,
       'views': views,
@@ -66,7 +63,6 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
         album,
         artists,
         duration,
-        likeStatus,
         source,
         year,
         category,

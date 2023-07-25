@@ -65,7 +65,6 @@ class YoutubeExploreMusicItem extends BaseExploreMusicItem {
       track: itemType.isVideoOrAudio
           ? YoutubeTrack(
               id: map['sourceId'],
-              likeStatus: null,
               thumbnails: thumbs,
               title: map['title'] as String,
               year: null,

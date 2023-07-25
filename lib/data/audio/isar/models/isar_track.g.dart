@@ -54,35 +54,30 @@ const IsarTrackSchema = CollectionSchema(
       type: IsarType.object,
       target: r'IsarDuration',
     ),
-    r'likeStatus': PropertySchema(
-      id: 7,
-      name: r'likeStatus',
-      type: IsarType.string,
-    ),
     r'source': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'source',
       type: IsarType.byte,
       enumMap: _IsarTracksourceEnumValueMap,
     ),
     r'thumbnails': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'thumbnails',
       type: IsarType.object,
       target: r'IsarThumbnailsSet',
     ),
     r'title': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'title',
       type: IsarType.string,
     ),
     r'views': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'views',
       type: IsarType.long,
     ),
     r'year': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'year',
       type: IsarType.string,
     )
@@ -158,12 +153,6 @@ int _isarTrackEstimateSize(
   bytesCount += 3 +
       IsarDurationSchema.estimateSize(
           object.isarDuration, allOffsets[IsarDuration]!, allOffsets);
-  {
-    final value = object.likeStatus;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   bytesCount += 3 +
       IsarThumbnailsSetSchema.estimateSize(
           object.thumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
@@ -200,17 +189,16 @@ void _isarTrackSerialize(
     IsarDurationSchema.serialize,
     object.isarDuration,
   );
-  writer.writeString(offsets[7], object.likeStatus);
-  writer.writeByte(offsets[8], object.source.index);
+  writer.writeByte(offsets[7], object.source.index);
   writer.writeObject<IsarThumbnailsSet>(
-    offsets[9],
+    offsets[8],
     allOffsets,
     IsarThumbnailsSetSchema.serialize,
     object.thumbnails,
   );
-  writer.writeString(offsets[10], object.title);
-  writer.writeLong(offsets[11], object.views);
-  writer.writeString(offsets[12], object.year);
+  writer.writeString(offsets[9], object.title);
+  writer.writeLong(offsets[10], object.views);
+  writer.writeString(offsets[11], object.year);
 }
 
 IsarTrack _isarTrackDeserialize(
@@ -237,18 +225,17 @@ IsarTrack _isarTrackDeserialize(
         ) ??
         const IsarDuration(),
     isarId: id,
-    likeStatus: reader.readStringOrNull(offsets[7]),
-    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[8])] ??
+    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[7])] ??
         MusicSource.youtube,
     thumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
-          offsets[9],
+          offsets[8],
           IsarThumbnailsSetSchema.deserialize,
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
-    title: reader.readStringOrNull(offsets[10]) ?? '',
-    views: reader.readLongOrNull(offsets[11]),
-    year: reader.readStringOrNull(offsets[12]),
+    title: reader.readStringOrNull(offsets[9]) ?? '',
+    views: reader.readLongOrNull(offsets[10]),
+    year: reader.readStringOrNull(offsets[11]),
   );
   return object;
 }
@@ -284,22 +271,20 @@ P _isarTrackDeserializeProp<P>(
           ) ??
           const IsarDuration()) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
       return (_IsarTracksourceValueEnumMap[reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 9:
+    case 8:
       return (reader.readObjectOrNull<IsarThumbnailsSet>(
             offset,
             IsarThumbnailsSetSchema.deserialize,
             allOffsets,
           ) ??
           const IsarThumbnailsSet()) as P;
-    case 10:
+    case 9:
       return (reader.readStringOrNull(offset) ?? '') as P;
-    case 11:
+    case 10:
       return (reader.readLongOrNull(offset)) as P;
-    case 12:
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1259,157 +1244,6 @@ extension IsarTrackQueryFilter
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'likeStatus',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
-      likeStatusIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'likeStatus',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
-      likeStatusGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'likeStatus',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
-      likeStatusStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'likeStatus',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> likeStatusMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'likeStatus',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
-      likeStatusIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'likeStatus',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
-      likeStatusIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'likeStatus',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> sourceEqualTo(
       MusicSource value) {
     return QueryBuilder.apply(this, (query) {
@@ -1885,18 +1719,6 @@ extension IsarTrackQuerySortBy on QueryBuilder<IsarTrack, IsarTrack, QSortBy> {
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortByLikeStatus() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'likeStatus', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortByLikeStatusDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'likeStatus', Sort.desc);
-    });
-  }
-
   QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'source', Sort.asc);
@@ -2008,18 +1830,6 @@ extension IsarTrackQuerySortThenBy
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenByLikeStatus() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'likeStatus', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenByLikeStatusDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'likeStatus', Sort.desc);
-    });
-  }
-
   QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'source', Sort.asc);
@@ -2104,13 +1914,6 @@ extension IsarTrackQueryWhereDistinct
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QDistinct> distinctByLikeStatus(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'likeStatus', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<IsarTrack, IsarTrack, QDistinct> distinctBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'source');
@@ -2187,12 +1990,6 @@ extension IsarTrackQueryProperty
       isarDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarDuration');
-    });
-  }
-
-  QueryBuilder<IsarTrack, String?, QQueryOperations> likeStatusProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'likeStatus');
     });
   }
 

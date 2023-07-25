@@ -10,7 +10,6 @@ class YoutubeTrack extends BaseTrack {
   const YoutubeTrack({
     required super.id,
     required super.duration,
-    required super.likeStatus,
     required super.thumbnails,
     required super.title,
     super.views,
@@ -36,7 +35,6 @@ class YoutubeTrack extends BaseTrack {
           ? artistsList.map((e) => YoutubeArtist.fromMap(e)).toList()
           : [],
       duration: _getDuration(map.whereKey('duration')),
-      likeStatus: map.whereKey('likeStatus'),
       thumbnails: ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
         (map.whereKey('thumbnails') as List)
             .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
