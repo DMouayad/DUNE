@@ -18,7 +18,7 @@ base class ExploreMusicRepository {
       return _homeExploreMusicCollections!.asResult;
     }
     final result = (await _exploreMusicDataSource.getMainItems()).fold(
-      ifSuccess: (result) => _homeExploreMusicCollections = result,
+      onSuccess: (result) => _homeExploreMusicCollections = result,
     );
     return result.flatMapFailure((error) {
       if (_homeExploreMusicCollections != null) {
@@ -39,7 +39,7 @@ base class ExploreMusicRepository {
     return (await _exploreMusicDataSource
             .getExploreMusicItemsByMoodsAndGenres())
         .fold(
-      ifSuccess: (result) => _moodsAndGenresCollections = result,
+      onSuccess: (result) => _moodsAndGenresCollections = result,
     );
   }
 }

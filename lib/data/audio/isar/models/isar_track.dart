@@ -21,6 +21,7 @@ part 'isar_track.g.dart';
   'artistsNames',
   'audioInfoSet',
   'stringify',
+  'thumbnails',
   'hashCode'
 })
 class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
@@ -28,8 +29,8 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
 
   @override
   Set<Type> get derived => {BaseTrack};
-  @override
-  final IsarThumbnailsSet thumbnails;
+
+  final IsarThumbnailsSet isarThumbnails;
   final IsarAudioInfoSet? isarAudioInfoSet;
   final String? albumId;
   final List<String> artistsIds;
@@ -54,7 +55,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     this.albumId,
     this.artistsIds = const [],
     super.id = '',
-    this.thumbnails = const IsarThumbnailsSet(),
+    this.isarThumbnails = const IsarThumbnailsSet(),
     super.title = '',
     super.year = '',
     super.views = 0,
@@ -64,7 +65,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     super.source = MusicSource.youtube,
     super.artists = const [],
   }) : super(
-          thumbnails: thumbnails,
+          thumbnails: isarThumbnails,
           duration: Duration(seconds: isarDuration.inSeconds),
           audioInfoSet: isarAudioInfoSet,
         );
@@ -91,7 +92,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       source: map.whereKey('source') != null
           ? MusicSource.values.byName(map.whereKey('source'))
           : MusicSource.unknown,
-      thumbnails: IsarThumbnailsSet.fromMap(map.whereKey('thumbnails')),
+      isarThumbnails: IsarThumbnailsSet.fromMap(map.whereKey('thumbnails')),
     );
   }
 
@@ -123,7 +124,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       albumId: albumId ?? album?.id ?? this.albumId,
       artists: artists ?? this.artists,
       views: views ?? this.views,
-      thumbnails: thumbnails ?? this.thumbnails,
+      isarThumbnails: thumbnails ?? isarThumbnails,
       year: year ?? this.year,
       source: source ?? this.source,
       isarAudioInfoSet: isarAudioInfoSet ?? this.isarAudioInfoSet,

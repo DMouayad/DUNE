@@ -1,6 +1,5 @@
 import 'package:dune/data/audio/isar/models/isar_category_playlists.dart';
 import 'package:dune/data/audio/isar/models/isar_playlist.dart';
-import 'package:dune/data/audio/isar/models/isar_thumbnails_set.dart';
 import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/support/logger_service.dart';
@@ -17,40 +16,21 @@ class IsarPlaylistDataSource
   FutureOrResult<IsarPlaylist?> find(String playlistId) async {
     return await Result.fromAsync(() async {
       return await _isar.isarPlaylists
-          .filter()
+          .where()
           .idEqualTo(playlistId)
           .findFirst();
     });
   }
 
   @override
-  FutureOrResult<IsarPlaylist> save(BasePlaylist playlist) async {
+  FutureOrResult<IsarPlaylist> save(IsarPlaylist playlist) async {
     return await Result.fromAsync(() async {
-      final isarPlaylist = playlist is IsarPlaylist
-          ? playlist
-          : _getIsarPlaylistFromBase(playlist);
       return await _isar.writeTxn(() async {
         // write the playlist to the db and get it's assigned [ID].
-        final playlistId = await _isar.isarPlaylists.put(isarPlaylist);
-        return isarPlaylist.copyWith(isarId: playlistId);
+        final playlistId = await _isar.isarPlaylists.put(playlist);
+        return playlist.copyWith(isarId: playlistId);
       });
     });
-  }
-
-  IsarPlaylist _getIsarPlaylistFromBase(BasePlaylist playlist) {
-    return IsarPlaylist(
-      id: playlist.id,
-      author: IsarPlaylistAuthor(
-        name: playlist.author?.name,
-        id: playlist.author?.id,
-      ),
-      thumbnails: IsarThumbnailsSet.fromMap(playlist.thumbnails.toMap()),
-      description: playlist.description,
-      duration: playlist.duration,
-      durationSeconds: playlist.durationSeconds,
-      title: playlist.title,
-      createdAt: playlist.createdAt,
-    );
   }
 
   FutureOrResult<List<IsarPlaylist>> getWhereIsarId(List<int?> ids) async {
@@ -74,7 +54,7 @@ class IsarPlaylistDataSource
   FutureResult<List<String>?> getCategoryPlaylistsIds(String categoryId) async {
     return await Result.fromAsync(() async {
       return await _isar.isarCategoryPlaylists
-          .filter()
+          .where()
           .categoryIdEqualTo(categoryId)
           .playlistsIdsProperty()
           .findFirst();
@@ -92,12 +72,14 @@ class IsarPlaylistDataSource
   @override
   FutureOrResult<List<IsarPlaylist>> saveCategoryPlaylists(
     String categoryId,
-    List<BasePlaylist> playlists,
+    List<IsarPlaylist> playlists,
   ) async {
     return await Result.fromAnother(() async {
       List<String> ids = [];
       for (BasePlaylist playlist in playlists) {
-        if (playlist.id != null) {
+        if (playlist.id == null) {
+          Log.e("playlist has no id");
+        } else {
           ids.add(playlist.id!);
         }
       }
@@ -114,9 +96,9 @@ class IsarPlaylistDataSource
   }
 
   FutureOrResult<List<IsarPlaylist>> saveAll(
-      List<BasePlaylist> playlists) async {
+      List<IsarPlaylist> playlists) async {
     List<IsarPlaylist> result = [];
-    for (BasePlaylist playlist in playlists) {
+    for (var playlist in playlists) {
       final savingPlaylistResult = await save(playlist);
       if (savingPlaylistResult.isFailure) {
         Log.e(savingPlaylistResult);
@@ -125,5 +107,11 @@ class IsarPlaylistDataSource
       }
     }
     return result.asResult;
+  }
+
+  @override
+  FutureOrResult<bool> existsWhereId(String id) async {
+    return await Result.fromAsync(() async =>
+        await _isar.isarPlaylists.where().idEqualTo(id).isNotEmpty());
   }
 }

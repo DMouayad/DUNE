@@ -52,23 +52,29 @@ const IsarAlbumSchema = CollectionSchema(
       name: r'isExplicit',
       type: IsarType.bool,
     ),
-    r'releaseDate': PropertySchema(
+    r'isarThumbnails': PropertySchema(
       id: 7,
+      name: r'isarThumbnails',
+      type: IsarType.object,
+      target: r'IsarThumbnailsSet',
+    ),
+    r'releaseDate': PropertySchema(
+      id: 8,
       name: r'releaseDate',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'title',
       type: IsarType.string,
     ),
     r'tracksIds': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'tracksIds',
       type: IsarType.stringList,
     ),
     r'type': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'type',
       type: IsarType.string,
     )
@@ -94,7 +100,10 @@ const IsarAlbumSchema = CollectionSchema(
     )
   },
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {
+    r'IsarThumbnailsSet': IsarThumbnailsSetSchema,
+    r'IsarThumbnail': IsarThumbnailSchema
+  },
   getId: _isarAlbumGetId,
   getLinks: _isarAlbumGetLinks,
   attach: _isarAlbumAttach,
@@ -144,6 +153,9 @@ int _isarAlbumEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 +
+      IsarThumbnailsSetSchema.estimateSize(
+          object.isarThumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
   bytesCount += 3 + object.title.length * 3;
   bytesCount += 3 + object.tracksIds.length * 3;
   {
@@ -174,10 +186,16 @@ void _isarAlbumSerialize(
   writer.writeStringList(offsets[4], object.featuredArtistsIds);
   writer.writeString(offsets[5], object.id);
   writer.writeBool(offsets[6], object.isExplicit);
-  writer.writeDateTime(offsets[7], object.releaseDate);
-  writer.writeString(offsets[8], object.title);
-  writer.writeStringList(offsets[9], object.tracksIds);
-  writer.writeString(offsets[10], object.type);
+  writer.writeObject<IsarThumbnailsSet>(
+    offsets[7],
+    allOffsets,
+    IsarThumbnailsSetSchema.serialize,
+    object.isarThumbnails,
+  );
+  writer.writeDateTime(offsets[8], object.releaseDate);
+  writer.writeString(offsets[9], object.title);
+  writer.writeStringList(offsets[10], object.tracksIds);
+  writer.writeString(offsets[11], object.type);
 }
 
 IsarAlbum _isarAlbumDeserialize(
@@ -195,10 +213,16 @@ IsarAlbum _isarAlbumDeserialize(
     id: reader.readStringOrNull(offsets[5]),
     isExplicit: reader.readBoolOrNull(offsets[6]) ?? false,
     isarId: id,
-    releaseDate: reader.readDateTimeOrNull(offsets[7]),
-    title: reader.readStringOrNull(offsets[8]) ?? '',
-    tracksIds: reader.readStringList(offsets[9]) ?? const [],
-    type: reader.readStringOrNull(offsets[10]),
+    isarThumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
+          offsets[7],
+          IsarThumbnailsSetSchema.deserialize,
+          allOffsets,
+        ) ??
+        const IsarThumbnailsSet(),
+    releaseDate: reader.readDateTimeOrNull(offsets[8]),
+    title: reader.readStringOrNull(offsets[9]) ?? '',
+    tracksIds: reader.readStringList(offsets[10]) ?? const [],
+    type: reader.readStringOrNull(offsets[11]),
   );
   return object;
 }
@@ -225,12 +249,19 @@ P _isarAlbumDeserializeProp<P>(
     case 6:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 7:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readObjectOrNull<IsarThumbnailsSet>(
+            offset,
+            IsarThumbnailsSetSchema.deserialize,
+            allOffsets,
+          ) ??
+          const IsarThumbnailsSet()) as P;
     case 8:
-      return (reader.readStringOrNull(offset) ?? '') as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 9:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 10:
+      return (reader.readStringList(offset) ?? const []) as P;
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2074,7 +2105,14 @@ extension IsarAlbumQueryFilter
 }
 
 extension IsarAlbumQueryObject
-    on QueryBuilder<IsarAlbum, IsarAlbum, QFilterCondition> {}
+    on QueryBuilder<IsarAlbum, IsarAlbum, QFilterCondition> {
+  QueryBuilder<IsarAlbum, IsarAlbum, QAfterFilterCondition> isarThumbnails(
+      FilterQuery<IsarThumbnailsSet> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'isarThumbnails');
+    });
+  }
+}
 
 extension IsarAlbumQueryLinks
     on QueryBuilder<IsarAlbum, IsarAlbum, QFilterCondition> {}
@@ -2437,6 +2475,13 @@ extension IsarAlbumQueryProperty
   QueryBuilder<IsarAlbum, bool, QQueryOperations> isExplicitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isExplicit');
+    });
+  }
+
+  QueryBuilder<IsarAlbum, IsarThumbnailsSet, QQueryOperations>
+      isarThumbnailsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isarThumbnails');
     });
   }
 

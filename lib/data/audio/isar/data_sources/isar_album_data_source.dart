@@ -11,8 +11,7 @@ class IsarAlbumDataSource implements BaseAlbumDataSource<IsarAlbum> {
   @override
   FutureOrResult<IsarAlbum?> find(String albumId) async {
     return await Result.fromAsync(
-      () async =>
-          await _isar.isarAlbums.filter().idEqualTo(albumId).findFirst(),
+      () async => await _isar.isarAlbums.where().idEqualTo(albumId).findFirst(),
     );
   }
 

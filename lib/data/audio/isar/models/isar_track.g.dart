@@ -54,17 +54,17 @@ const IsarTrackSchema = CollectionSchema(
       type: IsarType.object,
       target: r'IsarDuration',
     ),
-    r'source': PropertySchema(
+    r'isarThumbnails': PropertySchema(
       id: 7,
+      name: r'isarThumbnails',
+      type: IsarType.object,
+      target: r'IsarThumbnailsSet',
+    ),
+    r'source': PropertySchema(
+      id: 8,
       name: r'source',
       type: IsarType.byte,
       enumMap: _IsarTracksourceEnumValueMap,
-    ),
-    r'thumbnails': PropertySchema(
-      id: 8,
-      name: r'thumbnails',
-      type: IsarType.object,
-      target: r'IsarThumbnailsSet',
     ),
     r'title': PropertySchema(
       id: 9,
@@ -155,7 +155,7 @@ int _isarTrackEstimateSize(
           object.isarDuration, allOffsets[IsarDuration]!, allOffsets);
   bytesCount += 3 +
       IsarThumbnailsSetSchema.estimateSize(
-          object.thumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
+          object.isarThumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
   bytesCount += 3 + object.title.length * 3;
   {
     final value = object.year;
@@ -189,13 +189,13 @@ void _isarTrackSerialize(
     IsarDurationSchema.serialize,
     object.isarDuration,
   );
-  writer.writeByte(offsets[7], object.source.index);
   writer.writeObject<IsarThumbnailsSet>(
-    offsets[8],
+    offsets[7],
     allOffsets,
     IsarThumbnailsSetSchema.serialize,
-    object.thumbnails,
+    object.isarThumbnails,
   );
+  writer.writeByte(offsets[8], object.source.index);
   writer.writeString(offsets[9], object.title);
   writer.writeLong(offsets[10], object.views);
   writer.writeString(offsets[11], object.year);
@@ -225,14 +225,14 @@ IsarTrack _isarTrackDeserialize(
         ) ??
         const IsarDuration(),
     isarId: id,
-    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[7])] ??
-        MusicSource.youtube,
-    thumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
-          offsets[8],
+    isarThumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
+          offsets[7],
           IsarThumbnailsSetSchema.deserialize,
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
+    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[8])] ??
+        MusicSource.youtube,
     title: reader.readStringOrNull(offsets[9]) ?? '',
     views: reader.readLongOrNull(offsets[10]),
     year: reader.readStringOrNull(offsets[11]),
@@ -271,15 +271,15 @@ P _isarTrackDeserializeProp<P>(
           ) ??
           const IsarDuration()) as P;
     case 7:
-      return (_IsarTracksourceValueEnumMap[reader.readByteOrNull(offset)] ??
-          MusicSource.youtube) as P;
-    case 8:
       return (reader.readObjectOrNull<IsarThumbnailsSet>(
             offset,
             IsarThumbnailsSetSchema.deserialize,
             allOffsets,
           ) ??
           const IsarThumbnailsSet()) as P;
+    case 8:
+      return (_IsarTracksourceValueEnumMap[reader.readByteOrNull(offset)] ??
+          MusicSource.youtube) as P;
     case 9:
       return (reader.readStringOrNull(offset) ?? '') as P;
     case 10:
@@ -1659,10 +1659,10 @@ extension IsarTrackQueryObject
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> thumbnails(
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> isarThumbnails(
       FilterQuery<IsarThumbnailsSet> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'thumbnails');
+      return query.object(q, r'isarThumbnails');
     });
   }
 }
@@ -1993,16 +1993,16 @@ extension IsarTrackQueryProperty
     });
   }
 
-  QueryBuilder<IsarTrack, MusicSource, QQueryOperations> sourceProperty() {
+  QueryBuilder<IsarTrack, IsarThumbnailsSet, QQueryOperations>
+      isarThumbnailsProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'source');
+      return query.addPropertyName(r'isarThumbnails');
     });
   }
 
-  QueryBuilder<IsarTrack, IsarThumbnailsSet, QQueryOperations>
-      thumbnailsProperty() {
+  QueryBuilder<IsarTrack, MusicSource, QQueryOperations> sourceProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'thumbnails');
+      return query.addPropertyName(r'source');
     });
   }
 

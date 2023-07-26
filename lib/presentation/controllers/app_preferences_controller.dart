@@ -12,31 +12,12 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   final BaseAppPreferencesDataSource _dataSource;
 
-  /// Whether to notify listeners or not when [state] changes
-  @override
-  bool updateShouldNotify(
-    BaseAppPreferences old,
-    BaseAppPreferences current,
-  ) {
-    // if [lastSidePanelWidth] or [lastWindowSize] was changed, dont notify
-    // listeners because it appears to introduce a bug causing the
-    // [playbackControllerProvider] to be disposed of. Anyway, the change in these
-    // properties is not important to any listener for this provider's state.
-    if (old.lastSidePanelWidth != current.lastSidePanelWidth) {
-      return false;
-    }
-    if (old.lastWindowSize != current.lastWindowSize) {
-      return false;
-    }
-    return old != current;
-  }
-
   Future<void> _handleUpdatingAppPreferences(
     BaseAppPreferences newPreferences,
   ) async {
     if (newPreferences != state) {
       (await _dataSource.save(newPreferences))
-          .fold(ifSuccess: (prefs) => state = prefs);
+          .fold(onSuccess: (prefs) => state = prefs);
     }
   }
 
@@ -75,12 +56,11 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   Future<void> setExploreMusicSource(MusicSource source) async {
     (await _dataSource.save(state.copyWith(exploreMusicSource: source)))
-        .fold(ifSuccess: (prefs) => state = prefs);
+        .fold(onSuccess: (prefs) => state = prefs);
   }
 
   Future<void> setInitialPageOnStartup(InitialPageOnStartup page) async {
-    (await _dataSource.save(state.copyWith(initialPageOnStartup: page)))
-        .fold(ifSuccess: (prefs) => state = prefs);
+    _handleUpdatingAppPreferences(state.copyWith(initialPageOnStartup: page));
   }
 
   Future<void> setAudioStreamingQualityOption(

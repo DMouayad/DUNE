@@ -24,7 +24,7 @@ class ExploreMusicCategoriesController
             : initialState);
     (await MusicFacade.playlists.getCachedCategoryPlaylists(categoryId))
         .foldAsync(
-      ifSuccess: (playlists) async {
+      onSuccess: (playlists) async {
         if (playlists != null) {
           print('category playlists were found in local storage');
           state = const ExploreMusicCategoriesControllerState.loading()
@@ -36,7 +36,7 @@ class ExploreMusicCategoriesController
         (await MusicFacade.playlists
                 .getCategoryPlaylists(categoryId, musicSource))
             .fold(
-          ifSuccess: (playlistsFromRemote) {
+          onSuccess: (playlistsFromRemote) {
             print(
                 'fetched playlists from remote datasource ${playlistsFromRemote?.runtimeType}');
             if (playlistsFromRemote != null &&
@@ -51,7 +51,7 @@ class ExploreMusicCategoriesController
               state = AsyncData(state.requireValue);
             }
           },
-          ifFailure: (error) async {
+          onFailure: (error) async {
             Log.e(error);
             if (state.hasValue) {
               state = ExploreMusicCategoriesControllerState.error(
@@ -64,7 +64,7 @@ class ExploreMusicCategoriesController
           },
         );
       },
-      ifFailure: (error) async {
+      onFailure: (error) async {
         state = AsyncValue.error(error, error.stackTrace);
       },
     );

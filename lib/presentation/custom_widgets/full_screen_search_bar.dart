@@ -154,7 +154,7 @@ class _SearchMusicSourceOptionButton extends ConsumerWidget {
               .read(searchBarMusicSourceFilterProvider.notifier)
               .update((state) => value!);
         },
-        items: MusicSource.withoutUnknown
+        items: MusicSource.valuesWithoutUnknown
             .map(
               (e) => fluent.ComboBoxItem<MusicSource>(
                   value: e,

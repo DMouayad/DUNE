@@ -14,7 +14,7 @@ abstract base class TrackRepository<DataSource extends BaseTrackDataSource> {
 }
 
 abstract base class SavableTrackRepository<
-        DataSource extends BaseTrackDataSource>
+        DataSource extends BaseSavableTrackDataSource>
     extends TrackRepository<DataSource> {
   SavableTrackRepository(super.trackDataSource);
 

@@ -53,7 +53,3 @@ class AppWindowHelper {
     );
   }
 }
-
-extension ThemeModeExtension on ThemeMode {
-  bool get isDark => this == ThemeMode.dark;
-}

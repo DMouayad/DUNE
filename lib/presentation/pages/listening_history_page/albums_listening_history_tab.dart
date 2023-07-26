@@ -14,10 +14,11 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final listeningHistoryState = ref
-        .watch(listeningHistoryControllerProvider)
-        .whenData(
-            (value) => value.where((history) => history.albums.isNotEmpty));
+    final listeningHistoryState = ref.watch(
+      listeningHistoryControllerProvider.select(
+          (state) => state.whenData((value) => value.albumsListeningHistory)),
+    );
+
     return (listeningHistoryState.valueOrNull?.isEmpty ?? false)
         ? Center(
             child: Text(
@@ -35,15 +36,12 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
                 : listeningHistoryState.valueOrNull?.length ?? 0,
             itemBuilder: (BuildContext context, int index) {
               return _AlbumsGridView(
-                listeningHistoryState.map(
-                  data: (state) =>
-                      AsyncData(state.value.elementAt(index).albums),
-                  error: (state) =>
-                      AsyncValue.error(state.error, state.stackTrace),
-                  loading: (_) => const AsyncValue.loading(),
+                listeningHistoryState.whenData(
+                  (value) {
+                    final entry = value.entries.elementAt(index);
+                    return (date: entry.key, items: entry.value);
+                  },
                 ),
-                listeningHistoryState
-                    .whenData((value) => value.elementAt(index).date),
               );
             },
           );
@@ -51,10 +49,9 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
 }
 
 class _AlbumsGridView extends ConsumerStatefulWidget {
-  const _AlbumsGridView(this.albums, this.date);
+  const _AlbumsGridView(this.albumsInfo);
 
-  final AsyncValue<List<BaseAlbum>> albums;
-  final AsyncValue<DateTime> date;
+  final AsyncValue<({DateTime date, List<BaseAlbum> items})> albumsInfo;
 
   @override
   ConsumerState<_AlbumsGridView> createState() => _AlbumsGridViewState();
@@ -73,20 +70,19 @@ class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
   Widget build(BuildContext context) {
     return ScrollableCardsView(
       scrollController: scrollController,
-      titleWidget: widget.date.hasValue && widget.albums.hasValue
+      titleWidget: widget.albumsInfo.hasValue
           ? ListeningHistoryDateSectionHeader(
-              date: widget.date.requireValue,
-              trailing: _contentDescription(widget.albums.requireValue),
+              date: widget.albumsInfo.requireValue.date,
+              trailing:
+                  _contentDescription(widget.albumsInfo.requireValue.items),
               alignment: MainAxisAlignment.start,
             )
           : null,
-      itemsState: widget.albums.map(
-        data: (s) => AsyncData((itemCount: s.requireValue.length, title: null)),
-        error: (s) => AsyncError(s.error, s.stackTrace),
-        loading: (state) => const AsyncLoading(),
+      itemsState: widget.albumsInfo.whenData(
+        (value) => (itemCount: value.items.length, title: null),
       ),
       childBuilder: (double cardWidth, int index) {
-        final album = widget.albums.value!.elementAt(index);
+        final album = widget.albumsInfo.value!.items.elementAt(index);
         return CustomCard(
           tag: album.id ?? album.title,
           thumbnails: album.thumbnails,

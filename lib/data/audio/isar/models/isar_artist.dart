@@ -9,15 +9,22 @@ import 'isar_track.dart';
 
 part 'isar_artist.g.dart';
 
-@Collection(
-    ignore: {'albums', 'tracks', 'props', 'derived', 'hashCode', 'stringify'})
+@Collection(ignore: {
+  'albums',
+  'tracks',
+  'props',
+  'derived',
+  'hashCode',
+  'stringify',
+  'thumbnails'
+})
 class IsarArtist extends BaseArtist {
   Id? isarId;
 
   @override
   Set<Type> get derived => {BaseArtist};
-  @override
-  final IsarThumbnailsSet thumbnails;
+
+  final IsarThumbnailsSet isarThumbnails;
 
   @override
   @Index(unique: true, replace: true)
@@ -30,7 +37,7 @@ class IsarArtist extends BaseArtist {
     super.id = '',
     super.name = '',
     super.description = '',
-    this.thumbnails = const IsarThumbnailsSet(),
+    this.isarThumbnails = const IsarThumbnailsSet(),
     super.tracks = const [],
     super.albums = const [],
     this.tracksIds = const [],
@@ -40,7 +47,7 @@ class IsarArtist extends BaseArtist {
     super.shuffleId = '',
     super.category = '',
     this.isarId,
-  }) : super(thumbnails: thumbnails);
+  }) : super(thumbnails: isarThumbnails);
 
   factory IsarArtist.fromMap(Map<String, dynamic> map) {
     final thumbnailsMap = map.whereKey('thumbnails');
@@ -50,7 +57,7 @@ class IsarArtist extends BaseArtist {
       id: map.whereKey('id'),
       name: map.whereKey('name'),
       description: map.whereKey('description'),
-      thumbnails: thumbnailsMap is Map<String, dynamic>
+      isarThumbnails: thumbnailsMap is Map<String, dynamic>
           ? IsarThumbnailsSet.fromMap(thumbnailsMap)
           : const IsarThumbnailsSet(),
       tracks: tracksListMap is List
@@ -94,11 +101,13 @@ class IsarArtist extends BaseArtist {
       radioId: radioId ?? this.radioId,
       shuffleId: shuffleId ?? this.shuffleId,
       category: category ?? this.category,
-      thumbnails: thumbnails ?? this.thumbnails,
+      isarThumbnails: thumbnails ?? this.isarThumbnails,
       tracks: tracks ?? this.tracks,
       albums: albums ?? this.albums,
-      tracksIds: tracksIds ?? this.tracksIds,
-      albumsIds: albumsIds ?? this.albumsIds,
+      tracksIds:
+          tracksIds ?? tracks?.map((e) => e.id).toList() ?? this.tracksIds,
+      albumsIds:
+          albumsIds ?? albums?.map((e) => e.id!).toList() ?? this.albumsIds,
     );
   }
 }

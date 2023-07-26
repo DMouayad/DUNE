@@ -1,5 +1,4 @@
-import 'package:dune/domain/audio/base_models/base_play_history.dart';
-import 'package:dune/domain/audio/base_models/base_track_record.dart';
+import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -8,17 +7,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'listening_history_date_section.dart';
 import 'listening_history_section_shimmer.dart';
-import 'tracks_records_list_view.dart';
+import 'tracks_listening_histories_list_view.dart';
 
 class TracksListeningHistoryTab extends ConsumerWidget {
   const TracksListeningHistoryTab({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
-    final listeningHistoryState = ref
-        .watch(listeningHistoryControllerProvider)
-        .whenData(
-            (value) => value.where((history) => history.tracks.isNotEmpty));
+    final listeningHistoryState = ref.watch(
+      listeningHistoryControllerProvider.select(
+          (value) => value.whenData((value) => value.tracksListeningHistory)),
+    );
     if (!listeningHistoryState.isLoading && !listeningHistoryState.hasValue) {
       return const Center(
           child: Text("Failed Loading songs listening history"));
@@ -27,7 +26,7 @@ class TracksListeningHistoryTab extends ConsumerWidget {
         (listeningHistoryState.value?.isEmpty ?? false)) {
       return Center(
         child: Text(
-          "You haven't played any playlists recently...",
+          "You haven't played any tracks recently...",
           style: context.textTheme.titleSmall?.copyWith(
             color: context.colorScheme.secondary,
           ),
@@ -38,11 +37,16 @@ class TracksListeningHistoryTab extends ConsumerWidget {
       children: [
         Consumer(builder: (context, ref, _) {
           return SelectionToolBar(
-            controller:
-                ref.read(tracksRecordsSelectionControllerProvider.notifier),
-            selectionState: ref.watch(tracksRecordsSelectionControllerProvider),
+            controller: ref.read(
+                trackListeningHistoryCardsSelectionControllerProvider.notifier),
+            selectionState: ref
+                .watch(trackListeningHistoryCardsSelectionControllerProvider),
             onSelectAll: () => _onSelectAllTracks(
-                ref, listeningHistoryState.valueOrNull?.toList()),
+              ref,
+              listeningHistoryState.valueOrNull?.values
+                  .expand((e) => e)
+                  .toList(),
+            ),
           );
         }),
         Expanded(
@@ -56,17 +60,15 @@ class TracksListeningHistoryTab extends ConsumerWidget {
               if (listeningHistoryState.isLoading) {
                 return const ListeningHistorySectionShimmer();
               } else if (listeningHistoryState.hasValue) {
-                final listeningHistory =
-                    listeningHistoryState.requireValue.elementAt(index);
-                final List<BaseTrackRecord> tracksRecords =
-                    listeningHistory.tracks;
+                final item =
+                    listeningHistoryState.requireValue.entries.elementAt(index);
                 return Column(
                   children: [
                     ListeningHistoryDateSectionHeader(
-                      date: listeningHistory.date,
-                      trailing: _contentDescription(tracksRecords),
+                      date: item.key,
+                      trailing: _contentDescription(item.value),
                     ),
-                    TracksRecordsListView(tracksRecords),
+                    TracksListeningHistoriesListView(item.value),
                   ],
                 );
               }
@@ -78,7 +80,7 @@ class TracksListeningHistoryTab extends ConsumerWidget {
     );
   }
 
-  String _contentDescription(List<BaseTrackRecord> tracksRecords) {
+  String _contentDescription(List<BaseTrackListeningHistory> tracksRecords) {
     return tracksRecords.length > 1
         ? '(${tracksRecords.length} tracks)'
         : '1 track';
@@ -86,13 +88,14 @@ class TracksListeningHistoryTab extends ConsumerWidget {
 
   _onSelectAllTracks(
     WidgetRef ref,
-    List<BaseListeningHistory>? histories,
+    List<BaseTrackListeningHistory>? histories,
   ) {
-    ref.read(tracksRecordsSelectionControllerProvider.notifier).selectAll(
+    ref
+        .read(trackListeningHistoryCardsSelectionControllerProvider.notifier)
+        .selectAll(
           Map.fromEntries(
             histories
-                    ?.map((e) => e.tracks)
-                    .expand((element) => element)
+                    ?.map((e) => e)
                     .map((e) => MapEntry(e.track!.id, e.track!)) ??
                 [],
           ),

@@ -14,14 +14,14 @@ class ThemeRepository {
 
   FutureOr<void> loadAppTheme() async {
     (await _dataSource.getAppTheme()).fold(
-      ifSuccess: (value) {
+      onSuccess: (value) {
         _currentTheme = value;
       },
     );
   }
 
   FutureOr<void> updateAppTheme(AppTheme newAppTheme) async {
-    (await _dataSource.saveAppTheme(newAppTheme)).fold(ifSuccess: (_) {
+    (await _dataSource.saveAppTheme(newAppTheme)).fold(onSuccess: (_) {
       _currentTheme = newAppTheme;
     });
   }

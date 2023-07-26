@@ -48,17 +48,17 @@ const IsarPlaylistSchema = CollectionSchema(
       name: r'id',
       type: IsarType.string,
     ),
-    r'source': PropertySchema(
+    r'isarThumbnails': PropertySchema(
       id: 6,
+      name: r'isarThumbnails',
+      type: IsarType.object,
+      target: r'IsarThumbnailsSet',
+    ),
+    r'source': PropertySchema(
+      id: 7,
       name: r'source',
       type: IsarType.byte,
       enumMap: _IsarPlaylistsourceEnumValueMap,
-    ),
-    r'thumbnails': PropertySchema(
-      id: 7,
-      name: r'thumbnails',
-      type: IsarType.object,
-      target: r'IsarThumbnailsSet',
     ),
     r'title': PropertySchema(
       id: 8,
@@ -132,7 +132,7 @@ int _isarPlaylistEstimateSize(
   }
   bytesCount += 3 +
       IsarThumbnailsSetSchema.estimateSize(
-          object.thumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
+          object.isarThumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
   {
     final value = object.title;
     if (value != null) {
@@ -166,13 +166,13 @@ void _isarPlaylistSerialize(
   writer.writeString(offsets[3], object.duration);
   writer.writeLong(offsets[4], object.durationSeconds);
   writer.writeString(offsets[5], object.id);
-  writer.writeByte(offsets[6], object.source.index);
   writer.writeObject<IsarThumbnailsSet>(
-    offsets[7],
+    offsets[6],
     allOffsets,
     IsarThumbnailsSetSchema.serialize,
-    object.thumbnails,
+    object.isarThumbnails,
   );
+  writer.writeByte(offsets[7], object.source.index);
   writer.writeString(offsets[8], object.title);
   writer.writeStringList(offsets[9], object.tracksIds);
 }
@@ -195,15 +195,15 @@ IsarPlaylist _isarPlaylistDeserialize(
     durationSeconds: reader.readLongOrNull(offsets[4]),
     id: reader.readStringOrNull(offsets[5]),
     isarId: id,
-    source:
-        _IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offsets[6])] ??
-            MusicSource.youtube,
-    thumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
-          offsets[7],
+    isarThumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
+          offsets[6],
           IsarThumbnailsSetSchema.deserialize,
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
+    source:
+        _IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offsets[7])] ??
+            MusicSource.youtube,
     title: reader.readStringOrNull(offsets[8]),
     tracksIds: reader.readStringList(offsets[9]) ?? const [],
   );
@@ -234,15 +234,15 @@ P _isarPlaylistDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (_IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offset)] ??
-          MusicSource.youtube) as P;
-    case 7:
       return (reader.readObjectOrNull<IsarThumbnailsSet>(
             offset,
             IsarThumbnailsSetSchema.deserialize,
             allOffsets,
           ) ??
           const IsarThumbnailsSet()) as P;
+    case 7:
+      return (_IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offset)] ??
+          MusicSource.youtube) as P;
     case 8:
       return (reader.readStringOrNull(offset)) as P;
     case 9:
@@ -1599,10 +1599,10 @@ extension IsarPlaylistQueryObject
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition> thumbnails(
-      FilterQuery<IsarThumbnailsSet> q) {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition>
+      isarThumbnails(FilterQuery<IsarThumbnailsSet> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'thumbnails');
+      return query.object(q, r'isarThumbnails');
     });
   }
 }
@@ -1903,16 +1903,16 @@ extension IsarPlaylistQueryProperty
     });
   }
 
-  QueryBuilder<IsarPlaylist, MusicSource, QQueryOperations> sourceProperty() {
+  QueryBuilder<IsarPlaylist, IsarThumbnailsSet, QQueryOperations>
+      isarThumbnailsProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'source');
+      return query.addPropertyName(r'isarThumbnails');
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarThumbnailsSet, QQueryOperations>
-      thumbnailsProperty() {
+  QueryBuilder<IsarPlaylist, MusicSource, QQueryOperations> sourceProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'thumbnails');
+      return query.addPropertyName(r'source');
     });
   }
 

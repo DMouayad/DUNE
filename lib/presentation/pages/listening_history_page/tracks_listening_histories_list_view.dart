@@ -1,28 +1,29 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/base_models/base_track_record.dart';
+import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/track_card.dart';
 import 'package:dune/presentation/custom_widgets/track_card_wrapper.dart';
-import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-final tracksRecordsSelectionControllerProvider = StateNotifierProvider<
-    SelectionController<BaseTrack>, SelectionState<BaseTrack>>(
+final trackListeningHistoryCardsSelectionControllerProvider =
+    StateNotifierProvider<SelectionController<BaseTrack>,
+        SelectionState<BaseTrack>>(
   (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
 );
 
-class TracksRecordsListView extends ConsumerWidget {
-  final List<BaseTrackRecord> tracksRecordsState;
+class TracksListeningHistoriesListView extends ConsumerWidget {
+  final List<BaseTrackListeningHistory> tracksListeningHistories;
   final EdgeInsets? listPadding;
   final EdgeInsets? itemPadding;
   final bool compact;
 
-  const TracksRecordsListView(
-    this.tracksRecordsState, {
+  const TracksListeningHistoriesListView(
+    this.tracksListeningHistories, {
     this.listPadding,
     this.itemPadding,
     this.compact = false,
@@ -31,7 +32,7 @@ class TracksRecordsListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final tracksRecords = tracksRecordsState.reversed.toList();
+    final tracksRecords = tracksListeningHistories.reversed.toList();
     return AnimationLimiter(
       child: ListView.builder(
         shrinkWrap: true,
@@ -49,7 +50,7 @@ class TracksRecordsListView extends ConsumerWidget {
               horizontalOffset: 50.0,
               child: FadeInAnimation(
                 child: TrackRecordCard(
-                  trackRecord: tracksRecords.elementAt(index),
+                  trackListeningHistory: tracksRecords.elementAt(index),
                   color: _getCardColor(index, context.colorScheme),
                 ),
               ),
@@ -61,24 +62,23 @@ class TracksRecordsListView extends ConsumerWidget {
   }
 
   Color _getCardColor(int index, ColorScheme colorScheme) {
-    return index % 2 != 0 ? Colors.transparent : colorScheme.background;
+    return index % 2 != 0 ? colorScheme.surfaceVariant : colorScheme.background;
   }
 }
 
 class TrackRecordCard extends ConsumerWidget {
   const TrackRecordCard({
     super.key,
-    required this.trackRecord,
+    required this.trackListeningHistory,
     required this.color,
   });
 
-  final BaseTrackRecord trackRecord;
+  final BaseTrackListeningHistory trackListeningHistory;
   final Color color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(trackRecord.track?.id);
-    final BaseTrack? track = trackRecord.track;
+    final BaseTrack? track = trackListeningHistory.track;
     if (track == null) return const Text("Track was not found");
 
     final textTheme = context.textTheme.bodyMedium?.copyWith(
@@ -86,10 +86,12 @@ class TrackRecordCard extends ConsumerWidget {
     );
     return TrackCardWrapper(
       track: track,
-      selectionState: ref.watch(tracksRecordsSelectionControllerProvider),
+      selectionState:
+          ref.watch(trackListeningHistoryCardsSelectionControllerProvider),
       onSelected: (track) {
         ref
-            .read(tracksRecordsSelectionControllerProvider.notifier)
+            .read(
+                trackListeningHistoryCardsSelectionControllerProvider.notifier)
             .toggleSelectionForItem(track.id, track);
       },
       cardColor: color,
@@ -116,9 +118,7 @@ class TrackRecordCard extends ConsumerWidget {
               ),
             ),
           ),
-          // Divider(),
           Positioned(
-            // top: 0,
             left: 100,
             bottom: 0,
             right: 8,
@@ -126,13 +126,13 @@ class TrackRecordCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "complete listens: ${trackRecord.listeningHistory.first.completedListensCount}",
+                  "complete listens: ${trackListeningHistory.completedListensCount}",
                   style: textTheme,
                 ),
                 // Spacer(),
                 Text(
                   "uncompleted listens total: "
-                  "${trackRecord.listeningHistory.first.uncompletedListensTotalDuration?.inMinutes ?? 0}(min)",
+                  "${trackListeningHistory.uncompletedListensTotalDuration?.formatInHhMmSs ?? 0}",
                   style: textTheme,
                 ),
                 Tooltip(
@@ -140,7 +140,6 @@ class TrackRecordCard extends ConsumerWidget {
                   child: IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.more_horiz_rounded, size: 20),
-                    // label: Text("more"),
                   ),
                 ),
               ],

@@ -17,7 +17,7 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
         .copyWithPrevious(AsyncData(state.valueOrNull));
 
     (await _playlistData.getCachedPlaylistInfo(playlistId)).foldAsync(
-      ifSuccess: (playlist) async {
+      onSuccess: (playlist) async {
         print('fetched local playlist');
         if (playlist != null) {
           print('playlist found in local storage');
@@ -25,7 +25,7 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
               .copyWithPrevious(AsyncValue.data(playlist));
         }
         (await _playlistData.getPlaylist(playlistId, musicSource)).fold(
-          ifSuccess: (playlist) {
+          onSuccess: (playlist) {
             print('fetched playlist from remote datasource');
             if (playlist?.hasSameTracksAsOther(state.valueOrNull) ?? true) {
               state = AsyncData(state.value);
@@ -34,7 +34,7 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
               state = AsyncData(playlist);
             }
           },
-          ifFailure: (error) async {
+          onFailure: (error) async {
             if (state.hasValue) {
               state = AsyncValue<BasePlaylist?>.error(error, error.stackTrace)
                   .copyWithPrevious(AsyncData(state.requireValue));
@@ -44,7 +44,7 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
           },
         );
       },
-      ifFailure: (error) async {
+      onFailure: (error) async {
         state = AsyncValue.error(error, error.stackTrace);
       },
     );

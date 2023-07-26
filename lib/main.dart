@@ -34,7 +34,7 @@ Future<void> _registerDependencies() async {
 
   MusicFacade.registerInstance(
     cacheMusicRepository: isarMusicRepository,
-    userListeningHistoryRepository: isarMusicRepository.listeningHistory,
+    listeningHistoryRepository: isarMusicRepository.listeningHistory,
     youtubeMusicRepository: YoutubeMusicRepository(),
   );
 
@@ -48,8 +48,7 @@ Future<void> _registerDependencies() async {
 
     await AppWindowHelper.setWindowEffect(currentTheme);
   }
-  final initialRoute = _setupInitialRoute(appPreferences);
-  _registerAppRouter(initialRoute);
+  _registerAppRouter(_setupInitialRoute(appPreferences));
   registerControllersProviders();
 }
 

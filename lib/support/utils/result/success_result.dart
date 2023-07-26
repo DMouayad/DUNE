@@ -116,11 +116,11 @@ class SuccessResult<V extends Object?, E extends NoError> extends Result<V, E> {
 
   @override
   Future<Result<V, E>> foldAsync({
-    Future<void> Function(V value)? ifSuccess,
-    Future<void> Function(E error)? ifFailure,
+    Future<void> Function(V value)? onSuccess,
+    Future<void> Function(E error)? onFailure,
   }) async {
-    if (ifSuccess != null) {
-      await ifSuccess(value);
+    if (onSuccess != null) {
+      await onSuccess(value);
     }
     return SuccessResult(value);
   }
@@ -143,11 +143,11 @@ class SuccessResult<V extends Object?, E extends NoError> extends Result<V, E> {
 
   @override
   Result<V, E> fold({
-    void Function(V value)? ifSuccess,
-    void Function(E error)? ifFailure,
+    void Function(V value)? onSuccess,
+    void Function(E error)? onFailure,
   }) {
-    if (ifSuccess != null) {
-      ifSuccess(value);
+    if (onSuccess != null) {
+      onSuccess(value);
     }
     return SuccessResult(value);
   }

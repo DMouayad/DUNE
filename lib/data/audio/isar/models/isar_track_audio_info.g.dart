@@ -96,6 +96,9 @@ IsarTrackAudioInfo _isarTrackAudioInfoDeserialize(
   final object = IsarTrackAudioInfo(
     bitrateInKb: reader.readDoubleOrNull(offsets[0]),
     format: reader.readStringOrNull(offsets[1]),
+    musicSource: _IsarTrackAudioInfomusicSourceValueEnumMap[
+            reader.readByteOrNull(offsets[2])] ??
+        MusicSource.unknown,
     quality: _IsarTrackAudioInfoqualityValueEnumMap[
             reader.readByteOrNull(offsets[3])] ??
         AudioStreamingQuality.undefined,
@@ -119,7 +122,7 @@ P _isarTrackAudioInfoDeserializeProp<P>(
     case 2:
       return (_IsarTrackAudioInfomusicSourceValueEnumMap[
               reader.readByteOrNull(offset)] ??
-          MusicSource.youtube) as P;
+          MusicSource.unknown) as P;
     case 3:
       return (_IsarTrackAudioInfoqualityValueEnumMap[
               reader.readByteOrNull(offset)] ??

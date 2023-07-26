@@ -71,11 +71,6 @@ class _CustomCardState extends State<CustomCard> {
                   constraints: const BoxConstraints.expand(),
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: context.colorScheme.onSurface.withOpacity(.07),
-                      )
-                    ],
                     borderRadius: widget.shape == BoxShape.circle
                         ? null
                         : rectangleBorderRadius,

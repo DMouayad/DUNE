@@ -12,9 +12,9 @@ part 'isar_album.g.dart';
 @Collection(ignore: {
   'tracks',
   'artists',
+  'thumbnails',
   'props',
   'derived',
-  'thumbnails',
   'hashCode',
   'stringify'
 })
@@ -26,8 +26,8 @@ class IsarAlbum extends BaseAlbum {
 
   @override
   Set<Type> get derived => {BaseAlbum};
-  @override
-  final IsarThumbnailsSet thumbnails;
+
+  final IsarThumbnailsSet isarThumbnails;
 
   @override
   @Index(unique: true, replace: true)
@@ -44,12 +44,12 @@ class IsarAlbum extends BaseAlbum {
     super.category = '',
     super.duration = '',
     super.isExplicit = false,
-    this.thumbnails = const IsarThumbnailsSet(),
+    this.isarThumbnails = const IsarThumbnailsSet(),
     super.title = '',
     super.type = '',
     super.tracks = const [],
     super.releaseDate,
-  }) : super(thumbnails: thumbnails);
+  }) : super(thumbnails: isarThumbnails);
 
   factory IsarAlbum.fromMap(Map<String, dynamic> map) {
     final thumbnailsMap = map.whereKey('thumbnails');
@@ -63,8 +63,7 @@ class IsarAlbum extends BaseAlbum {
       browseId: map.whereKey('browseId'),
       category: map.whereKey('category'),
       duration: map.whereKey('duration'),
-      isExplicit: false,
-      thumbnails: thumbnailsMap is Map<String, dynamic>
+      isarThumbnails: thumbnailsMap is Map<String, dynamic>
           ? IsarThumbnailsSet.fromMap(thumbnailsMap)
           : const IsarThumbnailsSet(),
       tracks: tracksListMap is List
@@ -72,6 +71,7 @@ class IsarAlbum extends BaseAlbum {
           : [],
       title: map.whereKey('title'),
       type: map.whereKey('type'),
+      isExplicit: map.whereKey('isExplicit'),
       releaseDate: map.whereKey('releaseDate') != null
           ? DateTime.tryParse(map.whereKey('releaseDate'))
           : null,
@@ -100,8 +100,9 @@ class IsarAlbum extends BaseAlbum {
       browseId: browseId ?? this.browseId,
       albumArtistId: albumArtistId ?? this.albumArtistId,
       featuredArtistsIds: featuredArtistsIds ?? this.featuredArtistsIds,
-      tracksIds: tracksIds ?? this.tracksIds,
-      thumbnails: thumbnails ?? this.thumbnails,
+      tracksIds:
+          tracksIds ?? tracks?.map((e) => e.id).toList() ?? this.tracksIds,
+      isarThumbnails: thumbnails ?? this.isarThumbnails,
       artists: artists ?? this.artists,
       tracks: tracks ?? this.tracks,
       duration: duration,

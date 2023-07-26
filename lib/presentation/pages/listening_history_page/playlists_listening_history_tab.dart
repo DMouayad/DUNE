@@ -1,4 +1,4 @@
-import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
 import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
@@ -15,10 +15,10 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final listeningHistoryState = ref
-        .watch(listeningHistoryControllerProvider)
-        .whenData(
-            (value) => value.where((history) => history.playlists.isNotEmpty));
+    final listeningHistoryState = ref.watch(
+      listeningHistoryControllerProvider.select((state) =>
+          state.whenData((value) => value.playlistsListeningHistory)),
+    );
     return (listeningHistoryState.valueOrNull?.isEmpty ?? false)
         ? Center(
             child: Text(
@@ -36,15 +36,10 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
                 : listeningHistoryState.valueOrNull?.length ?? 0,
             itemBuilder: (BuildContext context, int index) {
               return _PlaylistsGridView(
-                listeningHistoryState.map(
-                  data: (state) =>
-                      AsyncData(state.value.elementAt(index).playlists),
-                  error: (state) =>
-                      AsyncValue.error(state.error, state.stackTrace),
-                  loading: (_) => const AsyncValue.loading(),
+                listeningHistoryState.whenData(
+                  (playlistsHistoriesMap) =>
+                      playlistsHistoriesMap.values.elementAt(index),
                 ),
-                listeningHistoryState
-                    .whenData((value) => value.elementAt(index).date),
               );
             },
           );
@@ -52,10 +47,9 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
 }
 
 class _PlaylistsGridView extends ConsumerStatefulWidget {
-  const _PlaylistsGridView(this.playlists, this.date);
+  const _PlaylistsGridView(this.playlistsInfo);
 
-  final AsyncValue<List<BasePlaylist>> playlists;
-  final AsyncValue<DateTime> date;
+  final AsyncValue<BasePlaylistsListeningHistory> playlistsInfo;
 
   @override
   ConsumerState<_PlaylistsGridView> createState() => _PlaylistsGridViewState();
@@ -74,20 +68,20 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
   Widget build(BuildContext context) {
     return ScrollableCardsView(
       scrollController: scrollController,
-      titleWidget: widget.date.hasValue && widget.playlists.hasValue
+      titleWidget: widget.playlistsInfo.hasValue
           ? ListeningHistoryDateSectionHeader(
-              date: widget.date.requireValue,
-              trailing: _contentDescription(widget.playlists.requireValue),
+              date: widget.playlistsInfo.requireValue.date,
+              trailing: _contentDescription(
+                  widget.playlistsInfo.requireValue.playlists),
               alignment: MainAxisAlignment.start,
             )
           : null,
-      itemsState: widget.playlists.map(
-        data: (s) => AsyncData((itemCount: s.requireValue.length, title: null)),
-        error: (s) => AsyncError(s.error, s.stackTrace),
-        loading: (state) => const AsyncLoading(),
+      itemsState: widget.playlistsInfo.whenData(
+        (data) => (itemCount: data.playlists.length, title: null),
       ),
       childBuilder: (double cardWidth, int index) {
-        final playlist = widget.playlists.value!.elementAt(index);
+        final playlist =
+            widget.playlistsInfo.requireValue.playlists.elementAt(index);
         return CustomCard(
           width: cardWidth,
           tag: playlist.id ?? playlist.title!,

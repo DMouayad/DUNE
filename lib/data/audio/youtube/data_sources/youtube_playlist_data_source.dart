@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import '../models/youtube_playlist.dart';
 
 class YoutubePlaylistDataSource extends BasePlaylistDataSource {
-  // final _ytExplode = YoutubeExplode();
   static const String _serverAddress =
       'https://drip-server-fv6tn36q0-spsden.vercel.app/';
 
@@ -16,7 +15,6 @@ class YoutubePlaylistDataSource extends BasePlaylistDataSource {
   FutureOrResult<YoutubePlaylist?> find(String playlistId) async {
     const limit = 20;
     return await Result.fromAnother(() async {
-      // print(vids.first);
       final response = await http.get(Uri.parse(
           '${_serverAddress}searchplaylist?playlistId=$playlistId&limit=$limit'));
       if (response.statusCode == 200) {

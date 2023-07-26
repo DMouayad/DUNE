@@ -2,16 +2,15 @@ import 'package:dune/data/audio/isar/data_sources/isar_album_data_source.dart';
 import 'package:dune/data/audio/isar/data_sources/isar_playlist_data_source.dart';
 import 'package:dune/data/audio/isar/models/isar_album.dart';
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
-import 'package:dune/data/audio/isar/models/isar_play_history.dart';
+import 'package:dune/data/audio/isar/models/isar_playlists_listening_history.dart';
 import 'package:dune/data/audio/isar/models/isar_playlist.dart';
 import 'package:dune/data/audio/isar/models/isar_track.dart';
-import 'package:dune/data/audio/isar/models/isar_track_record.dart';
+import 'package:dune/data/audio/isar/models/isar_track_listening_history.dart';
+import 'package:dune/domain/audio/base_models/base_listening_history_month_summary.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/utils/result/result.dart';
-import 'package:isar/isar.dart';
 
 import '../data_sources/isar_artist_data_source.dart';
-import '../data_sources/isar_play_history_data_source.dart';
 import '../data_sources/isar_track_data_source.dart';
 
 final class IsarModelsRelationHelper {
@@ -19,38 +18,37 @@ final class IsarModelsRelationHelper {
   final IsarArtistDataSource _artistDataSource;
   final IsarPlaylistDataSource _playlistDataSource;
   final IsarAlbumDataSource _albumDataSource;
-  final IsarListeningHistoryDataSource _listeningHistoryDataSource;
-  final Isar _isar;
 
   IsarModelsRelationHelper(
     this._trackDataSource,
     this._artistDataSource,
     this._albumDataSource,
     this._playlistDataSource,
-    this._listeningHistoryDataSource,
-    this._isar,
   );
 
-  FutureResult<List<IsarListeningHistory>> loadRelationsForPlayHistories(
-    List<IsarListeningHistory> histories,
+  FutureResult<List<IsarPlaylistsListeningHistory>>
+      loadRelationsForPlaylistsListeningHistories(
+    List<IsarPlaylistsListeningHistory> histories,
   ) async {
     return await _loadRelationsForMany(
       histories,
-      loadRelationsForListeningHistory,
+      loadRelationsForPlaylistsListeningHistory,
       itemRelationsAlreadyLoaded: (_) => false,
     );
   }
 
-  FutureResult<IsarListeningHistory> loadRelationsForListeningHistory(
-    IsarListeningHistory history, {
-    List<int> ignoredTracksIds = const [],
+  FutureResult<IsarPlaylistsListeningHistory>
+      loadRelationsForPlaylistsListeningHistory(
+    IsarPlaylistsListeningHistory history, {
     List<int> ignoredPlaylistsIds = const [],
   }) async {
     final List<IsarPlaylist> playlists;
     final playlistsIds = List<int>.from(history.isarPlaylistsIds);
 
+    for (var id in ignoredPlaylistsIds) {
+      playlistsIds.remove(id);
+    }
     if (playlistsIds.isNotEmpty) {
-      playlistsIds.removeWhere((e) => ignoredPlaylistsIds.contains(e));
       final fetchingPlaylistsResult =
           await _playlistDataSource.getWhereIsarId(playlistsIds);
       if (fetchingPlaylistsResult.isFailure) {
@@ -60,32 +58,51 @@ final class IsarModelsRelationHelper {
     } else {
       playlists = const [];
     }
+    return (await loadRelationsForPlaylists(playlists,
+            loadTracksRelations: true))
+        .mapSuccess((value) {
+      return history.copyWith(playlists: value);
+    });
+  }
 
-    final tracksRecordsIds = List<int>.from(history.isarTrackRecordsIds);
-    tracksRecordsIds.removeWhere((e) => ignoredTracksIds.contains(e));
-    if (tracksRecordsIds.isEmpty) {
-      return history.copyWith(playlists: playlists).asResult;
-    }
-    final fetchingTracksRecordsResult =
-        await _listeningHistoryDataSource.getTrackRecords(tracksRecordsIds);
-    if (fetchingTracksRecordsResult.isFailure) {
-      return fetchingTracksRecordsResult.mapFailure((error) => error);
-    }
-    final tracksRecords = fetchingTracksRecordsResult.requireValue;
-
-    return (await loadRelationsForTracksRecords(tracksRecords)).mapSuccess(
-      (value) => history.copyWith(tracks: value, playlists: playlists),
+  FutureResult<List<IsarTrackListeningHistory>>
+      loadRelationsForTrackListeningHistories(
+    List<IsarTrackListeningHistory> histories,
+  ) async {
+    return await _loadRelationsForMany(
+      histories,
+      loadRelationsForTrackListeningHistory,
+      itemRelationsAlreadyLoaded: (_) => false,
     );
   }
 
-  FutureResult<List<IsarTrackRecord>> loadRelationsForTracksRecords(
-    List<IsarTrackRecord> tracksRecords,
+  FutureResult<IsarTrackListeningHistory> loadRelationsForTrackListeningHistory(
+    IsarTrackListeningHistory history,
   ) async {
-    return await _loadRelationsForMany(
-      tracksRecords,
-      loadRelationsForTrackRecord,
-      itemRelationsAlreadyLoaded: (record) => record.track != null,
-    );
+    return await Result.fromAnother(() async {
+      final IsarTrack? track;
+      if (history.track is IsarTrack) {
+        track = history.track!;
+      } else {
+        final fetchingTrackResult =
+            await _trackDataSource.find(history.trackId!);
+        if (fetchingTrackResult.isSuccess) {
+          track = fetchingTrackResult.requireValue;
+        } else {
+          track = null;
+          Log.e(fetchingTrackResult.asFailure.error);
+        }
+      }
+      if (track == null) {
+        return history.asResult;
+      } else {
+        return (await loadRelationsForTrack(track)).mapSuccess(
+          (trackWithRelations) {
+            return history.copyWith(track: trackWithRelations);
+          },
+        );
+      }
+    });
   }
 
   FutureResult<List<IsarPlaylist>> loadRelationsForPlaylists(
@@ -96,31 +113,6 @@ final class IsarModelsRelationHelper {
       (e) => loadRelationsForPlaylist(e, loadTracksRelations),
       itemRelationsAlreadyLoaded: (p) => false,
     );
-  }
-
-  FutureResult<IsarTrackRecord> loadRelationsForTrackRecord(
-    IsarTrackRecord trackRecord,
-  ) async {
-    return await Result.fromAnother(() async {
-      final track = await _isar.isarTracks
-          .where()
-          .optional(trackRecord.trackId != null,
-              (q) => q.idEqualTo(trackRecord.trackId!))
-          .findFirst();
-
-      if (track == null) {
-        Log.e(
-          "The [IsarTrack] with id ${trackRecord.trackId} associated with this [IsarTrackRecord] was not found!!",
-        );
-        return trackRecord.asResult;
-      } else {
-        return (await loadRelationsForTrack(track)).mapSuccess(
-          (trackWithRelations) {
-            return trackRecord.copyWith(track: trackWithRelations);
-          },
-        );
-      }
-    });
   }
 
   FutureResult<List<IsarArtist>> loadRelationsForArtists(
@@ -197,38 +189,43 @@ final class IsarModelsRelationHelper {
     return await Result.fromAnother(() async {
       final List<IsarArtist> artistsOfTrack;
       // check if artists relation has already been loaded
+      IsarTrack trackWithArtists;
       if (track.artists.isNotEmpty) {
         artistsOfTrack = track.artists;
+        trackWithArtists = track.copyWith(artists: artistsOfTrack);
       } else {
         final artistsIds = List<String>.from(track.artistsIds);
         artistsIds.remove(artistIdToIgnore);
         if (artistsIds.isEmpty) {
           // no artists to load so the artists list is empty
           artistsOfTrack = const [];
+          trackWithArtists = track;
         } else {
           final fetchingArtistsResult =
               await _artistDataSource.getWhereIds(artistsIds);
           if (fetchingArtistsResult.isFailure) {
             return fetchingArtistsResult.mapFailure((error) => error);
           }
-          artistsOfTrack = fetchingArtistsResult.asSuccess.value;
+          artistsOfTrack = fetchingArtistsResult.requireValue;
+
+          trackWithArtists = track.copyWith(artists: artistsOfTrack);
         }
       }
       if (track.albumId == null || track.albumId == albumIdToIgnore) {
-        return track.copyWith(artists: artistsOfTrack).asResult;
+        return trackWithArtists.asResult;
       }
       return (await _albumDataSource.find(track.albumId!))
           .flatMapSuccessAsync((album) async {
         if (album == null) {
-          return track.copyWith(artists: artistsOfTrack).asResult;
+          return trackWithArtists.asResult;
         }
         return (await loadRelationsForAlbum(
           album,
-          trackIdToIgnore: track.id,
+          withArtists: false,
           withTracks: false,
         ))
             .mapSuccess((albumWithRelations) {
-          return track.copyWith(
+          return trackWithArtists.copyWith(
             album: albumWithRelations,
             artists: artistsOfTrack,
           );
@@ -283,8 +280,8 @@ final class IsarModelsRelationHelper {
     return await Result.fromAnother(() async {
       if (!withArtists && !withArtists) return album.asResult;
 
-      final List<IsarArtist> artistsOfAlbum;
-      final List<IsarTrack> tracksOfAlbum;
+      List<IsarArtist>? artistsOfAlbum;
+      List<IsarTrack>? tracksOfAlbum;
       if (withArtists) {
         // check if artists relation has already been loaded
         if (album.artists.isNotEmpty && album.artists is List<IsarArtist>) {
@@ -307,8 +304,6 @@ final class IsarModelsRelationHelper {
             artistsOfAlbum = fetchingArtistsResult.asSuccess.value;
           }
         }
-      } else {
-        artistsOfAlbum = const [];
       }
       if (withTracks) {
         if (album.tracksIds.isEmpty) {
@@ -326,12 +321,29 @@ final class IsarModelsRelationHelper {
                 tracks: tracksWithRelations, artists: artistsOfAlbum);
           });
         });
-      } else {
-        tracksOfAlbum = const [];
-        return album
-            .copyWith(artists: artistsOfAlbum, tracks: tracksOfAlbum)
-            .asResult;
       }
+
+      return album
+          .copyWith(artists: artistsOfAlbum, tracks: tracksOfAlbum)
+          .asResult;
     });
+  }
+
+  FutureResult<List<BaseListeningHistoryMonthSummary>>
+      loadRelationsForMonthsSummary(
+    List<BaseListeningHistoryMonthSummary> summaries,
+  ) async {
+    return await _loadRelationsForMany(
+      summaries,
+      loadRelationsForMonthSummary,
+      itemRelationsAlreadyLoaded: (instance) =>
+          instance.topArtists.isNotEmpty && instance.topTracks.isNotEmpty,
+    );
+  }
+
+  FutureResult<BaseListeningHistoryMonthSummary> loadRelationsForMonthSummary(
+    BaseListeningHistoryMonthSummary summary,
+  ) async {
+    return summary.asResult;
   }
 }

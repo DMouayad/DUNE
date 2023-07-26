@@ -34,7 +34,21 @@ const IsarCategoryPlaylistsSchema = CollectionSchema(
   deserialize: _isarCategoryPlaylistsDeserialize,
   deserializeProp: _isarCategoryPlaylistsDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'categoryId': IndexSchema(
+      id: -8798048739239305339,
+      name: r'categoryId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'categoryId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _isarCategoryPlaylistsGetId,
@@ -194,6 +208,73 @@ extension IsarCategoryPlaylistsQueryWhere on QueryBuilder<IsarCategoryPlaylists,
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<IsarCategoryPlaylists, IsarCategoryPlaylists, QAfterWhereClause>
+      categoryIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'categoryId',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarCategoryPlaylists, IsarCategoryPlaylists, QAfterWhereClause>
+      categoryIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarCategoryPlaylists, IsarCategoryPlaylists, QAfterWhereClause>
+      categoryIdEqualTo(String? categoryId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'categoryId',
+        value: [categoryId],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarCategoryPlaylists, IsarCategoryPlaylists, QAfterWhereClause>
+      categoryIdNotEqualTo(String? categoryId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId',
+              lower: [],
+              upper: [categoryId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId',
+              lower: [categoryId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId',
+              lower: [categoryId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId',
+              lower: [],
+              upper: [categoryId],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

@@ -113,7 +113,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
       title: baseTrack.title,
       isExplicit: baseTrack.isExplicit,
       source: baseTrack.source,
-      thumbnails: IsarThumbnailsSet.fromMap(baseTrack.thumbnails.toMap()),
+      isarThumbnails: IsarThumbnailsSet.fromMap(baseTrack.thumbnails.toMap()),
       views: baseTrack.views,
       isarDuration: IsarDuration(inSeconds: baseTrack.duration.inSeconds),
       category: baseTrack.category,
@@ -147,6 +147,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
               format: e.format,
               totalBytes: e.totalBytes,
               url: e.url,
+              musicSource: e.musicSource,
               quality: e.quality,
             ))
         .toList();

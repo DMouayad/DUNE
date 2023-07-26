@@ -101,9 +101,9 @@ abstract class BaseAppPreferences extends Equatable {
   @override
   List<Object?> get props => [
         usePrimaryColorInCardColor,
-        initialPageOnStartup.name,
-        exploreMusicSource.name,
-        searchEngine.name,
+        initialPageOnStartup,
+        exploreMusicSource,
+        searchEngine,
         volumeStep,
         rememberLastWindowSize,
         lastWindowSize,
@@ -125,8 +125,8 @@ enum ThumbnailQualitiesOrderOption {
   }),
   balanced({
     ThumbnailQuality.medium,
-    ThumbnailQuality.standard,
     ThumbnailQuality.high,
+    ThumbnailQuality.standard,
     ThumbnailQuality.low,
   }),
   lowest({

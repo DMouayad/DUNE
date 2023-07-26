@@ -1,6 +1,7 @@
 import 'package:dune/data/audio/isar/data_sources/isar_playlist_data_source.dart';
 import 'package:dune/data/audio/isar/helpers/isar_models_relation_helper.dart';
 import 'package:dune/data/audio/isar/models/isar_playlist.dart';
+import 'package:dune/data/audio/isar/models/isar_thumbnails_set.dart';
 import 'package:dune/data/audio/isar/repositories/isar_track_repository.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
@@ -29,6 +30,36 @@ final class IsarPlaylistRepository
     });
   }
 
+  IsarPlaylist _getIsarPlaylistFromBase(BasePlaylist playlist) {
+    final tracksIds = playlist.tracks.map((e) => e.id).toList();
+    return IsarPlaylist(
+      id: playlist.id,
+      author: IsarPlaylistAuthor(
+        name: playlist.author?.name,
+        id: playlist.author?.id,
+      ),
+      source: playlist.source,
+      tracksIds: tracksIds,
+      isarThumbnails: IsarThumbnailsSet.fromMap(playlist.thumbnails.toMap()),
+      description: playlist.description,
+      duration: playlist.duration,
+      durationSeconds: playlist.durationSeconds,
+      title: playlist.title,
+      createdAt: playlist.createdAt,
+    );
+  }
+
+  @override
+  FutureOrResult<List<BasePlaylist>> saveCategoryPlaylists(
+    String categoryId,
+    List<BasePlaylist> playlists,
+  ) async {
+    return await _playlistDataSource.saveCategoryPlaylists(
+      categoryId,
+      playlists.map((e) => _getIsarPlaylistFromBase(e)).toList(),
+    );
+  }
+
   @override
   FutureOrResult<IsarPlaylist> save(BasePlaylist playlist) async {
     return await Result.fromAnother(() async {
@@ -37,13 +68,10 @@ final class IsarPlaylistRepository
       if (tracksResult.isFailure) {
         return tracksResult.mapFailure((error) => error);
       }
-      final isarPlaylistResult = await _playlistDataSource.save(playlist);
-      if (isarPlaylistResult.isFailure) return isarPlaylistResult;
       final tracks = tracksResult.requireValue;
-      final tracksIds = tracks.map((e) => e.id).toList();
-      final isarPlaylist = isarPlaylistResult.requireValue
-          .copyWith(tracks: tracks, tracksIds: tracksIds);
 
+      final isarPlaylist =
+          _getIsarPlaylistFromBase(playlist).copyWith(tracks: tracks);
       return await _playlistDataSource.save(isarPlaylist);
     });
   }

@@ -52,13 +52,13 @@ abstract class Result<V extends Object?, E extends AppError> {
   }
 
   Result<V, E> fold({
-    void Function(V value)? ifSuccess,
-    void Function(E error)? ifFailure,
+    void Function(V value)? onSuccess,
+    void Function(E error)? onFailure,
   });
 
   Future<Result<V, E>> foldAsync({
-    Future<void> Function(V value)? ifSuccess,
-    Future<void> Function(E error)? ifFailure,
+    Future<void> Function(V value)? onSuccess,
+    Future<void> Function(E error)? onFailure,
   });
 
   Future<Result<U, F>> mapSuccessAsync<U extends Object?, F extends AppError>(
@@ -144,6 +144,17 @@ abstract class Result<V extends Object?, E extends AppError> {
     }
   }
 
+  static Result<U, V> from<U, V extends AppError>(
+    U Function() process, {
+    bool logError = true,
+  }) {
+    try {
+      return SuccessResult(process());
+    } catch (e, stack) {
+      return ExceptionHandler.getResult(e, stack);
+    }
+  }
+
   static Future<Result<U, V>> fromAnother<U, V extends AppError>(
     Future<Result<U, V>> Function() process, {
     bool logError = true,
@@ -196,7 +207,7 @@ extension AsyncResultExtension<V, E extends AppError>
     FutureOr<R> Function(V value)? onSuccess,
     Function(E)? onFailure,
   }) async {
-    (await this).mapToAsync(
+    (await this).foldAsync(
       onSuccess: (value) async => onSuccess != null ? onSuccess(value) : null,
       onFailure: (error) async => onFailure != null ? onFailure(error) : null,
     );

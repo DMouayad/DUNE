@@ -7,6 +7,7 @@ part 'isar_category_playlists.g.dart';
 class IsarCategoryPlaylists extends Equatable {
   final Id? id;
   final List<String> playlistsIds;
+  @Index()
   final String? categoryId;
 
   IsarCategoryPlaylists({
@@ -14,7 +15,6 @@ class IsarCategoryPlaylists extends Equatable {
     this.categoryId,
     this.playlistsIds = const [],
   });
-
   @override
   List<Object?> get props => [id, playlistsIds, categoryId];
 

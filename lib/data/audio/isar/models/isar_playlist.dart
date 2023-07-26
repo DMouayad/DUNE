@@ -7,17 +7,24 @@ import 'isar_track.dart';
 
 part 'isar_playlist.g.dart';
 
-@Collection(ignore: {'tracks', 'props', 'derived', 'hashCode', 'stringify'})
+@Collection(ignore: {
+  'tracks',
+  'thumbnails',
+  'props',
+  'derived',
+  'hashCode',
+  'stringify'
+})
 class IsarPlaylist extends BasePlaylist<IsarTrack> {
   Id? isarId;
   final List<String> tracksIds;
 
   @override
   Set<Type> get derived => {BasePlaylist};
+
   @override
   final IsarPlaylistAuthor? author;
-  @override
-  final IsarThumbnailsSet thumbnails;
+  final IsarThumbnailsSet isarThumbnails;
 
   @override
   @enumerated
@@ -31,7 +38,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
     super.id,
     this.author,
     this.isarId,
-    this.thumbnails = const IsarThumbnailsSet(),
+    this.isarThumbnails = const IsarThumbnailsSet(),
     this.tracksIds = const [],
     super.description = '',
     super.duration = '',
@@ -40,7 +47,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
     super.tracks = const [],
     super.createdAt,
     super.source = MusicSource.youtube,
-  }) : super(author: author, thumbnails: thumbnails);
+  }) : super(author: author, thumbnails: isarThumbnails);
 
   @override
   String toString() {
@@ -71,7 +78,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
       source: source ?? this.source,
       description: description ?? this.description,
       tracks: tracks ?? this.tracks,
-      thumbnails: thumbnails ?? this.thumbnails,
+      isarThumbnails: thumbnails ?? this.isarThumbnails,
       author: author ?? this.author,
       tracksIds: tracksIds ?? this.tracksIds,
     );

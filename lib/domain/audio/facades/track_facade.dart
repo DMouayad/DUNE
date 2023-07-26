@@ -17,7 +17,7 @@ final class TrackFacade {
     if (track.audioInfoSet != null) return track.audioInfoSet!.asResult;
     return (await _getMusicSourceRepo(musicSource ?? track.source)
             .getTrackAudioInfo(track))
-        .fold(ifSuccess: (audioInfo) {
+        .fold(onSuccess: (audioInfo) {
       _localTrackRepository.saveTrackAudioInfo(track, audioInfo);
     });
   }

@@ -1,18 +1,31 @@
 part of 'music_facade.dart';
 
 final class UserListeningHistoryFacade {
-  final BaseUserListeningHistoryRepository _repository;
+  final ListeningHistoryRepository _repository;
 
   UserListeningHistoryFacade(this._repository);
 
-  FutureResult<BaseListeningHistory> incrementTrackCompletedListensCount(
+  FutureResult<List<BaseTrackListeningHistory>> getDetailedHistoryForTrack(
+    String trackId,
+  ) async {
+    return await _repository.getDetailedHistoryForTrack(trackId);
+  }
+
+  FutureResult<BaseListeningHistoryMonthSummary?> getMonthSummary({
+    required int month,
+    required int year,
+  }) async {
+    return await _repository.getMonthSummary(month: month, year: year);
+  }
+
+  FutureResult<ListeningHistoryCollection> incrementTrackCompletedListensCount(
     BaseTrack track,
     DateTime date,
   ) async {
     return await _repository.incrementTrackCompletedListensCount(track, date);
   }
 
-  FutureResult<BaseListeningHistory> addToTrackUncompletedListensDuration(
+  FutureResult<ListeningHistoryCollection> addToTrackUncompletedListensDuration(
     BaseTrack track,
     DateTime date,
     Duration duration,
@@ -21,15 +34,14 @@ final class UserListeningHistoryFacade {
         track, date, duration);
   }
 
-  FutureOrResult<List<BaseListeningHistory<BaseTrackRecord, BasePlaylist>>>
-      getListeningHistoryByDates(
+  FutureOrResult<ListeningHistoryCollection> getListeningHistoryByDates(
     List<DateTime> dates,
   ) async {
     return await _repository.getByDates(dates.map((e) => e.onlyDate).toList());
   }
 
-  FutureResult<BaseListeningHistory> addPlaylist(
-    BasePlaylist<BaseTrack<BaseAlbum, BaseArtist>> playlist,
+  FutureResult<ListeningHistoryCollection> addPlaylist(
+    BasePlaylist playlist,
     DateTime date,
   ) async {
     return await _repository.addPlaylist(playlist, date);

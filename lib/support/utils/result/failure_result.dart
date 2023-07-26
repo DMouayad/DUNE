@@ -139,22 +139,22 @@ class FailureResult<V extends Object?, ErrorType extends AppError>
 
   @override
   Result<V, ErrorType> fold({
-    void Function(V value)? ifSuccess,
-    void Function(ErrorType error)? ifFailure,
+    void Function(V value)? onSuccess,
+    void Function(ErrorType error)? onFailure,
   }) {
-    if (ifFailure != null) {
-      ifFailure(error);
+    if (onFailure != null) {
+      onFailure(error);
     }
     return FailureResult(error);
   }
 
   @override
   Future<Result<V, ErrorType>> foldAsync({
-    Future<void> Function(V value)? ifSuccess,
-    Future<void> Function(ErrorType error)? ifFailure,
+    Future<void> Function(V value)? onSuccess,
+    Future<void> Function(ErrorType error)? onFailure,
   }) async {
-    if (ifFailure != null) {
-      await ifFailure(error);
+    if (onFailure != null) {
+      await onFailure(error);
     }
     return FailureResult(error);
   }

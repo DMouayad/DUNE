@@ -11,8 +11,7 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
   @override
   FutureOrResult<IsarTrack?> find(String trackId) async {
     return await Result.fromAsync(
-      () async =>
-          await _isar.isarTracks.filter().idEqualTo(trackId).findFirst(),
+      () async => await _isar.isarTracks.where().idEqualTo(trackId).findFirst(),
     );
   }
 
@@ -42,5 +41,11 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
           .anyOf(ids, (q, id) => q.idEqualTo(id))
           .findAll();
     });
+  }
+
+  @override
+  FutureOrResult<bool> existsWhereId(String id) async {
+    return await Result.fromAsync(
+        () async => await _isar.isarTracks.where().idEqualTo(id).isNotEmpty());
   }
 }

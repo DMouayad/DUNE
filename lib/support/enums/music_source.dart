@@ -16,5 +16,6 @@ enum MusicSource {
     return [youtube, spotify].contains(this);
   }
 
-  static List<MusicSource> get withoutUnknown => [youtube, spotify, local];
+  static List<MusicSource> get valuesWithoutUnknown =>
+      [youtube, spotify, local];
 }

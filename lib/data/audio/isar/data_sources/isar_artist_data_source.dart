@@ -13,22 +13,22 @@ class IsarArtistDataSource extends BaseArtistDataSource {
   @override
   FutureOrResult<IsarArtist?> find(String artistId) async {
     return await Result.fromAsync(() async {
-      return await _isar.isarArtists.filter().idEqualTo(artistId).findFirst();
+      return await _isar.isarArtists.where().idEqualTo(artistId).findFirst();
     });
   }
 
   @override
   FutureOrResult<List<IsarArtist>> getWhereIds(List<String> ids) async {
     return await Result.fromAsync(() async => await _isar.isarArtists
-        .filter()
+        .where()
         .anyOf(ids, (q, id) => q.idEqualTo(id))
         .findAll());
   }
 
   FutureOrResult<List<IsarArtist>> getAllWhereIsarIds(List<int?> ids) async {
     return await Result.fromAsync(() async => await _isar.isarArtists
-        .filter()
-        .anyOf(ids, (q, id) => q.isarIdEqualTo(id))
+        .where()
+        .anyOf(ids, (q, id) => q.isarIdEqualTo(id!))
         .findAll());
   }
 

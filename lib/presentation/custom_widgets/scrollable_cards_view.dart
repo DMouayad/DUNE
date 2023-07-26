@@ -48,9 +48,7 @@ class ScrollableCardsView extends StatelessWidget {
                 flex: 0,
                 child: SizedBox(
                   height: height ?? itemCardWidth,
-                  // width: double.infinity,
                   child: GridView.builder(
-                    // shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: itemCardWidth,
                       crossAxisSpacing: (height ?? 0) > itemCardWidth ? 8 : 0,
@@ -88,7 +86,7 @@ class ScrollableCardsView extends StatelessWidget {
                   itemCount: isLoading ? 5 : itemsState.requireValue.itemCount,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 8),
+                      padding: const EdgeInsetsDirectional.only(end: 10),
                       child: _itemBuilder(index, isLoading, itemCardWidth),
                     );
                   },
@@ -153,8 +151,8 @@ class ScrollableCardsView extends StatelessWidget {
       childBuilder: () {
         return AnimationConfiguration.staggeredList(
           position: index,
-          duration: showDuration ?? const Duration(milliseconds: 375),
-          delay: delayDuration ?? const Duration(milliseconds: 200),
+          duration: showDuration ?? const Duration(milliseconds: 200),
+          delay: delayDuration ?? const Duration(milliseconds: 100),
           child: SlideAnimation(
             verticalOffset: displayAsGrid ? 50.0 : 0.0,
             horizontalOffset: displayAsGrid ? 0.0 : -40,

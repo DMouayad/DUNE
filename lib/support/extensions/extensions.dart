@@ -24,6 +24,11 @@ extension ListExtensions<T> on List<T> {
     return (elementAt(randomIndex), randomIndex);
   }
 
+  T get randomElement {
+    final randomIndex = Random().nextInt(length - 1);
+    return elementAt(randomIndex);
+  }
+
   T firstWhereType(Type type) {
     return (this).whereType().first;
   }

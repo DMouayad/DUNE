@@ -1,4 +1,4 @@
-import 'package:dune/presentation/pages/listening_history_page/tracks_records_list_view.dart';
+import 'package:dune/presentation/pages/listening_history_page/tracks_listening_histories_list_view.dart';
 import 'package:dune/presentation/pages/search_page/search_result_widgets/search_results_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
@@ -57,9 +57,11 @@ class DesktopShortcutsHandler extends ConsumerWidget {
           ref.read(playbackControllerProvider.notifier).player.startOrPause();
         },
         const SingleActivator(LogicalKeyboardKey.escape): () {
-          if (ref.exists(tracksRecordsSelectionControllerProvider)) {
+          if (ref
+              .exists(trackListeningHistoryCardsSelectionControllerProvider)) {
             ref
-                .read(tracksRecordsSelectionControllerProvider.notifier)
+                .read(trackListeningHistoryCardsSelectionControllerProvider
+                    .notifier)
                 .cancelSelection();
           }
           if (ref.exists(searchResultTracksSelectionControllerProvider)) {

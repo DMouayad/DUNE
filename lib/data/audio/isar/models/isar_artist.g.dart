@@ -42,26 +42,26 @@ const IsarArtistSchema = CollectionSchema(
       name: r'id',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'isarThumbnails': PropertySchema(
       id: 5,
+      name: r'isarThumbnails',
+      type: IsarType.object,
+      target: r'IsarThumbnailsSet',
+    ),
+    r'name': PropertySchema(
+      id: 6,
       name: r'name',
       type: IsarType.string,
     ),
     r'radioId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'radioId',
       type: IsarType.string,
     ),
     r'shuffleId': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'shuffleId',
       type: IsarType.string,
-    ),
-    r'thumbnails': PropertySchema(
-      id: 8,
-      name: r'thumbnails',
-      type: IsarType.object,
-      target: r'IsarThumbnailsSet',
     ),
     r'tracksIds': PropertySchema(
       id: 9,
@@ -132,6 +132,9 @@ int _isarArtistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 +
+      IsarThumbnailsSetSchema.estimateSize(
+          object.isarThumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
   {
     final value = object.name;
     if (value != null) {
@@ -150,9 +153,6 @@ int _isarArtistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 +
-      IsarThumbnailsSetSchema.estimateSize(
-          object.thumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
   bytesCount += 3 + object.tracksIds.length * 3;
   {
     for (var i = 0; i < object.tracksIds.length; i++) {
@@ -174,15 +174,15 @@ void _isarArtistSerialize(
   writer.writeString(offsets[2], object.category);
   writer.writeString(offsets[3], object.description);
   writer.writeString(offsets[4], object.id);
-  writer.writeString(offsets[5], object.name);
-  writer.writeString(offsets[6], object.radioId);
-  writer.writeString(offsets[7], object.shuffleId);
   writer.writeObject<IsarThumbnailsSet>(
-    offsets[8],
+    offsets[5],
     allOffsets,
     IsarThumbnailsSetSchema.serialize,
-    object.thumbnails,
+    object.isarThumbnails,
   );
+  writer.writeString(offsets[6], object.name);
+  writer.writeString(offsets[7], object.radioId);
+  writer.writeString(offsets[8], object.shuffleId);
   writer.writeStringList(offsets[9], object.tracksIds);
 }
 
@@ -199,15 +199,15 @@ IsarArtist _isarArtistDeserialize(
     description: reader.readStringOrNull(offsets[3]) ?? '',
     id: reader.readStringOrNull(offsets[4]),
     isarId: id,
-    name: reader.readStringOrNull(offsets[5]),
-    radioId: reader.readStringOrNull(offsets[6]),
-    shuffleId: reader.readStringOrNull(offsets[7]),
-    thumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
-          offsets[8],
+    isarThumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
+          offsets[5],
           IsarThumbnailsSetSchema.deserialize,
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
+    name: reader.readStringOrNull(offsets[6]),
+    radioId: reader.readStringOrNull(offsets[7]),
+    shuffleId: reader.readStringOrNull(offsets[8]),
     tracksIds: reader.readStringList(offsets[9]) ?? const [],
   );
   return object;
@@ -231,18 +231,18 @@ P _isarArtistDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
-      return (reader.readStringOrNull(offset)) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
       return (reader.readObjectOrNull<IsarThumbnailsSet>(
             offset,
             IsarThumbnailsSetSchema.deserialize,
             allOffsets,
           ) ??
           const IsarThumbnailsSet()) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
       return (reader.readStringList(offset) ?? const []) as P;
     default:
@@ -2018,10 +2018,10 @@ extension IsarArtistQueryFilter
 
 extension IsarArtistQueryObject
     on QueryBuilder<IsarArtist, IsarArtist, QFilterCondition> {
-  QueryBuilder<IsarArtist, IsarArtist, QAfterFilterCondition> thumbnails(
+  QueryBuilder<IsarArtist, IsarArtist, QAfterFilterCondition> isarThumbnails(
       FilterQuery<IsarThumbnailsSet> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'thumbnails');
+      return query.object(q, r'isarThumbnails');
     });
   }
 }
@@ -2317,6 +2317,13 @@ extension IsarArtistQueryProperty
     });
   }
 
+  QueryBuilder<IsarArtist, IsarThumbnailsSet, QQueryOperations>
+      isarThumbnailsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isarThumbnails');
+    });
+  }
+
   QueryBuilder<IsarArtist, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -2332,13 +2339,6 @@ extension IsarArtistQueryProperty
   QueryBuilder<IsarArtist, String?, QQueryOperations> shuffleIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'shuffleId');
-    });
-  }
-
-  QueryBuilder<IsarArtist, IsarThumbnailsSet, QQueryOperations>
-      thumbnailsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'thumbnails');
     });
   }
 

@@ -49,11 +49,11 @@ class SearchController extends StateNotifier<AsyncValue<SearchState>> {
       (await MusicFacade.search
               .getSearchSuggestionsFor(query, searchMusicSource))
           .fold(
-        ifSuccess: (suggestions) {
+        onSuccess: (suggestions) {
           state = AsyncValue.data(
               state.requireValue.copyWith(searchSuggestions: suggestions));
         },
-        ifFailure: (error) => state =
+        onFailure: (error) => state =
             AsyncValue<SearchState>.error(error, error.stackTrace)
                 .copyWithPrevious(state),
       );
