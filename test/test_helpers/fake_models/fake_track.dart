@@ -10,7 +10,7 @@ import 'fake_album.dart';
 import 'fake_artist.dart';
 import '../factories/audio_info_set_factory.dart';
 
-final class FakeTrack extends BaseTrack {
+final class FakeTrack extends BaseTrack<FakeAlbum, FakeArtist> {
   const FakeTrack({
     required super.id,
     required super.album,
@@ -26,7 +26,8 @@ final class FakeTrack extends BaseTrack {
     required super.source,
   });
 
-  FakeTrack copyWith({
+  @override
+  T copyWith<T extends BaseTrack>({
     String? id,
     AudioInfoSet? audioInfoSet,
     FakeAlbum? album,
@@ -53,7 +54,7 @@ final class FakeTrack extends BaseTrack {
       isExplicit: isExplicit ?? this.isExplicit,
       thumbnails: thumbnails ?? this.thumbnails,
       source: source ?? this.source,
-    );
+    ) as T;
   }
 }
 

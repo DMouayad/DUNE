@@ -71,4 +71,19 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
         thumbnails,
         category,
       ];
+
+  T copyWith<T extends BaseTrack>({
+    String? id,
+    AudioInfoSet? audioInfoSet,
+    AlbumType? album,
+    List<ArtistType>? artists,
+    Duration? duration,
+    String? title,
+    String? year,
+    int? views,
+    String? category,
+    bool? isExplicit,
+    ThumbnailsSet? thumbnails,
+    MusicSource? source,
+  });
 }

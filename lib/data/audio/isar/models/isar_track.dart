@@ -1,6 +1,8 @@
 import 'package:dune/data/audio/isar/models/isar_album.dart';
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
+import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:isar/isar.dart';
@@ -96,7 +98,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     );
   }
 
-  IsarTrack copyWith({
+  IsarTrack copyWithIsar({
     Id? isarId,
     String? id,
     String? title,
@@ -131,5 +133,39 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       isExplicit: isExplicit ?? this.isExplicit,
       category: category ?? this.category,
     );
+  }
+
+  @override
+  T copyWith<T extends BaseTrack>({
+    String? id,
+    AudioInfoSet? audioInfoSet,
+    IsarAlbum? album,
+    List<IsarArtist>? artists,
+    Duration? duration,
+    String? title,
+    String? year,
+    int? views,
+    String? category,
+    bool? isExplicit,
+    ThumbnailsSet? thumbnails,
+    MusicSource? source,
+  }) {
+    return copyWithIsar(
+      isarId: isarId,
+      id: id ?? this.id,
+      title: title ?? this.title,
+      album: album ?? this.album,
+      isarDuration: isarDuration,
+      artistsIds: artistsIds,
+      albumId: album?.id ?? albumId,
+      artists: artists ?? this.artists,
+      views: views ?? this.views,
+      thumbnails: isarThumbnails,
+      year: year ?? this.year,
+      source: source ?? this.source,
+      isarAudioInfoSet: isarAudioInfoSet,
+      isExplicit: isExplicit ?? this.isExplicit,
+      category: category ?? this.category,
+    ) as T;
   }
 }

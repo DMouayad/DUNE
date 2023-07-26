@@ -67,7 +67,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
     // if a track was found, update its data if needed
     if (existentTrack != null) {
       if (existentTrack.artistsIds != newTrack.artistsIds) {
-        trackToSave = newTrack.copyWith(
+        trackToSave = newTrack.copyWithIsar(
             artistsIds: <String>{
           ...newTrack.artistsIds,
           ...existentTrack.artistsIds
@@ -76,7 +76,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
         saveTrackArtists = false;
       }
       if (newTrack.albumId == null) {
-        trackToSave = (trackToSave ?? newTrack).copyWith(
+        trackToSave = (trackToSave ?? newTrack).copyWithIsar(
           albumId: existentTrack.albumId,
         );
         saveTrackAlbum = false;
@@ -96,7 +96,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
         return savingTrackArtistsResult.mapFailure((error) => error);
       }
       final List<IsarArtist> artists = savingTrackArtistsResult.requireValue;
-      isarTrack = isarTrack.copyWith(artists: artists);
+      isarTrack = isarTrack.copyWithIsar(artists: artists);
     }
     if (saveTrackAlbum && isarTrack.album != null) {
       final savingAlbumResult = await _albumRepository.save(isarTrack.album!);
@@ -131,7 +131,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
       tracksIds: [baseTrack.id],
       tracks: [isarTrack],
     ).setIdIfNull();
-    return isarTrack.copyWith(
+    return isarTrack.copyWithIsar(
       album: album,
       albumId: album?.id,
       artistsIds: extractedArtists.artistsIds,
@@ -160,7 +160,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
     AudioInfoSet audioInfo,
   ) async {
     return await Result.fromAnother(() async {
-      final updatedTrack = _getIsarTrackFromBase(track).copyWith(
+      final updatedTrack = _getIsarTrackFromBase(track).copyWithIsar(
         isarAudioInfoSet: _getIsarTrackAudioInfoSet(audioInfo),
       );
       return (await save(updatedTrack)).mapSuccessToVoid();

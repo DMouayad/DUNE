@@ -1,3 +1,6 @@
+import 'package:dune/domain/audio/base_models/audio_info_set.dart';
+import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
@@ -60,5 +63,35 @@ class YoutubeTrack extends BaseTrack {
       return Duration(seconds: seconds, minutes: minutes ?? 0);
     }
     return Duration.zero;
+  }
+
+  @override
+  T copyWith<T extends BaseTrack>({
+    String? id,
+    AudioInfoSet? audioInfoSet,
+    BaseAlbum? album,
+    List<BaseArtist>? artists,
+    Duration? duration,
+    String? title,
+    String? year,
+    int? views,
+    String? category,
+    bool? isExplicit,
+    ThumbnailsSet? thumbnails,
+    MusicSource? source,
+  }) {
+    return YoutubeTrack(
+      id: id ?? this.id,
+      audioInfoSet: audioInfoSet ?? this.audioInfoSet,
+      album: album ?? this.album,
+      artists: artists ?? this.artists,
+      duration: duration ?? this.duration,
+      title: title ?? this.title,
+      year: year ?? this.year,
+      views: views ?? this.views,
+      category: category ?? this.category,
+      isExplicit: isExplicit ?? this.isExplicit,
+      thumbnails: thumbnails ?? this.thumbnails,
+    ) as T;
   }
 }
