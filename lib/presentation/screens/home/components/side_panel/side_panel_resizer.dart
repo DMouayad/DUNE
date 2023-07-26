@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 import 'package:dune/support/themes/fluent_app_themes.dart';
 
-class NavRailResizer extends ConsumerWidget {
-  const NavRailResizer({
+class SidePanelResizer extends ConsumerWidget {
+  const SidePanelResizer({
     super.key,
     required this.maxWidth,
     required this.minWidth,
@@ -77,21 +77,7 @@ class NavRailResizer extends ConsumerWidget {
           onHorizontalDragUpdate: onResizeRail,
           cursor: fluent_ui.SystemMouseCursors.resizeColumn,
           builder: (context, state) {
-            final Color color = context.colorScheme.onSurface.withOpacity(.3);
-            return Container(
-              height: 36,
-              // padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: context.colorScheme.background,
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: Row(
-                children: [
-                  VerticalDivider(width: 2, color: color),
-                  VerticalDivider(width: 4, color: color),
-                ],
-              ),
-            );
+            return const VerticalDivider(width: 4, color: Colors.transparent);
           },
         ),
       ),
