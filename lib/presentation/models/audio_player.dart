@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
@@ -240,10 +241,15 @@ abstract class AudioPlayer {
       await jumpToTrackInPlaylist(track);
     } else {
       // or else add the track to player playlist
-      final TrackAudioInfo? trackAudio =
+      final AudioInfoSet? audioInfoSet =
           await _getTrackAudio(track, musicSource);
+      final trackAudio = audioInfoSet?.whereQuality(
+        state.streamingQuality,
+        musicSource ?? track.source,
+      );
       if (trackAudio != null) {
-        await addTrackToPlayerPlaylist(trackAudio, track);
+        await addTrackToPlayerPlaylist(
+            trackAudio, track.copyWith(audioInfoSet: audioInfoSet));
       }
       _listeningHistoryHelper.addPlaylistToListeningHistory(state);
     }
@@ -261,7 +267,7 @@ abstract class AudioPlayer {
     BaseTrack track,
   );
 
-  Future<TrackAudioInfo?> _getTrackAudio(
+  Future<AudioInfoSet?> _getTrackAudio(
     BaseTrack track,
     MusicSource? musicSource,
   ) async {
@@ -270,11 +276,8 @@ abstract class AudioPlayer {
       musicSource: musicSource,
     ))
         .mapTo(
-      onSuccess: (audioInfo) {
-        return audioInfo.whereQuality(
-          state.streamingQuality,
-          musicSource ?? track.source,
-        );
+      onSuccess: (audioInfoSet) {
+        return audioInfoSet;
       },
       onFailure: (error) {
         Log.e(error);
