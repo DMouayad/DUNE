@@ -47,6 +47,7 @@ dependencies:
   flagsmith: ^4.0.0
   metadata_god:
     path: ./external/metadata_god
+  faker: ^2.1.0
 
 dev_dependencies:
   flutter_test:
