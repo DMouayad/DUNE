@@ -46,12 +46,12 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
               currentTrackThumbs: currentTrack?.thumbnails,
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.fromLTRB(14, 4, 24, 0),
                   child: SeekBar(),
                 ),
@@ -59,10 +59,10 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
                   child: Stack(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: PLayerBarTrackInfo(currentTrack),
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: PlayerBarTrackInfo(),
                       ),
-                      const Align(
+                      Align(
                         alignment: Alignment.center,
                         child: PlaybackControlButtons(),
                       ),

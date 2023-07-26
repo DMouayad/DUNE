@@ -30,8 +30,8 @@ class PlayPauseButton extends ConsumerWidget {
                       .player
                       .startOrPause(),
               child: Container(
-                width: 36,
-                height: 36,
+                width: 40,
+                height: 40,
                 // padding: const EdgeInsets.all(5),
                 decoration: const BoxDecoration(
                   color: Colors.transparent,
@@ -41,13 +41,13 @@ class PlayPauseButton extends ConsumerWidget {
                   child: playerState.isPlaying
                       ? Icon(
                           Icons.pause,
-                          size: 22,
-                          color: context.colorScheme.primary,
+                          size: 28,
+                          color: context.colorScheme.secondary,
                         )
                       : Icon(
                           Icons.play_arrow,
-                          size: 22,
-                          color: context.colorScheme.primary,
+                          size: 28,
+                          color: context.colorScheme.secondary,
                         ),
                 ),
               ),

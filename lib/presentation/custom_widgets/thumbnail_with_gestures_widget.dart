@@ -30,29 +30,32 @@ class ThumbnailWithGesturesWidget extends StatelessWidget {
           barrierDismissible: true,
           builder: (context) {
             return Dialog(
-              child: ExtendedImage.network(
-                highQualityThumb.url,
-                width: highQualityThumb.width,
-                height: highQualityThumb.height,
-                fit: BoxFit.cover,
-                cache: false,
-                mode: ExtendedImageMode.gesture,
-                initGestureConfigHandler: (state) {
-                  return GestureConfig(
-                    reverseMousePointerScrollDirection: true,
-                    minScale: 0.9,
-                    animationMinScale: 0.7,
-                    maxScale: 3.0,
-                    animationMaxScale: 3.5,
-                    speed: 1.0,
-                    inertialSpeed: 100.0,
-                    initialScale: 0.9,
-                    inPageView: false,
-                    initialAlignment: InitialAlignment.center,
-                  );
-                },
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ExtendedImage.network(
+                  highQualityThumb.url,
+                  width: highQualityThumb.width,
+                  height: highQualityThumb.height,
+                  fit: BoxFit.fill,
+                  cache: false,
+                  mode: ExtendedImageMode.gesture,
+                  initGestureConfigHandler: (state) {
+                    return GestureConfig(
+                      reverseMousePointerScrollDirection: true,
+                      minScale: 0.9,
+                      animationMinScale: 0.7,
+                      maxScale: 3.0,
+                      animationMaxScale: 3.5,
+                      speed: 1.0,
+                      inertialSpeed: 100.0,
+                      initialScale: 0.9,
+                      inPageView: false,
+                      initialAlignment: InitialAlignment.center,
+                    );
+                  },
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             );
           },

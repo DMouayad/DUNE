@@ -7,7 +7,7 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
-import 'nav_rail_resizer.dart';
+import 'side_panel_resizer.dart';
 import 'settings_button.dart';
 import 'side_panel_now_playing_section.dart';
 
@@ -79,13 +79,19 @@ class SidePanel extends ConsumerWidget {
                 ),
                 // UserPlaylistsSection(),
                 if (extended)
-                  const Expanded(child: SidePanelNowPlayingSection()),
+                  Container(
+                    constraints: BoxConstraints.loose(
+                      const Size.fromHeight(160),
+                    ),
+                    child: const SidePanelNowPlayingSection(),
+                  ),
               ],
             ),
             Positioned(
-              top: context.screenHeight * .4,
+              top: 0,
               right: 0,
-              child: NavRailResizer(
+              bottom: 0,
+              child: SidePanelResizer(
                 maxWidth: maxWidth,
                 minWidth: minWidth,
                 railWidth: railWidth,

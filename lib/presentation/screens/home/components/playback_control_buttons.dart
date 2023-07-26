@@ -17,7 +17,7 @@ class PlaybackControlButtons extends ConsumerWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.skip_previous),
-          iconSize: 20,
+          iconSize: 24,
           color: context.colorScheme.secondary,
           onPressed:
               playerState.isIdle ? null : () => audioPlayer.player.prev(),
@@ -25,7 +25,7 @@ class PlaybackControlButtons extends ConsumerWidget {
         const PlayPauseButton(),
         IconButton(
           icon: const Icon(Icons.skip_next),
-          iconSize: 20,
+          iconSize: 24,
           color: context.colorScheme.secondary,
           onPressed:
               playerState.isIdle ? null : () => audioPlayer.player.next(),
@@ -58,7 +58,7 @@ class PlaybackOptionButton extends ConsumerWidget {
                 ? Colors.white54
                 : Colors.black45,
       ),
-      iconSize: 20,
+      iconSize: 24,
       color: context.colorScheme.secondary,
       onPressed: onPressed,
     );

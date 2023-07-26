@@ -1,11 +1,13 @@
 import 'dart:math';
 
-import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/presentation/custom_widgets/image_place_holder.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TrackPlayerBarImage extends StatelessWidget {
   const TrackPlayerBarImage({
@@ -29,23 +31,27 @@ class TrackPlayerBarImage extends StatelessWidget {
 
 const minimizedWidth = 66.0;
 
-class PLayerBarTrackInfo extends StatelessWidget {
-  const PLayerBarTrackInfo(this.currentTrack, {super.key});
-
-  final BaseTrack? currentTrack;
+class PlayerBarTrackInfo extends ConsumerWidget {
+  const PlayerBarTrackInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final currentTrack = ref.watch(
+        playbackControllerProvider.select((value) => value.currentTrack));
+    final streamingQuality = ref.watch(
+        playbackControllerProvider.select((value) => value.streamingQuality));
     final trackTitle = currentTrack?.title;
     final artistsNames = currentTrack?.artists.map((e) => e.name).join(', ');
     return currentTrack == null
         ? const SizedBox.shrink()
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text(
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: Wrap(
+              direction: Axis.vertical,
+              alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.spaceBetween,
+              children: [
+                Text(
                   trackTitle ?? '',
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w500,
@@ -55,10 +61,8 @@ class PLayerBarTrackInfo extends StatelessWidget {
                   maxLines: artistsNames == null ? 3 : 1,
                   textAlign: TextAlign.start,
                 ),
-              ),
-              if (artistsNames != null && artistsNames.isNotEmpty) ...[
-                Expanded(
-                  child: Text(
+                if (artistsNames != null && artistsNames.isNotEmpty) ...[
+                  Text(
                     artistsNames,
                     maxLines: 1,
                     textAlign: TextAlign.center,
@@ -67,46 +71,26 @@ class PLayerBarTrackInfo extends StatelessWidget {
                       color: context.colorScheme.onBackground.withOpacity(.88),
                     ),
                   ),
-                ),
+                ],
+                if (currentTrack.audioInfoSet != null)
+                  Text(
+                    _getTrackAudioInfoFormatted(currentTrack.audioInfoSet
+                        ?.whereQuality(streamingQuality, currentTrack.source)),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: context.colorScheme.onPrimaryContainer
+                          .withOpacity(.6),
+                    ),
+                  ),
               ],
-            ],
+            ),
           );
   }
-}
 
-class ExpandableTrackInfo extends StatefulWidget {
-  const ExpandableTrackInfo(this.currentTrack, {super.key});
-
-  final BaseTrack? currentTrack;
-
-  @override
-  State<ExpandableTrackInfo> createState() => _ExpandableTrackInfoState();
-}
-
-class _ExpandableTrackInfoState extends State<ExpandableTrackInfo> {
-  double? width;
-
-  @override
-  Widget build(BuildContext context) {
-    width ??= max(160.0, context.screenWidth * .2);
-
-    return MouseRegion(
-      onEnter: (event) {
-        setState(() => width = context.screenWidth * .3);
-      },
-      onExit: (event) {
-        setState(() => width = null);
-      },
-      child: AnimatedContainer(
-        width: width,
-        height: 50,
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(
-          horizontal: 7,
-          vertical: widget.currentTrack != null ? 0 : 6,
-        ),
-        child: PLayerBarTrackInfo(widget.currentTrack),
-      ),
-    );
+  String _getTrackAudioInfoFormatted(TrackAudioInfo? audioInfo) {
+    if (audioInfo == null) return '';
+    return (audioInfo.bitrateInKb != null
+        ? '${audioInfo.bitrateInKb!.toInt()} kbps'
+        : '');
   }
 }

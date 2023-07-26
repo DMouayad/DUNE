@@ -31,15 +31,19 @@ class _SidePanelNowPlayingSectionState
 
   @override
   Widget build(BuildContext context) {
+    double _getMaxImageWidth() {
+      return min(70.0, railWidth! * .4);
+    }
+
     super.build(context);
 
     if (railWidth != ref.watch(navigationRailSizeProvider)) {
       railWidth = ref.watch(navigationRailSizeProvider) ?? 56.0;
-      maxImageWidth = min(200.0, railWidth! * .8);
+      maxImageWidth = _getMaxImageWidth();
       updateKeepAlive();
     }
     railWidth ??= 56.0;
-    maxImageWidth ??= min(200.0, railWidth! * .8);
+    maxImageWidth ??= _getMaxImageWidth();
     if (isLoadingTrack != ref.watch(playbackControllerProvider).isLoading) {
       isLoadingTrack = ref.watch(playbackControllerProvider).isLoading;
       updateKeepAlive();
@@ -54,36 +58,43 @@ class _SidePanelNowPlayingSectionState
         : Stack(
             fit: StackFit.expand,
             children: [
-              SizedBox(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: min(200.0, railWidth!),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: maxImageWidth,
-                      height: 140,
-                      child: TrackPlayerBarImage(
-                        imageDimension: maxImageWidth!,
-                        currentTrackThumbs: currentTrack?.thumbnails,
-                      ),
+                    Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        Expanded(
+                          flex: 0,
+                          child: SizedBox(
+                            width: maxImageWidth,
+                            height: maxImageWidth,
+                            child: TrackPlayerBarImage(
+                              imageDimension: maxImageWidth!,
+                              currentTrackThumbs: currentTrack?.thumbnails,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Expanded(
+                          child: PlayerBarTrackInfo(),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
                     ),
-                    SizedBox(
-                      width: railWidth! - 30,
-                      child: ExpandableTrackInfo(currentTrack),
-                    ),
-                    const Spacer(),
-                    SizedBox(
-                        width: min(240.0, railWidth! - 40),
-                        child: const SeekBar()),
-                    const SizedBox(height: 26),
-                    const Expanded(child: PlaybackControlButtons()),
-                    const Spacer(),
+                    const SizedBox(height: 20),
+                    const Expanded(child: SeekBar()),
+                    const Expanded(flex: 0, child: PlaybackControlButtons()),
+                    const SizedBox(height: 6),
                   ],
                 ),
               ),
               const Positioned(
                 right: 4,
-                bottom: 4,
+                bottom: 6,
                 child: VolumeControls(),
               ),
             ],
