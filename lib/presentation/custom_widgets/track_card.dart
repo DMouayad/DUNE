@@ -31,11 +31,12 @@ class TrackCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TrackCardWrapper(
+      playOnTap: true,
       track: track,
       onPlayTrack: onPlayTrack,
       cardColor: color,
       selectionState: selectionState,
-      onSelected: onSelected,
+      onSelected: () => onSelected(track),
       child: TrackCardMainContent(track: track),
     );
   }
@@ -48,6 +49,7 @@ class TrackCardMainContent extends StatelessWidget {
     this.alwaysCenterTitle = false,
     this.showAlbumName = true,
     this.showArtistsNames = true,
+    this.showDuration = true,
     this.onThumbnailPressed,
     this.crossAxisAlignment,
   });
@@ -58,6 +60,7 @@ class TrackCardMainContent extends StatelessWidget {
   final CrossAxisAlignment? crossAxisAlignment;
   final bool showArtistsNames;
   final bool showAlbumName;
+  final bool showDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -163,16 +166,17 @@ class TrackCardMainContent extends StatelessWidget {
               wideSpacer,
             ];
           }(),
-        Expanded(
-          flex: 0,
-          child: Text(
-            track.duration.formatInHhMmSs,
-            overflow: TextOverflow.ellipsis,
-            style: context.textTheme.bodySmall?.copyWith(
-                // color: context.colorScheme.onPrimaryContainer,
-                ),
+        if (showDuration)
+          Expanded(
+            flex: 0,
+            child: Text(
+              track.duration.formatInHhMmSs,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.bodySmall?.copyWith(
+                  // color: context.colorScheme.onPrimaryContainer,
+                  ),
+            ),
           ),
-        ),
         wideSpacer,
       ],
     );

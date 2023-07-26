@@ -10,7 +10,6 @@ import 'package:dune/presentation/custom_widgets/explore_music_collection_widget
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/support/utils/error/app_error.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/pages/explore_page/trending_header.dart';
@@ -18,9 +17,7 @@ import 'package:dune/presentation/pages/explore_page/trending_header.dart';
 const collectionsCountWhenLoading = 1;
 
 class ExplorePage extends ConsumerStatefulWidget {
-  const ExplorePage({
-    Key? key,
-  }) : super(key: key);
+  const ExplorePage({Key? key}) : super(key: key);
 
   @override
   ExplorePageState createState() => ExplorePageState();
@@ -99,7 +96,7 @@ class ExplorePageState extends ConsumerState<ExplorePage>
         updateKeepAlive();
       }
     }
-    if (hasError && !state.hasValue && !state.isLoading) {
+    if (hasError && !state.isLoading) {
       return DuneErrorWidget(
         state.error,
         onRetry: () => ref

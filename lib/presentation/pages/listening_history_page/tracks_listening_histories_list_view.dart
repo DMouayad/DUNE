@@ -49,9 +49,12 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
             child: SlideAnimation(
               horizontalOffset: 50.0,
               child: FadeInAnimation(
-                child: TrackRecordCard(
-                  trackListeningHistory: tracksRecords.elementAt(index),
-                  color: _getCardColor(index, context.colorScheme),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: TrackRecordCard(
+                    trackListeningHistory: tracksRecords.elementAt(index),
+                    color: context.colorScheme.background,
+                  ),
                 ),
               ),
             ),
@@ -59,10 +62,6 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
         },
       ),
     );
-  }
-
-  Color _getCardColor(int index, ColorScheme colorScheme) {
-    return index % 2 != 0 ? colorScheme.surfaceVariant : colorScheme.background;
   }
 }
 
@@ -85,10 +84,12 @@ class TrackRecordCard extends ConsumerWidget {
       color: context.colorScheme.secondary,
     );
     return TrackCardWrapper(
+      playOnTap: false,
+      onPlayTrack: () => _playTrack(track, ref),
       track: track,
       selectionState:
           ref.watch(trackListeningHistoryCardsSelectionControllerProvider),
-      onSelected: (track) {
+      onSelected: () {
         ref
             .read(
                 trackListeningHistoryCardsSelectionControllerProvider.notifier)
@@ -107,14 +108,10 @@ class TrackRecordCard extends ConsumerWidget {
                 track: track,
                 showAlbumName: false,
                 showArtistsNames: false,
+                showDuration: false,
                 alwaysCenterTitle: true,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                onThumbnailPressed: () {
-                  ref
-                      .read(playbackControllerProvider.notifier)
-                      .player
-                      .playSingleTrack(track);
-                },
+                onThumbnailPressed: () => _playTrack(track, ref),
               ),
             ),
           ),
@@ -148,5 +145,9 @@ class TrackRecordCard extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _playTrack(BaseTrack track, WidgetRef ref) {
+    ref.read(playbackControllerProvider.notifier).player.playSingleTrack(track);
   }
 }

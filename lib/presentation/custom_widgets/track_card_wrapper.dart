@@ -17,35 +17,36 @@ class TrackCardWrapper extends StatelessWidget {
     required this.cardColor,
     required this.selectionState,
     required this.onSelected,
-    this.onPlayTrack,
+    required this.onPlayTrack,
+    required this.playOnTap,
     this.onDelete,
     this.onDownload,
   });
 
   final BaseTrack track;
   final Widget child;
-  final void Function()? onPlayTrack;
+  final void Function() onPlayTrack;
   final void Function()? onDelete;
   final void Function()? onDownload;
   final Color cardColor;
   final SelectionState<BaseTrack> selectionState;
-  final void Function(BaseTrack) onSelected;
+  final void Function() onSelected;
+  final bool playOnTap;
 
   @override
   Widget build(BuildContext context) {
     final isSelected = selectionState.selectedValues.containsKey(track.id);
-    final tappingEnabled = onPlayTrack != null || isSelected;
     return fluent.FlyoutTarget(
       controller: flyoutController,
       child: OptionalParentWidget(
         parentWidgetBuilder: (child) {
           return Tooltip(
-            message: isSelected ? "Tap to unselect" : "Tap to play",
+            message: "Tap to play",
             waitDuration: const Duration(milliseconds: 1000),
             child: child,
           );
         },
-        condition: tappingEnabled,
+        condition: !selectionState.selectionEnabled && playOnTap,
         childWidget: Material(
           color: cardColor,
           shape: RoundedRectangleBorder(
@@ -63,6 +64,7 @@ class TrackCardWrapper extends StatelessWidget {
           child: DraggableTrackCard(
             selectionState: selectionState,
             child: InkWell(
+              onLongPress: onSelected,
               onSecondaryTapUp: (tapDetails) {
                 if (!context.isDesktopPlatform || isSelected) return;
                 // This calculates the position of the flyout according to the parent navigator
@@ -79,17 +81,15 @@ class TrackCardWrapper extends StatelessWidget {
                       track,
                       onDelete: onDelete,
                       onDownload: onDownload,
-                      onSelectTrack: () {
-                        onSelected(track);
-                        fluent.Flyout.of(context).close();
-                      },
+                      onPlayTrack: onPlayTrack,
+                      onSelectTrack: onSelected,
                     );
                   },
                 );
               },
               hoverColor:
-                  tappingEnabled ? context.colorScheme.primaryContainer : null,
-              mouseCursor: tappingEnabled ? null : MouseCursor.defer,
+                  playOnTap ? context.colorScheme.primaryContainer : null,
+              mouseCursor: playOnTap ? null : MouseCursor.defer,
               focusColor: context.colorScheme.primaryContainer,
               customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -109,9 +109,9 @@ class TrackCardWrapper extends StatelessWidget {
 
   void onTap() {
     if (selectionState.selectionEnabled) {
-      onSelected(track);
-    } else if (onPlayTrack != null) {
-      onPlayTrack!();
+      onSelected();
+    } else if (playOnTap) {
+      onPlayTrack();
     }
   }
 }
@@ -122,12 +122,14 @@ class TrackPopupMenu extends StatelessWidget {
     this.onDelete,
     this.onDownload,
     this.onSelectTrack,
+    this.onPlayTrack,
     super.key,
   });
 
   final BaseTrack track;
   final void Function()? onDelete;
   final void Function()? onSelectTrack;
+  final void Function()? onPlayTrack;
   final void Function()? onDownload;
 
   @override
@@ -135,9 +137,14 @@ class TrackPopupMenu extends StatelessWidget {
     return fluent.MenuFlyout(
       items: [
         fluent.MenuFlyoutItem(
+          leading: const Icon(fluent.FluentIcons.play),
+          text: const Text('Play'),
+          onPressed: () => _handleItemPressed(onPlayTrack, context),
+        ),
+        fluent.MenuFlyoutItem(
           leading: const Icon(fluent.FluentIcons.multi_select),
           text: const Text('Select'),
-          onPressed: onSelectTrack,
+          onPressed: () => _handleItemPressed(onSelectTrack, context),
         ),
         fluent.MenuFlyoutItem(
           leading: const Icon(Icons.person, size: 12),
@@ -153,25 +160,25 @@ class TrackPopupMenu extends StatelessWidget {
           fluent.MenuFlyoutItem(
             leading: const Icon(fluent.FluentIcons.download),
             text: const Text('Download'),
-            onPressed: onDownload != null
-                ? () {
-                    onDownload!();
-                    fluent.Flyout.of(context).close();
-                  }
-                : null,
+            onPressed: () => _handleItemPressed(onDownload, context),
           ),
         if (onDelete != null)
           fluent.MenuFlyoutItem(
             leading: const Icon(fluent.FluentIcons.delete),
             text: const Text('Delete'),
-            onPressed: onDelete != null
-                ? () {
-                    onDelete!();
-                    fluent.Flyout.of(context).close();
-                  }
-                : null,
+            onPressed: () => _handleItemPressed(onDelete, context),
           ),
       ],
     );
+  }
+
+  void _handleItemPressed(
+    void Function()? onPressed,
+    BuildContext context,
+  ) {
+    if (onPressed != null) {
+      fluent.Flyout.of(context).close();
+      onPressed();
+    }
   }
 }
