@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/presentation/custom_widgets/image_place_holder.dart';
@@ -46,10 +44,9 @@ class PlayerBarTrackInfo extends ConsumerWidget {
         ? const SizedBox.shrink()
         : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6.0),
-            child: Wrap(
-              direction: Axis.vertical,
-              alignment: WrapAlignment.center,
-              runAlignment: WrapAlignment.spaceBetween,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   trackTitle ?? '',

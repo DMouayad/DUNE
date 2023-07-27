@@ -31,7 +31,7 @@ class _SidePanelNowPlayingSectionState
 
   @override
   Widget build(BuildContext context) {
-    double _getMaxImageWidth() {
+    double getMaxImageWidth() {
       return min(70.0, railWidth! * .4);
     }
 
@@ -39,11 +39,11 @@ class _SidePanelNowPlayingSectionState
 
     if (railWidth != ref.watch(navigationRailSizeProvider)) {
       railWidth = ref.watch(navigationRailSizeProvider) ?? 56.0;
-      maxImageWidth = _getMaxImageWidth();
+      maxImageWidth = getMaxImageWidth();
       updateKeepAlive();
     }
     railWidth ??= 56.0;
-    maxImageWidth ??= _getMaxImageWidth();
+    maxImageWidth ??= getMaxImageWidth();
     if (isLoadingTrack != ref.watch(playbackControllerProvider).isLoading) {
       isLoadingTrack = ref.watch(playbackControllerProvider).isLoading;
       updateKeepAlive();
@@ -78,7 +78,6 @@ class _SidePanelNowPlayingSectionState
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         const Expanded(
                           child: PlayerBarTrackInfo(),
                         ),

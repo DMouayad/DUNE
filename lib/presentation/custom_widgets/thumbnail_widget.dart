@@ -76,7 +76,7 @@ class ThumbnailWidget extends ConsumerWidget {
               LoadState.loading => ShimmerWidget(
                   enabled: true,
                   shimmerSize: Size.square(dimension),
-                  direction: const ShimmerDirection.fromTopToBottom(),
+                  // direction: const ShimmerDirection.fr(),
                 ),
               _ => null,
             };

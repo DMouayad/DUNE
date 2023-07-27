@@ -17,12 +17,12 @@ abstract class AudioPlayer {
   late PlayerState _currentState;
 
   PlayerState get state => _currentState;
-  late final ListeningHistoryHelper _listeningHistoryHelper;
 
   Stream<PlayerState> get stateStream => _stateStreamController.stream;
   late final StreamController<PlayerState> _stateStreamController;
   late final AudioPlayerStreams streams;
   late final StreamSubscription<PlayerState> _statesSub;
+  late final ListeningHistoryHelper _listeningHistoryHelper;
 
   AudioPlayer(
     PlayerState initialState,
