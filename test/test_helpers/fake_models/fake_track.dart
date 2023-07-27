@@ -91,7 +91,7 @@ final class FakeTrackFactory extends BaseModelFactory<FakeTrack> {
     final fakeTrack = FakeTrack(
       id: _id ?? faker.lorem.random.string(20),
       audioInfoSet: _audioInfoSet ??
-          (source!.isLocal && _shouldCreateAudioInfoSet
+          (source!.isLocal || _shouldCreateAudioInfoSet
               ? AudioInfoSetFactory().setItems(4, source).create()
               : null),
       album: null,
@@ -164,8 +164,15 @@ final class FakeTrackFactory extends BaseModelFactory<FakeTrack> {
     return _copyWith(source: source);
   }
 
+  FakeTrackFactory withAudioInfo() {
+    return _copyWith(shouldCreateAudioInfoSet: true);
+  }
+
   FakeTrackFactory withoutAudioInfo() {
     return _copyWith(
+      // we specify the source as either (youtube or spotify) so
+      // no AudioInfoSet will be set for track in case of "randomly" giving it
+      // a source of [MusicSource.local]
       source: faker.randomGenerator
           .element([MusicSource.youtube, MusicSource.spotify]),
       shouldCreateAudioInfoSet: false,
