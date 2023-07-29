@@ -32,7 +32,7 @@ Future<void> _registerDependencies() async {
   // await isar.writeTxn(() async => await isar.clear());
   final isarMusicRepository = IsarMusicRepository(isar: isar);
 
-  MusicFacade.registerInstance(
+  MusicFacade.setInstance(
     cacheMusicRepository: isarMusicRepository,
     listeningHistoryRepository: isarMusicRepository.listeningHistory,
     youtubeMusicRepository: YoutubeMusicRepository(),

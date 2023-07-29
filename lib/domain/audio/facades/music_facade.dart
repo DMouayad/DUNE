@@ -55,7 +55,7 @@ final class MusicFacade {
         UserListeningHistoryFacade(listeningHistoryRepository);
   }
 
-  static late final MusicFacade _instance;
+  static late MusicFacade _instance;
 
   late final PlaylistFacade _playlists;
 
@@ -77,8 +77,9 @@ final class MusicFacade {
 
   static UserListeningHistoryFacade get userListeningHistory =>
       _instance._userListeningHistory;
+  static bool _wasRegistered = false;
 
-  static void registerInstance({
+  static void setInstance({
     required CacheMusicRepository cacheMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
@@ -88,6 +89,7 @@ final class MusicFacade {
       youtubeMusicRepository: youtubeMusicRepository,
       listeningHistoryRepository: listeningHistoryRepository,
     );
+    _wasRegistered = true;
   }
 }
 
