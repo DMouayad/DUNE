@@ -10,6 +10,7 @@ import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 
 import 'player_state.dart';
 
@@ -117,17 +118,14 @@ abstract class AudioPlayer {
   }
 
   void _playNextTrackInPlaylist() {
-    final isNotLastTrack =
-        state.currentTrack != state.currentPlaylist!.tracks.last;
+    final isNotLastTrack = state.playlistCurrentTrackIndex !=
+        state.currentPlaylist!.tracks.length - 1;
 
-    if (isNotLastTrack) {
-      final nextTrackInPlaylistIndex = state.currentPlaylistTrackIndex! + 1;
+    if (isNotLastTrack && state.currentPlaylist!.tracks.isNotEmpty) {
+      final nextTrackInPlaylistIndex = state.playlistCurrentTrackIndex! + 1;
 
       _playTrack(
         state.currentPlaylist!.tracks.elementAt(nextTrackInPlaylistIndex),
-      );
-      _stateStreamController.add(
-        state.copyWith(currentPlaylistTrackIndex: nextTrackInPlaylistIndex),
       );
     }
   }
@@ -145,34 +143,35 @@ abstract class AudioPlayer {
   }
 
   void _playPrevTrackInPlaylist() {
-    final isNotFirstTrack =
-        state.currentTrack != state.currentPlaylist!.tracks.first;
-    if (isNotFirstTrack) {
-      final previousTrackInPlaylistIndex = state.currentPlaylistTrackIndex! - 1;
+    final isNotFirstTrack = state.playlistCurrentTrackIndex != 0;
+    if (isNotFirstTrack && state.currentPlaylist!.tracks.isNotEmpty) {
+      final previousTrackInPlaylistIndex = state.playlistCurrentTrackIndex! - 1;
       _playTrack(
         state.currentPlaylist!.tracks.elementAt(previousTrackInPlaylistIndex),
       );
-      _stateStreamController.add(state.copyWith(
-          currentPlaylistTrackIndex: previousTrackInPlaylistIndex));
     }
   }
 
+  @mustCallSuper
   void setVolume(double value) {
     _stateStreamController.add(state.copyWith(volume: value));
   }
 
   double getVolumeStep();
 
+  @mustCallSuper
   void decreaseVolume() {
     _stateStreamController
         .add(state.copyWith(volume: state.volume - getVolumeStep()));
   }
 
+  @mustCallSuper
   void increaseVolume() {
     _stateStreamController
         .add(state.copyWith(volume: state.volume + getVolumeStep()));
   }
 
+  @mustCallSuper
   void toggleRepeat() {
     final newRepeatMode = RepeatMode.values.elementAt(
       state.repeat.index == RepeatMode.values.last.index
@@ -186,22 +185,38 @@ abstract class AudioPlayer {
     state.isMuted ? setVolume(50.0) : setVolume(0.0);
   }
 
-  void setCurrentTrack(BaseTrack? track) {
-    if (track == null) return;
-    final trackIndex = state.playerTracks.isEmpty
-        ? 0
-        : (state.currentPlayerTrackIndex ?? state.playerTracks.length - 1) + 1;
-    _stateStreamController.add(state.copyWith(
-      playerTracks: [...state.playerTracks, track],
-      currentPlayerTrackIndex: trackIndex,
-    ));
+  void updateCurrentTrackIndex(String? trackId) {
+    if (state.playerTracks.isEmpty) {
+      _stateStreamController.add(state.copyWith(playerCurrentTrackIndex: null));
+    } else {
+      final trackIndex = state.playerTracks.indexWhere((e) => e.id == trackId);
+      if (trackIndex != -1) {
+        _stateStreamController
+            .add(state.copyWith(playerCurrentTrackIndex: trackIndex));
+      }
+      if (state.currentPlaylistNotNull) {
+        _updatePlaylistCurrentTrackIndex(trackId);
+      }
+    }
   }
 
+  void _updatePlaylistCurrentTrackIndex(String? trackId) {
+    final trackIndexInPlaylist =
+        state.currentPlaylist!.tracks.indexWhere((e) => e.id == trackId);
+    if (trackIndexInPlaylist != -1) {
+      _stateStreamController.add(
+        state.copyWith(playlistCurrentTrackIndex: trackIndexInPlaylist),
+      );
+    }
+  }
+
+  @mustCallSuper
   void toggleShuffle({bool? enabled}) {
     _stateStreamController
         .add(state.copyWith(shuffle: enabled ?? !state.shuffle));
   }
 
+  @mustCallSuper
   void seek(Duration position) async {
     if (state.currentTrack == null) return;
     _stateStreamController.add(state.copyWith(position: position));
@@ -222,7 +237,7 @@ abstract class AudioPlayer {
     _stateStreamController.add(state.copyWith(
       currentPlaylist:
           state.currentPlaylist?.id != playlist.id ? playlist : null,
-      currentPlaylistTrackIndex: trackData.$2,
+      playlistCurrentTrackIndex: trackData.$2,
     ));
 
     _playTrack(trackData.$1, musicSource: musicSource);
@@ -249,7 +264,7 @@ abstract class AudioPlayer {
     _stateStreamController.add(state.copyWith(isLoading: true));
 
     if (trackExistsInCurrentPlaylist(track)) {
-      await jumpToTrackInPlaylist(track);
+      await jumpToTrack(track);
     } else {
       // or else add the track to player playlist
       final AudioInfoSet? audioInfoSet =
@@ -271,12 +286,16 @@ abstract class AudioPlayer {
 
   bool trackExistsInCurrentPlaylist(BaseTrack track);
 
-  Future<void> jumpToTrackInPlaylist(BaseTrack track);
+  Future<void> jumpToTrack(BaseTrack track);
 
+  @mustCallSuper
   Future<void> addTrackToPlayerPlaylist(
     TrackAudioInfo trackAudioInfo,
     BaseTrack track,
-  );
+  ) async {
+    final newPlayerTracks = {...state.playerTracks, track}.toList();
+    _stateStreamController.add(state.copyWith(playerTracks: newPlayerTracks));
+  }
 
   Future<AudioInfoSet?> getTrackAudioInfoSet(
     BaseTrack track,
@@ -297,6 +316,7 @@ abstract class AudioPlayer {
     );
   }
 
+  @mustCallSuper
   Future<void> disposePlayer() async {
     _statesSub.cancel();
   }

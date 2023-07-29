@@ -39,9 +39,7 @@ final class MediaKitAudioPlayer extends AudioPlayer {
     _player.stream.playlist.listen((event) {
       // get the currently playing media
       final currentPlayingMedia = event.medias.elementAt(event.index);
-      setCurrentTrack(state.playerTracks.firstWhereOrNull(
-        (e) => e.id == currentPlayingMedia.extras?['trackId'],
-      ));
+      updateCurrentTrackIndex(currentPlayingMedia.extras?['trackId']);
     });
   }
 
@@ -67,7 +65,7 @@ final class MediaKitAudioPlayer extends AudioPlayer {
   double getVolumeStep() => getUserSpecifiedVolumeStep();
 
   @override
-  Future<void> jumpToTrackInPlaylist(BaseTrack track) async {
+  Future<void> jumpToTrack(BaseTrack track) async {
     final mediakit.Media? trackMediaInCurrentPlaylist =
         _getTrackMediaFromPlayerPlaylist(track);
 
@@ -130,6 +128,7 @@ final class MediaKitAudioPlayer extends AudioPlayer {
     TrackAudioInfo trackAudioInfo,
     BaseTrack track,
   ) async {
+    super.addTrackToPlayerPlaylist(trackAudioInfo, track);
     try {
       if (_player.state.playlist.medias.isEmpty) {
         final trackMedia = mediakit.Media(

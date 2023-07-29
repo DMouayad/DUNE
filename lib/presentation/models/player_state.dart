@@ -19,15 +19,15 @@ class PlayerState extends Equatable {
   final bool isLoading;
   final BasePlaylist? currentPlaylist;
   final List<BaseTrack> playerTracks;
-  final int? currentPlaylistTrackIndex;
-  final int? currentPlayerTrackIndex;
+  final int? playlistCurrentTrackIndex;
+  final int? playerCurrentTrackIndex;
   final AudioStreamingQuality streamingQuality;
 
   BaseTrack? get currentTrack {
-    if (currentPlayerTrackIndex != null &&
+    if (playerCurrentTrackIndex != null &&
         playerTracks.isNotEmpty &&
-        currentPlayerTrackIndex! < playerTracks.length) {
-      return playerTracks.elementAt(currentPlayerTrackIndex!);
+        playerCurrentTrackIndex! < playerTracks.length) {
+      return playerTracks.elementAt(playerCurrentTrackIndex!);
     }
     return null;
   }
@@ -60,8 +60,8 @@ class PlayerState extends Equatable {
     required this.repeat,
     required this.autoPlayNext,
     this.currentPlaylist,
-    this.currentPlayerTrackIndex,
-    this.currentPlaylistTrackIndex,
+    this.playerCurrentTrackIndex,
+    this.playlistCurrentTrackIndex,
     this.playerTracks = const [],
     this.streamingQuality = AudioStreamingQuality.balanced,
   });
@@ -96,8 +96,8 @@ class PlayerState extends Equatable {
     bool? shuffle,
     bool? isLoading,
     bool? autoPlayNext,
-    int? currentPlaylistTrackIndex,
-    int? currentPlayerTrackIndex,
+    int? playlistCurrentTrackIndex,
+    int? playerCurrentTrackIndex,
     BasePlaylist? currentPlaylist,
     AudioStreamingQuality? streamingQuality,
     List<BaseTrack>? playerTracks,
@@ -117,19 +117,19 @@ class PlayerState extends Equatable {
       autoPlayNext: autoPlayNext ?? this.autoPlayNext,
       isLoading: isLoading ?? this.isLoading,
       playerTracks: playerTracks ?? this.playerTracks,
-      currentPlayerTrackIndex:
-          currentPlayerTrackIndex ?? this.currentPlayerTrackIndex,
+      playerCurrentTrackIndex:
+          playerCurrentTrackIndex ?? this.playerCurrentTrackIndex,
       currentPlaylist: currentPlaylist ?? this.currentPlaylist,
-      currentPlaylistTrackIndex:
-          currentPlaylistTrackIndex ?? this.currentPlaylistTrackIndex,
+      playlistCurrentTrackIndex:
+          playlistCurrentTrackIndex ?? this.playlistCurrentTrackIndex,
     );
   }
 
   @override
   List<Object?> get props => [
         volume,
-        currentPlaylistTrackIndex,
-        currentPlayerTrackIndex,
+        playlistCurrentTrackIndex,
+        playerCurrentTrackIndex,
         playerTracks,
         position,
         duration,
@@ -147,7 +147,7 @@ class PlayerState extends Equatable {
 
   @override
   String toString() {
-    return 'PlayerState{volume: $volume, position: $position, duration: $duration, buffer: $buffer, isPlaying: $isPlaying, isBuffering: $isBuffering, isCompleted: $isCompleted, isMuted: $isMuted, autoPlayNext: $autoPlayNext, repeat: $repeat, shuffle: $shuffle, isLoading: $isLoading, currentPlaylist: {title: ${currentPlaylist?.title}, id:${currentPlaylist?.id}}, currentTrack: {title: ${currentTrack?.title}, id:${currentTrack?.id}}, currentPlaylistTrackIndex: $currentPlaylistTrackIndex}';
+    return 'PlayerState{volume: $volume, position: $position, duration: $duration, buffer: $buffer, isPlaying: $isPlaying, isBuffering: $isBuffering, isCompleted: $isCompleted, isMuted: $isMuted, autoPlayNext: $autoPlayNext, repeat: $repeat, shuffle: $shuffle, isLoading: $isLoading, currentPlaylist: {title: ${currentPlaylist?.title}, id:${currentPlaylist?.id}}, currentTrack: {title: ${currentTrack?.title}, id:${currentTrack?.id}}, playlistCurrentTrackIndex: $playlistCurrentTrackIndex}';
   }
 }
 

@@ -26,11 +26,10 @@ void main() {
     test(
       'player should update its state when [AudioPlayerStreams.playing] emits'
       ' [true] and [player.currentTrack] is not null',
-      () {
+      () async {
         final track = FakeTrackFactory().withAudioInfo().create();
-        player.setCurrentTrack(track);
-        _streams.playingStreamController.add(true);
-        expect(player.state.isPlaying, true);
+        await player.playSingleTrack(track);
+        expectLater(player.state.isPlaying, true);
       },
     );
     test(
@@ -158,7 +157,8 @@ void main() {
       expectLater(player.state.isPlaying, false);
       expectLater(player.state.isLoading, true);
     });
-    test('player should stop loading when loading a new track is finished',
+    test(
+        '[player.state.isLoading] should be [false] when loading a new track is finished',
         () async {
       final track1 = FakeTrackFactory().withAudioInfo().create();
       // play track

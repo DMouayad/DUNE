@@ -81,8 +81,6 @@ class FakeAudioPlayerStreams {
 
 class FakeAudioPlayer extends AudioPlayer {
   final FakeAudioPlayerStreams _streams;
-  final List<BaseTrack> _playerPlaylist = [];
-  int? _currentTrackIndex;
 
   FakeAudioPlayer(this._streams, ListeningHistoryHelper listeningHistoryHelper)
       : super(
@@ -113,13 +111,8 @@ class FakeAudioPlayer extends AudioPlayer {
     TrackAudioInfo trackAudioInfo,
     BaseTrack track,
   ) async {
-    if (_playerPlaylist.isEmpty || _currentTrackIndex == null) {
-      _currentTrackIndex = 0;
-    } else {
-      _currentTrackIndex = _currentTrackIndex! + 1;
-    }
-    _playerPlaylist.add(track);
-    setCurrentTrack(track);
+    super.addTrackToPlayerPlaylist(trackAudioInfo, track);
+    updateCurrentTrackIndex(track.id);
     start();
   }
 
@@ -127,32 +120,33 @@ class FakeAudioPlayer extends AudioPlayer {
   double getVolumeStep() => 8;
 
   @override
-  Future<void> jumpToTrackInPlaylist(BaseTrack track) async {
-    _currentTrackIndex =
-        _playerPlaylist.indexWhere((element) => element.id == track.id);
-    setCurrentTrack(track);
-    startOrPause();
+  Future<void> jumpToTrack(BaseTrack track) async {
+    updateCurrentTrackIndex(track.id);
+    start();
   }
 
   @override
   void onPlayNext() {
-    final currentTrackIsLast = _currentTrackIndex == _playerPlaylist.length - 1;
-    if (currentTrackIsLast || _playerPlaylist.isEmpty) {
+    final currentTrackIsLast =
+        state.playerCurrentTrackIndex == state.playerTracks.length - 1;
+    if (currentTrackIsLast || state.playerTracks.isEmpty) {
       return;
     }
-    _currentTrackIndex = (_currentTrackIndex ?? 0) + 1;
-    setCurrentTrack(_playerPlaylist[_currentTrackIndex!]);
+
+    final nextTrackIndex = (state.playerCurrentTrackIndex ?? 0) + 1;
+    updateCurrentTrackIndex(state.playerTracks.elementAt(nextTrackIndex).id);
+
     start();
   }
 
   @override
   void onPlayPrevious() {
-    final currentTrackIsFirst = _currentTrackIndex == 0;
-    if (currentTrackIsFirst || _playerPlaylist.isEmpty) {
+    final currentTrackIsFirst = state.playerCurrentTrackIndex == 0;
+    if (currentTrackIsFirst || state.playerTracks.isEmpty) {
       return;
     }
-    _currentTrackIndex = (_currentTrackIndex ?? 1) - 1;
-    setCurrentTrack(_playerPlaylist[_currentTrackIndex!]);
+    final nextTrackIndex = (state.playerCurrentTrackIndex ?? 1) - 1;
+    updateCurrentTrackIndex(state.playerTracks.elementAt(nextTrackIndex).id);
     start();
   }
 
@@ -167,7 +161,7 @@ class FakeAudioPlayer extends AudioPlayer {
 
   @override
   bool trackExistsInCurrentPlaylist(BaseTrack<BaseAlbum, BaseArtist> track) {
-    return _playerPlaylist.containsWhere((e) => e.id == track.id);
+    return state.playerTracks.containsWhere((e) => e.id == track.id);
   }
 
   @override
