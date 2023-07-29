@@ -26,22 +26,23 @@ class AudioInfoSet extends Equatable {
     AudioStreamingQuality quality,
     MusicSource source,
   ) {
+    if (items.isEmpty) return null;
     final itemsWithSameSource = List<TrackAudioInfo>.from(
         items.where((value) => value.musicSource == source));
-    if (itemsWithSameSource.isEmpty) return null;
     final itemWithSameQuality =
         itemsWithSameSource.firstWhereOrNull((e) => e.quality == quality);
     if (itemWithSameQuality != null) return itemWithSameQuality;
-    return AudioStreamingQuality.lowQualityGroup.contains(quality)
-        ? itemsWithSameSource.firstWhereAnyOrNull((element) => [
-              element.quality == AudioStreamingQuality.low,
-              element.quality == AudioStreamingQuality.lowest,
-              element.quality == AudioStreamingQuality.balanced,
-            ])
-        : itemsWithSameSource.firstWhereAnyOrNull((element) => [
-              element.quality == AudioStreamingQuality.high,
-              element.quality == AudioStreamingQuality.best,
-            ]);
+    return (AudioStreamingQuality.lowQualityGroup.contains(quality)
+            ? itemsWithSameSource.firstWhereAnyOrNull((element) => [
+                  element.quality == AudioStreamingQuality.low,
+                  element.quality == AudioStreamingQuality.lowest,
+                  element.quality == AudioStreamingQuality.balanced,
+                ])
+            : itemsWithSameSource.firstWhereAnyOrNull((element) => [
+                  element.quality == AudioStreamingQuality.high,
+                  element.quality == AudioStreamingQuality.best,
+                ])) ??
+        items.first;
   }
 
   factory AudioInfoSet.fromListWithUnknownQuality(
