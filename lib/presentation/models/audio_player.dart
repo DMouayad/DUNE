@@ -248,7 +248,7 @@ abstract class AudioPlayer {
     BaseTrack track, {
     MusicSource? musicSource,
   }) async {
-    _stateStreamController.add(state.copyWith(currentPlaylist: null));
+    _stateStreamController.add(state.copyWith(hasPlaylist: false));
     await _playTrack(track, musicSource: musicSource);
   }
 

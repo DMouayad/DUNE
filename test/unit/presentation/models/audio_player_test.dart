@@ -10,7 +10,9 @@ import '../../../test_helpers/fake_models/fake_track.dart';
 
 late AudioPlayer player;
 late FakeAudioPlayerStreams _streams;
-final listeningHistoryHelper = ListeningHistoryHelper(
+
+/// A fake instance & wont be used since we're testing the [AudioPlayer] only.
+final _listeningHistoryHelper = ListeningHistoryHelper(
   (p0) {},
   (p0) {},
   (p0, p1) {},
@@ -19,7 +21,7 @@ final listeningHistoryHelper = ListeningHistoryHelper(
 void main() {
   setUp(() {
     _streams = FakeAudioPlayerStreams();
-    player = FakeAudioPlayer(_streams, listeningHistoryHelper);
+    player = FakeAudioPlayer(_streams, _listeningHistoryHelper);
   });
 
   group('Player streams tests', () {
@@ -171,6 +173,48 @@ void main() {
       expectLater(player.state.isPlaying, true);
       expectLater(player.state.isLoading, false);
       expectLater(player.state.currentTrack, track1);
+    });
+    test(
+      'player should have [track] in its [state.playerTracks]',
+      () async {
+        final track = FakeTrackFactory().withAudioInfo().create();
+        await player.playSingleTrack(track);
+        await Future.delayed(const Duration(milliseconds: 100));
+        expectLater(player.state.playerTracks.single, track);
+      },
+    );
+    test(
+      '[player.state.currentTrack] should match provided track'
+      ' with player tracks is empty',
+      () async {
+        final track = FakeTrackFactory().withAudioInfo().create();
+        await player.playSingleTrack(track);
+        expectLater(player.state.currentTrack, track);
+      },
+    );
+    test(
+        '[player.state.currentTrack] should match provided track'
+        ' (with previously-played tracks)', () async {
+      final FakePlaylist playlist =
+          FakePlaylistFactory().setTracksCount(10).create();
+      await player.playPlaylist(playlist);
+      final track = FakeTrackFactory().withAudioInfo().create();
+      await player.playSingleTrack(track);
+      expectLater(player.state.currentTrack, track);
+    });
+    test(
+        'calling [player.playSingleTrack] should set [state.currentPlaylist] to null',
+        () async {
+      final FakePlaylist playlist =
+          FakePlaylistFactory().setTracksCount(10).create();
+      await player.playPlaylist(playlist);
+      // assert [playlist] has been set as current.
+      expectLater(player.state.currentPlaylist, playlist);
+      // then play a single track
+      final track = FakeTrackFactory().withAudioInfo().create();
+      await player.playSingleTrack(track);
+      expectLater(player.state.currentTrack, track);
+      expectLater(player.state.currentPlaylist, null);
     });
   });
 }

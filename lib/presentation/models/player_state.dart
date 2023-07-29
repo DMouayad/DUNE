@@ -101,6 +101,7 @@ class PlayerState extends Equatable {
     BasePlaylist? currentPlaylist,
     AudioStreamingQuality? streamingQuality,
     List<BaseTrack>? playerTracks,
+    bool hasPlaylist = true,
   }) {
     return PlayerState(
       volume: volume ?? this.volume,
@@ -119,7 +120,8 @@ class PlayerState extends Equatable {
       playerTracks: playerTracks ?? this.playerTracks,
       playerCurrentTrackIndex:
           playerCurrentTrackIndex ?? this.playerCurrentTrackIndex,
-      currentPlaylist: currentPlaylist ?? this.currentPlaylist,
+      currentPlaylist:
+          hasPlaylist ? (currentPlaylist ?? this.currentPlaylist) : null,
       playlistCurrentTrackIndex:
           playlistCurrentTrackIndex ?? this.playlistCurrentTrackIndex,
     );
