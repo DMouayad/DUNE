@@ -11,7 +11,6 @@ import 'package:dune/presentation/controllers/search_controller.dart';
 import 'package:dune/presentation/controllers/listening_history_controller.dart';
 import 'package:dune/presentation/models/audio_player.dart';
 import 'package:dune/presentation/models/media_kit_audio_player.dart';
-import 'package:dune/presentation/models/player_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/controllers/playback_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_controller.dart';
@@ -23,7 +22,7 @@ import 'package:isar/isar.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:media_kit/media_kit.dart' as mediaKit;
 
-void registerAudioPlayer(Ref ref) {
+AudioPlayer registerAudioPlayer(Ref ref) {
   final listeningHistoryHelper = ListeningHistoryHelper(
     ref
         .read(listeningHistoryControllerProvider.notifier)
@@ -46,19 +45,18 @@ void registerAudioPlayer(Ref ref) {
             logLevel: mediaKit.MPVLogLevel.debug,
           ),
         ),
-        PlayerState.initial(),
         listeningHistoryHelper,
         () => ref.watch(
             appPreferencesController.select((value) => value.volumeStep)),
       ),
     );
   }
+  return GetIt.instance.get<AudioPlayer>();
 }
 
 void registerControllersProviders() {
   playbackControllerProvider = StateNotifierProvider((ref) {
-    registerAudioPlayer(ref);
-    return PlaybackController(GetIt.instance.get<AudioPlayer>());
+    return PlaybackController(registerAudioPlayer(ref));
   });
 
   searchControllerProvider = StateNotifierProvider((ref) => SearchController());
@@ -104,7 +102,8 @@ Future<BaseAppPreferences> registerAppPreferencesControllerProvider(
   );
 
   appPreferencesController = StateNotifierProvider(
-      (ref) => AppPreferencesController(dataSource, prefs));
+    (ref) => AppPreferencesController(dataSource, prefs),
+  );
   return prefs;
 }
 

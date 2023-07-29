@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
@@ -164,8 +165,12 @@ final class FakeTrackFactory extends BaseModelFactory<FakeTrack> {
     return _copyWith(source: source);
   }
 
-  FakeTrackFactory withAudioInfo() {
-    return _copyWith(shouldCreateAudioInfoSet: true);
+  FakeTrackFactory withAudioInfo([List<TrackAudioInfo>? trackAudioInfo]) {
+    return _copyWith(
+      shouldCreateAudioInfoSet: true,
+      audioInfoSet:
+          trackAudioInfo != null ? AudioInfoSet(items: trackAudioInfo) : null,
+    );
   }
 
   FakeTrackFactory withoutAudioInfo() {
