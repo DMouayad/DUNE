@@ -37,8 +37,6 @@ abstract class AudioPlayer {
     Stream<bool> buffering,
     Stream<Duration> buffer,
     Stream<RepeatMode> repeatMode,
-    Stream<TrackAudioInfo>? audioInfo,
-    Stream<double?> audioBitrate,
   ) {
     _currentState = initialState;
     _listeningHistoryHelper = listeningHistoryHelper;
@@ -53,8 +51,6 @@ abstract class AudioPlayer {
       buffering,
       buffer,
       repeatMode,
-      audioInfo,
-      audioBitrate,
     );
     _stateStreamController = StreamController.broadcast(sync: true);
     _statesSub = _stateStreamController.stream.listen((event) {
@@ -114,21 +110,25 @@ abstract class AudioPlayer {
 
   void next() {
     if (state.currentPlaylist != null) {
-      final isNotLastTrack =
-          state.currentTrack != state.currentPlaylist!.tracks.last;
-
-      if (isNotLastTrack) {
-        final nextTrackInPlaylistIndex = state.playlistCurrentTrackIndex! + 1;
-
-        _playTrack(
-          state.currentPlaylist!.tracks.elementAt(nextTrackInPlaylistIndex),
-        );
-        _stateStreamController.add(
-          state.copyWith(playlistCurrentTrackIndex: nextTrackInPlaylistIndex),
-        );
-      }
+      _playNextTrackInPlaylist();
     } else {
       onPlayNext();
+    }
+  }
+
+  void _playNextTrackInPlaylist() {
+    final isNotLastTrack =
+        state.currentTrack != state.currentPlaylist!.tracks.last;
+
+    if (isNotLastTrack) {
+      final nextTrackInPlaylistIndex = state.currentPlaylistTrackIndex! + 1;
+
+      _playTrack(
+        state.currentPlaylist!.tracks.elementAt(nextTrackInPlaylistIndex),
+      );
+      _stateStreamController.add(
+        state.copyWith(currentPlaylistTrackIndex: nextTrackInPlaylistIndex),
+      );
     }
   }
 
@@ -138,19 +138,22 @@ abstract class AudioPlayer {
 
   void prev() {
     if (state.currentPlaylist != null) {
-      final isNotFirstTrack =
-          state.currentTrack != state.currentPlaylist!.tracks.first;
-      if (isNotFirstTrack) {
-        final previousTrackInPlaylistIndex =
-            state.playlistCurrentTrackIndex! - 1;
-        _playTrack(
-          state.currentPlaylist!.tracks.elementAt(previousTrackInPlaylistIndex),
-        );
-        _stateStreamController.add(state.copyWith(
-            playlistCurrentTrackIndex: previousTrackInPlaylistIndex));
-      }
+      _playPrevTrackInPlaylist();
     } else {
       onPlayPrevious();
+    }
+  }
+
+  void _playPrevTrackInPlaylist() {
+    final isNotFirstTrack =
+        state.currentTrack != state.currentPlaylist!.tracks.first;
+    if (isNotFirstTrack) {
+      final previousTrackInPlaylistIndex = state.currentPlaylistTrackIndex! - 1;
+      _playTrack(
+        state.currentPlaylist!.tracks.elementAt(previousTrackInPlaylistIndex),
+      );
+      _stateStreamController.add(state.copyWith(
+          currentPlaylistTrackIndex: previousTrackInPlaylistIndex));
     }
   }
 
@@ -184,7 +187,14 @@ abstract class AudioPlayer {
   }
 
   void setCurrentTrack(BaseTrack? track) {
-    _stateStreamController.add(state.copyWith(currentTrack: track));
+    if (track == null) return;
+    final trackIndex = state.playerTracks.isEmpty
+        ? 0
+        : (state.currentPlayerTrackIndex ?? state.playerTracks.length - 1) + 1;
+    _stateStreamController.add(state.copyWith(
+      playerTracks: [...state.playerTracks, track],
+      currentPlayerTrackIndex: trackIndex,
+    ));
   }
 
   void toggleShuffle({bool? enabled}) {
@@ -208,13 +218,14 @@ abstract class AudioPlayer {
         : track != null
             ? (track, playlist.tracks.indexOf(track))
             : (playlist.tracks.first, 0);
+
     _stateStreamController.add(state.copyWith(
       currentPlaylist:
           state.currentPlaylist?.id != playlist.id ? playlist : null,
-      playlistCurrentTrackIndex: trackData.$2,
+      currentPlaylistTrackIndex: trackData.$2,
     ));
 
-    await _playTrack(trackData.$1, musicSource: musicSource);
+    _playTrack(trackData.$1, musicSource: musicSource);
     toggleShuffle(enabled: shuffle);
   }
 
@@ -223,7 +234,7 @@ abstract class AudioPlayer {
     MusicSource? musicSource,
   }) async {
     _stateStreamController.add(state.copyWith(currentPlaylist: null));
-    _playTrack(track, musicSource: musicSource);
+    await _playTrack(track, musicSource: musicSource);
   }
 
   Future<void> _playTrack(BaseTrack track, {MusicSource? musicSource}) async {
@@ -242,7 +253,7 @@ abstract class AudioPlayer {
     } else {
       // or else add the track to player playlist
       final AudioInfoSet? audioInfoSet =
-          await _getTrackAudio(track, musicSource);
+          await getTrackAudioInfoSet(track, musicSource);
       final trackAudio = audioInfoSet?.whereQuality(
         state.streamingQuality,
         musicSource ?? track.source,
@@ -250,8 +261,8 @@ abstract class AudioPlayer {
       if (trackAudio != null) {
         await addTrackToPlayerPlaylist(
             trackAudio, track.copyWith(audioInfoSet: audioInfoSet));
+        _listeningHistoryHelper.addPlaylistToListeningHistory(state);
       }
-      _listeningHistoryHelper.addPlaylistToListeningHistory(state);
     }
     if (state.isLoading) {
       _stateStreamController.add(state.copyWith(isLoading: false));
@@ -267,7 +278,7 @@ abstract class AudioPlayer {
     BaseTrack track,
   );
 
-  Future<AudioInfoSet?> _getTrackAudio(
+  Future<AudioInfoSet?> getTrackAudioInfoSet(
     BaseTrack track,
     MusicSource? musicSource,
   ) async {
@@ -326,13 +337,6 @@ class AudioPlayerStreams {
   /// Current playlist repeat mode.
   final Stream<RepeatMode> repeatMode;
 
-  /// Audio parameters of the currently playing [Media].
-  /// e.g. sample rate, channels, etc.
-  final Stream<TrackAudioInfo>? audioInfo;
-
-  /// Audio bitrate of the currently playing track.
-  final Stream<double?> audioBitrate;
-
   AudioPlayerStreams(
     this.playing,
     this.completed,
@@ -344,7 +348,5 @@ class AudioPlayerStreams {
     this.buffering,
     this.buffer,
     this.repeatMode,
-    this.audioInfo,
-    this.audioBitrate,
   );
 }

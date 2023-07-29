@@ -1,5 +1,3 @@
-import 'package:dune/domain/audio/base_models/base_album.dart';
-import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/presentation/models/player_state.dart';
@@ -16,11 +14,10 @@ final class MediaKitAudioPlayer extends AudioPlayer {
 
   MediaKitAudioPlayer(
     this._player,
-    PlayerState initialState,
     ListeningHistoryHelper listeningHistoryHelper,
     this.getUserSpecifiedVolumeStep,
   ) : super(
-          initialState,
+          PlayerState.initial(),
           listeningHistoryHelper,
           _player.stream.playing,
           _player.stream.completed,
@@ -38,9 +35,15 @@ final class MediaKitAudioPlayer extends AudioPlayer {
               mediakit.PlaylistMode.loop => RepeatMode.loopCurrentPlaylist,
             },
           ),
-          null,
-          _player.stream.audioBitrate,
-        );
+        ) {
+    _player.stream.playlist.listen((event) {
+      // get the currently playing media
+      final currentPlayingMedia = event.medias.elementAt(event.index);
+      setCurrentTrack(state.playerTracks.firstWhereOrNull(
+        (e) => e.id == currentPlayingMedia.extras?['trackId'],
+      ));
+    });
+  }
 
   @override
   Future<void> toggleShuffle({bool? enabled}) async {
@@ -69,7 +72,6 @@ final class MediaKitAudioPlayer extends AudioPlayer {
         _getTrackMediaFromPlayerPlaylist(track);
 
     await _player.jump(trackMediaInCurrentPlaylist?.extras?['index']);
-    setCurrentTrack(track);
   }
 
   @override
@@ -99,35 +101,34 @@ final class MediaKitAudioPlayer extends AudioPlayer {
   void startOrPause() => _player.playOrPause();
 
   @override
-  bool trackExistsInCurrentPlaylist(BaseTrack<BaseAlbum, BaseArtist> track) {
+  bool trackExistsInCurrentPlaylist(BaseTrack track) {
     // check if [track] media has already been added to the playlist
     final mediakit.Media? trackMediaInCurrentPlaylist =
         _getTrackMediaFromPlayerPlaylist(track);
     return trackMediaInCurrentPlaylist != null;
   }
 
-  mediakit.Media? _getTrackMediaFromPlayerPlaylist(
-      BaseTrack<BaseAlbum, BaseArtist> track) {
+  mediakit.Media? _getTrackMediaFromPlayerPlaylist(BaseTrack track) {
     return _player.state.playlist.medias
         .firstWhereOrNull((media) => media.extras?['trackId'] == track.id);
   }
 
   @override
-  void decreaseVolume() {
+  Future<void> decreaseVolume() async {
+    await _player.setVolume(state.volume);
     super.decreaseVolume();
-    _player.setVolume(state.volume);
   }
 
   @override
-  void increaseVolume() {
+  Future<void> increaseVolume() async {
+    await _player.setVolume(state.volume);
     super.increaseVolume();
-    _player.setVolume(state.volume);
   }
 
   @override
   Future<void> addTrackToPlayerPlaylist(
     TrackAudioInfo trackAudioInfo,
-    BaseTrack<BaseAlbum, BaseArtist> track,
+    BaseTrack track,
   ) async {
     try {
       if (_player.state.playlist.medias.isEmpty) {
@@ -136,14 +137,12 @@ final class MediaKitAudioPlayer extends AudioPlayer {
           extras: {'trackId': track.id, 'index': 0},
         );
         await _player.open(mediakit.Playlist([trackMedia], index: 0));
-        setCurrentTrack(track);
       } else {
         final trackMedia = mediakit.Media(trackAudioInfo.url!, extras: {
           'trackId': track.id,
           'index': _player.state.playlist.index + 1
         });
         await _player.add(trackMedia);
-        setCurrentTrack(track);
         await _player.next();
         await _player.play();
       }

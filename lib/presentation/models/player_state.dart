@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/track_audio_info.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:equatable/equatable.dart';
 
@@ -17,9 +18,27 @@ class PlayerState extends Equatable {
   final bool shuffle;
   final bool isLoading;
   final BasePlaylist? currentPlaylist;
-  final BaseTrack? currentTrack;
-  final int? playlistCurrentTrackIndex;
+  final List<BaseTrack> playerTracks;
+  final int? currentPlaylistTrackIndex;
+  final int? currentPlayerTrackIndex;
   final AudioStreamingQuality streamingQuality;
+
+  BaseTrack? get currentTrack {
+    if (currentPlayerTrackIndex != null &&
+        playerTracks.isNotEmpty &&
+        currentPlayerTrackIndex! < playerTracks.length) {
+      return playerTracks.elementAt(currentPlayerTrackIndex!);
+    }
+    return null;
+  }
+
+  TrackAudioInfo? get trackAudioInfo {
+    if (currentTrack == null) return null;
+    return currentTrack!.audioInfoSet?.whereQuality(
+      streamingQuality,
+      currentTrack!.source,
+    );
+  }
 
   bool get currentPlaylistNotNull => currentPlaylist != null;
 
@@ -41,8 +60,9 @@ class PlayerState extends Equatable {
     required this.repeat,
     required this.autoPlayNext,
     this.currentPlaylist,
-    this.currentTrack,
-    this.playlistCurrentTrackIndex,
+    this.currentPlayerTrackIndex,
+    this.currentPlaylistTrackIndex,
+    this.playerTracks = const [],
     this.streamingQuality = AudioStreamingQuality.balanced,
   });
 
@@ -76,10 +96,11 @@ class PlayerState extends Equatable {
     bool? shuffle,
     bool? isLoading,
     bool? autoPlayNext,
-    int? playlistCurrentTrackIndex,
+    int? currentPlaylistTrackIndex,
+    int? currentPlayerTrackIndex,
     BasePlaylist? currentPlaylist,
     AudioStreamingQuality? streamingQuality,
-    BaseTrack? currentTrack,
+    List<BaseTrack>? playerTracks,
   }) {
     return PlayerState(
       volume: volume ?? this.volume,
@@ -95,17 +116,21 @@ class PlayerState extends Equatable {
       shuffle: shuffle ?? this.shuffle,
       autoPlayNext: autoPlayNext ?? this.autoPlayNext,
       isLoading: isLoading ?? this.isLoading,
-      currentTrack: currentTrack ?? this.currentTrack,
+      playerTracks: playerTracks ?? this.playerTracks,
+      currentPlayerTrackIndex:
+          currentPlayerTrackIndex ?? this.currentPlayerTrackIndex,
       currentPlaylist: currentPlaylist ?? this.currentPlaylist,
-      playlistCurrentTrackIndex:
-          playlistCurrentTrackIndex ?? this.playlistCurrentTrackIndex,
+      currentPlaylistTrackIndex:
+          currentPlaylistTrackIndex ?? this.currentPlaylistTrackIndex,
     );
   }
 
   @override
   List<Object?> get props => [
         volume,
-        playlistCurrentTrackIndex,
+        currentPlaylistTrackIndex,
+        currentPlayerTrackIndex,
+        playerTracks,
         position,
         duration,
         buffer,
@@ -118,12 +143,11 @@ class PlayerState extends Equatable {
         isLoading,
         autoPlayNext,
         currentPlaylist,
-        currentTrack,
       ];
 
   @override
   String toString() {
-    return 'PlayerState{volume: $volume, position: $position, duration: $duration, buffer: $buffer, isPlaying: $isPlaying, isBuffering: $isBuffering, isCompleted: $isCompleted, isMuted: $isMuted, autoPlayNext: $autoPlayNext, repeat: $repeat, shuffle: $shuffle, isLoading: $isLoading, currentPlaylist: {title: ${currentPlaylist?.title}, id:${currentPlaylist?.id}}, currentTrack: {title: ${currentTrack?.title}, id:${currentTrack?.id}}, playlistCurrentTrackIndex: $playlistCurrentTrackIndex}';
+    return 'PlayerState{volume: $volume, position: $position, duration: $duration, buffer: $buffer, isPlaying: $isPlaying, isBuffering: $isBuffering, isCompleted: $isCompleted, isMuted: $isMuted, autoPlayNext: $autoPlayNext, repeat: $repeat, shuffle: $shuffle, isLoading: $isLoading, currentPlaylist: {title: ${currentPlaylist?.title}, id:${currentPlaylist?.id}}, currentTrack: {title: ${currentTrack?.title}, id:${currentTrack?.id}}, currentPlaylistTrackIndex: $currentPlaylistTrackIndex}';
   }
 }
 
