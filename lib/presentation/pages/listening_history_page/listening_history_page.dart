@@ -60,7 +60,7 @@ class _ListeningHistoryPageState extends ConsumerState<ListeningHistoryPage>
                 onPressed: () {
                   ref
                       .read(listeningHistoryControllerProvider.notifier)
-                      .loadListeningHistoryOverLastWeek();
+                      .loadListeningHistoryOverLastMonth();
                 },
                 icon: Icon(
                   Icons.refresh,

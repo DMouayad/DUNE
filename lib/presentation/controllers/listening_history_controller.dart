@@ -3,6 +3,7 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/listening_history.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/support/extensions/extensions.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ListeningHistoryController
@@ -16,14 +17,15 @@ class ListeningHistoryController
 
   Future<void> loadListeningHistoryOnDays(List<DateTime> days) async {}
 
-  Future<void> loadListeningHistoryOverLastWeek() async {
+  Future<void> loadListeningHistoryOverLastMonth() async {
     state = const AsyncValue<ListeningHistoryCollection>.loading()
         .copyWithPrevious(state);
-    final days = List.generate(DateTime.daysPerWeek, (i) => i)
-        .map((dayIndex) =>
-            DateTime.now().subtract(Duration(days: dayIndex)).onlyDate)
-        .toList();
-    (await MusicFacade.userListeningHistory.getListeningHistoryByDates(days))
+    final now = DateTime.now();
+    final dateRange = DateTimeRange(
+        start: DateTime(now.year, now.month),
+        end: DateTime(now.year, now.month, 31));
+    (await MusicFacade.userListeningHistory
+            .getListeningHistoryByRange(dateRange))
         .fold(
       onSuccess: (value) {
         state = AsyncValue.data(value);
