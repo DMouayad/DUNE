@@ -103,7 +103,7 @@ extension ContextThemeExtension on BuildContext {
 
   BorderRadius get platformBorderRadius =>
       BorderRadius.circular(isWindowsPlatform
-          ? 8
+          ? 10
           : isIOSPlatform
               ? 8
               : 20);

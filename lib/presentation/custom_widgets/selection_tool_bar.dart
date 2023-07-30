@@ -28,40 +28,8 @@ class SelectionToolBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "(${selectionState.selectedValues.length}) Selected",
-                  style: context.textTheme.titleMedium?.copyWith(
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(width: 10),
                 Expanded(
-                  child: CommandBar(
-                      compactBreakpointWidth: 300,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      primaryItems: [
-                        _CustomCommandBarButton(
-                          FluentIcons.cancel,
-                          "cancel",
-                          onPressed: controller.cancelSelection,
-                        ),
-                        _CustomCommandBarButton(
-                          FluentIcons.clear_selection,
-                          "clear",
-                          onPressed: controller.clearSelections,
-                        ),
-                        _CustomCommandBarButton(
-                          FluentIcons.select_all,
-                          "Select All",
-                          onPressed: onSelectAll,
-                        ),
-                      ]),
-                ),
-                Spacer(
-                  flex: context.isPortraitTablet ? 0 : 1,
-                ),
-                Expanded(
-                  flex: context.isPortraitTablet ? 1 : 2,
+                  flex: context.isPortraitTablet ? 2 : 1,
                   child: CommandBar(
                     compactBreakpointWidth: 150,
                     overflowBehavior: CommandBarOverflowBehavior.scrolling,
@@ -84,6 +52,42 @@ class SelectionToolBar extends StatelessWidget {
                           onPressed: onRemove,
                         ),
                     ],
+                  ),
+                ),
+                if (context.screenWidth > 900) const Spacer(),
+                Expanded(
+                  flex: context.isDesktop ? 2 : 1,
+                  child: CommandBar(
+                    compactBreakpointWidth: 300,
+                    // overflowBehavior: CommandBarOverflowBehavior.scrolling,
+                    // isCompact: true,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    primaryItems: [
+                      _CustomCommandBarButton(
+                        FluentIcons.cancel,
+                        "cancel",
+                        onPressed: controller.cancelSelection,
+                      ),
+                      _CustomCommandBarButton(
+                        FluentIcons.clear_selection,
+                        "clear",
+                        onPressed: controller.clearSelections,
+                      ),
+                      _CustomCommandBarButton(
+                        FluentIcons.select_all,
+                        "Select All",
+                        onPressed: onSelectAll,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    "(${selectionState.selectedValues.length}) selected",
+                    style: context.textTheme.titleSmall?.copyWith(
+                      color: context.colorScheme.primary,
+                    ),
                   ),
                 ),
               ],
