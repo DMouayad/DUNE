@@ -26,7 +26,7 @@ final class TrackListeningHistoryFactory
       uncompletedListensTotalDuration: _uncompletedListensTotalDuration ??
           Duration(seconds: faker.randomGenerator.integer(10000)),
       completedListensCount:
-          _completedListensCount ?? faker.randomGenerator.integer(300),
+          _completedListensCount ?? faker.randomGenerator.integer(200),
     );
   }
 

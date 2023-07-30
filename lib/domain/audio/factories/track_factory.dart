@@ -46,7 +46,9 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
     final source = _source ??
         faker.randomGenerator.element(MusicSource.valuesWithoutUnknown);
     return FakeTrack(
-      id: _id ?? faker.lorem.random.string(20),
+      id: _id ??
+          faker.lorem.random.string(20, min: 6) +
+              faker.randomGenerator.numberOfLength(3),
       audioInfoSet: _audioInfoSet ??
           (source!.isLocal || _shouldCreateAudioInfoSet
               ? AudioInfoSetFactory().setItems(4, source).create()

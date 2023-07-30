@@ -28,7 +28,8 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
   @override
   FakeAlbum create() {
     return FakeAlbum(
-      id: _id ?? faker.randomGenerator.string(30),
+      id: _id ??
+          faker.randomGenerator.string(15, min: 6) + faker.address.citySuffix(),
       artists: _artists ?? [],
       browseId:
           _browseId ?? faker.randomGenerator.string(20) + faker.lorem.word(),

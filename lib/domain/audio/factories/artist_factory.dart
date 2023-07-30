@@ -27,11 +27,9 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   @override
   FakeArtist create() {
     return FakeArtist(
-      id: _id ??
-          faker.randomGenerator.string(20) +
-              faker.randomGenerator.numberOfLength(20),
+      id: _id ?? faker.randomGenerator.string(20, min: 6) + faker.date.time(),
       browseId:
-          _browseId ?? faker.randomGenerator.string(30) + faker.lorem.word(),
+          _browseId ?? faker.randomGenerator.string(10) + faker.lorem.word(),
       radioId: _radioId ?? faker.randomGenerator.string(10),
       shuffleId: _shuffleId ?? faker.lorem.word(),
       category: _category ?? faker.food.dish(),

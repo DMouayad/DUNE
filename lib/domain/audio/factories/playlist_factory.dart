@@ -30,8 +30,8 @@ final class PlaylistFactory extends BaseModelFactory<FakePlaylist> {
   FakePlaylist create() {
     return FakePlaylist(
       id: _id ??
-          '${faker.lorem.word()}-${faker.address.countryCode()}'
-              '-${faker.randomGenerator.numberOfLength(10)}',
+          '${faker.address.countryCode()}'
+              '-${faker.randomGenerator.string(10)}',
       author: _author ?? PlaylistAuthor(name: faker.person.name()),
       description: _description ?? faker.lorem.sentence(),
       duration: _duration,
