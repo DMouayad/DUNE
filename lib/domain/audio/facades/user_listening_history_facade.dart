@@ -40,6 +40,12 @@ final class UserListeningHistoryFacade {
     return await _repository.getByDates(dates.map((e) => e.onlyDate).toList());
   }
 
+  FutureOrResult<ListeningHistoryCollection> getListeningHistoryByRange(
+    DateTimeRange dateRange,
+  ) async {
+    return await _repository.getByRange(dateRange);
+  }
+
   FutureResult<ListeningHistoryCollection> addPlaylist(
     BasePlaylist playlist,
     DateTime date,
