@@ -150,7 +150,9 @@ class ExplorePageState extends ConsumerState<ExplorePage>
   }
 
   (List<BaseExploreMusicCollection>, List<BaseExploreMusicItem>)
-      _getDataFromState(ExploreMusicState state) {
+      _getDataFromState(
+    ExploreMusicState state,
+  ) {
     List<BaseExploreMusicCollection> _collections = [];
     List<BaseExploreMusicItem> _trendingItems = [];
     for (BaseExploreMusicCollection collection in state.homeCollections) {

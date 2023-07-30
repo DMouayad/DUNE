@@ -41,9 +41,10 @@ class AdaptiveChip<T> extends StatelessWidget {
     return fluent.SizedBox(
       height: 38,
       width: min(150, context.screenWidth * .4),
-      child: fluent.ChipTheme(
-        data: fluent.ChipThemeData(
-          decoration: fluent.ButtonState.resolveWith((states) {
+      child: fluent.Button(
+        onPressed: onPressed,
+        style: fluent.ButtonStyle(
+          backgroundColor: fluent.ButtonState.resolveWith((states) {
             Color color;
             if (selected) {
               color = context.colorScheme.primaryContainer
@@ -52,14 +53,11 @@ class AdaptiveChip<T> extends StatelessWidget {
               color = context.colorScheme.secondaryContainer
                   .withOpacity(states.isHovering || states.isPressing ? 1 : .4);
             }
-            return BoxDecoration(color: color);
+            return color;
           }),
         ),
-        child: fluent.Chip(
-          onPressed: onPressed,
-          text: fluent.Center(
-            child: _getLabel(text, context, selected),
-          ),
+        child: fluent.Center(
+          child: _getLabel(text, context, selected),
         ),
       ),
     );

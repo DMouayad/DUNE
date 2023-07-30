@@ -249,6 +249,8 @@ Widget menuButton(context) {
       HapticFeedback.lightImpact();
     },
     child: Container(
+      alignment: Alignment.topCenter,
+      margin: const EdgeInsets.only(top: 15),
       child: Text(
         'MENU',
         style: TextStyle(
@@ -257,8 +259,6 @@ Widget menuButton(context) {
           color: context.colorScheme.secondary.withOpacity(.7),
         ),
       ),
-      alignment: Alignment.topCenter,
-      margin: const EdgeInsets.only(top: 15),
     ),
   );
 }

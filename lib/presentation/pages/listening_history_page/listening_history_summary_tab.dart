@@ -5,7 +5,7 @@ class ListeningHistorySummaryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
         Positioned(
           left: 0,
@@ -18,7 +18,7 @@ class ListeningHistorySummaryTab extends StatelessWidget {
 }
 
 class _MonthSelectionBar extends StatelessWidget {
-  const _MonthSelectionBar({super.key});
+  const _MonthSelectionBar();
 
   @override
   Widget build(BuildContext context) {

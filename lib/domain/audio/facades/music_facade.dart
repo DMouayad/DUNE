@@ -78,7 +78,6 @@ final class MusicFacade {
 
   static UserListeningHistoryFacade get userListeningHistory =>
       _instance._userListeningHistory;
-  static bool _wasRegistered = false;
 
   static void setInstance({
     required CacheMusicRepository cacheMusicRepository,
@@ -90,7 +89,6 @@ final class MusicFacade {
       youtubeMusicRepository: youtubeMusicRepository,
       listeningHistoryRepository: listeningHistoryRepository,
     );
-    _wasRegistered = true;
   }
 }
 

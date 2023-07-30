@@ -101,7 +101,7 @@ class IsarArtist extends BaseArtist {
       radioId: radioId ?? this.radioId,
       shuffleId: shuffleId ?? this.shuffleId,
       category: category ?? this.category,
-      isarThumbnails: thumbnails ?? this.isarThumbnails,
+      isarThumbnails: thumbnails ?? isarThumbnails,
       tracks: tracks ?? this.tracks,
       albums: albums ?? this.albums,
       tracksIds:

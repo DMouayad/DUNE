@@ -102,7 +102,7 @@ class IsarAlbum extends BaseAlbum {
       featuredArtistsIds: featuredArtistsIds ?? this.featuredArtistsIds,
       tracksIds:
           tracksIds ?? tracks?.map((e) => e.id).toList() ?? this.tracksIds,
-      isarThumbnails: thumbnails ?? this.isarThumbnails,
+      isarThumbnails: thumbnails ?? isarThumbnails,
       artists: artists ?? this.artists,
       tracks: tracks ?? this.tracks,
       duration: duration,

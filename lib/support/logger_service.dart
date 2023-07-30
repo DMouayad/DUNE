@@ -19,8 +19,8 @@ class Log {
 
   static final Log _instance = Log._internal();
 
-  static void v(dynamic message) {
-    to.v(message);
+  static void t(dynamic message) {
+    to.t(message);
   }
 
   static void d(dynamic message) {
@@ -39,24 +39,7 @@ class Log {
     to.e(message);
   }
 
-  static void wtf(dynamic message) {
-    to.wtf(message);
-  }
-
-  static void _logByLevel(Level logLevel, String message) {
-    switch (logLevel) {
-      case Level.info:
-        to.i(message);
-        break;
-      case Level.warning:
-        to.w(message);
-        break;
-
-      case Level.error:
-        to.e(message);
-        break;
-      default:
-        throw UnimplementedError();
-    }
+  static void f(dynamic message) {
+    to.f(message);
   }
 }

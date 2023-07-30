@@ -78,7 +78,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
       source: source ?? this.source,
       description: description ?? this.description,
       tracks: tracks ?? this.tracks,
-      isarThumbnails: thumbnails ?? this.isarThumbnails,
+      isarThumbnails: thumbnails ?? isarThumbnails,
       author: author ?? this.author,
       tracksIds: tracksIds ?? this.tracksIds,
     );

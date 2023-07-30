@@ -1,5 +1,4 @@
 import 'package:dune/presentation/controllers/selection_controller.dart';
-import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 

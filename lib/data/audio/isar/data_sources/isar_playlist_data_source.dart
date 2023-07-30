@@ -108,10 +108,4 @@ class IsarPlaylistDataSource
     }
     return result.asResult;
   }
-
-  @override
-  FutureOrResult<bool> existsWhereId(String id) async {
-    return await Result.fromAsync(() async =>
-        await _isar.isarPlaylists.where().idEqualTo(id).isNotEmpty());
-  }
 }
