@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
+import 'package:dune/domain/audio/factories/playlist_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/fake_models/fake_playlist.dart';
-import '../../../test_helpers/fake_repositories/fake_playlist_repository.dart';
-import '../../../test_helpers/isar_test_db.dart';
+import '../../../utils/fake_repositories/fake_playlist_repository.dart';
+import '../../../utils/isar_test_db.dart';
 
 Future<PlaylistFacade> _setupFacadeWith({
   required FakePlaylistRepository youtubeRepository,
@@ -20,10 +20,10 @@ Future<PlaylistFacade> _setupFacadeWith({
   );
 }
 
-final FakePlaylistFactory fakeYoutubePlaylistFactory =
-    FakePlaylistFactory().setMusicSource(MusicSource.youtube);
-final FakePlaylistFactory fakeSpotifyPlaylistFactory =
-    FakePlaylistFactory().setMusicSource(MusicSource.spotify);
+final fakeYoutubePlaylistFactory =
+    PlaylistFactory().setMusicSource(MusicSource.youtube);
+final fakeSpotifyPlaylistFactory =
+    PlaylistFactory().setMusicSource(MusicSource.spotify);
 
 void main() {
   setUpAll(() async => await initIsarForTesting());

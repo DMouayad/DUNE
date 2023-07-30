@@ -1,19 +1,18 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
+import 'package:dune/domain/audio/factories/explore_music_collection_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/utils/error/app_error.dart';
 import 'package:dune/support/utils/result/result.dart';
-import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/fake_models/fake_explore_music_collection.dart';
-import '../../../test_helpers/fake_repositories/fake_explore_music_repository.dart';
+import '../../../utils/fake_repositories/fake_explore_music_repository.dart';
 
 void main() {
   group('test fetched items are returned from the provided [MusicSource]', () {
     late final ExploreMusicFacade facade;
-    final youtubeFactory = FakeExploreMusicCollectionFactory()
-        .setYoutubeAsSource()
-        .setItemsCount(10);
-    final spotifyFactory = FakeExploreMusicCollectionFactory()
+    final youtubeFactory =
+        ExploreMusicCollectionFactory().setYoutubeAsSource().setItemsCount(10);
+    final spotifyFactory = ExploreMusicCollectionFactory()
         .setMusicSource(MusicSource.spotify)
         .setItemsCount(10);
 

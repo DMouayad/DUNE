@@ -1,8 +1,7 @@
 import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.dart';
+import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:dune/support/utils/result/result.dart';
-
-import '../fake_models/fake_playlist.dart';
 
 final class FakePlaylistRepository extends PlaylistRepository {
   FakePlaylistRepository({

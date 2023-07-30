@@ -1,48 +1,15 @@
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/domain/audio/factories/base_model_factory.dart';
+import 'package:dune/domain/audio/fake_models/fake_explore_music_item.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
-import '../base_model_factory.dart';
-import 'fake_track.dart';
 
-final class FakeExploreMusicItem extends BaseExploreMusicItem {
-  const FakeExploreMusicItem({
-    required super.type,
-    required super.title,
-    required super.sourceId,
-    required super.thumbnails,
-    required super.count,
-    required super.description,
-    required super.track,
-    required super.source,
-  });
+import 'track_factory.dart';
 
-  FakeExploreMusicItem _copyWith({
-    ExploreMusicItemType? type,
-    String? title,
-    String? sourceId,
-    ThumbnailsSet? thumbnails,
-    String? count,
-    String? description,
-    MusicSource? source,
-    // BaseTrack? track,
-  }) {
-    return FakeExploreMusicItem(
-      type: type ?? this.type,
-      title: title ?? this.title,
-      sourceId: sourceId ?? this.sourceId,
-      thumbnails: thumbnails ?? this.thumbnails,
-      count: count ?? this.count,
-      description: description ?? this.description,
-      source: source ?? this.source,
-      track: track,
-    );
-  }
-}
-
-final class FakeExploreMusicItemFactory
+final class ExploreMusicItemFactory
     extends BaseModelFactory<FakeExploreMusicItem> {
-  FakeExploreMusicItemFactory._(
+  ExploreMusicItemFactory._(
     this._type,
     this._source,
     this._title,
@@ -52,18 +19,18 @@ final class FakeExploreMusicItemFactory
     this._description,
   );
 
-  FakeExploreMusicItemFactory withSource(MusicSource? source) {
+  ExploreMusicItemFactory withSource(MusicSource? source) {
     return _copyWith(source: source);
   }
 
-  FakeExploreMusicItemFactory withType(ExploreMusicItemType type) {
+  ExploreMusicItemFactory withType(ExploreMusicItemType type) {
     return _copyWith(type: type);
   }
 
   bool get hasTrack =>
       [ExploreMusicItemType.video, ExploreMusicItemType.audio].contains(_type);
 
-  FakeExploreMusicItemFactory() {
+  ExploreMusicItemFactory() {
     _type = _title =
         _sourceId = _thumbnails = _count = _description = _source = null;
   }
@@ -89,12 +56,11 @@ final class FakeExploreMusicItemFactory
           (hasTrack ? null : faker.randomGenerator.integer(100).toString()),
       description: _description ?? faker.lorem.sentences(2).join('\n'),
       source: source!,
-      track:
-          hasTrack ? FakeTrackFactory().setMusicSource(source).create() : null,
+      track: hasTrack ? TrackFactory().setMusicSource(source).create() : null,
     );
   }
 
-  FakeExploreMusicItemFactory _copyWith({
+  ExploreMusicItemFactory _copyWith({
     ExploreMusicItemType? type,
     MusicSource? source,
     String? title,
@@ -103,7 +69,7 @@ final class FakeExploreMusicItemFactory
     String? count,
     String? description,
   }) {
-    return FakeExploreMusicItemFactory._(
+    return ExploreMusicItemFactory._(
       type ?? _type,
       source ?? _source,
       title ?? _title,

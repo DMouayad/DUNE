@@ -1,39 +1,19 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
+import 'package:dune/domain/audio/factories/base_model_factory.dart';
+import 'package:dune/domain/audio/fake_models/fake_track_listening_history.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 
-import '../base_model_factory.dart';
-import 'fake_track.dart';
+import 'track_factory.dart';
 
-final class FakeTrackListeningHistory extends BaseTrackListeningHistory {
-  FakeTrackListeningHistory({
-    super.date,
-    super.uncompletedListensTotalDuration,
-    super.completedListensCount,
-    super.track,
-  });
-
-  @override
-  Type copyWith<Type extends BaseTrackListeningHistory>({
-    BaseTrack? track,
-    DateTime? date,
-    Duration? uncompletedListensTotalDuration,
-    int? completedListensCount,
-  }) {
-    // TODO: implement copyWith
-    throw UnimplementedError();
-  }
-}
-
-final class FakeTrackListeningHistoryFactory
+final class TrackListeningHistoryFactory
     extends BaseModelFactory<FakeTrackListeningHistory> {
   late final BaseTrack? _track;
   late final DateTime? _date;
   late final Duration? _uncompletedListensTotalDuration;
   late final int? _completedListensCount;
 
-  FakeTrackListeningHistoryFactory() {
+  TrackListeningHistoryFactory() {
     _track = _date =
         _uncompletedListensTotalDuration = _completedListensCount = null;
   }
@@ -42,7 +22,7 @@ final class FakeTrackListeningHistoryFactory
   FakeTrackListeningHistory create() {
     return FakeTrackListeningHistory(
       date: _date ?? faker.date.dateTime().onlyDate,
-      track: _track ?? FakeTrackFactory().create(),
+      track: _track ?? TrackFactory().create(),
       uncompletedListensTotalDuration: _uncompletedListensTotalDuration ??
           Duration(seconds: faker.randomGenerator.integer(10000)),
       completedListensCount:
@@ -50,21 +30,21 @@ final class FakeTrackListeningHistoryFactory
     );
   }
 
-  FakeTrackListeningHistoryFactory setTrack(BaseTrack track) {
+  TrackListeningHistoryFactory setTrack(BaseTrack? track) {
     return _copyWith(track: track);
   }
 
-  FakeTrackListeningHistoryFactory setCompletedListensCount(int count) {
+  TrackListeningHistoryFactory setCompletedListensCount(int count) {
     return _copyWith(completedListensCount: count);
   }
 
-  FakeTrackListeningHistoryFactory setUnCompletedListensTotalDuration(
+  TrackListeningHistoryFactory setUnCompletedListensTotalDuration(
     Duration duration,
   ) {
     return _copyWith(uncompletedListensTotalDuration: duration);
   }
 
-  FakeTrackListeningHistoryFactory._({
+  TrackListeningHistoryFactory._({
     required BaseTrack? track,
     required DateTime? date,
     required Duration? uncompletedListensTotalDuration,
@@ -74,13 +54,13 @@ final class FakeTrackListeningHistoryFactory
         _uncompletedListensTotalDuration = uncompletedListensTotalDuration,
         _completedListensCount = completedListensCount;
 
-  FakeTrackListeningHistoryFactory _copyWith({
+  TrackListeningHistoryFactory _copyWith({
     BaseTrack? track,
     DateTime? date,
     Duration? uncompletedListensTotalDuration,
     int? completedListensCount,
   }) {
-    return FakeTrackListeningHistoryFactory._(
+    return TrackListeningHistoryFactory._(
       track: track ?? _track,
       date: date ?? _date,
       uncompletedListensTotalDuration:

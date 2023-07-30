@@ -1,13 +1,13 @@
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
+import 'package:dune/domain/audio/factories/track_audio_info_factory.dart';
+import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/factories/track_audio_info_factory.dart';
-import '../../../test_helpers/fake_models/fake_track.dart';
-import '../../../test_helpers/fake_repositories/fake_track_repository.dart';
-import '../../../test_helpers/isar_test_db.dart';
+import '../../../utils/fake_repositories/fake_track_repository.dart';
+import '../../../utils/isar_test_db.dart';
 
 Future<TrackFacade> _setupFacadeWith({
   required FakeOnlineSourceTrackRepository youtubeRepository,
@@ -41,7 +41,7 @@ void main() {
           'it returns a [TrackAudioInfo] with a source of [MusicSource.youtube]'
           'when provided source is [MusicSource.youtube]', () async {
         final audioInfoResult = await facade.getTrackAudioInfo(
-          FakeTrackFactory().setMusicSource(MusicSource.youtube).create(),
+          TrackFactory().setMusicSource(MusicSource.youtube).create(),
           musicSource: MusicSource.youtube,
         );
         expectLater(audioInfoResult.isSuccess, true);

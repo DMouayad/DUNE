@@ -1,8 +1,7 @@
 import 'package:dune/data/audio/isar/models/isar_track_listening_history.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/isar_test_db.dart';
-import '../../../utils/isar_track_listening_history_helper.dart';
+import '../../../utils/isar_test_db.dart';
 
 DateTime get date => DateTime.now();
 
@@ -32,7 +31,7 @@ void main() {
           .requireValue;
       // assert no month summary exists for [date.month]
       expectLater(monthSummaryBefore, null);
-      final histories = await createTracksListeningHistories();
+      await isarTrackListeningHistorySeeder.seedCount();
       final monthSummary = (await isarMusicRepo.listeningHistory
               .getMonthSummary(month: date.month, year: date.year))
           .requireValue;

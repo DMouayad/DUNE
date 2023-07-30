@@ -1,16 +1,15 @@
-import 'package:dune/data/audio/isar/repositories/isar_music_repository.dart';
+import 'package:dune/domain/audio/factories/audio_info_set_factory.dart';
+import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/factories/audio_info_set_factory.dart';
-import '../../../test_helpers/fake_models/fake_track.dart';
-import '../../../test_helpers/isar_test_db.dart';
+import '../../../utils/isar_test_db.dart';
 import '../../../utils/equality_helper.dart';
 
 void main() {
   setUpAll(() async => await initIsarForTesting());
   setUp(() async => await refreshDatabase());
   test('it should save track in DB', () async {
-    final track = FakeTrackFactory().create();
+    final track = TrackFactory().create();
     final fetchingTrackBefore = await isarMusicRepo.tracks.getById(track.id);
     // assert track not already present in the database
     expectLater(fetchingTrackBefore.requireValue == null, true);
@@ -27,7 +26,7 @@ void main() {
   });
 
   test('it should save track audio info in DB', () async {
-    final track = FakeTrackFactory().withoutAudioInfo().create();
+    final track = TrackFactory().withoutAudioInfo().create();
     final fetchingTrackBefore = await isarMusicRepo.tracks.getById(track.id);
     // assert track doesn't already have an [AudioInfoSet]
     expectLater(fetchingTrackBefore.requireValue?.audioInfoSet, null);

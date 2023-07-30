@@ -1,8 +1,7 @@
 import 'package:dune/domain/audio/base_data_sources/base_explore_music_data_source.dart';
+import 'package:dune/domain/audio/factories/explore_music_collection_factory.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
 import 'package:dune/support/utils/result/result.dart';
-
-import '../fake_models/fake_explore_music_collection.dart';
 
 final class FakeExploreMusicRepository extends ExploreMusicRepository {
   FakeExploreMusicRepository({

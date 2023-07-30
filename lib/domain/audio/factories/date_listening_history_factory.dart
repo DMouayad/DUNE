@@ -1,11 +1,12 @@
 import 'package:dune/domain/audio/base_models/listening_history.dart';
+import 'package:dune/domain/audio/factories/base_model_factory.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 
-import '../base_model_factory.dart';
-import 'fake_playlists_listening_history.dart';
-import 'fake_track.dart';
-import 'fake_track_listening_history.dart';
+import '../fake_models/fake_playlists_listening_history.dart';
+import '../fake_models/fake_track.dart';
+import '../fake_models/fake_track_listening_history.dart';
+import 'track_listening_history_factory.dart';
 
 final class FakeDateListeningHistory extends DateListeningHistory {
   FakeDateListeningHistory({
@@ -15,7 +16,7 @@ final class FakeDateListeningHistory extends DateListeningHistory {
   });
 }
 
-final class FakeDateListeningHistoryFactory
+final class DateListeningHistoryFactory
     extends BaseModelFactory<FakeDateListeningHistory> {
   late final DateTime? _date;
 
@@ -24,7 +25,7 @@ final class FakeDateListeningHistoryFactory
   late final List<FakeTrackListeningHistory>? _tracksListeningHistory;
   late final FakePlaylistsListeningHistory? _playlistsListeningHistory;
 
-  FakeDateListeningHistoryFactory() {
+  DateListeningHistoryFactory() {
     _date = _tracksListeningHistory = _playlistsListeningHistory = null;
   }
 
@@ -37,27 +38,27 @@ final class FakeDateListeningHistoryFactory
     );
   }
 
-  FakeDateListeningHistoryFactory setTracksListeningHistoryCount(int count) {
+  DateListeningHistoryFactory setTracksListeningHistoryCount(int count) {
     return _copyWith(
       tracksListeningHistory: List.generate(
         count,
-        (index) => FakeTrackListeningHistoryFactory().create(),
+        (index) => TrackListeningHistoryFactory().create(),
       ),
     );
   }
 
-  FakeDateListeningHistoryFactory createListeningHistoriesForTracks(
+  DateListeningHistoryFactory createListeningHistoriesForTracks(
     List<FakeTrack> tracks,
   ) {
     return _copyWith(
       tracksListeningHistory: tracks
           .map((track) =>
-              FakeTrackListeningHistoryFactory().setTrack(track).create())
+              TrackListeningHistoryFactory().setTrack(track).create())
           .toList(),
     );
   }
 
-  FakeDateListeningHistoryFactory._({
+  DateListeningHistoryFactory._({
     required DateTime? date,
     required List<FakeTrackListeningHistory>? tracksListeningHistory,
     required FakePlaylistsListeningHistory? playlistsListeningHistory,
@@ -65,12 +66,12 @@ final class FakeDateListeningHistoryFactory
         _tracksListeningHistory = tracksListeningHistory,
         _playlistsListeningHistory = playlistsListeningHistory;
 
-  FakeDateListeningHistoryFactory _copyWith({
+  DateListeningHistoryFactory _copyWith({
     DateTime? date,
     List<FakeTrackListeningHistory>? tracksListeningHistory,
     FakePlaylistsListeningHistory? playlistsListeningHistory,
   }) {
-    return FakeDateListeningHistoryFactory._(
+    return DateListeningHistoryFactory._(
       date: date ?? _date,
       tracksListeningHistory: tracksListeningHistory ?? _tracksListeningHistory,
       playlistsListeningHistory:

@@ -1,12 +1,12 @@
+import 'package:dune/domain/audio/factories/playlist_factory.dart';
+import 'package:dune/domain/audio/factories/track_factory.dart';
+import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers/fake_models/fake_playlist.dart';
-import '../../../test_helpers/fake_models/fake_track.dart';
-import '../../../test_helpers/isar_test_db.dart';
+import '../../../utils/isar_test_db.dart';
 import '../../../utils/equality_helper.dart';
-import '../../../utils/isar_track_listening_history_helper.dart';
 
 void main() {
   setUpAll(() async => await initIsarForTesting());
@@ -14,7 +14,7 @@ void main() {
   group("adding playlist to playlists listening history", () {
     test('it saves playlist in local storage when it does not exists',
         () async {
-      final playlist = FakePlaylistFactory().create();
+      final playlist = PlaylistFactory().create();
       final fetchingPlaylistBefore =
           await isarMusicRepo.playlists.getById(playlist.id!);
       expectLater(fetchingPlaylistBefore.requireValue, null);
@@ -28,7 +28,7 @@ void main() {
     test(
         'it adds the playlist to the specified date when it already exists in'
         'local storage', () async {
-      final playlist = FakePlaylistFactory().create();
+      final playlist = PlaylistFactory().create();
       final savingPlaylistResult = await isarMusicRepo.playlists.save(playlist);
       expectLater(savingPlaylistResult.isSuccess, true);
       final fetchingPlaylistBefore =
@@ -44,7 +44,7 @@ void main() {
         'it adds the provided playlist when it does not exists in the specified'
         ' date playlists listening history', () async {
       final date = DateTime.now().onlyDate;
-      final playlist = FakePlaylistFactory().create();
+      final playlist = PlaylistFactory().create();
       final addingToListeningHistory =
           await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
       final datePlaylistsListeningHistory = addingToListeningHistory
@@ -57,7 +57,7 @@ void main() {
     test(
         'it does not add it twice if already exists in the'
         '[date] playlists listening history', () async {
-      final playlist = FakePlaylistFactory().setTracksCount(20).create();
+      final playlist = PlaylistFactory().setTracksCount(20).create();
       // add the first time
       await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
       // assert it was added to the [date] playlists listening history
@@ -100,7 +100,7 @@ void main() {
         ' date playlists listening history which will be containing other playlists',
         () async {
       final playlists = await _addRandomPlaylistsToListeningHistory(date);
-      final playlist = FakePlaylistFactory().create();
+      final playlist = PlaylistFactory().create();
       final addingToListeningHistory =
           await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
       final datePlaylistsListeningHistory = addingToListeningHistory
@@ -122,7 +122,7 @@ void main() {
     test(
         'it increments completed listens count by one with no history for track',
         () async {
-      final track = FakeTrackFactory().create();
+      final track = TrackFactory().create();
       final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
@@ -144,8 +144,8 @@ void main() {
         'if track has previous listening history for date, it should increment '
         'completed listens count without creating new listening history',
         () async {
-      final track = FakeTrackFactory().create();
-      await createHistoryForTrack(track, date);
+      final track = TrackFactory().create();
+      await isarTrackListeningHistorySeeder.seedOne(track, date);
       final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
@@ -169,7 +169,7 @@ void main() {
     test(
         'it sets the uncompleted listens total duration by for track with no previous history',
         () async {
-      final track = FakeTrackFactory().create();
+      final track = TrackFactory().create();
       final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
@@ -191,8 +191,8 @@ void main() {
         'if track has previous listening history for date, it should adds to'
         ' the uncompleted listens duration without creating new listening history',
         () async {
-      final track = FakeTrackFactory().create();
-      await createHistoryForTrack(track, date);
+      final track = TrackFactory().create();
+      await isarTrackListeningHistorySeeder.seedOne(track, date);
       final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
@@ -221,7 +221,7 @@ DateTime get date => DateTime.now().onlyDate;
 Future<List<FakePlaylist>> _addRandomPlaylistsToListeningHistory(
   DateTime date,
 ) async {
-  final playlists = FakePlaylistFactory().setTracksCount(10).createCount(10);
+  final playlists = PlaylistFactory().setTracksCount(10).createCount(10);
   for (var playlist in playlists) {
     await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
   }

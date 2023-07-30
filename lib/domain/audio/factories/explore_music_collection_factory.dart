@@ -1,9 +1,10 @@
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
+import 'package:dune/domain/audio/factories/base_model_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
-import '../base_model_factory.dart';
-import 'fake_explore_music_item.dart';
+import '../fake_models/fake_explore_music_item.dart';
+import 'explore_music_item_factory.dart';
 
 final class FakeExploreMusicCollection
     extends BaseExploreMusicCollection<FakeExploreMusicItem> {
@@ -15,9 +16,9 @@ final class FakeExploreMusicCollection
   });
 }
 
-final class FakeExploreMusicCollectionFactory
+final class ExploreMusicCollectionFactory
     extends BaseModelFactory<FakeExploreMusicCollection> {
-  FakeExploreMusicCollectionFactory() {
+  ExploreMusicCollectionFactory() {
     _isTrending = _title = _source = _items = null;
   }
 
@@ -37,33 +38,33 @@ final class FakeExploreMusicCollectionFactory
     );
   }
 
-  FakeExploreMusicCollectionFactory setMusicSource(MusicSource source) {
+  ExploreMusicCollectionFactory setMusicSource(MusicSource source) {
     return _copyWith(source: source);
   }
 
-  FakeExploreMusicCollectionFactory setYoutubeAsSource() {
+  ExploreMusicCollectionFactory setYoutubeAsSource() {
     return _copyWith(source: MusicSource.youtube);
   }
 
-  FakeExploreMusicCollectionFactory setIsTrending(bool trending) {
+  ExploreMusicCollectionFactory setIsTrending(bool trending) {
     return _copyWith(isTrending: trending);
   }
 
-  FakeExploreMusicCollectionFactory setItemsCount(int count) {
+  ExploreMusicCollectionFactory setItemsCount(int count) {
     return _copyWith(
-      items: FakeExploreMusicItemFactory()
+      items: ExploreMusicItemFactory()
           .withSource(_source)
           .createCount(faker.randomGenerator.integer(count)),
     );
   }
 
-  FakeExploreMusicCollectionFactory _copyWith({
+  ExploreMusicCollectionFactory _copyWith({
     bool? isTrending,
     String? title,
     List<FakeExploreMusicItem>? items,
     MusicSource? source,
   }) {
-    return FakeExploreMusicCollectionFactory._(
+    return ExploreMusicCollectionFactory._(
       isTrending: isTrending ?? _isTrending,
       title: title ?? _title,
       items: items ?? _items,
@@ -71,7 +72,7 @@ final class FakeExploreMusicCollectionFactory
     );
   }
 
-  FakeExploreMusicCollectionFactory._({
+  ExploreMusicCollectionFactory._({
     required bool? isTrending,
     required String? title,
     required List<FakeExploreMusicItem>? items,
