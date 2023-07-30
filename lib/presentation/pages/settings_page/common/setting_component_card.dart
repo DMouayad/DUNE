@@ -32,9 +32,6 @@ class SettingComponentCard extends ConsumerWidget {
         headerShape: (expanded) {
           return RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(expanded ? 2 : 10),
-            side: BorderSide(
-              color: context.colorScheme.secondary.withOpacity(.1),
-            ),
           );
         },
         contentBackgroundColor: ref.watch(appThemeControllerProvider).cardColor,

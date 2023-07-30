@@ -1,14 +1,19 @@
+import 'package:flutter/material.dart';
+
+//
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+//
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/track_card.dart';
+import 'package:dune/presentation/custom_widgets/track_card_pop_up_menu.dart';
 import 'package:dune/presentation/custom_widgets/track_card_wrapper.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 final trackListeningHistoryCardsSelectionControllerProvider =
     StateNotifierProvider<SelectionController<BaseTrack>,
@@ -83,6 +88,16 @@ class TrackRecordCard extends ConsumerWidget {
     final textTheme = context.textTheme.bodyMedium?.copyWith(
       color: context.colorScheme.secondary,
     );
+    final popupMenu = TrackCardPopupMenu(
+      track,
+      additionalItems: [
+        (
+          text: 'show Track listening history',
+          icon: Icons.history,
+          onPressed: () {},
+        ),
+      ],
+    );
     return TrackCardWrapper(
       playOnTap: false,
       onPlayTrack: () => _playTrack(track, ref),
@@ -96,6 +111,7 @@ class TrackRecordCard extends ConsumerWidget {
             .toggleSelectionForItem(track.id, track);
       },
       cardColor: color,
+      popupMenu: popupMenu,
       child: Stack(
         children: [
           Positioned(
@@ -133,10 +149,26 @@ class TrackRecordCard extends ConsumerWidget {
                   style: textTheme,
                 ),
                 Tooltip(
-                  message: "More about this song listening history",
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_horiz_rounded, size: 20),
+                  message: "More",
+                  child: GestureDetector(
+                    onTapDown: (tapDetails) {
+                      final isSelected = ref
+                          .watch(
+                              trackListeningHistoryCardsSelectionControllerProvider)
+                          .selectedValues
+                          .containsKey(track.id);
+
+                      showTrackCardPopupMenu(
+                        context,
+                        isSelected,
+                        tapDetails.localPosition,
+                        popupMenu,
+                      );
+                    },
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.more_horiz_rounded, size: 20),
+                    ),
                   ),
                 ),
               ],

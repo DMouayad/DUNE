@@ -30,9 +30,8 @@ class PlayPauseButton extends ConsumerWidget {
                       .player
                       .startOrPause(),
               child: Container(
-                width: 40,
-                height: 40,
-                // padding: const EdgeInsets.all(5),
+                width: 52,
+                height: 52,
                 decoration: const BoxDecoration(
                   color: Colors.transparent,
                   shape: BoxShape.circle,

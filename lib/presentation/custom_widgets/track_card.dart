@@ -9,6 +9,7 @@ import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'placeholders.dart';
+import 'track_card_pop_up_menu.dart';
 import 'track_card_wrapper.dart';
 
 class TrackCard extends StatelessWidget {
@@ -37,6 +38,13 @@ class TrackCard extends StatelessWidget {
       cardColor: color,
       selectionState: selectionState,
       onSelected: () => onSelected(track),
+      popupMenu: TrackCardPopupMenu(
+        track,
+        onDelete: () {},
+        onDownload: () {},
+        onPlayTrack: onPlayTrack,
+        onSelectTrack: () {},
+      ),
       child: TrackCardMainContent(track: track),
     );
   }
