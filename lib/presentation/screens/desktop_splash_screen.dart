@@ -20,7 +20,7 @@ class _DesktopSplashScreenState extends ConsumerState<DesktopSplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      context.goNamed(RouteName.explorePage);
+      context.go(AppRouter.initialLocation);
     });
     super.initState();
   }
