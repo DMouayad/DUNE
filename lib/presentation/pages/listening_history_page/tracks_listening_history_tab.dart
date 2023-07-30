@@ -33,7 +33,7 @@ class TracksListeningHistoryTab extends ConsumerWidget {
         ),
       );
     }
-    return Column(
+    return ListView(
       children: [
         Consumer(builder: (context, ref, _) {
           return SelectionToolBar(
@@ -49,32 +49,29 @@ class TracksListeningHistoryTab extends ConsumerWidget {
             ),
           );
         }),
-        Expanded(
-          flex: 0,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: listeningHistoryState.isLoading
-                ? 1
-                : listeningHistoryState.valueOrNull?.length ?? 0,
-            itemBuilder: (BuildContext context, int index) {
-              if (listeningHistoryState.isLoading) {
-                return const ListeningHistorySectionShimmer();
-              } else if (listeningHistoryState.hasValue) {
-                final item =
-                    listeningHistoryState.requireValue.entries.elementAt(index);
-                return Column(
-                  children: [
-                    ListeningHistoryDateSectionHeader(
-                      date: item.key,
-                      trailing: _contentDescription(item.value),
-                    ),
-                    TracksListeningHistoriesListView(item.value),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: listeningHistoryState.isLoading
+              ? 1
+              : listeningHistoryState.valueOrNull?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            if (listeningHistoryState.isLoading) {
+              return const ListeningHistorySectionShimmer();
+            } else if (listeningHistoryState.hasValue) {
+              final item =
+                  listeningHistoryState.requireValue.entries.elementAt(index);
+              return Column(
+                children: [
+                  ListeningHistoryDateSectionHeader(
+                    date: item.key,
+                    trailing: _contentDescription(item.value),
+                  ),
+                  TracksListeningHistoriesListView(item.value),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ],
     );

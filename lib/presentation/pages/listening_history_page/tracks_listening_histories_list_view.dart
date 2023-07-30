@@ -1,3 +1,5 @@
+import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:flutter/material.dart';
 
 //
@@ -56,7 +58,7 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
               child: FadeInAnimation(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 4.0),
-                  child: TrackRecordCard(
+                  child: TrackHistoryCard(
                     trackListeningHistory: tracksRecords.elementAt(index),
                     color: context.colorScheme.background,
                   ),
@@ -70,8 +72,8 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
   }
 }
 
-class TrackRecordCard extends ConsumerWidget {
-  const TrackRecordCard({
+class TrackHistoryCard extends ConsumerWidget {
+  const TrackHistoryCard({
     super.key,
     required this.trackListeningHistory,
     required this.color,
@@ -97,6 +99,7 @@ class TrackRecordCard extends ConsumerWidget {
           onPressed: () {},
         ),
       ],
+      onSelectTrack: () => _onSelected(ref, track),
     );
     return TrackCardWrapper(
       playOnTap: false,
@@ -104,12 +107,7 @@ class TrackRecordCard extends ConsumerWidget {
       track: track,
       selectionState:
           ref.watch(trackListeningHistoryCardsSelectionControllerProvider),
-      onSelected: () {
-        ref
-            .read(
-                trackListeningHistoryCardsSelectionControllerProvider.notifier)
-            .toggleSelectionForItem(track.id, track);
-      },
+      onSelected: () => _onSelected(ref, track),
       cardColor: color,
       popupMenu: popupMenu,
       child: Stack(
@@ -157,11 +155,13 @@ class TrackRecordCard extends ConsumerWidget {
                               trackListeningHistoryCardsSelectionControllerProvider)
                           .selectedValues
                           .containsKey(track.id);
-
                       showTrackCardPopupMenu(
                         context,
                         isSelected,
-                        tapDetails.localPosition,
+                        Offset(
+                          tapDetails.globalPosition.dx,
+                          tapDetails.localPosition.dy,
+                        ),
                         popupMenu,
                       );
                     },
@@ -177,6 +177,12 @@ class TrackRecordCard extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _onSelected(WidgetRef ref, BaseTrack<BaseAlbum, BaseArtist> track) {
+    ref
+        .read(trackListeningHistoryCardsSelectionControllerProvider.notifier)
+        .toggleSelectionForItem(track.id, track);
   }
 
   void _playTrack(BaseTrack track, WidgetRef ref) {
