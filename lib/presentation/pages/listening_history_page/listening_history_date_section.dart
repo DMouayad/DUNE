@@ -15,11 +15,14 @@ class ListeningHistoryDateSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const divider = Divider(
+      thickness: .3,
+    );
     return SizedBox(
       height: 60,
       child: Column(
         children: [
-          const Divider(),
+          divider,
           Expanded(
             flex: 0,
             child: Padding(
@@ -44,7 +47,7 @@ class ListeningHistoryDateSectionHeader extends StatelessWidget {
               ),
             ),
           ),
-          const Divider(),
+          divider,
         ],
       ),
     );

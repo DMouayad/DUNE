@@ -29,12 +29,17 @@ class SettingComponentCard extends ConsumerWidget {
     return fluent_ui.Padding(
       padding: const EdgeInsets.all(4.0),
       child: fluent_ui.Expander(
-        headerShape: (expanded) {
-          return RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(expanded ? 2 : 10),
-          );
-        },
         contentBackgroundColor: ref.watch(appThemeControllerProvider).cardColor,
+        headerBackgroundColor: (expanded) {
+          return fluent_ui.ButtonState.resolveWith((states) {
+            final color = ref.watch(appThemeControllerProvider).cardColor;
+            final darkerColor = color.withOpacity(.6);
+            if (states.isHovering) {
+              return darkerColor;
+            }
+            return expanded ? darkerColor : color;
+          });
+        },
         trailing: trailing ??
             (trailingText != null ? _getTrailingTextWidget(context) : null),
         header: Row(

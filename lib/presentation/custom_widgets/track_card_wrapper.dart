@@ -82,10 +82,7 @@ class TrackCardWrapper extends StatelessWidget {
               ),
               onTap: onTap,
               borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                child: child,
-              ),
+              child: child,
             ),
           ),
         ),

@@ -33,10 +33,13 @@ class TracksListeningHistoryTab extends ConsumerWidget {
         ),
       );
     }
-    return ListView(
-      children: [
-        Consumer(builder: (context, ref, _) {
-          return SelectionToolBar(
+    return CustomScrollView(
+      primary: true,
+      slivers: [
+        SliverPersistentHeader(
+          pinned: true,
+          floating: true,
+          delegate: PersistentSelectionToolBar(
             controller: ref.read(
                 trackListeningHistoryCardsSelectionControllerProvider.notifier),
             selectionState: ref
@@ -47,10 +50,10 @@ class TracksListeningHistoryTab extends ConsumerWidget {
                   .expand((e) => e)
                   .toList(),
             ),
-          );
-        }),
-        ListView.builder(
-          shrinkWrap: true,
+          ),
+        ),
+        SliverList.builder(
+          // shrinkWrap: true,
           itemCount: listeningHistoryState.isLoading
               ? 1
               : listeningHistoryState.valueOrNull?.length ?? 0,

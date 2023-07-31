@@ -1,7 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -58,13 +57,11 @@ class TrackCardMainContent extends StatelessWidget {
     this.showAlbumName = true,
     this.showArtistsNames = true,
     this.showDuration = true,
-    this.onThumbnailPressed,
     this.crossAxisAlignment,
   });
 
   final BaseTrack<BaseAlbum, BaseArtist> track;
   final bool alwaysCenterTitle;
-  final void Function()? onThumbnailPressed;
   final CrossAxisAlignment? crossAxisAlignment;
   final bool showArtistsNames;
   final bool showAlbumName;
@@ -90,24 +87,11 @@ class TrackCardMainContent extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           flex: 0,
-          child: OptionalParentWidget(
-            condition: onThumbnailPressed != null,
-            parentWidgetBuilder: (child) {
-              return InkWell(
-                onTap: onThumbnailPressed,
-                child: Tooltip(
-                  message: 'Tap to play',
-                  waitDuration: const Duration(milliseconds: 1000),
-                  child: child,
-                ),
-              );
-            },
-            childWidget: ThumbnailWidget(
-              thumbnailsSet: track.thumbnails,
-              dimension: imageDimension,
-              cacheNetworkImage: true,
-              placeholder: const TrackCoverPlaceholder(),
-            ),
+          child: ThumbnailWidget(
+            thumbnailsSet: track.thumbnails,
+            dimension: imageDimension,
+            cacheNetworkImage: true,
+            placeholder: const TrackCoverPlaceholder(),
           ),
         ),
         wideSpacer,
