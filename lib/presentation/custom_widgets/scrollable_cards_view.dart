@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import 'shimmer_widget.dart';
 
@@ -148,20 +147,7 @@ class ScrollableCardsView extends StatelessWidget {
       enabled: isLoading,
       shimmerSize: Size.fromWidth(itemCardWidth),
       borderRadius: 10,
-      childBuilder: () {
-        return AnimationConfiguration.staggeredList(
-          position: index,
-          duration: showDuration ?? const Duration(milliseconds: 200),
-          delay: delayDuration ?? const Duration(milliseconds: 100),
-          child: SlideAnimation(
-            verticalOffset: displayAsGrid ? 50.0 : 0.0,
-            horizontalOffset: displayAsGrid ? 0.0 : -40,
-            child: FadeInAnimation(
-              child: childBuilder(itemCardWidth, index),
-            ),
-          ),
-        );
-      },
+      childBuilder: () => childBuilder(itemCardWidth, index),
     );
   }
 }
