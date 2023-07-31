@@ -4,6 +4,7 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -44,9 +45,12 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
   ///
   /// Each [PlaylistPage] has a different [selectionController]
   /// in case of the tabs-mode is enabled.
-  late final selectionController = AutoDisposeStateNotifierProvider<
-      SelectionController<BaseTrack>, SelectionState<BaseTrack>>(
-    (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
+  late final selectionController = TracksSelectionControllerProvider(
+    (ref) => SelectionController<BaseTrack>(
+      SelectionState.initial(itemToString: (track) {
+        return track.title;
+      }),
+    ),
   );
 
   @override
@@ -94,6 +98,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
             controller: ref.read(selectionController.notifier),
             selectionState: ref.watch(selectionController),
             onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
+            isExpanded: true,
           ),
           Expanded(
             flex: 0,

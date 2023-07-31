@@ -1,4 +1,6 @@
+import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/navigation/app_router.dart';
+import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/screens/home/components/app_tab_view.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/now_playing_section_display_mode.dart';
@@ -40,3 +42,6 @@ final StateProvider<MusicSource> explorePageMusicSourceProvider =
 
 final searchBarMusicSourceFilterProvider =
     StateProvider((ref) => ref.watch(appPreferencesController).searchEngine);
+
+typedef TracksSelectionControllerProvider = StateNotifierProvider<
+    SelectionController<BaseTrack>, SelectionState<BaseTrack>>;

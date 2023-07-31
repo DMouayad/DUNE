@@ -1,9 +1,9 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/error_widget.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/custom_widgets/track_card.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +16,7 @@ class TracksListView extends ConsumerWidget {
   final EdgeInsets? itemPadding;
   final BasePlaylist? playlist;
   final void Function()? onRetryWhenErrorLoadingTracks;
-  final AutoDisposeStateNotifierProvider<SelectionController<BaseTrack>,
-      SelectionState<BaseTrack>> selectionControllerProvider;
+  final TracksSelectionControllerProvider selectionControllerProvider;
 
   const TracksListView(
     this.tracksState, {

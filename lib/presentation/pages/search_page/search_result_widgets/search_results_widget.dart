@@ -3,6 +3,7 @@ import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/presentation/custom_widgets/error_widget.dart';
 import 'package:dune/presentation/pages/search_page/search_result_widgets/artists_result_widget.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/models/search_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -18,9 +19,10 @@ import 'albums_result_widget.dart';
 import 'playlists_result_widget.dart';
 
 final searchResultTracksSelectionControllerProvider =
-    AutoDisposeStateNotifierProvider<SelectionController<BaseTrack>,
-        SelectionState<BaseTrack>>(
-  (ref) => SelectionController<BaseTrack>(SelectionState.initialState()),
+    TracksSelectionControllerProvider(
+  (ref) => SelectionController<BaseTrack>(
+    SelectionState.initial(itemToString: (track) => track.title),
+  ),
 );
 
 class SearchResultsWidget extends ConsumerWidget {

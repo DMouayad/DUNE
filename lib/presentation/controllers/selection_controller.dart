@@ -4,7 +4,9 @@ export 'package:dune/presentation/models/selection_state.dart';
 
 class SelectionController<V extends Object>
     extends StateNotifier<SelectionState<V>> {
-  SelectionController(super.state);
+  final SelectionState<V> initialState;
+
+  SelectionController(this.initialState) : super(initialState);
 
   void addSelection(String key, V value) {
     if (state.selectedValues.containsKey(key)) return;
@@ -15,7 +17,7 @@ class SelectionController<V extends Object>
   }
 
   void selectAll(Map<String, V> items) {
-    state = SelectionState(true, items);
+    state = state.copyWith(selectedValues: items);
   }
 
   void toggleSelectionForItem(String key, V value) {
@@ -35,10 +37,10 @@ class SelectionController<V extends Object>
   }
 
   void cancelSelection() {
-    state = SelectionState.initialState();
+    state = initialState;
   }
 
   void clearSelections() {
-    state = SelectionState(true, {});
+    state = initialState.copyWith(selectionEnabled: true);
   }
 }
