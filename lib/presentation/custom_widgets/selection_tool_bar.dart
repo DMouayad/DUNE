@@ -89,7 +89,7 @@ class SelectionToolBar<ItemType extends Object> extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -121,11 +121,9 @@ class SelectionToolBar<ItemType extends Object> extends StatelessWidget {
                   ),
                   if (context.screenWidth > 900) const Spacer(),
                   Expanded(
-                    flex: context.isDesktop ? 2 : 1,
+                    flex: context.screenWidth > 1200 ? 2 : 1,
                     child: CommandBar(
                       compactBreakpointWidth: 300,
-                      // overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                      // isCompact: true,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       primaryItems: [
                         _CustomCommandBarButton(
@@ -167,36 +165,35 @@ class SelectionToolBar<ItemType extends Object> extends StatelessWidget {
                     itemCount: selectionState.selectedValues.length,
                     gridDelegate:
                         const material.SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 34,
-                      mainAxisExtent: 120,
+                      maxCrossAxisExtent: 36,
+                      mainAxisExtent: 130,
                       mainAxisSpacing: 3,
                       crossAxisSpacing: 3,
                     ),
                     itemBuilder: (context, index) {
                       final entry = selectionState.selectedValues.entries
                           .elementAt(index);
-                      return SizedBox(
-                        width: 120,
-                        child: material.FilterChip(
-                          tooltip: 'tap to unselect',
-                          label: Text(
-                            selectionState.itemToString(entry.value),
-                            style: context.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: context.colorScheme.onPrimaryContainer,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                      return material.RawChip(
+                        tooltip: selectionState.itemToString(entry.value),
+                        tapEnabled: false,
+                        label: Text(
+                          selectionState.itemToString(entry.value),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: context.colorScheme.onPrimaryContainer,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          showCheckmark: false,
-                          selectedColor: context.colorScheme.secondaryContainer,
-                          selected: true,
-                          onSelected: (selected) {
-                            controller.toggleSelectionForItem(
-                              entry.key,
-                              entry.value,
-                            );
-                          },
                         ),
+                        showCheckmark: false,
+                        selectedColor: context.colorScheme.secondaryContainer,
+                        selected: true,
+                        onPressed: () {},
+                        onDeleted: () {
+                          controller.toggleSelectionForItem(
+                            entry.key,
+                            entry.value,
+                          );
+                        },
                       );
                     },
                   ),

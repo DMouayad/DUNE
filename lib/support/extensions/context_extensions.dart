@@ -64,7 +64,7 @@ extension ContextScreenSizeExtension on BuildContext {
   bool get isDesktop => screenWidth >= 980;
 
   double get maxNavRailWidth {
-    return isPortraitTablet ? 220.0 : min(350.0, screenWidth * .3);
+    return max(240.0, min(400.0, screenWidth * .2));
   }
 }
 
