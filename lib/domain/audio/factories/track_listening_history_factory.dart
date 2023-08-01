@@ -69,7 +69,7 @@ final class TrackListeningHistoryFactory
     );
   }
 
-  TrackListeningHistoryFactory setDate(DateTime date) {
+  TrackListeningHistoryFactory setDate(DateTime? date) {
     return _copyWith(date: date);
   }
 }

@@ -132,6 +132,7 @@ mixin ListeningHistoryDataExtractor {
 
 class ListeningHistoryCollection {
   late final Map<DateTime, DateListeningHistory> _itemsMap;
+  Map<DateTime, DateListeningHistory> get histories => _itemsMap;
 
   ListeningHistoryCollection(List<DateListeningHistory> items) {
     _itemsMap = Map.fromEntries(items.map((e) => MapEntry(e.date.onlyDate, e)));
