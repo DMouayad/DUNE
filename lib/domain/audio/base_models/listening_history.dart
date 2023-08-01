@@ -1,11 +1,13 @@
 import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/support/extensions/extensions.dart';
+import 'package:equatable/equatable.dart';
 
 import 'base_album.dart';
 import 'base_artist.dart';
 
-class DateListeningHistory with ListeningHistoryDataExtractor {
+class DateListeningHistory extends Equatable
+    with ListeningHistoryDataExtractor {
   late final DateTime date;
 
   /// The listening histories of all tracks
@@ -65,12 +67,17 @@ class DateListeningHistory with ListeningHistoryDataExtractor {
   }
 
   DateListeningHistory copyWithPlaylistHistoryAdded(
-      BasePlaylistsListeningHistory history) {
+    BasePlaylistsListeningHistory history,
+  ) {
     return copyWith(
       playlistsListeningHistory:
           playlistsListeningHistory?.addPlaylists(history.playlists),
     );
   }
+
+  @override
+  List<Object?> get props =>
+      [date, tracksListeningHistory, playlistsListeningHistory];
 
 // DateListeningHistory copyWithPlaylistsListeningHistoryAdded(
 //   BasePlaylistsListeningHistory history,

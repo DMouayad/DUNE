@@ -1,6 +1,10 @@
+import 'package:dune/support/extensions/extensions.dart';
+import 'package:equatable/equatable.dart';
+
 import 'base_playlist.dart';
 
-abstract class BasePlaylistsListeningHistory<P extends BasePlaylist> {
+abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
+    extends Equatable {
   /// The date the [playlists] were listened to on.
   final DateTime date;
 
@@ -20,4 +24,7 @@ abstract class BasePlaylistsListeningHistory<P extends BasePlaylist> {
       'playlists': playlists.map((e) => e.toMap()).toList(),
     };
   }
+
+  @override
+  List<Object?> get props => [date.onlyDate, playlists];
 }

@@ -3,14 +3,28 @@ import 'package:dune/domain/audio/base_models/base_playlists_listening_history.d
 
 final class FakePlaylistsListeningHistory
     extends BasePlaylistsListeningHistory {
-  FakePlaylistsListeningHistory({
+  const FakePlaylistsListeningHistory({
     required super.date,
     required super.playlists,
   });
 
   @override
-  BasePlaylistsListeningHistory addPlaylists(List<BasePlaylist> playlists) {
-    // TODO: implement addPlaylists
-    throw UnimplementedError();
+  Set<Type> get derived => {BasePlaylistsListeningHistory};
+
+  @override
+  FakePlaylistsListeningHistory addPlaylists(List<BasePlaylist> playlists) {
+    return copyWith(
+      playlists: {...this.playlists, ...playlists}.toList(),
+    );
+  }
+
+  FakePlaylistsListeningHistory copyWith({
+    DateTime? date,
+    List<BasePlaylist>? playlists,
+  }) {
+    return FakePlaylistsListeningHistory(
+      date: date ?? this.date,
+      playlists: playlists ?? this.playlists,
+    );
   }
 }

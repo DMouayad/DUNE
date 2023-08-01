@@ -1,6 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import 'base_track.dart';
 
-abstract class BaseTrackListeningHistory<T extends BaseTrack> {
+abstract class BaseTrackListeningHistory<T extends BaseTrack>
+    extends Equatable {
   final T? track;
   final DateTime? date;
   final Duration? uncompletedListensTotalDuration;
@@ -36,6 +39,10 @@ abstract class BaseTrackListeningHistory<T extends BaseTrack> {
       'completedListensCount': completedListensCount,
     };
   }
+
+  @override
+  List<Object?> get props =>
+      [track, date, uncompletedListensTotalDuration, completedListensCount];
 }
 
 class TrackListeningHistoryHelper {

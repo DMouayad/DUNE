@@ -7,13 +7,19 @@ part 'isar_track_listening_history.g.dart';
 @Collection(ignore: {
   'track',
   'uncompletedListensTotalDuration',
-  'totalListeningDuration'
+  'totalListeningDuration',
+  'props',
+  'derived',
+  'stringify'
 })
 final class IsarTrackListeningHistory
     extends BaseTrackListeningHistory<IsarTrack> {
   Id? id;
   @Index(unique: true, replace: true)
   final String? trackId;
+
+  @override
+  Set<Type> get derived => {BaseTrackListeningHistory};
 
   @override
   @Index()

@@ -5,9 +5,11 @@ import 'isar_playlist.dart';
 
 part 'isar_playlists_listening_history.g.dart';
 
-@Collection(ignore: {'playlists'})
+@Collection(ignore: {'playlists', 'props', 'derived', 'stringify'})
 class IsarPlaylistsListeningHistory
     extends BasePlaylistsListeningHistory<IsarPlaylist> {
+  @override
+  Set<Type> get derived => {BasePlaylistsListeningHistory};
   Id? id;
   final List<int> isarPlaylistsIds;
 
