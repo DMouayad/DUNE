@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:faker/faker.dart';
+
 extension ListExtensions<T> on List<T> {
   List<String> toStringList() {
     final l = <String>[];
@@ -98,4 +100,16 @@ extension DurationExtension on Duration {
 extension DateTimeExtension on DateTime {
   /// returns a new [DateTime] with only the ([year], [month], [day]) properties.
   DateTime get onlyDate => DateTime(year, month, day);
+}
+
+extension FakerExtension on Faker {
+  DateTime get randomDateFromCurrentMonth {
+    final now = DateTime.now();
+    return date
+        .dateTimeBetween(
+          DateTime(now.year, now.month),
+          DateTime(now.year, now.month, 31),
+        )
+        .onlyDate;
+  }
 }

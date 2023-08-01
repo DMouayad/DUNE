@@ -21,8 +21,8 @@ final class PlaylistsListeningHistoryFactory
   @override
   FakePlaylistsListeningHistory create() {
     return FakePlaylistsListeningHistory(
-      date: _date ?? faker.date.dateTime().onlyDate,
-      playlists: [],
+      date: _date ?? faker.randomDateFromCurrentMonth,
+      playlists: _playlists ?? [],
     );
   }
 

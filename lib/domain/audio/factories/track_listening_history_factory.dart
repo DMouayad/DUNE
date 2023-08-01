@@ -21,7 +21,7 @@ final class TrackListeningHistoryFactory
   @override
   FakeTrackListeningHistory create() {
     return FakeTrackListeningHistory(
-      date: _date ?? faker.date.dateTime().onlyDate,
+      date: _date ?? faker.randomDateFromCurrentMonth,
       track: _track ?? TrackFactory().create(),
       uncompletedListensTotalDuration: _uncompletedListensTotalDuration ??
           Duration(seconds: faker.randomGenerator.integer(10000)),
@@ -67,5 +67,9 @@ final class TrackListeningHistoryFactory
           uncompletedListensTotalDuration ?? _uncompletedListensTotalDuration,
       completedListensCount: completedListensCount ?? _completedListensCount,
     );
+  }
+
+  TrackListeningHistoryFactory setDate(DateTime date) {
+    return _copyWith(date: date);
   }
 }
