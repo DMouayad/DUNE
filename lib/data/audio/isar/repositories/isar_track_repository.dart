@@ -2,7 +2,6 @@ import 'package:dune/data/audio/isar/data_sources/isar_track_data_source.dart';
 import 'package:dune/data/audio/isar/helpers/isar_models_relation_helper.dart';
 import 'package:dune/data/audio/isar/models/isar_audio_info_set.dart';
 import 'package:dune/data/audio/isar/models/isar_track.dart';
-import 'package:dune/data/audio/isar/models/isar_track_audio_info.dart';
 import 'package:dune/data/audio/isar/repositories/isar_album_repository.dart';
 import 'package:dune/data/audio/isar/repositories/isar_artist_repository.dart';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
@@ -11,10 +10,7 @@ import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/utils/result/result.dart';
 
-import '../models/isar_album.dart';
 import '../models/isar_artist.dart';
-import '../models/isar_duration.dart';
-import '../models/isar_thumbnails_set.dart';
 
 final class IsarTrackRepository extends SavableTrackRepository {
   final IsarArtistRepository _artistRepository;
@@ -54,7 +50,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
 
   @override
   FutureOrResult<IsarTrack> save(BaseTrack track) async {
-    final IsarTrack newTrack = _getIsarTrackFromBase(track);
+    final IsarTrack newTrack = IsarTrack.fromBase(track);
     // first we check if an [IsarTrack] exists for this track.
     final existentIsarTrackResult = await _trackDataSource.find(track.id);
     if (existentIsarTrackResult.isFailure) {
@@ -107,61 +103,14 @@ final class IsarTrackRepository extends SavableTrackRepository {
     return isarTrack.asResult;
   }
 
-  IsarTrack _getIsarTrackFromBase(BaseTrack baseTrack) {
-    final isarTrack = IsarTrack(
-      id: baseTrack.id,
-      title: baseTrack.title,
-      isExplicit: baseTrack.isExplicit,
-      source: baseTrack.source,
-      isarThumbnails: IsarThumbnailsSet.fromMap(baseTrack.thumbnails.toMap()),
-      views: baseTrack.views,
-      isarDuration: IsarDuration(inSeconds: baseTrack.duration.inSeconds),
-      category: baseTrack.category,
-      year: baseTrack.year,
-      isarAudioInfoSet: _getIsarTrackAudioInfoSet(baseTrack.audioInfoSet),
-    );
-    final extractedArtists =
-        _artistRepository.extractArtistsFromTrack(baseTrack);
-    final albumArtistsIds = List<String>.from(extractedArtists.artistsIds);
-    final albumArtistId =
-        albumArtistsIds.isNotEmpty ? albumArtistsIds.removeAt(0) : null;
-    final album = IsarAlbum.tryFromMap(baseTrack.album?.toMap())?.copyWith(
-      albumArtistId: albumArtistId,
-      featuredArtistsIds: albumArtistsIds,
-      tracksIds: [baseTrack.id],
-      tracks: [isarTrack],
-    ).setIdIfNull();
-    return isarTrack.copyWithIsar(
-      album: album,
-      albumId: album?.id,
-      artistsIds: extractedArtists.artistsIds,
-      artists: extractedArtists.artists,
-    );
-  }
-
-  IsarAudioInfoSet? _getIsarTrackAudioInfoSet(AudioInfoSet? audioInfo) {
-    if (audioInfo == null) return null;
-    final items = audioInfo.items
-        .map((e) => IsarTrackAudioInfo(
-              bitrateInKb: e.bitrateInKb,
-              format: e.format,
-              totalBytes: e.totalBytes,
-              url: e.url,
-              musicSource: e.musicSource,
-              quality: e.quality,
-            ))
-        .toList();
-    return IsarAudioInfoSet(isarAudioInfoList: items);
-  }
-
   @override
   FutureVoidResult saveTrackAudioInfo(
     BaseTrack track,
     AudioInfoSet audioInfo,
   ) async {
     return await Result.fromAnother(() async {
-      final updatedTrack = _getIsarTrackFromBase(track).copyWithIsar(
-        isarAudioInfoSet: _getIsarTrackAudioInfoSet(audioInfo),
+      final updatedTrack = IsarTrack.fromBase(track).copyWithIsar(
+        isarAudioInfoSet: IsarAudioInfoSet.from(audioInfo),
       );
       return (await save(updatedTrack)).mapSuccessToVoid();
     });

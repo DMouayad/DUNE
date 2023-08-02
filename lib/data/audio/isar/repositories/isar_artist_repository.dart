@@ -69,29 +69,6 @@ final class IsarArtistRepository
     return result.asResult;
   }
 
-  ({List<IsarArtist> artists, List<String> artistsIds}) extractArtistsFromTrack(
-    BaseTrack track,
-  ) {
-    final artistsIds = <String>[];
-    final artists = track.artists.map((e) {
-      final String id;
-      if (e.id != null) {
-        id = e.id!;
-        artistsIds.add(e.id!);
-      } else {
-        id = e.browseId ?? shortHash(e.name);
-      }
-      return IsarArtist.fromMap(e.toMap())
-          .copyWith(
-            albumsIds: track.album?.id != null ? [track.album!.id!] : [],
-            tracksIds: [track.id],
-            id: id,
-          )
-          .setIdIfNull();
-    }).toList();
-    return (artists: artists, artistsIds: artistsIds);
-  }
-
   IsarArtist _updateArtistData({
     required IsarArtist oldInstance,
     required IsarArtist newInstance,

@@ -28,4 +28,19 @@ class IsarAudioInfoSet extends AudioInfoSet {
           : [],
     );
   }
+
+  static IsarAudioInfoSet? from(AudioInfoSet? audioInfo) {
+    if (audioInfo == null) return null;
+    final items = audioInfo.items
+        .map((e) => IsarTrackAudioInfo(
+              bitrateInKb: e.bitrateInKb,
+              format: e.format,
+              totalBytes: e.totalBytes,
+              url: e.url,
+              musicSource: e.musicSource,
+              quality: e.quality,
+            ))
+        .toList();
+    return IsarAudioInfoSet(isarAudioInfoList: items);
+  }
 }

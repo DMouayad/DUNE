@@ -5,13 +5,13 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 
 import 'isar_audio_info_set.dart';
 import 'isar_duration.dart';
 import 'isar_thumbnails_set.dart';
 import 'isar_track_audio_info.dart';
-
 part 'isar_track.g.dart';
 
 @Collection(ignore: {
@@ -24,7 +24,8 @@ part 'isar_track.g.dart';
   'audioInfoSet',
   'stringify',
   'thumbnails',
-  'hashCode'
+  'hashCode',
+  'extractArtists'
 })
 class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
   Id? isarId;
@@ -167,5 +168,57 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       isExplicit: isExplicit ?? this.isExplicit,
       category: category ?? this.category,
     ) as T;
+  }
+
+  factory IsarTrack.fromBase(BaseTrack baseTrack) {
+    final isarTrack = IsarTrack(
+      id: baseTrack.id,
+      title: baseTrack.title,
+      isExplicit: baseTrack.isExplicit,
+      source: baseTrack.source,
+      isarThumbnails: IsarThumbnailsSet.fromMap(baseTrack.thumbnails.toMap()),
+      views: baseTrack.views,
+      isarDuration: IsarDuration(inSeconds: baseTrack.duration.inSeconds),
+      category: baseTrack.category,
+      year: baseTrack.year,
+      isarAudioInfoSet: IsarAudioInfoSet.from(baseTrack.audioInfoSet),
+    );
+    final extractedArtists = isarTrack.extractArtists;
+    final albumArtistsIds = List<String>.from(extractedArtists.artistsIds);
+    final albumArtistId =
+        albumArtistsIds.isNotEmpty ? albumArtistsIds.removeAt(0) : null;
+    final album = IsarAlbum.tryFromMap(baseTrack.album?.toMap())?.copyWith(
+      albumArtistId: albumArtistId,
+      featuredArtistsIds: albumArtistsIds,
+      tracksIds: [baseTrack.id],
+      tracks: [isarTrack],
+    ).setIdIfNull();
+    return isarTrack.copyWithIsar(
+      album: album,
+      albumId: album?.id,
+      artistsIds: extractedArtists.artistsIds,
+      artists: extractedArtists.artists,
+    );
+  }
+
+  ({List<IsarArtist> artists, List<String> artistsIds}) get extractArtists {
+    final artistsIds = <String>[];
+    final extractedArtists = artists.map((e) {
+      final String id;
+      if (e.id != null) {
+        id = e.id!;
+        artistsIds.add(e.id!);
+      } else {
+        id = e.browseId ?? shortHash(e.name);
+      }
+      return IsarArtist.fromMap(e.toMap())
+          .copyWith(
+            albumsIds: album?.id != null ? [album!.id!] : [],
+            tracksIds: [id],
+            id: id,
+          )
+          .setIdIfNull();
+    }).toList();
+    return (artists: extractedArtists, artistsIds: artistsIds);
   }
 }
