@@ -20,7 +20,7 @@ final class IsarTracksListeningHistoryRepository
     IsarTrack track,
     DateTime date,
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount,
+    int? completedListensCount,
   ) {
     return IsarTrackListeningHistory(
       track: track,
@@ -28,7 +28,7 @@ final class IsarTracksListeningHistoryRepository
       date: date,
       uncompletedListensTotalDurationInSeconds:
           uncompletedListensTotalDuration?.inSeconds ?? 0,
-      completedListensCount: incrementCompleteListensCount ? 1 : 0,
+      completedListensCount: completedListensCount,
     );
   }
 
@@ -36,17 +36,18 @@ final class IsarTracksListeningHistoryRepository
   IsarTrackListeningHistory updateExistentHistory(
     IsarTrackListeningHistory history,
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount,
+    int? completedListensCount,
   ) {
-    IsarTrackListeningHistory newHistory = history.copyWith();
+    IsarTrackListeningHistory? newHistory;
     if (uncompletedListensTotalDuration != null) {
-      newHistory = newHistory.copyWithAddedUncompletedListensTotalDuration(
+      newHistory = history.copyWithAddedUncompletedListensTotalDuration(
           uncompletedListensTotalDuration);
     }
-    if (incrementCompleteListensCount) {
-      newHistory = newHistory.copyWithCompletedListensCountIncrementedByOne();
+    if (completedListensCount != null) {
+      newHistory = (newHistory ?? history)
+          .copyWith(completedListensCount: completedListensCount);
     }
-    return newHistory;
+    return newHistory ?? history;
   }
 
   @override

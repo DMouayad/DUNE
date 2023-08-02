@@ -17,21 +17,21 @@ abstract base class BaseTracksListeningHistoryRepository<
     Track track,
     DateTime date,
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount,
+    int? completedListensCount,
   );
 
   /// Returns an Updated listening history from the passed [history].
   T updateExistentHistory(
     T history,
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount,
+    int? completedListensCount,
   );
 
   FutureOrResult<BaseTrackListeningHistory> addToHistory(
     Track track,
     DateTime date, {
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount = false,
+    int? incrementCompletedListensByCount,
   }) async {
     /// First check if an existing [BaseTrackListeningHistory] was created
     /// for this date.
@@ -46,12 +46,15 @@ abstract base class BaseTracksListeningHistoryRepository<
               track,
               date.onlyDate,
               uncompletedListensTotalDuration,
-              incrementCompleteListensCount,
+              incrementCompletedListensByCount,
             )
           : updateExistentHistory(
               existingHistory.copyWith(track: track),
               uncompletedListensTotalDuration,
-              incrementCompleteListensCount,
+              incrementCompletedListensByCount != null
+                  ? (existingHistory.completedListensCount ?? 0) +
+                      incrementCompletedListensByCount
+                  : existingHistory.completedListensCount,
             );
 
       return (await _dataSource.save(history)).mapSuccessTo((value) => history);

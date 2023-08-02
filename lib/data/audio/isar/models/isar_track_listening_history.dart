@@ -51,7 +51,7 @@ final class IsarTrackListeningHistory
   Duration get uncompletedListensTotalDuration =>
       Duration(seconds: uncompletedListensTotalDurationInSeconds);
 
-  IsarTrackListeningHistory copyWithCompletedListensCountIncrementedByOne() {
+  IsarTrackListeningHistory copyWithCompletedListensCount() {
     return copyWith(
       completedListensCount: (completedListensCount ?? 0) + 1,
     );
@@ -72,11 +72,12 @@ final class IsarTrackListeningHistory
     DateTime? date,
     Duration? uncompletedListensTotalDuration,
     int? completedListensCount,
+    int? id,
   }) {
     return IsarTrackListeningHistory(
       track: track ?? this.track,
-      id: id,
-      trackId: trackId,
+      id: id ?? this.id,
+      trackId: track?.id ?? trackId,
       date: date ?? this.date,
       uncompletedListensTotalDurationInSeconds:
           (uncompletedListensTotalDuration ??

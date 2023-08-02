@@ -20,9 +20,14 @@ final class UserListeningHistoryFacade {
 
   FutureResult<ListeningHistoryCollection> incrementTrackCompletedListensCount(
     BaseTrack track,
-    DateTime date,
-  ) async {
-    return await _repository.incrementTrackCompletedListensCount(track, date);
+    DateTime date, {
+    int incrementBy = 1,
+  }) async {
+    return await _repository.incrementTrackCompletedListensCount(
+      track,
+      date,
+      count: incrementBy,
+    );
   }
 
   FutureResult<ListeningHistoryCollection> addToTrackUncompletedListensDuration(

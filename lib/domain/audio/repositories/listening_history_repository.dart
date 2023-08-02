@@ -17,9 +17,7 @@ import 'track_repository.dart';
 import 'tracks_listening_history_repository.dart';
 
 final class ListeningHistoryRepository
-    with
-        ListeningHistoryMonthSummaryUseCases,
-        ListeningHistoryCollectionCacheHelper {
+    with ListeningHistoryMonthSummaryUseCases {
   final SavablePlaylistRepository _playlistRepository;
   final SavableTrackRepository _trackRepository;
   final BaseTracksListeningHistoryRepository _tracksListeningHistoryRepository;
@@ -27,6 +25,7 @@ final class ListeningHistoryRepository
       _playlistListeningHistoryRepository;
   final ListeningHistoryMonthSummaryRepository
       _listeningHistoryMonthSummaryRepository;
+  late final ListeningHistoryCollectionCacheHelper _memoryCacheHelper;
 
   ListeningHistoryRepository(
     this._playlistRepository,
@@ -34,7 +33,10 @@ final class ListeningHistoryRepository
     this._tracksListeningHistoryRepository,
     this._playlistListeningHistoryRepository,
     this._listeningHistoryMonthSummaryRepository,
-  );
+  ) : _memoryCacheHelper = ListeningHistoryCollectionCacheHelper();
+
+  ListeningHistoryCollection get _listeningHistoryCollection =>
+      _memoryCacheHelper.listeningHistoryCollection;
 
   FutureResult<BasePlaylist> _savePlaylistIfNotPresent(
       BasePlaylist playlist) async {
@@ -65,19 +67,20 @@ final class ListeningHistoryRepository
 
     // on success, return the cached [ListeningHistoryCollection] with
     // the updated playlists listening history.
-    return playlistsHistoryResult
-        .mapSuccessTo((value) => _cachePlaylistHistory(value));
+    return playlistsHistoryResult.mapSuccessTo(
+        (value) => _memoryCacheHelper.cachePlaylistHistory(value));
   }
 
   FutureOrResult<ListeningHistoryCollection>
       incrementTrackCompletedListensCount(
     BaseTrack track,
-    DateTime date,
-  ) async {
+    DateTime date, {
+    int count = 1,
+  }) async {
     return await _handleTrackListeningHistoryActions(
       track,
       date,
-      incrementCompleteListensCount: true,
+      incrementCompletedListensCount: count,
     );
   }
 
@@ -86,7 +89,7 @@ final class ListeningHistoryRepository
     BaseTrack track,
     DateTime date, {
     Duration? uncompletedListensTotalDuration,
-    bool incrementCompleteListensCount = false,
+    int? incrementCompletedListensCount,
   }) async {
     // first check if [track] exists in DB or else store it.
     final fetchingTrackResult = await _saveTrackIfNotPresent(track);
@@ -101,7 +104,7 @@ final class ListeningHistoryRepository
       savedTrack,
       date.onlyDate,
       uncompletedListensTotalDuration: uncompletedListensTotalDuration,
-      incrementCompleteListensCount: incrementCompleteListensCount,
+      incrementCompletedListensByCount: incrementCompletedListensCount,
     );
 
     // on success, return the cached [ListeningHistoryCollection] with
@@ -173,7 +176,8 @@ final class ListeningHistoryRepository
           onFailure: (error) {},
           onSuccess: (value) => playlistsHistories = value,
         );
-    return _cacheAndReturnHistories(tracksHistories, playlistsHistories);
+    return _memoryCacheHelper.cacheAndReturnHistories(
+        tracksHistories, playlistsHistories);
   }
 
   FutureOrResult<ListeningHistoryCollection> getByRange(
@@ -189,7 +193,8 @@ final class ListeningHistoryRepository
           onFailure: (error) {},
           onSuccess: (value) => playlistsHistories = value,
         );
-    return _cacheAndReturnHistories(tracksHistories, playlistsHistories);
+    return _memoryCacheHelper.cacheAndReturnHistories(
+        tracksHistories, playlistsHistories);
   }
 
   FutureOrResult<ListeningHistoryCollection> searchFor(String text) {
@@ -213,14 +218,14 @@ final class ListeningHistoryRepository
   }
 }
 
-mixin ListeningHistoryCollectionCacheHelper {
+mixin class ListeningHistoryCollectionCacheHelper {
   /// A Cached in-memory list of [DateListeningHistory].
-  ListeningHistoryCollection _listeningHistoryCollection =
+  ListeningHistoryCollection listeningHistoryCollection =
       ListeningHistoryCollection([]);
 
   /// Updates the cached [ListeningHistoryCollection] with the provided track
   /// and playlist listening histories and returns it
-  Result<ListeningHistoryCollection, AppError> _cacheAndReturnHistories(
+  Result<ListeningHistoryCollection, AppError> cacheAndReturnHistories(
     List<BaseTrackListeningHistory> tracksHistories,
     List<BasePlaylistsListeningHistory> playlistsHistories,
   ) {
@@ -257,19 +262,19 @@ mixin ListeningHistoryCollectionCacheHelper {
         } else {
           dateListeningHistory = DateListeningHistory(
             date: item.date,
-            tracksListeningHistory: [],
+            tracksListeningHistory: const [],
             playlistsListeningHistory: item,
           );
         }
 
         newCollection.replaceHistory(dateListeningHistory);
       }
-      _listeningHistoryCollection = newCollection;
-      return newCollection;
+      listeningHistoryCollection = newCollection;
+      return listeningHistoryCollection;
     });
   }
 
-  Result<ListeningHistoryCollection, AppError> _cachePlaylistHistory(
+  Result<ListeningHistoryCollection, AppError> cachePlaylistHistory(
     BasePlaylistsListeningHistory? history,
   ) {
     return Result.from(() {
@@ -277,20 +282,20 @@ mixin ListeningHistoryCollectionCacheHelper {
         /// The listening history of the [history] date.
         /// which will be updated with the [history]
         final DateListeningHistory newListeningHistory;
-        if (_listeningHistoryCollection.historyExistsForDay(history!.date)) {
-          newListeningHistory = _listeningHistoryCollection
+        if (listeningHistoryCollection.historyExistsForDay(history!.date)) {
+          newListeningHistory = listeningHistoryCollection
               .getWhereDate(history.date)!
               .copyWithPlaylistHistoryAdded(history);
         } else {
           newListeningHistory = DateListeningHistory(
             date: history.date,
-            tracksListeningHistory: [],
+            tracksListeningHistory: const [],
             playlistsListeningHistory: history,
           );
         }
-        _listeningHistoryCollection.replaceHistory(newListeningHistory);
+        listeningHistoryCollection.replaceHistory(newListeningHistory);
       }
-      return _listeningHistoryCollection;
+      return listeningHistoryCollection;
     });
   }
 }
