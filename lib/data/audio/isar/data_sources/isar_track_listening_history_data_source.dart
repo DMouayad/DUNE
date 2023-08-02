@@ -42,11 +42,12 @@ class IsarTrackListeningHistoryDataSource
   }
 
   @override
-  FutureOrResult<VoidValue> save(IsarTrackListeningHistory instance) async {
-    return await Result.fromAnother(() async {
-      await _isar.writeTxn(
+  FutureOrResult<IsarTrackListeningHistory> save(
+      IsarTrackListeningHistory instance) async {
+    return await Result.fromAsync(() async {
+      final id = await _isar.writeTxn(
           () async => await _isar.isarTrackListeningHistorys.put(instance));
-      return SuccessResult.voidResult();
+      return instance.copyWith(id: id);
     });
   }
 
@@ -60,7 +61,10 @@ class IsarTrackListeningHistoryDataSource
   }
 
   @override
-  FutureResult<IsarTrackListeningHistory?> findByTrackId(String trackId) async {
+  FutureResult<IsarTrackListeningHistory?> findByTrackId(
+    String trackId,
+    DateTime date,
+  ) async {
     return await Result.fromAsync(() async {
       return await _isar.isarTrackListeningHistorys
           .where()

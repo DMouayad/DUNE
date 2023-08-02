@@ -11,6 +11,18 @@ abstract base class BaseTracksListeningHistoryRepository<
 
   const BaseTracksListeningHistoryRepository(this._dataSource);
 
+  FutureOrResult<List<T>> getByDates(List<DateTime> dates) async {
+    return await _dataSource.getByDates(dates);
+  }
+
+  FutureOrResult<List<T>> getByRange(DateTimeRange range) async {
+    return await _dataSource.getByRange(range);
+  }
+
+  FutureOrResult<List<T>> getAllForTrack(String trackId) async {
+    return await _dataSource.findAllByTrackId(trackId);
+  }
+
   /// Returns a new [BaseTrackListeningHistory] instance for the passed
   /// arguments.
   T getHistoryInstance(
@@ -34,8 +46,11 @@ abstract base class BaseTracksListeningHistoryRepository<
     int? incrementCompletedListensByCount,
   }) async {
     /// First check if an existing [BaseTrackListeningHistory] was created
-    /// for this date.
-    final fetchingExistingHistory = await _dataSource.getByDate(date.onlyDate);
+    /// for this [track] and [date].
+    final fetchingExistingHistory = await _dataSource.findByTrackId(
+      track.id,
+      date.onlyDate,
+    );
     return await fetchingExistingHistory
         .mapSuccessAsync((existingHistory) async {
       // if no matching history was found, save a new instance in the DB
@@ -59,17 +74,5 @@ abstract base class BaseTracksListeningHistoryRepository<
 
       return (await _dataSource.save(history)).mapSuccessTo((value) => history);
     });
-  }
-
-  FutureOrResult<List<T>> getByDates(List<DateTime> dates) async {
-    return await _dataSource.getByDates(dates);
-  }
-
-  FutureOrResult<List<T>> getByRange(DateTimeRange range) async {
-    return await _dataSource.getByRange(range);
-  }
-
-  FutureOrResult<List<T>> getAllForTrack(String trackId) async {
-    return await _dataSource.findAllByTrackId(trackId);
   }
 }

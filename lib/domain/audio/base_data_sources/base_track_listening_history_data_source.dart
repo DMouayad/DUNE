@@ -4,9 +4,9 @@ import 'package:flutter/material.dart' show DateTimeRange;
 
 abstract class BaseTrackListeningHistoryDataSource<
     T extends BaseTrackListeningHistory> {
-  FutureOrResult<VoidValue> save(T instance);
+  FutureOrResult<T> save(T instance);
 
-  FutureOrResult<T?> findByTrackId(String trackId);
+  FutureOrResult<T?> findByTrackId(String trackId, DateTime date);
 
   FutureOrResult<List<T>> findAllByTrackId(String trackId);
 
