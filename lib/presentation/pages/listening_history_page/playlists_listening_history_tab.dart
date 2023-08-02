@@ -71,17 +71,17 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
       titleWidget: widget.playlistsInfo.hasValue
           ? ListeningHistoryDateSectionHeader(
               date: widget.playlistsInfo.requireValue.date,
-              trailing: _contentDescription(
-                  widget.playlistsInfo.requireValue.playlists),
+              trailing:
+                  _contentDescription(widget.playlistsInfo.requireValue.items),
               alignment: MainAxisAlignment.start,
             )
           : null,
       itemsState: widget.playlistsInfo.whenData(
-        (data) => (itemCount: data.playlists.length, title: null),
+        (data) => (itemCount: data.items.length, title: null),
       ),
       childBuilder: (double cardWidth, int index) {
         final playlist =
-            widget.playlistsInfo.requireValue.playlists.elementAt(index);
+            widget.playlistsInfo.requireValue.items.elementAt(index);
         return CustomCard(
           width: cardWidth,
           tag: playlist.id ?? playlist.title!,

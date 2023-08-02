@@ -1,6 +1,6 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
-import 'package:dune/domain/audio/base_models/listening_history.dart';
+import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/theme/app_theme.dart';
 import 'package:dune/presentation/controllers/app_preferences_controller.dart';
 import 'package:dune/presentation/controllers/app_theme_controller.dart';

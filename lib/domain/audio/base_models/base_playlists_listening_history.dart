@@ -5,26 +5,26 @@ import 'base_playlist.dart';
 
 abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
     extends Equatable {
-  /// The date the [playlists] were listened to on.
+  /// The date the [items] were listened to on.
   final DateTime date;
 
   /// List of playlists which were played on the specified [date]
-  final List<P> playlists;
+  final List<P> items;
 
   const BasePlaylistsListeningHistory({
     required this.date,
-    required this.playlists,
+    required this.items,
   });
 
-  BasePlaylistsListeningHistory addPlaylists(List<P> playlists);
+  BasePlaylistsListeningHistory addPlaylists(List<P> items);
 
   Map<String, dynamic> toMap() {
     return {
       'date': date.toString(),
-      'playlists': playlists.map((e) => e.toMap()).toList(),
+      'items': items.map((e) => e.toMap()).toList(),
     };
   }
 
   @override
-  List<Object?> get props => [date.onlyDate, playlists];
+  List<Object?> get props => [date.onlyDate, items];
 }

@@ -1,7 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_listening_history_month_summary.dart';
 import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
-import 'package:dune/domain/audio/base_models/listening_history.dart';
+import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/use_cases/listening_history_month_summary_use_cases.dart';
@@ -141,7 +141,7 @@ final class ListeningHistoryRepository
         } else {
           newListeningHistory = DateListeningHistory(
             date: trackHistory.date!,
-            tracksListeningHistory: [trackHistory],
+            tracks: [trackHistory],
           );
         }
         _listeningHistoryCollection.replaceHistory(newListeningHistory);
@@ -245,7 +245,7 @@ mixin class ListeningHistoryCollectionCacheHelper {
           /// and adds the track history to it
           dateListeningHistory = DateListeningHistory(
             date: item.date!,
-            tracksListeningHistory: [item],
+            tracks: [item],
           );
         }
 
@@ -258,12 +258,12 @@ mixin class ListeningHistoryCollectionCacheHelper {
         if (newCollection.historyExistsForDay(item.date)) {
           dateListeningHistory = newCollection
               .getWhereDate(item.date)!
-              .copyWith(playlistsListeningHistory: item);
+              .copyWithPlaylistHistoryAdded(item);
         } else {
           dateListeningHistory = DateListeningHistory(
             date: item.date,
-            tracksListeningHistory: const [],
-            playlistsListeningHistory: item,
+            tracks: const [],
+            playlists: item,
           );
         }
 
@@ -289,8 +289,8 @@ mixin class ListeningHistoryCollectionCacheHelper {
         } else {
           newListeningHistory = DateListeningHistory(
             date: history.date,
-            tracksListeningHistory: const [],
-            playlistsListeningHistory: history,
+            tracks: const [],
+            playlists: history,
           );
         }
         listeningHistoryCollection.replaceHistory(newListeningHistory);

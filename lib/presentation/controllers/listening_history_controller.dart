@@ -1,6 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/base_models/listening_history.dart';
+import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';

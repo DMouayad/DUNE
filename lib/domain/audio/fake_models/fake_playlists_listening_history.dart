@@ -5,26 +5,26 @@ final class FakePlaylistsListeningHistory
     extends BasePlaylistsListeningHistory {
   const FakePlaylistsListeningHistory({
     required super.date,
-    required super.playlists,
+    required super.items,
   });
 
   @override
   Set<Type> get derived => {BasePlaylistsListeningHistory};
 
   @override
-  FakePlaylistsListeningHistory addPlaylists(List<BasePlaylist> playlists) {
+  FakePlaylistsListeningHistory addPlaylists(List<BasePlaylist> items) {
     return copyWith(
-      playlists: {...this.playlists, ...playlists}.toList(),
+      items: {...this.items, ...items}.toList(),
     );
   }
 
   FakePlaylistsListeningHistory copyWith({
     DateTime? date,
-    List<BasePlaylist>? playlists,
+    List<BasePlaylist>? items,
   }) {
     return FakePlaylistsListeningHistory(
       date: date ?? this.date,
-      playlists: playlists ?? this.playlists,
+      items: items ?? this.items,
     );
   }
 }

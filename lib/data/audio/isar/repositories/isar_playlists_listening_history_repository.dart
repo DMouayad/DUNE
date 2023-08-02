@@ -29,7 +29,7 @@ final class IsarPlaylistsListeningHistoryRepository
       IsarPlaylist playlist, DateTime date) {
     return IsarPlaylistsListeningHistory(
       date: date,
-      playlists: [playlist],
+      items: [playlist],
       isarPlaylistsIds: [playlist.isarId!],
     );
   }

@@ -6,7 +6,7 @@ import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart
 import 'package:dune/domain/audio/base_models/base_listening_history_month_summary.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
-import 'package:dune/domain/audio/base_models/listening_history.dart';
+import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/audio/repositories/album_repository.dart';
 import 'package:dune/domain/audio/repositories/artist_repository.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';

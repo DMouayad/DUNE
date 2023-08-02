@@ -60,9 +60,7 @@ final class IsarModelsRelationHelper {
     }
     return (await loadRelationsForPlaylists(playlists,
             loadTracksRelations: true))
-        .mapSuccess((value) {
-      return history.copyWith(playlists: value);
-    });
+        .mapSuccess((value) => history.copyWith(items: value));
   }
 
   FutureResult<List<IsarTrackListeningHistory>>

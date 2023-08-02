@@ -22,7 +22,7 @@ final class PlaylistsListeningHistoryFactory
   FakePlaylistsListeningHistory create() {
     return FakePlaylistsListeningHistory(
       date: _date ?? faker.randomDateFromCurrentMonth,
-      playlists: _playlists ?? [],
+      items: _playlists ?? [],
     );
   }
 

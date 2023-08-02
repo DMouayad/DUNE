@@ -14,16 +14,13 @@ class TracksListeningHistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final listeningHistoryState = ref.watch(
-      listeningHistoryControllerProvider.select(
-          (value) => value.whenData((value) => value.tracksListeningHistory)),
-    );
+    final listeningHistoryState = ref.watch(listeningHistoryControllerProvider);
     if (!listeningHistoryState.isLoading && !listeningHistoryState.hasValue) {
       return const Center(
           child: Text("Failed Loading songs listening history"));
     }
     if (listeningHistoryState.hasValue &&
-        (listeningHistoryState.value?.isEmpty ?? false)) {
+        (listeningHistoryState.value?.tracksListeningHistory.isEmpty ?? true)) {
       return Center(
         child: Text(
           "You haven't played any tracks recently...",
@@ -33,6 +30,19 @@ class TracksListeningHistoryTab extends ConsumerWidget {
         ),
       );
     }
+
+    final Map<DateTime, List<BaseTrackListeningHistory>> tracksHistoriesMap;
+    if (listeningHistoryState.hasValue) {
+      tracksHistoriesMap =
+          Map.from(listeningHistoryState.requireValue.tracksListeningHistory);
+      tracksHistoriesMap.removeWhere((key, value) => value.isEmpty);
+    } else {
+      tracksHistoriesMap = {};
+    }
+    for (var entry in tracksHistoriesMap.entries) {
+      print('${entry.key}: ${entry.value.length}');
+    }
+    // print(listeningHistoryState.valueOrNull?.keys.toList());
     return CustomScrollView(
       primary: true,
       slivers: [
@@ -46,7 +56,7 @@ class TracksListeningHistoryTab extends ConsumerWidget {
                 .watch(trackListeningHistoryCardsSelectionControllerProvider),
             onSelectAll: () => _onSelectAllTracks(
               ref,
-              listeningHistoryState.valueOrNull?.values
+              listeningHistoryState.valueOrNull?.tracksListeningHistory.values
                   .expand((e) => e)
                   .toList(),
             ),
@@ -54,15 +64,13 @@ class TracksListeningHistoryTab extends ConsumerWidget {
         ),
         SliverList.builder(
           // shrinkWrap: true,
-          itemCount: listeningHistoryState.isLoading
-              ? 1
-              : listeningHistoryState.valueOrNull?.length ?? 0,
+          itemCount:
+              listeningHistoryState.isLoading ? 1 : tracksHistoriesMap.length,
           itemBuilder: (BuildContext context, int index) {
             if (listeningHistoryState.isLoading) {
               return const ListeningHistorySectionShimmer();
             } else if (listeningHistoryState.hasValue) {
-              final item =
-                  listeningHistoryState.requireValue.entries.elementAt(index);
+              final item = tracksHistoriesMap.entries.elementAt(index);
               return Column(
                 children: [
                   ListeningHistoryDateSectionHeader(

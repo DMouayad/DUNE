@@ -21,26 +21,26 @@ class IsarPlaylistsListeningHistory
     required super.date,
     this.id,
     this.isarPlaylistsIds = const [],
-    super.playlists = const [],
+    super.items = const [],
   });
 
   IsarPlaylistsListeningHistory copyWith({
     Id? id,
     DateTime? date,
-    List<IsarPlaylist>? playlists,
+    List<IsarPlaylist>? items,
     List<int>? isarPlaylistsIds,
   }) {
     return IsarPlaylistsListeningHistory(
       id: id ?? this.id,
       date: date ?? this.date,
-      playlists: playlists ?? this.playlists,
+      items: items ?? this.items,
       isarPlaylistsIds: isarPlaylistsIds ?? this.isarPlaylistsIds,
     );
   }
 
   IsarPlaylistsListeningHistory copyWithAddedPlaylist(IsarPlaylist playlist) {
     return copyWith(
-      playlists: {...playlists, playlist}.toList(),
+      items: {...items, playlist}.toList(),
       isarPlaylistsIds: <int>{
         ...isarPlaylistsIds,
         playlist.isarId!,
@@ -49,12 +49,12 @@ class IsarPlaylistsListeningHistory
   }
 
   @override
-  BasePlaylistsListeningHistory addPlaylists(List<IsarPlaylist> playlists) {
+  BasePlaylistsListeningHistory addPlaylists(List<IsarPlaylist> items) {
     return copyWith(
-      playlists: {...this.playlists, ...playlists}.toList(),
+      items: {...this.items, ...items}.toList(),
       isarPlaylistsIds: <int>{
         ...isarPlaylistsIds,
-        ...playlists.map((e) => e.isarId!),
+        ...items.map((e) => e.isarId!),
       }.toList(),
     );
   }
