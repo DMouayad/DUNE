@@ -16,8 +16,6 @@ abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
     required this.items,
   });
 
-  BasePlaylistsListeningHistory addPlaylists(List<P> items);
-
   Map<String, dynamic> toMap() {
     return {
       'date': date.toString(),
@@ -27,4 +25,11 @@ abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
 
   @override
   List<Object?> get props => [date.onlyDate, items];
+
+  BasePlaylistsListeningHistory copyWith({
+    DateTime? date,
+    List<P>? items,
+  });
+
+  BasePlaylistsListeningHistory copyWithAddedPlaylists(List<P> items);
 }

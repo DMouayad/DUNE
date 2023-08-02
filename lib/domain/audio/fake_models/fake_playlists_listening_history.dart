@@ -12,12 +12,14 @@ final class FakePlaylistsListeningHistory
   Set<Type> get derived => {BasePlaylistsListeningHistory};
 
   @override
-  FakePlaylistsListeningHistory addPlaylists(List<BasePlaylist> items) {
+  FakePlaylistsListeningHistory copyWithAddedPlaylists(
+      List<BasePlaylist> items) {
     return copyWith(
       items: {...this.items, ...items}.toList(),
     );
   }
 
+  @override
   FakePlaylistsListeningHistory copyWith({
     DateTime? date,
     List<BasePlaylist>? items,

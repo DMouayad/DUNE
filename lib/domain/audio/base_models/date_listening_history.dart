@@ -62,7 +62,9 @@ class DateListeningHistory extends Equatable
     BasePlaylistsListeningHistory history,
   ) {
     return copyWith(
-      playlists: history,
+      playlists: playlists == null
+          ? history
+          : playlists!.copyWithAddedPlaylists(history.items),
     );
   }
 

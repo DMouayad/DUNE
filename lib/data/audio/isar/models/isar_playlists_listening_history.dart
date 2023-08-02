@@ -1,3 +1,4 @@
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:isar/isar.dart';
 
@@ -24,6 +25,7 @@ class IsarPlaylistsListeningHistory
     super.items = const [],
   });
 
+  @override
   IsarPlaylistsListeningHistory copyWith({
     Id? id,
     DateTime? date,
@@ -49,7 +51,9 @@ class IsarPlaylistsListeningHistory
   }
 
   @override
-  BasePlaylistsListeningHistory addPlaylists(List<IsarPlaylist> items) {
+  BasePlaylistsListeningHistory copyWithAddedPlaylists(
+    List<IsarPlaylist> items,
+  ) {
     return copyWith(
       items: {...this.items, ...items}.toList(),
       isarPlaylistsIds: <int>{
