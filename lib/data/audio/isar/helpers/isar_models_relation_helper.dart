@@ -188,7 +188,8 @@ final class IsarModelsRelationHelper {
       final List<IsarArtist> artistsOfTrack;
       // check if artists relation has already been loaded
       IsarTrack trackWithArtists;
-      if (track.artists.isNotEmpty) {
+      if (track.artists.isNotEmpty &&
+          track.artists.length == track.artistsIds.length) {
         artistsOfTrack = track.artists;
         trackWithArtists = track.copyWith(artists: artistsOfTrack);
       } else {

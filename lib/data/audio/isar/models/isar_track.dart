@@ -183,7 +183,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       year: baseTrack.year,
       isarAudioInfoSet: IsarAudioInfoSet.from(baseTrack.audioInfoSet),
     );
-    final extractedArtists = isarTrack.extractArtists;
+    final extractedArtists = isarTrack.extractArtistsFromTrack(baseTrack);
     final albumArtistsIds = List<String>.from(extractedArtists.artistsIds);
     final albumArtistId =
         albumArtistsIds.isNotEmpty ? albumArtistsIds.removeAt(0) : null;
@@ -201,9 +201,11 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     );
   }
 
-  ({List<IsarArtist> artists, List<String> artistsIds}) get extractArtists {
+  ({List<IsarArtist> artists, List<String> artistsIds}) extractArtistsFromTrack(
+    BaseTrack track,
+  ) {
     final artistsIds = <String>[];
-    final extractedArtists = artists.map((e) {
+    final extractedArtists = track.artists.map((e) {
       final String id;
       if (e.id != null) {
         id = e.id!;
@@ -213,8 +215,8 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       }
       return IsarArtist.fromMap(e.toMap())
           .copyWith(
-            albumsIds: album?.id != null ? [album!.id!] : [],
-            tracksIds: [id],
+            albumsIds: track.album?.id != null ? [track.album!.id!] : [],
+            tracksIds: [track.id],
             id: id,
           )
           .setIdIfNull();
