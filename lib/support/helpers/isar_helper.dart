@@ -41,7 +41,7 @@ class IsarHelper {
   }
 
   static Future<Isar> initForTesting() async {
-    await Isar.initializeIsarCore();
+    await Isar.initializeIsarCore(download: true);
     return await init(
       directory: Directory.systemTemp,
       enableInspector: false,

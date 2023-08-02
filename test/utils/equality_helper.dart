@@ -3,6 +3,7 @@ import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 
 class EqualityHelper {
   static bool playlistsHasSameProps(BasePlaylist first, BasePlaylist second) {
@@ -30,24 +31,21 @@ class EqualityHelper {
         hasSameTracksIds;
   }
 
-  static bool tracksHasSameProps(BaseTrack first, BaseTrack second) {
-    final firstProps = List.from(first.props);
-    firstProps.remove(first.artists);
-    firstProps.remove(first.album);
-    final secondProps = List.from(second.props);
-    secondProps.remove(second.artists);
-    secondProps.remove(second.album);
-    return const ListEquality().equals(firstProps, secondProps) &&
-        hasSameAlbum(first.album, second.album) &&
-        twoTracksHasSameArtists(first, second);
+  static bool tracksHistoriesHasSameProps(
+      BaseTrackListeningHistory first, BaseTrackListeningHistory second) {
+    return (first.date == second.date) &&
+        (first.uncompletedListensTotalDuration ==
+            second.uncompletedListensTotalDuration) &&
+        (first.completedListensCount == second.completedListensCount) &&
+        (first.track!.id == second.track!.id);
   }
 
-  static bool twoTracksHasSameArtists(BaseTrack first, BaseTrack second) {
+  static bool tracksHasSameArtists(BaseTrack first, BaseTrack second) {
     if (first.artists.length != second.artists.length) {
       return false;
     }
     for (int i = 0; i < first.artists.length; i++) {
-      if (artistsMatch(
+      if (artistsHasSameProps(
           first.artists.elementAt(i), second.artists.elementAt(i))) {
         // do nothing
       } else {
@@ -57,7 +55,7 @@ class EqualityHelper {
     return true;
   }
 
-  static bool hasSameAlbum(BaseAlbum? first, BaseAlbum? second) {
+  static bool albumsHasSameProps(BaseAlbum? first, BaseAlbum? second) {
     final firstProps = List.from(first?.props ?? []);
     firstProps.remove(first?.artists);
     firstProps.remove(first?.tracks);
@@ -68,7 +66,7 @@ class EqualityHelper {
     return const ListEquality().equals(firstProps, secondProps);
   }
 
-  static bool artistsMatch(BaseArtist first, BaseArtist second) {
+  static bool artistsHasSameProps(BaseArtist first, BaseArtist second) {
     final firstProps = List.from(first.props);
     firstProps.remove(first.tracks);
     firstProps.remove(first.albums);

@@ -2,11 +2,9 @@ import 'package:dune/data/audio/isar/data_sources/isar_artist_data_source.dart';
 import 'package:dune/data/audio/isar/helpers/isar_models_relation_helper.dart';
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
-import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/repositories/artist_repository.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/utils/result/result.dart';
-import 'package:flutter/foundation.dart';
 
 final class IsarArtistRepository
     extends SavableArtistRepository<IsarArtistDataSource> {

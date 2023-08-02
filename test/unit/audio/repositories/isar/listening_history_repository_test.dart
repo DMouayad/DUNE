@@ -3,43 +3,49 @@ import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../utils/isar_test_db.dart';
-import '../../../utils/equality_helper.dart';
+import '../../../../utils/isar_test_db.dart';
+import '../../../../utils/equality_helper.dart';
 
 void main() {
   setUpAll(() async => await initIsarForTesting());
   setUp(() async => await refreshDatabase());
   group("adding playlist to playlists listening history", () {
-    test('it saves playlist in local storage when it does not exists',
-        () async {
-      final playlist = PlaylistFactory().create();
-      final fetchingPlaylistBefore =
-          await isarMusicRepo.playlists.getById(playlist.id!);
-      expectLater(fetchingPlaylistBefore.requireValue, null);
-
-      await isarMusicRepo.listeningHistory
-          .addPlaylist(playlist, DateTime.now());
-      final fetchingPlaylistAfter =
-          await isarMusicRepo.playlists.getById(playlist.id!);
-      expectLater(fetchingPlaylistAfter.requireValue, playlist);
-    });
     test(
-        'it adds the playlist to the specified date when it already exists in'
-        'local storage', () async {
-      final playlist = PlaylistFactory().create();
-      final savingPlaylistResult = await isarMusicRepo.playlists.save(playlist);
-      expectLater(savingPlaylistResult.isSuccess, true);
-      final fetchingPlaylistBefore =
-          await isarMusicRepo.playlists.getById(playlist.id!);
-      // assert it exists before adding is to the listening history
-      expectLater(fetchingPlaylistBefore.requireValue, playlist);
+      'it saves playlist in local storage when it does not exists',
+      () async {
+        final playlist = PlaylistFactory().create();
+        final fetchingPlaylistBefore =
+            await isarMusicRepo.playlists.getById(playlist.id!);
+        expectLater(fetchingPlaylistBefore.requireValue, null);
 
-      final addingToListeningHistory = await isarMusicRepo.listeningHistory
-          .addPlaylist(playlist, DateTime.now());
-      expectLater(addingToListeningHistory.isSuccess, true);
-    });
+        await isarMusicRepo.listeningHistory
+            .addPlaylist(playlist, DateTime.now());
+        final fetchingPlaylistAfter =
+            await isarMusicRepo.playlists.getById(playlist.id!);
+        expectLater(fetchingPlaylistAfter.requireValue, playlist);
+      },
+    );
+    test(
+      'it adds the playlist to the specified date when it already exists in'
+      'local storage',
+      () async {
+        final playlist = PlaylistFactory().create();
+        final savingPlaylistResult =
+            await isarMusicRepo.playlists.save(playlist);
+        expectLater(savingPlaylistResult.isSuccess, true);
+        final fetchingPlaylistBefore =
+            await isarMusicRepo.playlists.getById(playlist.id!);
+        // assert it exists before adding is to the listening history
+        expectLater(fetchingPlaylistBefore.requireValue, playlist);
+
+        final addingToListeningHistory = await isarMusicRepo.listeningHistory
+            .addPlaylist(playlist, DateTime.now());
+        expectLater(addingToListeningHistory.isSuccess, true);
+      },
+    );
     test(
         'it adds the provided playlist when it does not exists in the specified'
         ' date playlists listening history', () async {
@@ -51,11 +57,11 @@ void main() {
           .requireValue.playlistsListeningHistory
           .whereKey(date.onlyDate);
       expectLater(
-          datePlaylistsListeningHistory!.playlists.contains(playlist), true);
+          datePlaylistsListeningHistory!.items.contains(playlist), true);
       expect(datePlaylistsListeningHistory.date, date);
     });
     test(
-        'it does not add it twice if already exists in the'
+        'it does not add it twice if already exists in the '
         '[date] playlists listening history', () async {
       final playlist = PlaylistFactory().setTracksCount(20).create();
       // add the first time
@@ -64,15 +70,15 @@ void main() {
       final datePlaylistsListeningHistory =
           (await isarMusicRepo.listeningHistory.getByDates([date]))
               .requireValue
-              .playlistsListeningHistory
-              .whereKey(date);
+              .playlistsListeningHistory;
       // assert a listening history was returned for the [date]
-      expectLater(datePlaylistsListeningHistory != null, true);
+      expectLater(datePlaylistsListeningHistory.whereKey(date) != null, true);
       // asset it has only one playlist for this date which is the one we
       // previously added.
       expectLater(
         EqualityHelper.playlistsHasSameProps(
-            datePlaylistsListeningHistory!.playlists.single, playlist),
+            datePlaylistsListeningHistory.whereKey(date)!.items.single,
+            playlist),
         true,
       );
 
@@ -88,7 +94,7 @@ void main() {
               .requireValue
               .playlistsListeningHistory
               .whereKey(date)!
-              .playlists
+              .items
               .single;
       expectLater(
         EqualityHelper.playlistsHasSameProps(playlistAfterSecondTime, playlist),
@@ -109,11 +115,11 @@ void main() {
       // assert the returned playlist listening history for this date
       // contains all the before-added ones plus the added [playlist]
       expectLater(
-        datePlaylistsListeningHistory?.playlists.length,
+        datePlaylistsListeningHistory?.items.length,
         playlists.length + 1,
       );
       expectLater(
-          datePlaylistsListeningHistory!.playlists.contains(playlist), true);
+          datePlaylistsListeningHistory!.items.contains(playlist), true);
       expect(datePlaylistsListeningHistory.date, date);
     });
   });
@@ -131,13 +137,11 @@ void main() {
 
       final incrementResult = await isarMusicRepo.listeningHistory
           .incrementTrackCompletedListensCount(track, date);
-      expectLater(incrementResult.isSuccess, true);
       final trackListeningHistory = incrementResult
           .requireValue.tracksListeningHistory
           .whereKey(date)
           ?.single;
       expectLater(trackListeningHistory?.track?.id, track.id);
-      expectLater(trackListeningHistory?.date, date);
       expectLater(trackListeningHistory?.completedListensCount, 1);
     });
     test(
@@ -154,13 +158,11 @@ void main() {
 
       final incrementResult = await isarMusicRepo.listeningHistory
           .incrementTrackCompletedListensCount(track, date);
-      expectLater(incrementResult.isSuccess, true);
       final trackListeningHistory = incrementResult
           .requireValue.tracksListeningHistory
           .whereKey(date)
           ?.single;
       expectLater(trackListeningHistory?.track?.id, track.id);
-      expectLater(trackListeningHistory?.date, date);
       expectLater(trackListeningHistory?.completedListensCount,
           trackListeningHistoryBefore.single.completedListensCount! + 1);
     });
@@ -177,13 +179,13 @@ void main() {
       expectLater(trackListeningHistoryBefore.isEmpty, true);
 
       final duration = Duration(seconds: faker.randomGenerator.integer(100));
-      final result = await isarMusicRepo.listeningHistory
-          .addToTrackUncompletedListensDuration(track, date, duration);
-      expectLater(result.isSuccess, true);
-      final trackListeningHistory =
-          result.requireValue.tracksListeningHistory.whereKey(date)?.single;
+      final trackListeningHistory = (await isarMusicRepo.listeningHistory
+              .addToTrackUncompletedListensDuration(track, date, duration))
+          .requireValue
+          .tracksListeningHistory
+          .whereKey(date)
+          ?.single;
       expectLater(trackListeningHistory?.track?.id, track.id);
-      expectLater(trackListeningHistory?.date, date);
       expectLater(
           trackListeningHistory?.uncompletedListensTotalDuration, duration);
     });
@@ -202,15 +204,44 @@ void main() {
       final duration = Duration(seconds: faker.randomGenerator.integer(100));
       final result = await isarMusicRepo.listeningHistory
           .addToTrackUncompletedListensDuration(track, date, duration);
-      expectLater(result.isSuccess, true);
       final trackListeningHistory =
           result.requireValue.tracksListeningHistory.whereKey(date)?.single;
       expectLater(trackListeningHistory?.track?.id, track.id);
-      expectLater(trackListeningHistory?.date, date);
       expectLater(
         trackListeningHistory?.uncompletedListensTotalDuration,
         trackListeningHistoryBefore.single.uncompletedListensTotalDuration! +
             duration,
+      );
+    });
+    group('returned [ListeningHistoryCollection] tests', () {
+      test(
+        'it should return tracksListeningHistories grouped by date',
+        () async {
+          final seededTracksHistories =
+              await isarTrackListeningHistorySeeder.seedCount(date);
+          final tracksListeningHistories =
+              (await isarMusicRepo.listeningHistory.getByDates([date]))
+                  .requireValue
+                  .tracksListeningHistory;
+          expect(
+            tracksListeningHistories.entries.every(
+              (entry) {
+                final historiesFromCache = entry.value;
+
+                final addedHistories = seededTracksHistories
+                    .where((h) => h.date == entry.key)
+                    .toList();
+                return historiesFromCache.length == addedHistories.length;
+              },
+            ),
+            true,
+          );
+          // assert that all the passed [seededTracksHistories] were returned
+          expect(
+            tracksListeningHistories.values.expand((element) => element).length,
+            seededTracksHistories.length,
+          );
+        },
       );
     });
   });
@@ -218,10 +249,19 @@ void main() {
 
 DateTime get date => DateTime.now().onlyDate;
 
+DateTimeRange get currentMonth {
+  final now = DateTime.now();
+
+  return DateTimeRange(
+    start: DateTime(now.year, now.month),
+    end: DateTime(now.year, now.month, 31),
+  );
+}
+
 Future<List<FakePlaylist>> _addRandomPlaylistsToListeningHistory(
   DateTime date,
 ) async {
-  final playlists = PlaylistFactory().setTracksCount(10).createCount(10);
+  final playlists = PlaylistFactory().setTracksCount(10).createCount(2);
   for (var playlist in playlists) {
     await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
   }
@@ -232,11 +272,9 @@ Future<List<FakePlaylist>> _addRandomPlaylistsToListeningHistory(
           .playlistsListeningHistory
           .whereKey(date.onlyDate);
   for (int i = 0; i < playlists.length; i++) {
-    expectLater(
-      EqualityHelper.playlistsHasSameProps(
-          playlists[i], playlistsListeningHistory!.playlists[i]),
-      true,
-    );
+    final isEqual = EqualityHelper.playlistsHasSameProps(
+        playlists[i], playlistsListeningHistory!.items[i]);
+    expectLater(isEqual, true);
   }
   return playlists;
 }

@@ -1,7 +1,7 @@
 import 'package:dune/data/audio/isar/models/isar_track_listening_history.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../utils/isar_test_db.dart';
+import '../../../../utils/isar_test_db.dart';
 
 DateTime get date => DateTime.now();
 
