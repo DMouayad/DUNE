@@ -28,18 +28,23 @@ const IsarTrackListeningHistorySchema = CollectionSchema(
       name: r'date',
       type: IsarType.dateTime,
     ),
-    r'totalListeningDurationInSeconds': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 2,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'totalListeningDurationInSeconds': PropertySchema(
+      id: 3,
       name: r'totalListeningDurationInSeconds',
       type: IsarType.long,
     ),
     r'trackId': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'trackId',
       type: IsarType.string,
     ),
     r'uncompletedListensTotalDurationInSeconds': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'uncompletedListensTotalDurationInSeconds',
       type: IsarType.long,
     )
@@ -108,9 +113,10 @@ void _isarTrackListeningHistorySerialize(
 ) {
   writer.writeLong(offsets[0], object.completedListensCount);
   writer.writeDateTime(offsets[1], object.date);
-  writer.writeLong(offsets[2], object.totalListeningDurationInSeconds);
-  writer.writeString(offsets[3], object.trackId);
-  writer.writeLong(offsets[4], object.uncompletedListensTotalDurationInSeconds);
+  writer.writeLong(offsets[2], object.hashCode);
+  writer.writeLong(offsets[3], object.totalListeningDurationInSeconds);
+  writer.writeString(offsets[4], object.trackId);
+  writer.writeLong(offsets[5], object.uncompletedListensTotalDurationInSeconds);
 }
 
 IsarTrackListeningHistory _isarTrackListeningHistoryDeserialize(
@@ -123,9 +129,9 @@ IsarTrackListeningHistory _isarTrackListeningHistoryDeserialize(
     completedListensCount: reader.readLongOrNull(offsets[0]),
     date: reader.readDateTimeOrNull(offsets[1]),
     id: id,
-    trackId: reader.readStringOrNull(offsets[3]),
+    trackId: reader.readStringOrNull(offsets[4]),
     uncompletedListensTotalDurationInSeconds:
-        reader.readLongOrNull(offsets[4]) ?? 0,
+        reader.readLongOrNull(offsets[5]) ?? 0,
   );
   return object;
 }
@@ -144,8 +150,10 @@ P _isarTrackListeningHistoryDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -648,6 +656,62 @@ extension IsarTrackListeningHistoryQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterFilterCondition> hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
       QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1029,6 +1093,20 @@ extension IsarTrackListeningHistoryQuerySortBy on QueryBuilder<
   }
 
   QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
       QAfterSortBy> sortByTotalListeningDurationInSeconds() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'totalListeningDurationInSeconds', Sort.asc);
@@ -1100,6 +1178,20 @@ extension IsarTrackListeningHistoryQuerySortThenBy on QueryBuilder<
       QAfterSortBy> thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory,
+      QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -1179,6 +1271,13 @@ extension IsarTrackListeningHistoryQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory, QDistinct>
+      distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, IsarTrackListeningHistory, QDistinct>
       distinctByTotalListeningDurationInSeconds() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'totalListeningDurationInSeconds');
@@ -1219,6 +1318,13 @@ extension IsarTrackListeningHistoryQueryProperty on QueryBuilder<
       dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
+    });
+  }
+
+  QueryBuilder<IsarTrackListeningHistory, int, QQueryOperations>
+      hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 

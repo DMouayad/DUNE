@@ -23,8 +23,13 @@ const IsarPlaylistsListeningHistorySchema = CollectionSchema(
       name: r'date',
       type: IsarType.dateTime,
     ),
-    r'isarPlaylistsIds': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 1,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isarPlaylistsIds': PropertySchema(
+      id: 2,
       name: r'isarPlaylistsIds',
       type: IsarType.longList,
     )
@@ -74,7 +79,8 @@ void _isarPlaylistsListeningHistorySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.date);
-  writer.writeLongList(offsets[1], object.isarPlaylistsIds);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeLongList(offsets[2], object.isarPlaylistsIds);
 }
 
 IsarPlaylistsListeningHistory _isarPlaylistsListeningHistoryDeserialize(
@@ -86,7 +92,7 @@ IsarPlaylistsListeningHistory _isarPlaylistsListeningHistoryDeserialize(
   final object = IsarPlaylistsListeningHistory(
     date: reader.readDateTime(offsets[0]),
     id: id,
-    isarPlaylistsIds: reader.readLongList(offsets[1]) ?? const [],
+    isarPlaylistsIds: reader.readLongList(offsets[2]) ?? const [],
   );
   return object;
 }
@@ -101,6 +107,8 @@ P _isarPlaylistsListeningHistoryDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
+      return (reader.readLong(offset)) as P;
+    case 2:
       return (reader.readLongList(offset) ?? const []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -367,6 +375,62 @@ extension IsarPlaylistsListeningHistoryQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterFilterCondition> hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
       QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -611,6 +675,20 @@ extension IsarPlaylistsListeningHistoryQuerySortBy on QueryBuilder<
       return query.addSortBy(r'date', Sort.desc);
     });
   }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
 }
 
 extension IsarPlaylistsListeningHistoryQuerySortThenBy on QueryBuilder<
@@ -626,6 +704,20 @@ extension IsarPlaylistsListeningHistoryQuerySortThenBy on QueryBuilder<
       QAfterSortBy> thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -654,6 +746,13 @@ extension IsarPlaylistsListeningHistoryQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
+      QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, IsarPlaylistsListeningHistory,
       QDistinct> distinctByIsarPlaylistsIds() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isarPlaylistsIds');
@@ -676,6 +775,13 @@ extension IsarPlaylistsListeningHistoryQueryProperty on QueryBuilder<
       dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
+    });
+  }
+
+  QueryBuilder<IsarPlaylistsListeningHistory, int, QQueryOperations>
+      hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 
