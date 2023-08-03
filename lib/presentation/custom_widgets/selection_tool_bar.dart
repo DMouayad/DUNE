@@ -3,15 +3,14 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 
-const _toolBarMaxHeight = 180.0;
-const _toolBarMinHeight = 54.0;
-
 class PersistentSelectionToolBar<ItemType extends Object>
     extends SliverPersistentHeaderDelegate {
   const PersistentSelectionToolBar({
     required this.controller,
     required this.selectionState,
     required this.onSelectAll,
+    required this.toolBarMaxHeight,
+    required this.toolBarMinHeight,
     this.onDownload,
     this.onRemove,
   });
@@ -23,6 +22,8 @@ class PersistentSelectionToolBar<ItemType extends Object>
 
   /// called when remove/delete option button is pressed
   final void Function()? onRemove;
+  final double toolBarMaxHeight;
+  final double toolBarMinHeight;
 
   @override
   Widget build(
@@ -46,14 +47,14 @@ class PersistentSelectionToolBar<ItemType extends Object>
   double get maxExtent {
     return selectionState.selectionEnabled
         ? selectionState.selectedValues.isEmpty
-            ? _toolBarMinHeight
-            : _toolBarMaxHeight
+            ? toolBarMinHeight
+            : toolBarMaxHeight
         : 0;
   }
 
   @override
   double get minExtent =>
-      selectionState.selectionEnabled ? _toolBarMinHeight : 0;
+      selectionState.selectionEnabled ? toolBarMinHeight : 0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

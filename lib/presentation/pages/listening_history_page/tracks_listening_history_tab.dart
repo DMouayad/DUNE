@@ -39,10 +39,6 @@ class TracksListeningHistoryTab extends ConsumerWidget {
     } else {
       tracksHistoriesMap = {};
     }
-    for (var entry in tracksHistoriesMap.entries) {
-      print('${entry.key}: ${entry.value.length}');
-    }
-    // print(listeningHistoryState.valueOrNull?.keys.toList());
     return CustomScrollView(
       primary: true,
       slivers: [
@@ -50,6 +46,8 @@ class TracksListeningHistoryTab extends ConsumerWidget {
           pinned: true,
           floating: true,
           delegate: PersistentSelectionToolBar(
+            toolBarMaxHeight: 180,
+            toolBarMinHeight: 54,
             controller: ref.read(
                 trackListeningHistoryCardsSelectionControllerProvider.notifier),
             selectionState: ref
