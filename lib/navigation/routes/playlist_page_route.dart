@@ -15,14 +15,17 @@ class PlaylistPageRoute extends GoRoute {
           })
         : null;
     return CustomTransitionPage(
-      child: PlaylistPage(
-        key: state.pageKey,
-        musicSource: params?.musicSource,
-        playlistId: state.pathParameters['playlistId'] as String,
-        title: params?.title,
-        description: params?.description,
-        thumbnails: params?.thumbnails,
-        tracksCount: params?.tracksCount,
+      child: PageBodyWrapper(
+        tabsModeEnabled: false,
+        child: PlaylistPage(
+          key: state.pageKey,
+          musicSource: params?.musicSource,
+          playlistId: state.pathParameters['playlistId'] as String,
+          title: params?.title,
+          description: params?.description,
+          thumbnails: params?.thumbnails,
+          tracksCount: params?.tracksCount,
+        ),
       ),
       transitionsBuilder: (
         BuildContext context,
