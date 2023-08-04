@@ -12,6 +12,7 @@ import 'package:dune/dune_app.dart';
 import 'package:dune/support/helpers/app_window_helper.dart';
 import 'package:dune/support/helpers/platform_helpers.dart';
 import 'data/audio/isar/repositories/isar_music_repository.dart';
+import 'data/audio/isar/seeders/isar_track_listening_history_seeder.dart';
 import 'data/audio/youtube/repositories/youtube_music_repository.dart';
 import 'domain/audio/facades/music_facade.dart';
 import 'presentation/screens/home/components/app_tab_view.dart';
@@ -28,9 +29,9 @@ Future<void> main() async {
 
 Future<void> _registerDependencies() async {
   final isar = await IsarHelper.init();
-
   // await isar.writeTxn(() async => await isar.clear());
   final isarMusicRepository = IsarMusicRepository(isar: isar);
+  // IsarTrackListeningHistorySeeder(isarMusicRepository, isar).seedCount();
 
   MusicFacade.setInstance(
     cacheMusicRepository: isarMusicRepository,
@@ -48,12 +49,14 @@ Future<void> _registerDependencies() async {
 
     await AppWindowHelper.setWindowEffect(currentTheme);
   }
-  _registerAppRouter(_setupInitialRoute(appPreferences));
+  AppRouter.init(initialLocation: _setupInitialRoute(appPreferences));
+  // initialize global [Provider]s variables
   registerControllersProviders();
 }
 
 String _setupInitialRoute(BaseAppPreferences appPreferences) {
   final route = AppRouter.getInitialRoute(appPreferences.initialPageOnStartup);
+  // add a [TabData] for the initial page
   homeScreenTabsProvider = StateProvider<List<TabData>>((_) {
     return [
       TabData(
@@ -70,8 +73,4 @@ String _setupInitialRoute(BaseAppPreferences appPreferences) {
         .indexOf(route.data.index);
   });
   return route.data.path;
-}
-
-void _registerAppRouter(String initialLocation) {
-  AppRouter.init(initialLocation: initialLocation);
 }
