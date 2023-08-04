@@ -35,41 +35,44 @@ class TrackHistoryCard extends ConsumerWidget {
     final selectionState =
         ref.watch(trackListeningHistoryCardsSelectionControllerProvider);
 
-    return TrackCardWrapper(
-      playOnTap: false,
-      onPlayTrack: () => _playTrack(track, ref),
-      track: track,
-      selectionState: selectionState,
-      onSelected: () => _onSelected(ref, track),
-      cardColor: color,
-      popupMenu: popupMenu,
-      child: Flex(
-        direction: Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: _TrackInfoPart(
-              track: track,
-              selectionEnabled: selectionState.selectionEnabled,
-              playTrack: () => _playTrack(track, ref),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: TrackCardWrapper(
+        playOnTap: false,
+        onPlayTrack: () => _playTrack(track, ref),
+        track: track,
+        selectionState: selectionState,
+        onSelected: () => _onSelected(ref, track),
+        cardColor: color,
+        popupMenu: popupMenu,
+        child: Flex(
+          direction: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: _TrackInfoPart(
+                track: track,
+                selectionEnabled: selectionState.selectionEnabled,
+                playTrack: () => _playTrack(track, ref),
+              ),
             ),
-          ),
-          Expanded(
-            child: _ListeningHistoryInfoPart(trackListeningHistory),
-          ),
-          Expanded(
-            flex: 0,
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.history, size: 18),
+            Expanded(
+              child: _ListeningHistoryInfoPart(trackListeningHistory),
             ),
-          ),
-          _MoreButton(
-            selected: selectionState.selectedValues.containsKey(track.id),
-            popupMenu: popupMenu,
-          ),
-          const SizedBox(width: 10),
-        ],
+            Expanded(
+              flex: 0,
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.history, size: 18),
+              ),
+            ),
+            _MoreButton(
+              selected: selectionState.selectedValues.containsKey(track.id),
+              popupMenu: popupMenu,
+            ),
+            const SizedBox(width: 10),
+          ],
+        ),
       ),
     );
   }
@@ -122,33 +125,26 @@ class _TrackInfoPart extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  // vertical: 3,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      track.title,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: context.colorScheme.onBackground,
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    track.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      color: context.colorScheme.onBackground,
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      track.artistsNames,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colorScheme.onPrimaryContainer,
-                      ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    track.artistsNames,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colorScheme.onPrimaryContainer,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -168,6 +164,7 @@ class _ListeningHistoryInfoPart extends StatelessWidget {
     final divider = VerticalDivider(
       color: context.colorScheme.onBackground.withOpacity(.05),
       thickness: 1.1,
+      width: 12,
     );
     return Tooltip(
       message:
@@ -181,26 +178,27 @@ class _ListeningHistoryInfoPart extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // total listens duration in minutes //
+              Flexible(child: divider),
+              // complete listens count
               Expanded(
                 flex: 0,
                 child: _NumberCircle(
-                  title: "Total minutes:  ",
-                  number:
-                      trackListeningHistory.totalListeningDuration?.inMinutes,
+                  title: " times",
+                  number: trackListeningHistory.completedListensCount,
                 ),
               ),
               Flexible(child: divider),
               if (constraints.maxWidth > 320) ...[
-                // complete listens count
+                // total listens duration in minutes //
                 Expanded(
                   flex: 0,
                   child: _NumberCircle(
-                    title: "Completed listens count:  ",
-                    number: trackListeningHistory.completedListensCount,
+                    title: " minutes",
+                    number:
+                        trackListeningHistory.totalListeningDuration?.inMinutes,
                   ),
                 ),
-                divider,
+                Flexible(child: divider),
               ],
             ],
           ),
@@ -252,37 +250,34 @@ class _NumberCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      // mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          title,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colorScheme.onBackground.withOpacity(.95),
-            fontWeight: FontWeight.w500,
-          ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: context.colorScheme.primaryContainer,
+          width: 1.5,
         ),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: ShapeDecoration(
-            shape: CircleBorder(
-              side: BorderSide(
-                color: context.colorScheme.primaryContainer,
-                width: 1.5,
-              ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${number ?? 0}',
+            style: context.textTheme.titleSmall?.copyWith(
+              color: context.colorScheme.primary,
             ),
           ),
-          child: Center(
-            child: Text(
-              '${number ?? 0}',
-              style: context.textTheme.titleSmall?.copyWith(
-                color: context.colorScheme.primary,
-              ),
+          Text(
+            title,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

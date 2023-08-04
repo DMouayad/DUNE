@@ -37,14 +37,14 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return ListView.builder(
       shrinkWrap: true,
-      itemExtent: 60,
+      itemExtent: 62,
       padding: listPadding ??
           (compact ? const EdgeInsets.only(top: 22) : const EdgeInsets.all(8)),
       itemCount: tracksListeningHistories.length,
       itemBuilder: (context, index) {
         return TrackHistoryCard(
           trackListeningHistory: tracksListeningHistories.elementAt(index),
-          color: context.colorScheme.secondary.withOpacity(.04),
+          color: context.colorScheme.onBackground.withOpacity(.05),
         );
       },
     );
