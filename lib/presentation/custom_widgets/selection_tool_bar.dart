@@ -167,7 +167,7 @@ class SelectionToolBar<ItemType extends Object> extends StatelessWidget {
                     gridDelegate:
                         const material.SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 36,
-                      mainAxisExtent: 130,
+                      mainAxisExtent: 100,
                       mainAxisSpacing: 3,
                       crossAxisSpacing: 3,
                     ),

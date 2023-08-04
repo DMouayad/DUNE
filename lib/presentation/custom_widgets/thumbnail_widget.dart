@@ -64,7 +64,7 @@ class ThumbnailWidget extends ConsumerWidget {
     }
     if (imageProvider != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         child: ExtendedImage(
           image: imageProvider,
           fit: BoxFit.cover,

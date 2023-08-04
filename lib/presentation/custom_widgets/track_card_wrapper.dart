@@ -39,51 +39,39 @@ class TrackCardWrapper extends StatelessWidget {
     final isSelected = selectionState.selectedValues.containsKey(track.id);
     return fluent.FlyoutTarget(
       controller: flyoutController,
-      child: OptionalParentWidget(
-        parentWidgetBuilder: (child) {
-          return Tooltip(
-            message: "Tap to play",
-            waitDuration: const Duration(milliseconds: 1000),
-            child: child,
-          );
-        },
-        condition: !selectionState.selectionEnabled && playOnTap,
-        childWidget: Material(
-          color: cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: isSelected
-                ? BorderSide(
-                    color:
-                        context.colorScheme.onPrimaryContainer.withOpacity(.9),
-                    width: 1.3,
-                  )
-                : BorderSide.none,
-          ),
-          borderOnForeground: true,
-          child: DraggableTrackCard(
-            selectionState: selectionState,
-            child: InkWell(
-              onLongPress: onSelected,
-              onSecondaryTapUp: (tapDetails) {
-                showTrackCardPopupMenu(
-                  context,
-                  isSelected,
-                  tapDetails.localPosition,
-                  popupMenu,
-                );
-              },
-              hoverColor:
-                  playOnTap ? context.colorScheme.primaryContainer : null,
-              mouseCursor: playOnTap ? null : MouseCursor.defer,
-              focusColor: context.colorScheme.primaryContainer,
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              onTap: onTap,
+      child: Material(
+        color: cardColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: isSelected
+              ? BorderSide(
+                  color: context.colorScheme.onPrimaryContainer.withOpacity(.9),
+                  width: 1.3,
+                )
+              : BorderSide.none,
+        ),
+        borderOnForeground: true,
+        child: DraggableTrackCard(
+          selectionState: selectionState,
+          child: InkWell(
+            onLongPress: onSelected,
+            onSecondaryTapUp: (tapDetails) {
+              showTrackCardPopupMenu(
+                context,
+                isSelected,
+                tapDetails.localPosition,
+                popupMenu,
+              );
+            },
+            hoverColor: playOnTap ? context.colorScheme.primaryContainer : null,
+            mouseCursor: playOnTap ? null : MouseCursor.defer,
+            focusColor: context.colorScheme.primaryContainer,
+            customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              child: child,
             ),
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(10),
+            child: child,
           ),
         ),
       ),

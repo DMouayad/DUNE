@@ -61,7 +61,6 @@ class TracksListeningHistoryTab extends ConsumerWidget {
           ),
         ),
         SliverList.builder(
-          // shrinkWrap: true,
           itemCount:
               listeningHistoryState.isLoading ? 1 : tracksHistoriesMap.length,
           itemBuilder: (BuildContext context, int index) {

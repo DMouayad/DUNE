@@ -2,7 +2,6 @@ import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
-import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
@@ -75,13 +74,18 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
         }
       }
     }
+    final maxHeight = context.screenWidth > 500
+        ? context.screenHeight * 0.27
+        : context.screenHeight * 0.23;
 
-    return SingleChildScrollView(
-      primary: false,
-      padding: const EdgeInsets.only(bottom: 50),
-      child: Column(
-        children: [
-          PlaylistPageHeader(
+    return CustomScrollView(
+      primary: true,
+      slivers: [
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: PersistentPlaylistPageHeaderDelegate(
+            minHeaderExtent: 70,
+            maxHeaderExtent: maxHeight,
             isFetchingPlaylistInfo:
                 playlistState.hasValue && playlistState.isLoading,
             title: widget.title ?? playlist?.title ?? '',
@@ -93,31 +97,28 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
                     : null) ??
                 playlist?.tracks.length,
             onShuffle: playlistState.valueOrNull != null ? () {} : null,
-          ),
-          SelectionToolBar(
             controller: ref.read(selectionController.notifier),
             selectionState: ref.watch(selectionController),
             onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
-            isExpanded: true,
           ),
-          Expanded(
-            flex: 0,
-            child: TracksListView(
-              selectionControllerProvider: selectionController,
-              playlistState.whenData((data) => data?.tracks ?? []),
-              playlist: playlistState.whenData((value) => value).valueOrNull,
-              onRetryWhenErrorLoadingTracks: () {
-                if (widget.musicSource != null) {
-                  ref.read(playlistControllerProvider.notifier).get(
-                        widget.playlistId,
-                        widget.musicSource!,
-                      );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+        TracksListView(
+          isSliverList: true,
+          physics: const NeverScrollableScrollPhysics(),
+          selectionControllerProvider: selectionController,
+          playlistState.whenData((data) => data?.tracks ?? []),
+          playlist: playlistState.whenData((value) => value).valueOrNull,
+          onRetryWhenErrorLoadingTracks: () {
+            if (widget.musicSource != null) {
+              ref.read(playlistControllerProvider.notifier).get(
+                    widget.playlistId,
+                    widget.musicSource!,
+                  );
+            }
+          },
+        ),
+      ],
+      // ),
     );
   }
 

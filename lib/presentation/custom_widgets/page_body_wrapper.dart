@@ -19,7 +19,9 @@ class PageBodyWrapper extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appTheme = ref.watch(appThemeControllerProvider);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: tabsModeEnabled
+          ? const EdgeInsets.all(16)
+          : const EdgeInsets.fromLTRB(4, 24, 4, 0),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         color: appTheme.acrylicWindowEffectEnabled

@@ -42,7 +42,7 @@ class TrackCard extends StatelessWidget {
         onDelete: () {},
         onDownload: () {},
         onPlayTrack: onPlayTrack,
-        onSelectTrack: () {},
+        onSelectTrack: () => onSelected(track),
       ),
       child: TrackCardMainContent(track: track),
     );
