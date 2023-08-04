@@ -1,4 +1,5 @@
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ListeningHistoryDateSectionHeader extends StatelessWidget {
@@ -54,7 +55,7 @@ class ListeningHistoryDateSectionHeader extends StatelessWidget {
   }
 
   String _getDayFromDifference(DateTime date) {
-    return switch (date.difference(DateTime.now()).inDays) {
+    return switch (date.difference(DateTime.now().onlyDate).inDays) {
       0 => 'today'.toUpperCase(),
       -1 => 'yesterday'.toUpperCase(),
       _ => '${date.month}/${date.day}/${date.year}',
