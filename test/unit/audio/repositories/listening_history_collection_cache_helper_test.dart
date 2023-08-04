@@ -4,6 +4,7 @@ import 'package:dune/domain/audio/base_models/base_playlists_listening_history.d
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/factories/playlists_listening_history_factory.dart';
 import 'package:dune/domain/audio/factories/track_listening_history_factory.dart';
+import 'package:dune/domain/audio/fake_models/fake_playlists_listening_history.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -88,18 +89,21 @@ void main() {
           collection.playlistsListeningHistory.entries.every(
             (entry) {
               final historiesFromCache = entry.value;
-              final addedHistories = playlistsListeningHistories
-                  .firstWhere((h) => h.date == entry.key);
+              final addedHistoriesList =
+                  playlistsListeningHistories.where((h) => h.date == entry.key);
+              final dateHistory = addedHistoriesList.fold(
+                FakePlaylistsListeningHistory(
+                  date: addedHistoriesList.first.date,
+                  items: const [],
+                ),
+                (previousValue, element) =>
+                    previousValue.copyWithAddedPlaylists(element.items),
+              );
 
-              return addedHistories == historiesFromCache;
+              return dateHistory == historiesFromCache;
             },
           ),
           true,
-        );
-        // assert that all the passed [playlistsListeningHistories] were returned
-        expect(
-          collection.playlistsListeningHistory.values.length,
-          playlistsListeningHistories.length,
         );
       },
     );

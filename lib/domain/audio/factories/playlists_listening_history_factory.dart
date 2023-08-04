@@ -13,16 +13,18 @@ final class PlaylistsListeningHistoryFactory
 
   /// List of playlists which were played on the specified [date]
   late final List<FakePlaylist>? _playlists;
+  late final int _playlistsCount;
 
   PlaylistsListeningHistoryFactory() {
     _date = _playlists = null;
+    _playlistsCount = 0;
   }
 
   @override
   FakePlaylistsListeningHistory create() {
     return FakePlaylistsListeningHistory(
       date: _date ?? faker.randomDateFromCurrentMonth,
-      items: _playlists ?? [],
+      items: _playlists ?? PlaylistFactory().createCount(_playlistsCount),
     );
   }
 
@@ -30,33 +32,27 @@ final class PlaylistsListeningHistoryFactory
     return _copyWith(date: date);
   }
 
-  PlaylistsListeningHistoryFactory setPlaylistsCount(
-    int count, {
-    PlaylistFactory Function(PlaylistFactory)? factory,
-  }) {
-    return _copyWith(
-      playlists: List.generate(count, (index) {
-        return (factory != null
-                ? factory(PlaylistFactory())
-                : PlaylistFactory())
-            .create();
-      }),
-    );
+  PlaylistsListeningHistoryFactory setPlaylistsCount(int count) {
+    return _copyWith(playlistsCount: count);
   }
 
   PlaylistsListeningHistoryFactory._({
     required DateTime? date,
     required List<FakePlaylist>? playlists,
+    required int? playlistsCount,
   })  : _date = date,
-        _playlists = playlists;
+        _playlists = playlists,
+        _playlistsCount = playlistsCount ?? 0;
 
   PlaylistsListeningHistoryFactory _copyWith({
     DateTime? date,
     List<FakePlaylist>? playlists,
+    int? playlistsCount,
   }) {
     return PlaylistsListeningHistoryFactory._(
       date: date ?? _date,
       playlists: playlists ?? _playlists,
+      playlistsCount: playlistsCount ?? _playlistsCount,
     );
   }
 }
