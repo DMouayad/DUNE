@@ -23,8 +23,8 @@ class ExploreMusicSourceSettingComponent extends ConsumerWidget {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: List.generate(MusicSource.values.length, (index) {
-            final source = MusicSource.values[index];
+          children: List.generate(MusicSource.remoteSources.length, (index) {
+            final source = MusicSource.remoteSources[index];
             return AdaptiveChip(
               selected: currentSource == source,
               text: source.name,

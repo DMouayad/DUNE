@@ -18,4 +18,6 @@ enum MusicSource {
 
   static List<MusicSource> get valuesWithoutUnknown =>
       [youtube, spotify, local];
+
+  static List<MusicSource> get remoteSources => [youtube, spotify];
 }

@@ -22,8 +22,9 @@ class MusicSearchSourceSettingComponent extends ConsumerWidget {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: List.generate(MusicSource.values.length, (index) {
-            final source = MusicSource.values[index];
+          children:
+              List.generate(MusicSource.valuesWithoutUnknown.length, (index) {
+            final source = MusicSource.valuesWithoutUnknown[index];
             return AdaptiveChip(
               selected: currentSource == source,
               text: source.name,
