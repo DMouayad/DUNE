@@ -18,6 +18,10 @@ extension DeviceInfoExtension on BuildContext {
   }
 }
 
+extension AdaptiveContextExtension on BuildContext {
+  double get trackThumbnailDimension => isDesktop ? 50 : 48;
+}
+
 extension ResponsiveContextExtension on BuildContext {
   double get horizontalMargins {
     final screenWidth = MediaQuery.of(this).size.width;

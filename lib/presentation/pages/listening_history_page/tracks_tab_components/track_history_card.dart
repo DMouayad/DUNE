@@ -106,14 +106,19 @@ class _TrackInfoPart extends StatelessWidget {
         waitDuration: const Duration(milliseconds: 1000),
         child: Row(
           children: [
-            const SizedBox(width: 10),
             Expanded(
               flex: 0,
-              child: ThumbnailWidget(
-                thumbnailsSet: track.thumbnails,
-                dimension: context.isDesktop ? 56 : 48,
-                cacheNetworkImage: true,
-                placeholder: const TrackCoverPlaceholder(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 2.0,
+                  horizontal: 6.0,
+                ),
+                child: ThumbnailWidget(
+                  thumbnailsSet: track.thumbnails,
+                  dimension: context.trackThumbnailDimension,
+                  cacheNetworkImage: true,
+                  placeholder: const TrackCoverPlaceholder(),
+                ),
               ),
             ),
             Expanded(

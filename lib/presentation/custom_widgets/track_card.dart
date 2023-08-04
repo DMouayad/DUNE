@@ -78,8 +78,6 @@ class TrackCardMainContent extends StatelessWidget {
     );
     final wideSpacer = SizedBox(width: context.screenWidth > 900 ? 36 : 24);
 
-    final double imageDimension = context.isDesktop ? 56 : 48;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
@@ -89,7 +87,7 @@ class TrackCardMainContent extends StatelessWidget {
           flex: 0,
           child: ThumbnailWidget(
             thumbnailsSet: track.thumbnails,
-            dimension: imageDimension,
+            dimension: context.trackThumbnailDimension,
             cacheNetworkImage: true,
             placeholder: const TrackCoverPlaceholder(),
           ),
