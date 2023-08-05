@@ -62,7 +62,6 @@ class WideHomeScreen extends ConsumerWidget {
           return Row(
             children: [
               const Expanded(flex: 0, child: SidePanel()),
-              const SizedBox(width: 4),
               if (tabsModeEnabled)
                 Expanded(
                   child: LayoutBuilder(builder: (context, constraints) {

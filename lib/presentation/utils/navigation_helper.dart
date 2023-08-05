@@ -31,8 +31,7 @@ class NavigationHelper {
     final tracksCount = exploreItem?.count;
     final musicSource = exploreItem?.source ?? playlist!.source;
     ref.read(playlistControllerProvider.notifier).get(sourceId, source);
-    if (!context.isMobile &&
-        ref.watch(appPreferencesController).tabsModeEnabled) {
+    if (ref.watch(appPreferencesController).tabsModeEnabled) {
       final newTab = TabData(
         title: title!,
         tabKey: title,
