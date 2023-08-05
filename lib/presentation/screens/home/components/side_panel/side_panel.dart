@@ -99,16 +99,17 @@ class SidePanel extends ConsumerWidget {
                   ),
               ],
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              child: SidePanelResizer(
-                maxWidth: maxWidth,
-                minWidth: 52,
-                railWidth: railWidth,
+            if (!context.isMobile)
+              Positioned(
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: SidePanelResizer(
+                  maxWidth: maxWidth,
+                  minWidth: 52,
+                  railWidth: railWidth,
+                ),
               ),
-            ),
           ],
         ),
       );
