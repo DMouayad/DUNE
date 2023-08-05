@@ -15,6 +15,7 @@ class AppTabView extends ConsumerWidget {
     return TabView(
       onChanged: (index) => _onTabChanged(index, ref),
       currentIndex: ref.watch(selectedTapIndexProvider),
+      minTabWidth: 130,
       footer: footer != null
           ? Padding(
               padding: const EdgeInsetsDirectional.only(end: 8),
