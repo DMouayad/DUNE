@@ -19,7 +19,7 @@ class AppWindowHelper {
 
     WindowOptions windowOptions = WindowOptions(
       size: initialSize,
-      minimumSize: const Size(360, 600),
+      minimumSize: const Size(500, 600),
       center: true,
       skipTaskbar: false,
       windowButtonVisibility: false,
