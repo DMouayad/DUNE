@@ -79,7 +79,9 @@ class _SidePanelNowPlayingSectionState
                           ),
                         ),
                         const Expanded(
-                          child: PlayerBarTrackInfo(),
+                          // flex: 0,
+                          child:
+                              SizedBox(height: 60, child: PlayerBarTrackInfo()),
                         ),
                         const SizedBox(width: 20),
                       ],

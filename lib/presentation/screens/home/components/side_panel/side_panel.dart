@@ -11,7 +11,7 @@ import 'side_panel_resizer.dart';
 import 'settings_button.dart';
 import 'side_panel_now_playing_section.dart';
 
-const minWidth = 56.0;
+const minWidth = 40.0;
 
 class SidePanel extends ConsumerWidget {
   const SidePanel({super.key});
@@ -32,16 +32,16 @@ class SidePanel extends ConsumerWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       final maxWidth = context.maxNavRailWidth;
-
       return Container(
         constraints: BoxConstraints.loose(Size.fromWidth(railWidth)),
         decoration: BoxDecoration(color: cardColor),
         child: Stack(
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (extended)
-                  Expanded(
+                  Flexible(
                     flex: 0,
                     child: DragToMoveArea(
                       child: Padding(
@@ -49,34 +49,46 @@ class SidePanel extends ConsumerWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'DUNE',
-                              textAlign: TextAlign.center,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                color: context.colorScheme.secondary,
-                                fontFamily: 'bruno_ace',
+                            Flexible(
+                              // flex: 0,
+                              child: Text(
+                                'DUNE',
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  color: context.colorScheme.secondary,
+                                  fontFamily: 'bruno_ace',
+                                ),
                               ),
                             ),
-                            const SettingsButton(),
+                            const Expanded(
+                              flex: 0,
+                              child: SettingsButton(),
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
                 Expanded(
-                  child: NavigationRail(
-                    backgroundColor: Colors.transparent,
-                    extended: extended,
-                    destinations: destinations,
-                    minWidth: minWidth,
-                    trailing: extended ? null : const SettingsButton(),
-                    labelType: NavigationRailLabelType.none,
-                    selectedIndex:
-                        currentBranchIsADestination ? selectedIndex : null,
-                    onDestinationSelected: (index) =>
-                        _onDestinationSelected(index, ref, selectedIndex),
+                  flex: 0,
+                  child: SizedBox(
+                    height: 300,
+                    width: railWidth,
+                    child: NavigationRail(
+                      backgroundColor: Colors.transparent,
+                      extended: extended,
+                      destinations: destinations,
+                      minWidth: minWidth,
+                      trailing: extended ? null : const SettingsButton(),
+                      labelType: extended ? null : NavigationRailLabelType.none,
+                      selectedIndex:
+                          currentBranchIsADestination ? selectedIndex : null,
+                      onDestinationSelected: (index) =>
+                          _onDestinationSelected(index, ref, selectedIndex),
+                    ),
                   ),
                 ),
+                const Spacer(flex: 1),
                 // UserPlaylistsSection(),
                 if (extended)
                   Container(
@@ -93,7 +105,7 @@ class SidePanel extends ConsumerWidget {
               bottom: 0,
               child: SidePanelResizer(
                 maxWidth: maxWidth,
-                minWidth: minWidth,
+                minWidth: 56,
                 railWidth: railWidth,
               ),
             ),

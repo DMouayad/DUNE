@@ -22,7 +22,6 @@ class DuneLoadingWidget extends StatelessWidget {
         color: backgroundColor,
       ),
       alignment: Alignment.center,
-      padding: const EdgeInsets.all(6),
       constraints: BoxConstraints.tight(Size.square(size + 35)),
       child: LoadingAnimationWidget.beat(
         color: color ?? context.colorScheme.primary,

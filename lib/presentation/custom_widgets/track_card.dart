@@ -39,7 +39,7 @@ class TrackCard extends StatelessWidget {
       onSelected: () => onSelected(track),
       popupMenu: TrackCardPopupMenu(
         track,
-        onDelete: () {},
+        onDelete: null,
         onDownload: () {},
         onPlayTrack: onPlayTrack,
         onSelectTrack: () => onSelected(track),
@@ -162,9 +162,7 @@ class TrackCardMainContent extends StatelessWidget {
             child: Text(
               track.duration.formatInHhMmSs,
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.bodySmall?.copyWith(
-                  // color: context.colorScheme.onPrimaryContainer,
-                  ),
+              style: context.textTheme.bodySmall,
             ),
           ),
         wideSpacer,
