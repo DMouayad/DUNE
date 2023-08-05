@@ -69,7 +69,6 @@ class ExplorePageState extends ConsumerState<ExplorePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     final state = ref.watch(exploreMusicControllerProvider);
     if (state.hasError != hasError) {
       hasError = state.hasError;

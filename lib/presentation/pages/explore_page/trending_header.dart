@@ -60,67 +60,86 @@ class _TrendingHeaderState extends ConsumerState<TrendingHeader> {
           cache: true,
           retries: 2,
         );
-        return InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            if (widget.items[index].track != null) {
-              ref
-                  .read(playbackControllerProvider.notifier)
-                  .player
-                  .playSingleTrack(widget.items[index].track!);
-            }
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Positioned(
-                left: 20,
-                bottom: 20,
-                child: SizedBox(
-                  width: context.screenWidth * .3,
-                  child: Text(
-                    widget.items[index].title,
-                    style: context.textTheme.titleLarge?.copyWith(
-                      color: context.colorScheme.onPrimaryContainer,
-                    ),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              Opacity(
-                opacity: .3,
-                child: Container(
-                  constraints: const BoxConstraints.expand(),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
+        return LayoutBuilder(builder: (context, constraints) {
+          final showTransparentImage = constraints.maxWidth < 500;
+          return InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () {
+              if (widget.items[index].track != null) {
+                ref
+                    .read(playbackControllerProvider.notifier)
+                    .player
+                    .playSingleTrack(widget.items[index].track!);
+              }
+            },
+            child: Stack(
+              // fit: StackFit.expand,
+              children: [
+                Opacity(
+                  opacity: showTransparentImage ? .7 : .3,
+                  child: Container(
+                    constraints: const BoxConstraints.expand(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  constraints: BoxConstraints.loose(
-                    Size.fromWidth(min(320, context.screenWidth * .4)),
-                  ),
-                  margin: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.fill,
+                Positioned(
+                  left: showTransparentImage ? 0 : 10,
+                  bottom: 10,
+                  child: Container(
+                    color: showTransparentImage
+                        ? context.colorScheme.background.withOpacity(.4)
+                        : null,
+                    width: showTransparentImage
+                        ? context.screenWidth
+                        : min(160, constraints.maxWidth * .5),
+                    height: showTransparentImage ? 30 : 100,
+                    alignment: showTransparentImage
+                        ? Alignment.center
+                        : Alignment.centerLeft,
+                    child: Text(
+                      widget.items[index].title,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        color: context.colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: showTransparentImage
+                          ? TextAlign.center
+                          : TextAlign.start,
+                      maxLines: showTransparentImage ? 1 : 4,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
+                if (!showTransparentImage)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      constraints: BoxConstraints.loose(
+                        Size.fromWidth(
+                          min(320, context.screenWidth * .5),
+                        ),
+                      ),
+                      margin: const EdgeInsets.all(12.0),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        });
       },
     );
   }
