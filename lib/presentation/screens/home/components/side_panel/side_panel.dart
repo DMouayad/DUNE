@@ -11,7 +11,7 @@ import 'side_panel_resizer.dart';
 import 'settings_button.dart';
 import 'side_panel_now_playing_section.dart';
 
-const minWidth = 40.0;
+const minWidth = 44.0;
 
 class SidePanel extends ConsumerWidget {
   const SidePanel({super.key});
@@ -78,7 +78,7 @@ class SidePanel extends ConsumerWidget {
                       backgroundColor: Colors.transparent,
                       extended: extended,
                       destinations: destinations,
-                      minWidth: minWidth,
+                      minWidth: extended ? minWidth : 52,
                       trailing: extended ? null : const SettingsButton(),
                       labelType: extended ? null : NavigationRailLabelType.none,
                       selectedIndex:
@@ -105,7 +105,7 @@ class SidePanel extends ConsumerWidget {
               bottom: 0,
               child: SidePanelResizer(
                 maxWidth: maxWidth,
-                minWidth: 56,
+                minWidth: 52,
                 railWidth: railWidth,
               ),
             ),
