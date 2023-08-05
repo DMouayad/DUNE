@@ -17,33 +17,16 @@ import '../../custom_widgets/desktop_app_bar_buttons.dart';
 
 final showBackButtonProvider = StateProvider((ref) => false);
 
-class WideHomeScreen extends ConsumerStatefulWidget {
+class WideHomeScreen extends ConsumerWidget {
   const WideHomeScreen(this.navigationShell, {Key? key}) : super(key: key);
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  ConsumerState<WideHomeScreen> createState() => _WideHomeScreenState();
-}
+  Widget build(BuildContext context, ref) {
+    final tabsModeEnabled =
+        ref.watch(appPreferencesController.select((v) => v.tabsModeEnabled));
 
-class _WideHomeScreenState extends ConsumerState<WideHomeScreen> {
-  @override
-  void initState() {
-    GoRouter.of(context).routerDelegate.addListener(() {
-      final shouldShowBackButton = AppRouter.canPop();
-      if (shouldShowBackButton != ref.watch(showBackButtonProvider)) {
-        ref
-            .read(showBackButtonProvider.notifier)
-            .update((state) => shouldShowBackButton);
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final tabsModeEnabled = ref.watch(appPreferencesController).tabsModeEnabled;
     if (tabsModeEnabled) {
       ref.listen(
         selectedTabKeyProvider,
@@ -65,7 +48,7 @@ class _WideHomeScreenState extends ConsumerState<WideHomeScreen> {
                 .read(navigationRailSelectedIndex.notifier)
                 .update((state) => null);
           }
-          widget.navigationShell.goBranch(destinationIndex.value);
+          navigationShell.goBranch(destinationIndex.value);
         }
       },
     );
@@ -101,7 +84,7 @@ class _WideHomeScreenState extends ConsumerState<WideHomeScreen> {
                             ),
                           ),
                         // the main body widget
-                        Positioned.fill(top: 40, child: widget.navigationShell),
+                        Positioned.fill(top: 40, child: navigationShell),
                         Positioned(
                           top: 0,
                           right: 0,

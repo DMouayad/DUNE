@@ -1,4 +1,5 @@
 import 'package:dune/domain/theme/app_theme.dart';
+import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/custom_widgets/desktop_shortcuts_handler.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/helpers/app_window_helper.dart';
@@ -31,6 +32,15 @@ class _DesktopHomeScreenState extends ConsumerState<DesktopHomeScreen> {
     if (isDesktopNotWebPlatform) {
       windowManager.addListener(appWindowSizeListener);
     }
+    GoRouter.of(context).routerDelegate.addListener(() {
+      final shouldShowBackButton = AppRouter.canPop();
+      if (shouldShowBackButton != ref.watch(showBackButtonProvider)) {
+        ref
+            .read(showBackButtonProvider.notifier)
+            .update((state) => shouldShowBackButton);
+      }
+    });
+
     super.initState();
   }
 
@@ -46,6 +56,7 @@ class _DesktopHomeScreenState extends ConsumerState<DesktopHomeScreen> {
   Widget build(BuildContext context) {
     ref.listen<AppTheme>(
         appThemeControllerProvider, (p, n) => _onThemeChange(p, n, context));
+
     return DragToResizeArea(
       child: DesktopShortcutsHandler(
         child: context.isMobile
