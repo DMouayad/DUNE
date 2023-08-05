@@ -1,6 +1,5 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/screens/home/components/player_widgets/track_info.dart';
-import 'package:dune/presentation/utils/constants.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,46 +32,44 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
       currentTrack = playbackStateTrack;
       updateKeepAlive();
     }
-    return Container(
-      color: context.colorScheme.background,
-      padding: const EdgeInsets.only(left: 12, bottom: 2),
-      height: kBottomPlayerBarHeight,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 0,
-            child: TrackPlayerBarImage(
-              imageDimension: 46,
-              currentTrackThumbs: currentTrack?.thumbnails,
-            ),
-          ),
-          const Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(14, 4, 24, 0),
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        color: context.colorScheme.surfaceVariant,
+        padding: const EdgeInsets.only(left: 12),
+        height: context.bottomPlayerBarHeight,
+        child: Column(
+          children: [
+            const Expanded(
+              flex: 0,
+              child: SizedBox(
+                height: 30,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(14, 14, 24, 0),
                   child: SeekBar(),
                 ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: PlayerBarTrackInfo(),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: PlaybackControlButtons(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              // flex: 0,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 0,
+                    child: TrackPlayerBarImage(
+                      imageDimension: context.trackThumbnailDimension,
+                      currentTrackThumbs: currentTrack?.thumbnails,
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 0,
+                    child: PlaybackControlButtons(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

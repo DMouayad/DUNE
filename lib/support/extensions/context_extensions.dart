@@ -19,7 +19,7 @@ extension DeviceInfoExtension on BuildContext {
 }
 
 extension AdaptiveContextExtension on BuildContext {
-  double get trackThumbnailDimension => isDesktop ? 50 : 48;
+  double get trackThumbnailDimension => isDesktop ? 50 : 46;
 }
 
 extension ResponsiveContextExtension on BuildContext {
@@ -70,6 +70,8 @@ extension ContextScreenSizeExtension on BuildContext {
   double get maxNavRailWidth {
     return max(240.0, min(400.0, screenWidth * .2));
   }
+
+  double get bottomPlayerBarHeight => screenHeight > 600 ? 88 : 80;
 }
 
 extension ContextThemeExtension on BuildContext {

@@ -21,13 +21,10 @@ class TrackPlayerBarImage extends StatelessWidget {
     return ThumbnailWithGesturesWidget(
       thumbnailsSet: currentTrackThumbs,
       placeholder: const ImagePlaceHolder(),
-      constraints:
-          BoxConstraints(maxWidth: imageDimension, maxHeight: imageDimension),
+      constraints: BoxConstraints.loose(Size.square(imageDimension)),
     );
   }
 }
-
-const minimizedWidth = 66.0;
 
 class PlayerBarTrackInfo extends ConsumerWidget {
   const PlayerBarTrackInfo({super.key});
@@ -48,24 +45,32 @@ class PlayerBarTrackInfo extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  trackTitle ?? '',
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: context.colorScheme.secondary,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: artistsNames == null ? 3 : 1,
-                  textAlign: TextAlign.start,
-                ),
-                if (artistsNames != null && artistsNames.isNotEmpty) ...[
-                  Text(
-                    artistsNames,
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
+                Expanded(
+                  flex: 0,
+                  child: Text(
+                    trackTitle ?? '',
                     style: context.textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: context.colorScheme.onBackground.withOpacity(.88),
+                      color: context.colorScheme.secondary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines:
+                        artistsNames == null || artistsNames.isEmpty ? 2 : 1,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                if (artistsNames != null && artistsNames.isNotEmpty) ...[
+                  Expanded(
+                    // flex: 0,
+                    child: Text(
+                      artistsNames,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color:
+                            context.colorScheme.onBackground.withOpacity(.88),
+                      ),
                     ),
                   ),
                 ],

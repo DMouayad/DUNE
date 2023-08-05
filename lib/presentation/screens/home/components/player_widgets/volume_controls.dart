@@ -77,10 +77,8 @@ class _VolumeControlsState extends ConsumerState<VolumeControls> {
             // if (!showSlider)
             Icon(
               isMuted ? Icons.volume_off_rounded : Icons.volume_up,
-              color: isMuted
-                  ? Colors.red
-                  : context.colorScheme.secondary.withOpacity(.7),
-              size: 18,
+              color: isMuted ? Colors.red : context.colorScheme.secondary,
+              size: 20,
             ),
           ],
         ),

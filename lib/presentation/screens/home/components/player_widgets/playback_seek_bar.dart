@@ -16,7 +16,7 @@ class SeekBar extends ConsumerWidget {
         barCapShape: av.BarCapShape.round,
         thumbGlowColor: context.colorScheme.primaryContainer,
         thumbColor: context.colorScheme.secondary,
-        progressBarColor: context.colorScheme.secondary.withOpacity(.8),
+        progressBarColor: context.colorScheme.onPrimaryContainer,
         baseBarColor: context.isDarkMode
             ? Colors.white12
             : context.colorScheme.secondary.withOpacity(.12),
@@ -26,9 +26,9 @@ class SeekBar extends ConsumerWidget {
         ),
         timeLabelLocation: av.TimeLabelLocation.none,
         thumbCanPaintOutsideBar: false,
-        thumbGlowRadius: 6.0,
-        thumbRadius: 4,
-        barHeight: 8,
+        thumbGlowRadius: 8.0,
+        thumbRadius: 5,
+        barHeight: context.isDesktopPlatform ? 6 : 4,
         progress: playerState.position,
         buffered: playerState.buffer,
         total: playerState.duration,

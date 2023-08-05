@@ -15,7 +15,7 @@ class ImagePlaceHolder extends StatelessWidget {
         color: context.colorScheme.surfaceVariant,
         child: Icon(
           Icons.music_note_outlined,
-          size: 22,
+          size: context.trackThumbnailDimension,
           color: context.colorScheme.secondary,
         ),
       ),
