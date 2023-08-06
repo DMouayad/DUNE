@@ -11,30 +11,54 @@ import 'side_panel_resizer.dart';
 import 'settings_button.dart';
 import 'side_panel_now_playing_section.dart';
 
-const minWidth = 44.0;
+const kSidePanelMinWidth = 52.0;
 
-class SidePanel extends ConsumerWidget {
+class SidePanel extends ConsumerStatefulWidget {
   const SidePanel({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<SidePanel> createState() => _SidePanelState();
+}
+
+class _SidePanelState extends ConsumerState<SidePanel>
+    with AutomaticKeepAliveClientMixin {
+  double railWidth = kSidePanelMinWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     final selectedIndex = ref.watch(navigationRailSelectedIndex);
 
     final currentBranchIsADestination = HomeNavigationShellBranchIndex
         .navigationRailDestinations
         .contains(ref.watch(homeNavigationShellBranchIndexProvider));
-
+    if (railWidth != ref.watch(navigationRailSizeProvider)) {
+      if (context.isMobile) {
+        if (railWidth != kSidePanelMinWidth) {
+          ref.read(navigationRailSizeProvider.notifier).state =
+              kSidePanelMinWidth;
+          railWidth = kSidePanelMinWidth;
+        }
+      } else {
+        railWidth = ref.watch(navigationRailSizeProvider) ?? kSidePanelMinWidth;
+      }
+      updateKeepAlive();
+    }
     final cardColor = ref
         .watch(appThemeControllerProvider.select((value) => value.cardColor));
-
-    final railWidth = ref.watch(navigationRailSizeProvider) ?? minWidth;
     final extended = railWidth > 180;
+    final minimized = railWidth == kSidePanelMinWidth;
+
+    final maxWidth = context.maxNavRailWidth;
 
     return LayoutBuilder(builder: (context, constraints) {
-      final maxWidth = context.maxNavRailWidth;
       return Container(
         constraints: BoxConstraints.loose(Size.fromWidth(railWidth)),
-        decoration: BoxDecoration(color: cardColor),
+        decoration: BoxDecoration(
+          color: minimized && context.isMobile
+              ? context.colorScheme.background
+              : cardColor,
+        ),
         child: Stack(
           children: [
             Column(
@@ -78,7 +102,7 @@ class SidePanel extends ConsumerWidget {
                       backgroundColor: Colors.transparent,
                       extended: extended,
                       destinations: destinations,
-                      minWidth: extended ? minWidth : 52,
+                      minWidth: extended ? kSidePanelMinWidth : 52,
                       trailing: extended ? null : const SettingsButton(),
                       labelType: extended ? null : NavigationRailLabelType.none,
                       selectedIndex:
@@ -93,7 +117,7 @@ class SidePanel extends ConsumerWidget {
                 if (extended)
                   Container(
                     constraints: BoxConstraints.loose(
-                      const Size.fromHeight(160),
+                      const Size.fromHeight(180),
                     ),
                     child: const SidePanelNowPlayingSection(),
                   ),
@@ -135,4 +159,7 @@ class SidePanel extends ConsumerWidget {
       }
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
