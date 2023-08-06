@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kBottomPlayerBarHeight = 74.0;
+const kPagePadding = EdgeInsets.symmetric(vertical: 16);
 final destinations = [
   const NavigationRailDestination(
     icon: Icon(Icons.explore_outlined),

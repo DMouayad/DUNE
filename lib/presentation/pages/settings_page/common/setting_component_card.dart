@@ -26,6 +26,11 @@ class SettingComponentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final radius = switch (context.platform) {
+      TargetPlatform.windows => 4.0,
+      TargetPlatform.android => 16.0,
+      _ => 10.0,
+    };
     return fluent_ui.Padding(
       padding: const EdgeInsets.all(4.0),
       child: fluent_ui.Expander(
@@ -39,6 +44,11 @@ class SettingComponentCard extends ConsumerWidget {
             }
             return expanded ? darkerColor : color;
           });
+        },
+        headerShape: (expanded) {
+          return RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          );
         },
         trailing: trailing ??
             (trailingText != null ? _getTrailingTextWidget(context) : null),

@@ -1,4 +1,6 @@
+import 'package:dune/presentation/custom_widgets/page_title.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/presentation/utils/constants.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -31,11 +33,8 @@ class SettingsPage extends ConsumerWidget {
     const biggerSpacer = SizedBox(height: 40.0);
 
     return fluent.ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Text(
-        'Settings',
-        style: context.pageHeaderTextStyle,
-      ),
+      header: const PageTitle('Settings'),
+      padding: kPagePadding,
       content: ListView(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         physics: const BouncingScrollPhysics(),
