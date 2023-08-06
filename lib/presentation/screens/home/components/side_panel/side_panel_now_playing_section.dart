@@ -7,6 +7,7 @@ import 'package:dune/presentation/screens/home/components/playback_control_butto
 import 'package:dune/presentation/screens/home/components/player_widgets/playback_seek_bar.dart';
 import 'package:dune/presentation/screens/home/components/player_widgets/track_info.dart';
 import 'package:dune/presentation/screens/home/components/player_widgets/volume_controls.dart';
+import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,34 +63,35 @@ class _SidePanelNowPlayingSectionState
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: min(200.0, railWidth!),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flex(
                       direction: Axis.horizontal,
                       children: [
                         Expanded(
                           flex: 0,
-                          child: SizedBox(
-                            width: maxImageWidth,
-                            height: maxImageWidth,
-                            child: TrackPlayerBarImage(
-                              imageDimension: maxImageWidth!,
-                              currentTrackThumbs: currentTrack?.thumbnails,
-                            ),
+                          child: TrackPlayerBarImage(
+                            imageDimension: context.trackThumbnailDimension,
+                            currentTrackThumbs: currentTrack?.thumbnails,
                           ),
                         ),
-                        const Expanded(
-                          // flex: 0,
-                          child:
-                              SizedBox(height: 60, child: PlayerBarTrackInfo()),
+                        Expanded(
+                          flex: 0,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxHeight: 50,
+                              minHeight: 30,
+                            ),
+                            child: const PlayerBarTrackInfo(),
+                          ),
                         ),
-                        const SizedBox(width: 20),
                       ],
                     ),
                     const SizedBox(height: 20),
                     const Expanded(child: SeekBar()),
                     const Expanded(flex: 0, child: PlaybackControlButtons()),
-                    const SizedBox(height: 6),
+                    const Spacer(),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
