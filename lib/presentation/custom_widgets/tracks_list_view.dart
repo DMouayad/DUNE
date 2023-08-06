@@ -68,22 +68,14 @@ class TracksListView extends ConsumerWidget {
       }
 
       return isSliverList
-          ? SliverPadding(
-              padding: context.isMobile
-                  ? EdgeInsets.only(bottom: context.bottomPlayerBarHeight)
-                  : EdgeInsets.zero,
-              sliver: SliverFixedExtentList.builder(
-                itemExtent: 70,
-                itemCount: tracks.length,
-                itemBuilder: builder,
-              ),
+          ? SliverFixedExtentList.builder(
+              itemExtent: 70,
+              itemCount: tracks.length,
+              itemBuilder: builder,
             )
           : ListView.builder(
               shrinkWrap: true,
               physics: physics,
-              padding: context.isMobile
-                  ? EdgeInsets.only(bottom: context.bottomPlayerBarHeight)
-                  : EdgeInsets.zero,
               itemExtent: 70,
               itemCount: tracks.length,
               itemBuilder: builder,
