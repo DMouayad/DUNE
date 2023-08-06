@@ -21,15 +21,11 @@ final trackListeningHistoryCardsSelectionControllerProvider =
 
 class TracksListeningHistoriesListView extends ConsumerWidget {
   final List<BaseTrackListeningHistory> tracksListeningHistories;
-  final EdgeInsets? listPadding;
   final EdgeInsets? itemPadding;
-  final bool compact;
 
   const TracksListeningHistoriesListView(
     this.tracksListeningHistories, {
-    this.listPadding,
     this.itemPadding,
-    this.compact = false,
     super.key,
   });
 
@@ -38,8 +34,9 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
     return ListView.builder(
       shrinkWrap: true,
       itemExtent: 62,
-      padding: listPadding ??
-          (compact ? const EdgeInsets.only(top: 22) : const EdgeInsets.all(8)),
+      padding: context.isMobile
+          ? EdgeInsets.fromLTRB(8, 8, 8, context.bottomPlayerBarHeight)
+          : EdgeInsets.zero,
       itemCount: tracksListeningHistories.length,
       itemBuilder: (context, index) {
         return TrackHistoryCard(
