@@ -94,7 +94,7 @@ class ScrollableCardsView extends StatelessWidget {
             const SizedBox(height: 30),
           ],
         ),
-        if (!isLoading)
+        if (!isLoading && (!context.isMobile || context.isDesktopPlatform))
           Positioned.fill(
             top: 5,
             right: 14,
@@ -173,7 +173,13 @@ class _Title extends StatelessWidget {
               child: title ??
                   Text(
                     titleText ?? '',
-                    style: context.textTheme.titleLarge,
+                    style: (context.isMobile
+                            ? context.textTheme.titleMedium
+                            : context.textTheme.titleLarge)
+                        ?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: context.colorScheme.onBackground,
+                    ),
                     textAlign: TextAlign.left,
                   ),
             ),
