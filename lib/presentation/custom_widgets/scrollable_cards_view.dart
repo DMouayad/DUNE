@@ -41,7 +41,7 @@ class ScrollableCardsView extends StatelessWidget {
               titleText: itemsState.valueOrNull?.title,
               title: titleWidget,
             ),
-            const SizedBox(height: 10),
+            // const SizedBox(height: 10),
             if (displayAsGrid)
               Expanded(
                 flex: 0,
@@ -50,6 +50,7 @@ class ScrollableCardsView extends StatelessWidget {
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: itemCardWidth,
+                      mainAxisExtent: (itemCardWidth),
                       crossAxisSpacing: (height ?? 0) > itemCardWidth ? 8 : 0,
                     ),
                     controller: scrollController,
@@ -57,7 +58,7 @@ class ScrollableCardsView extends StatelessWidget {
                         ? const NeverScrollableScrollPhysics()
                         : null,
                     scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.zero,
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                     itemCount:
                         isLoading ? 4 : itemsState.requireValue.itemCount,
                     itemBuilder: (context, index) {
@@ -81,7 +82,7 @@ class ScrollableCardsView extends StatelessWidget {
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                   itemCount: isLoading ? 5 : itemsState.requireValue.itemCount,
                   itemBuilder: (context, index) {
                     return Padding(

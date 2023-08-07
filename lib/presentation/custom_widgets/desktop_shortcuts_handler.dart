@@ -69,11 +69,6 @@ class DesktopShortcutsHandler extends ConsumerWidget {
                 .read(searchResultTracksSelectionControllerProvider.notifier)
                 .cancelSelection();
           }
-          if (ref.exists(searchResultTracksSelectionControllerProvider)) {
-            ref
-                .read(searchResultTracksSelectionControllerProvider.notifier)
-                .cancelSelection();
-          }
         },
       },
       child: Focus(

@@ -44,7 +44,7 @@ class TracksListeningHistoriesListView extends ConsumerWidget {
       itemBuilder: (context, index) {
         return TrackHistoryCard(
           trackListeningHistory: tracksListeningHistories.elementAt(index),
-          color: context.colorScheme.onBackground.withOpacity(.05),
+          color: context.colorScheme.onBackground.withOpacity(.01),
         );
       },
     );

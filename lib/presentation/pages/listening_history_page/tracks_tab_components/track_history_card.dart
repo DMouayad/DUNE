@@ -161,24 +161,19 @@ class _ListeningHistoryInfoPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final divider = VerticalDivider(
-      color: context.colorScheme.onBackground.withOpacity(.05),
-      thickness: 1.1,
-      width: 12,
-    );
     return Tooltip(
       message:
-          ''' Completed listens count: ${trackListeningHistory.completedListensCount ?? 0}
-      \ntotal uncompleted listens duration: ${trackListeningHistory.uncompletedListensTotalDuration?.formatInHhMmSs} 
-      \n Total listening duration for this day(in minutes): ${trackListeningHistory.totalListeningDuration?.inMinutes}
+          '''Completed listens count: ${trackListeningHistory.completedListensCount ?? 0}
+      \nUncompleted listens duration: ${trackListeningHistory.uncompletedListensTotalDuration?.formatInHhMmSs} 
+      \nTotal listening duration: ${trackListeningHistory.totalListeningDuration?.inMinutes} minutes
       ''',
+      waitDuration: const Duration(milliseconds: 600),
       child: LayoutBuilder(builder: (context, constraints) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Flexible(child: divider),
               // complete listens count
               Expanded(
                 flex: 0,
@@ -187,8 +182,10 @@ class _ListeningHistoryInfoPart extends StatelessWidget {
                   number: trackListeningHistory.completedListensCount,
                 ),
               ),
-              Flexible(child: divider),
-              if (constraints.maxWidth > 320) ...[
+              if (constraints.maxWidth > 320 ||
+                  (trackListeningHistory.completedListensCount == null &&
+                      trackListeningHistory.uncompletedListensTotalDuration !=
+                          null)) ...[
                 // total listens duration in minutes //
                 Expanded(
                   flex: 0,
@@ -198,7 +195,6 @@ class _ListeningHistoryInfoPart extends StatelessWidget {
                         trackListeningHistory.totalListeningDuration?.inMinutes,
                   ),
                 ),
-                Flexible(child: divider),
               ],
             ],
           ),
@@ -254,8 +250,9 @@ class _NumberCircle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
       decoration: BoxDecoration(
         border: Border.all(
-          color: context.colorScheme.primaryContainer,
-          width: 1.5,
+          color: context.colorScheme.secondaryContainer,
+          width: 1.3,
+          strokeAlign: BorderSide.strokeAlignOutside,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -265,8 +262,9 @@ class _NumberCircle extends StatelessWidget {
         children: [
           Text(
             '${number ?? 0}',
-            style: context.textTheme.titleSmall?.copyWith(
+            style: context.textTheme.bodySmall?.copyWith(
               color: context.colorScheme.primary,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(

@@ -37,9 +37,15 @@ class TrackCardWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = selectionState.selectedValues.containsKey(track.id);
-    return fluent.FlyoutTarget(
-      controller: flyoutController,
-      child: Material(
+    return OptionalParentWidget(
+      parentWidgetBuilder: (child) {
+        return fluent.FlyoutTarget(
+          controller: flyoutController,
+          child: child,
+        );
+      },
+      condition: context.isDesktopPlatform,
+      childWidget: Material(
         color: cardColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

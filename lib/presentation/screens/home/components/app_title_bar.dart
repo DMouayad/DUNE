@@ -17,8 +17,7 @@ class AppTitleBar extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appTheme = ref.watch(appThemeControllerProvider);
 
-    final searchViewWidth =
-        context.screenWidth * (context.screenWidth > 900 ? .8 : .8);
+    final searchViewWidth = context.screenWidth * .66;
     return DragToMoveArea(
       child: Container(
         padding: const EdgeInsets.only(left: 8),

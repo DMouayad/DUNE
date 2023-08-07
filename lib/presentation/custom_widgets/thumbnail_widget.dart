@@ -71,16 +71,6 @@ class ThumbnailWidget extends ConsumerWidget {
           shape: shape,
           width: dimension,
           height: dimension,
-          loadStateChanged: (state) {
-            return switch (state.extendedImageLoadState) {
-              LoadState.loading => ShimmerWidget(
-                  enabled: true,
-                  shimmerSize: Size.square(dimension),
-                  // direction: const ShimmerDirection.fr(),
-                ),
-              _ => null,
-            };
-          },
         ),
       );
     }

@@ -29,7 +29,7 @@ class PlaylistsListeningHistoryTab extends ConsumerWidget {
             ),
           )
         : ListView.builder(
-            itemExtent: 360.0,
+            itemExtent: 340.0,
             scrollDirection: Axis.vertical,
             itemCount: listeningHistoryState.isLoading
                 ? 1
@@ -67,6 +67,7 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
   @override
   Widget build(BuildContext context) {
     return ScrollableCardsView(
+      height: 340,
       scrollController: scrollController,
       titleWidget: widget.playlistsInfo.hasValue
           ? ListeningHistoryDateSectionHeader(

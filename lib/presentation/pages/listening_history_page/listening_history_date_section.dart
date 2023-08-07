@@ -20,7 +20,7 @@ class ListeningHistoryDateSectionHeader extends StatelessWidget {
       thickness: .3,
     );
     return SizedBox(
-      height: 60,
+      height: 40,
       child: Column(
         children: [
           divider,
@@ -48,7 +48,6 @@ class ListeningHistoryDateSectionHeader extends StatelessWidget {
               ),
             ),
           ),
-          divider,
         ],
       ),
     );

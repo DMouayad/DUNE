@@ -95,9 +95,9 @@ class SelectionToolBar<ItemType extends Object> extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: context.screenWidth > 600 ? 2 : 1,
                     child: CommandBar(
-                      compactBreakpointWidth: 150,
+                      compactBreakpointWidth: 300,
                       overflowBehavior: CommandBarOverflowBehavior.scrolling,
                       mainAxisAlignment: MainAxisAlignment.end,
                       primaryItems: [

@@ -19,8 +19,12 @@ class PageBodyWrapper extends ConsumerWidget {
       condition: false,
       parentWidgetBuilder: (child) {
         return Padding(
-            padding: EdgeInsets.only(bottom: context.bottomPlayerBarHeight),
-            child: child);
+          padding: EdgeInsets.only(
+            bottom: context.bottomPlayerBarHeight,
+            left: 10,
+          ),
+          child: child,
+        );
       },
       childWidget: child,
     );
@@ -29,7 +33,7 @@ class PageBodyWrapper extends ConsumerWidget {
         : Container(
             padding: ref.watch(appPreferencesController).tabsModeEnabled
                 ? const EdgeInsets.all(16)
-                : const EdgeInsets.fromLTRB(4, 24, 4, 0),
+                : const EdgeInsets.only(right: 4, left: 8),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               color: appTheme.acrylicWindowEffectEnabled

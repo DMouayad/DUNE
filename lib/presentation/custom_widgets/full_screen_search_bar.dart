@@ -29,11 +29,11 @@ class FullScreenSearchBar extends ConsumerWidget {
         height: searchViewSize.height,
       ),
       viewTrailing: const [_SearchMusicSourceOptionButton()],
-      viewElevation: 0,
+      viewElevation: 1,
       barShape: MaterialStateProperty.resolveWith(
         (states) {
           return RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: context.colorScheme.surfaceVariant),
           );
         },
