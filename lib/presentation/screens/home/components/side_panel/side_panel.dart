@@ -6,9 +6,6 @@ import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
-import 'side_panel_resizer.dart';
-import 'settings_button.dart';
 import 'side_panel_now_playing_section.dart';
 
 const kSidePanelMinWidth = 52.0;
@@ -23,6 +20,16 @@ class SidePanel extends ConsumerStatefulWidget {
 class _SidePanelState extends ConsumerState<SidePanel>
     with AutomaticKeepAliveClientMixin {
   double railWidth = kSidePanelMinWidth;
+
+  Color getPanelColor(BuildContext context) {
+    final appTheme = ref.watch(appThemeControllerProvider);
+    final minimized = railWidth == kSidePanelMinWidth;
+    return appTheme.acrylicWindowEffectEnabled
+        ? minimized
+            ? Colors.transparent
+            : appTheme.cardColor
+        : context.colorScheme.background;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,100 +51,51 @@ class _SidePanelState extends ConsumerState<SidePanel>
       }
       updateKeepAlive();
     }
-    final cardColor = ref
-        .watch(appThemeControllerProvider.select((value) => value.cardColor));
-    final extended = railWidth > 180;
-    final minimized = railWidth == kSidePanelMinWidth;
 
-    final maxWidth = context.maxNavRailWidth;
-
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        constraints: BoxConstraints.loose(Size.fromWidth(railWidth)),
-        decoration: BoxDecoration(
-          color: minimized && context.isMobile
-              ? context.colorScheme.background
-              : cardColor,
-        ),
-        child: Stack(
+    return AnimatedContainer(
+      curve: Curves.fastOutSlowIn,
+      duration: const Duration(milliseconds: 400),
+      constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
+      decoration: BoxDecoration(
+        color: getPanelColor(context),
+      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        final extended = constraints.minWidth == context.maxNavRailWidth;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (extended)
-                  Flexible(
-                    flex: 0,
-                    child: DragToMoveArea(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              // flex: 0,
-                              child: Text(
-                                'DUNE',
-                                textAlign: TextAlign.center,
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  color: context.colorScheme.secondary,
-                                  fontFamily: 'bruno_ace',
-                                ),
-                              ),
-                            ),
-                            const Expanded(
-                              flex: 0,
-                              child: SettingsButton(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                Expanded(
-                  flex: 0,
-                  child: SizedBox(
-                    height: 300,
-                    width: railWidth,
-                    child: NavigationRail(
-                      backgroundColor: Colors.transparent,
-                      extended: extended,
-                      destinations: destinations,
-                      minWidth: extended ? kSidePanelMinWidth : 52,
-                      trailing: extended ? null : const SettingsButton(),
-                      labelType: extended ? null : NavigationRailLabelType.none,
-                      selectedIndex:
-                          currentBranchIsADestination ? selectedIndex : null,
-                      onDestinationSelected: (index) =>
-                          _onDestinationSelected(index, ref, selectedIndex),
-                    ),
-                  ),
-                ),
-                const Spacer(flex: 1),
-                // UserPlaylistsSection(),
-                if (extended)
-                  Container(
-                    constraints: BoxConstraints.loose(
-                      const Size.fromHeight(180),
-                    ),
-                    child: const SidePanelNowPlayingSection(),
-                  ),
-              ],
-            ),
-            if (!context.isMobile)
-              Positioned(
-                top: 0,
-                right: 0,
-                bottom: 0,
-                child: SidePanelResizer(
-                  maxWidth: maxWidth,
-                  minWidth: 52,
-                  railWidth: railWidth,
+            Expanded(
+              flex: 0,
+              child: Container(
+                height: 300,
+                width: constraints.minWidth,
+                padding: const EdgeInsets.only(left: 6),
+                child: NavigationRail(
+                  backgroundColor: Colors.transparent,
+                  extended: extended,
+                  destinations: destinations,
+                  minWidth: extended ? 44 : kSidePanelMinWidth,
+                  labelType: extended ? null : NavigationRailLabelType.none,
+                  selectedIndex:
+                      currentBranchIsADestination ? selectedIndex : null,
+                  onDestinationSelected: (index) =>
+                      _onDestinationSelected(index, ref, selectedIndex),
                 ),
               ),
+            ),
+            const Spacer(flex: 1),
+            // UserPlaylistsSection(),
+            if (extended)
+              Container(
+                constraints: BoxConstraints.loose(
+                  const Size.fromHeight(180),
+                ),
+                child: const SidePanelNowPlayingSection(),
+              ),
           ],
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 
   void _onDestinationSelected(int index, WidgetRef ref, int? selectedIndex) {

@@ -36,7 +36,7 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
       type: MaterialType.transparency,
       child: Container(
         color: context.colorScheme.surfaceVariant,
-        padding: const EdgeInsets.only(left: 12),
+        padding: const EdgeInsets.only(left: 18),
         height: context.bottomPlayerBarHeight,
         child: Column(
           children: [
@@ -51,8 +51,8 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
               ),
             ),
             Expanded(
-              // flex: 0,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 0,
@@ -61,9 +61,18 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
                       currentTrackThumbs: currentTrack?.thumbnails,
                     ),
                   ),
+                  if (currentTrack != null)
+                    SizedBox(
+                      height: context.trackThumbnailDimension,
+                      child: const PlayerBarTrackInfo(),
+                    )
+                  else
+                    const Spacer(),
                   const Expanded(
-                    flex: 0,
-                    child: PlaybackControlButtons(),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 4.0, left: 8),
+                      child: PlaybackControlButtons(),
+                    ),
                   ),
                 ],
               ),

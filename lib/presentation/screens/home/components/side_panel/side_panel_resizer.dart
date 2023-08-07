@@ -73,12 +73,18 @@ class SidePanelResizer extends ConsumerWidget {
         onDoubleTap: () {
           setRailWidth(isExtended ? minWidth : maxWidth);
         },
-        child: fluent_ui.HoverButton(
-          onHorizontalDragUpdate: onResizeRail,
-          cursor: fluent_ui.SystemMouseCursors.resizeColumn,
-          builder: (context, state) {
-            return const VerticalDivider(width: 4, color: Colors.transparent);
-          },
+        child: SizedBox(
+          width: 4,
+          child: fluent_ui.HoverButton(
+            onHorizontalDragUpdate: onResizeRail,
+            cursor: fluent_ui.SystemMouseCursors.resizeColumn,
+            builder: (context, state) {
+              return VerticalDivider(
+                width: 1,
+                color: context.colorScheme.surfaceVariant.withOpacity(.8),
+              );
+            },
+          ),
         ),
       ),
     );

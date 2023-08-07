@@ -76,7 +76,7 @@ class _SidePanelNowPlayingSectionState
                           ),
                         ),
                         Expanded(
-                          flex: 0,
+                          // flex: 0,
                           child: ConstrainedBox(
                             constraints: const BoxConstraints(
                               maxHeight: 50,
@@ -89,7 +89,10 @@ class _SidePanelNowPlayingSectionState
                     ),
                     const SizedBox(height: 20),
                     const Expanded(child: SeekBar()),
-                    const Expanded(flex: 0, child: PlaybackControlButtons()),
+                    const Expanded(
+                      child:
+                          SizedBox(height: 40, child: PlaybackControlButtons()),
+                    ),
                     const Spacer(),
                     const SizedBox(height: 20),
                   ],

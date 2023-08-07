@@ -33,22 +33,17 @@ class PlayPauseButton extends ConsumerWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  // color: ,
+                  color: context.colorScheme.secondaryContainer,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(8),
                 ),
+                margin: const EdgeInsets.symmetric(horizontal: 6),
                 child: Center(
-                  child: playerState.isPlaying
-                      ? Icon(
-                          Icons.pause,
-                          size: 28,
-                          color: context.colorScheme.onSecondaryContainer,
-                        )
-                      : Icon(
-                          Icons.play_arrow,
-                          size: 28,
-                          color: context.colorScheme.onSecondaryContainer,
-                        ),
+                  child: Icon(
+                    playerState.isPlaying ? Icons.pause : Icons.play_arrow,
+                    size: context.isMobile ? 30 : 28,
+                    color: context.colorScheme.secondary,
+                  ),
                 ),
               ),
             ),

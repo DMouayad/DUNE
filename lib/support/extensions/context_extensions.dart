@@ -71,7 +71,7 @@ extension ContextScreenSizeExtension on BuildContext {
     return max(240.0, min(400.0, screenWidth * .2));
   }
 
-  double get bottomPlayerBarHeight => screenHeight > 600 ? 88 : 80;
+  double get bottomPlayerBarHeight => isDesktopPlatform ? 76 : 100;
 }
 
 extension ContextThemeExtension on BuildContext {
@@ -92,13 +92,6 @@ extension ContextThemeExtension on BuildContext {
   ColorScheme get colorScheme => theme.colorScheme;
 
   TextTheme get textTheme => Theme.of(this).textTheme;
-
-  TextStyle? get pageHeaderTextStyle {
-    return textTheme.headlineSmall?.copyWith(
-      color: colorScheme.secondary,
-      fontFamily: 'baloo2',
-    );
-  }
 
   TextStyle? get sectionHeaderTextStyle {
     return textTheme.titleMedium?.copyWith(
