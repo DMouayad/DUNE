@@ -16,7 +16,6 @@ class PlaylistPageRoute extends GoRoute {
         : null;
     return CustomTransitionPage(
       child: PageBodyWrapper(
-        tabsModeEnabled: false,
         child: PlaylistPage(
           key: state.pageKey,
           musicSource: params?.musicSource,

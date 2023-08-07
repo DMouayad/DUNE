@@ -13,7 +13,6 @@ class ExploreMusicCategoryPageRoute extends GoRoute {
   static Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CustomTransitionPage(
       child: PageBodyWrapper(
-        tabsModeEnabled: false,
         child: ExploreMusicCategoryPage(
           key: state.pageKey,
           categoryId: state.pathParameters['categoryId'],

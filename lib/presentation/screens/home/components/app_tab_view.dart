@@ -30,7 +30,7 @@ class AppTabView extends ConsumerWidget {
                 onClosed: () {
                   AppTabViewHelper.onCloseTab(e, ref);
                 },
-                body: PageBodyWrapper(tabsModeEnabled: true, child: e.body),
+                body: PageBodyWrapper(child: e.body),
               ))
           .toList(),
     );

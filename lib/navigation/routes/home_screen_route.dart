@@ -28,7 +28,7 @@ Page<void> _buildPageWithTransition(
 ) {
   return CustomTransitionPage<void>(
     key: pageKey,
-    child: PageBodyWrapper(tabsModeEnabled: false, child: page),
+    child: PageBodyWrapper(child: page),
     transitionDuration: const Duration(milliseconds: 1200),
     transitionsBuilder: (
       BuildContext context,
