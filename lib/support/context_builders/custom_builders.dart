@@ -8,7 +8,7 @@ abstract class _BaseBuilder<T extends Object> {
 
   const _BaseBuilder({this.fallBackChild});
 
-  T of(BuildContext context);
+  T? of(BuildContext context);
 }
 
 base class CustomBuilder<T extends Object> extends _BaseBuilder<T> {
@@ -28,8 +28,8 @@ base class CustomBuilder<T extends Object> extends _BaseBuilder<T> {
   @override
   T of(BuildContext context) {
     return (order == BuildingOrder.adaptiveFirst
-            ? adaptiveBuilder?.of(context)
-            : responsiveBuilder?.of(context)) ??
+            ? adaptiveBuilder?.of(context) ?? responsiveBuilder?.of(context)
+            : responsiveBuilder?.of(context) ?? adaptiveBuilder?.of(context)) ??
         fallBackChild!;
   }
 }
@@ -55,7 +55,7 @@ final class AdaptiveBuilder<T extends Object> extends _BaseBuilder<T> {
         );
 
   @override
-  T of(BuildContext context) {
+  T? of(BuildContext context) {
     return switch (context.platform) {
           TargetPlatform.android => androidChild,
           TargetPlatform.iOS => iosChild,
@@ -65,7 +65,7 @@ final class AdaptiveBuilder<T extends Object> extends _BaseBuilder<T> {
               "The platform (${context.platform}) doesn't have an implemented builder",
             ),
         } ??
-        fallBackChild!;
+        fallBackChild;
   }
 }
 
@@ -130,7 +130,8 @@ class ResponsiveBuilder<T extends Object> extends _BaseBuilder<T> {
   final T? wideScreenChild;
 
   @override
-  T of(BuildContext context) {
+  T? of(BuildContext context) {
+    print(mobileChild != null);
     return switch (context.deviceTypeByScreen) {
           DeviceType.mobile => switch (context.platform) {
                 TargetPlatform.android => androidMobileChild,
@@ -150,6 +151,6 @@ class ResponsiveBuilder<T extends Object> extends _BaseBuilder<T> {
               wideScreenChild,
           DeviceType.desktop => desktopChild ?? wideScreenChild,
         } ??
-        fallBackChild!;
+        fallBackChild;
   }
 }
