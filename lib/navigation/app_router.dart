@@ -22,6 +22,8 @@ import 'package:fluent_ui/fluent_ui.dart' show DrillInPageTransition;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../env.dart';
+
 part 'routes/home_screen_route.dart';
 
 part 'routes/desktop_splash_screen_route.dart';
@@ -61,7 +63,6 @@ class AppRouter {
                 return ContextWidgetBuilder(ContextBuilder(
                   defaultChild: HomeScreen(navigationShell),
                   mobileScreenChild: HomeScreen(navigationShell),
-                  // windowsSmallScreenChild: HomeScreen(navigationShell),
                   windowsChild: DesktopHomeScreen(navigationShell),
                   wideScreenChild: WideHomeScreen(navigationShell),
                 ));
@@ -78,7 +79,7 @@ class AppRouter {
             ),
             DesktopSplashScreenRoute(),
           ],
-          debugLogDiagnostics: true,
+          debugLogDiagnostics: kIsDebug,
         );
 
   static void init({required String initialLocation}) {
