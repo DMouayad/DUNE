@@ -37,35 +37,57 @@ part 'constants.dart';
 class AppRouter {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> explorePageNavigatorKey =
-      GlobalKey<NavigatorState>();
+  static late final AppRouter _instance;
 
-  static late final AppRouter instance;
-  final GoRouter _router;
+  final GoRouter _defaultLayoutRouter;
+
+  /// A [GoRouter] _instance used as the primary app Navigator/Router.
+  ///
+  /// this router has only one route which is the home screen route
+  final GoRouter _tabsLayoutRouter;
+
   final String _initialLocation;
 
-  static String get initialLocation => instance._initialLocation;
+  static late bool _tabsModeEnabled;
 
-  GoRouter get router => instance._router;
+  static String get initialLocation => _instance._initialLocation;
+
+  static GoRouter get router => _tabsModeEnabled
+      ? _instance._tabsLayoutRouter
+      : _instance._defaultLayoutRouter;
 
   AppRouter._(this._initialLocation)
-      : _router = GoRouter(
+      : _tabsLayoutRouter = GoRouter(
+          navigatorKey: AppRouter.rootNavigatorKey,
+          initialLocation: RoutePath.desktopSplashScreenPage,
+          routes: [
+            DesktopSplashScreenRoute(),
+            GoRoute(
+              path: '/home',
+              builder: (context, state) => const WideTabsLayoutHomeScreen(),
+            ),
+          ],
+        ),
+        _defaultLayoutRouter = GoRouter(
           navigatorKey: AppRouter.rootNavigatorKey,
           initialLocation: RoutePath.desktopSplashScreenPage,
           routes: [
             StatefulShellRoute.indexedStack(
-              // parentNavigatorKey: AppRouter.rootNavigatorKey,
               builder: (
                 BuildContext context,
                 GoRouterState state,
                 StatefulNavigationShell navigationShell,
               ) {
-                return ContextWidgetBuilder(ContextBuilder(
-                  defaultChild: HomeScreen(navigationShell),
-                  mobileScreenChild: HomeScreen(navigationShell),
-                  windowsChild: DesktopHomeScreen(navigationShell),
-                  wideScreenChild: WideHomeScreen(navigationShell),
-                ));
+                return CustomBuilder<Widget>(
+                  adaptiveBuilder: AdaptiveBuilder(
+                    windowsChild: WideDefaultLayoutHomeScreen(navigationShell),
+                  ),
+                  responsiveBuilder: ResponsiveBuilder(
+                    mobileChild: HomeScreen(navigationShell),
+                    wideScreenChild:
+                        WideDefaultLayoutHomeScreen(navigationShell),
+                  ),
+                ).of(context);
               },
               branches: [
                 // the order must be the same as the values of

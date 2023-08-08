@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:dune/support/context_builders/context_builder.dart';
+import 'package:dune/support/context_builders/custom_builders.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -19,10 +19,10 @@ class AdaptiveChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContextBuilder(
+    return AdaptiveBuilder(
+      fallBackChild: _materialChip(context),
       windowsChild: _fluentUiChip(context),
-      defaultChild: _materialChip(context),
-    ).getCurrentContextChild(context);
+    ).of(context);
   }
 
   Widget _materialChip(BuildContext context) {
