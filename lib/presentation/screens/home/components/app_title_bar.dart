@@ -1,5 +1,5 @@
 import 'package:dune/presentation/custom_widgets/desktop_app_bar_buttons.dart';
-import 'package:dune/presentation/custom_widgets/full_screen_search_bar.dart';
+import 'package:dune/presentation/custom_widgets/top_search_bar.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,10 @@ class AppTitleBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Expanded(child: FullScreenSearchBar()),
+                Expanded(
+                  flex: context.screenWidth > 800 ? 0 : 1,
+                  child: const TopSearchBar(),
+                ),
                 if (context.isDesktopPlatform && !kIsWeb)
                   const Expanded(flex: 0, child: DesktopAppBarButtons()),
               ],
