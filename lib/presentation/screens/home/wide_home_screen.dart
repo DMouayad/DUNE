@@ -1,61 +1,32 @@
+import 'package:dune/presentation/models/tabs_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:window_manager/window_manager.dart';
-
 //
-import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/app_tab_view_helper.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/navigation/app_router.dart';
 
 //
-import 'components/app_tab_view.dart';
 import 'components/app_title_bar.dart';
 import 'components/player_bottom_bar/player_bottom_bar.dart';
 import 'components/side_panel/side_panel.dart';
-
-final showBackButtonProvider = StateProvider((ref) => false);
+import 'desktop_home_screen_wrapper.dart';
 
 class WideHomeScreen extends ConsumerWidget {
   const WideHomeScreen(this.navigationShell, {Key? key}) : super(key: key);
-
   final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context, ref) {
-    final tabsModeEnabled =
-        ref.watch(appPreferencesController.select((v) => v.tabsModeEnabled));
-
-    if (tabsModeEnabled) {
-      ref.listen(
-        selectedTabKeyProvider,
-        (prev, next) => AppTabViewHelper.onCurrentTabKeyChange(next, ref),
-      );
-    }
-    ref.listen(
-      homeNavigationShellBranchIndexProvider,
-      (prev, next) {
-        if (tabsModeEnabled) {
-          AppTabViewHelper.onCurrentHomeNavigationShellBranchIndexChange(
-              next, ref);
-        } else {
-          final destinationIndex = HomeNavigationShellBranchIndex.values
-              .singleWhere((e) => e == next);
-          if (!HomeNavigationShellBranchIndex.navigationRailDestinations
-              .contains(next)) {
-            ref
-                .read(navigationRailSelectedIndex.notifier)
-                .update((state) => null);
-          }
-          navigationShell.goBranch(destinationIndex.value);
-        }
-      },
-    );
+    // [ref.read] is used since enabling/disabling tabs layout will only takes
+    // effect on the next time the app is opened
+    final tabsModeEnabled = ref.read(appPreferencesController).tabsModeEnabled;
     final appTheme = ref.watch(appThemeControllerProvider);
-    return Material(
+    final topSpacing = tabsModeEnabled ? 85.5 : 41.5;
+    final screen = Material(
       type: MaterialType.transparency,
       child: Theme(
         data: appTheme.materialThemeData,
@@ -70,29 +41,47 @@ class WideHomeScreen extends ConsumerWidget {
                     left: 0,
                     child: PlayerBottomBar(),
                   ),
-                const Positioned(
-                    top: 0, right: 0, left: 0, child: AppTitleBar()),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  child: AppTitleBar(
+                    tabsModeEnabled: tabsModeEnabled,
+                    onTabChanged: (i) => _onTabChanged(i, ref),
+                    onAddNewTab: () {
+                      ref.read(tabsStateProvider.notifier).update(
+                            (state) => state.withTabAdded(
+                              TabData(
+                                  tabIndex: navigationShell.currentIndex + 1),
+                            ),
+                          );
+                    },
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: topSpacing - 1,
+                  child: const Divider(height: 1, thickness: .8),
+                ),
                 Positioned.fill(
                   // top margins for the [AppTitleBar]
-                  top: 54,
+                  top: topSpacing,
                   bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
                   child: Row(
                     children: [
                       Expanded(
                         flex: 0,
-                        child: OptionalParentWidget(
-                          condition:
-                              context.isMobile && context.isDesktopPlatform,
-                          parentWidgetBuilder: (child) =>
-                              DragToMoveArea(child: child),
-                          childWidget: const SidePanel(),
+                        child: SidePanel(
+                          onDestinationSelected: (index) {
+                            AppRouter.onQuickNavDestinationSelected(
+                                index, navigationShell);
+                          },
                         ),
                       ),
-                      // the main body widget
-                      if (tabsModeEnabled)
-                        const Expanded(child: AppTabView())
-                      else
-                        Expanded(child: navigationShell),
+                      const VerticalDivider(
+                          width: 16, thickness: .8), // the main body widget
+                      Expanded(child: navigationShell),
                     ],
                   ),
                 ),
@@ -102,5 +91,19 @@ class WideHomeScreen extends ConsumerWidget {
         ),
       ),
     );
+    return OptionalParentWidget(
+      condition: context.isDesktopPlatform,
+      parentWidgetBuilder: (child) => DesktopHomeScreenWrapper(child),
+      childWidget: screen,
+    );
+  }
+
+  void _onTabChanged(int index, WidgetRef ref) {
+    if (ref.watch(tabsStateProvider).selectedTabIndex != index) {
+      ref
+          .read(tabsStateProvider.notifier)
+          .update((state) => state.withNewSelectedTab(index));
+      navigationShell.goBranch(index);
+    }
   }
 }

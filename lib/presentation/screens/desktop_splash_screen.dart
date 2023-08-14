@@ -5,7 +5,6 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class DesktopSplashScreen extends ConsumerStatefulWidget {
   const DesktopSplashScreen({
@@ -20,7 +19,7 @@ class _DesktopSplashScreenState extends ConsumerState<DesktopSplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      context.go(AppRouter.initialLocation);
+      AppRouter.router.go(AppRouter.initialAppPage.path);
     });
     super.initState();
   }

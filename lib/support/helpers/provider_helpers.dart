@@ -74,7 +74,7 @@ void registerControllersProviders() {
       StateNotifierProvider((ref) => ExploreMusicCategoriesController());
 
   listeningHistoryControllerProvider = StateNotifierProvider(
-    (ref) => ListeningHistoryController()..loadListeningHistoryOverLastMonth(),
+    (ref) => ListeningHistoryController(),
   );
 }
 

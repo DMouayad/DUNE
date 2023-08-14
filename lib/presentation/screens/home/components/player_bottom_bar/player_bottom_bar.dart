@@ -68,10 +68,12 @@ class _PlayerBottomBarState extends ConsumerState<PlayerBottomBar>
                     )
                   else
                     const Spacer(),
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 4.0, left: 8),
-                      child: PlaybackControlButtons(),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          right: 10, bottom: 4.0, left: 8),
+                      child: const PlaybackControlButtons(),
                     ),
                   ),
                 ],

@@ -1,6 +1,3 @@
-import 'package:dune/domain/app_preferences/base_app_preferences.dart';
-import 'package:dune/navigation/app_router.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/helpers/isar_helper.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,10 +9,8 @@ import 'package:dune/dune_app.dart';
 import 'package:dune/support/helpers/app_window_helper.dart';
 import 'package:dune/support/helpers/platform_helpers.dart';
 import 'data/audio/isar/repositories/isar_music_repository.dart';
-import 'data/audio/isar/seeders/isar_track_listening_history_seeder.dart';
 import 'data/audio/youtube/repositories/youtube_music_repository.dart';
 import 'domain/audio/facades/music_facade.dart';
-import 'presentation/screens/home/components/app_tab_view.dart';
 import 'support/helpers/provider_helpers.dart';
 
 Future<void> main() async {
@@ -49,28 +44,6 @@ Future<void> _registerDependencies() async {
 
     await AppWindowHelper.setWindowEffect(currentTheme);
   }
-  AppRouter.init(initialLocation: _setupInitialRoute(appPreferences));
   // initialize global [Provider]s variables
   registerControllersProviders();
-}
-
-String _setupInitialRoute(BaseAppPreferences appPreferences) {
-  final route = AppRouter.getInitialRoute(appPreferences.initialPageOnStartup);
-  // add a [TabData] for the initial page
-  homeScreenTabsProvider = StateProvider<List<TabData>>((_) {
-    return [
-      TabData(
-        title: route.data.name!,
-        body: route.page,
-        tabKey: route.data.index.name,
-      )
-    ];
-  });
-  homeNavigationShellBranchIndexProvider =
-      StateProvider((_) => route.data.index);
-  navigationRailSelectedIndex = StateProvider((ref) {
-    return HomeNavigationShellBranchIndex.navigationRailDestinations
-        .indexOf(route.data.index);
-  });
-  return route.data.path;
 }

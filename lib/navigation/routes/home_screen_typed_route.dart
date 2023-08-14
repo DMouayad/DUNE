@@ -29,7 +29,7 @@
 //
 //   @override
 //   Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-//     return ContextBuilder(
+//     return CustomBuilder(
 //       defaultChild: HomeScreen(navigator),
 //       mobileScreenChild: HomeScreen(navigator),
 //       windowsChild: DesktopHomeScreen(body: navigator),

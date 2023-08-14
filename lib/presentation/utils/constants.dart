@@ -9,11 +9,6 @@ final destinations = [
     label: Text('Explore'),
   ),
   const NavigationRailDestination(
-    icon: Icon(Icons.search_outlined),
-    selectedIcon: Icon(Icons.search),
-    label: Text('Search'),
-  ),
-  const NavigationRailDestination(
     icon: Icon(Icons.featured_play_list_outlined),
     selectedIcon: Icon(Icons.featured_play_list),
     label: Text('Listening History'),
@@ -22,6 +17,11 @@ final destinations = [
     icon: Icon(Icons.library_music_outlined),
     selectedIcon: Icon(Icons.library_music),
     label: Text('My Library'),
+  ),
+  const NavigationRailDestination(
+    icon: Icon(Icons.settings_applications_outlined),
+    selectedIcon: Icon(Icons.settings_applications),
+    label: Text('Settings'),
   ),
 ];
 const kCoverImagePlaceHolderUrl = 'https://shorturl.at/dru03';

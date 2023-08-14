@@ -5,11 +5,12 @@ class DesktopSplashScreenRoute extends GoRoute {
       : super(
           path: RoutePath.desktopSplashScreenPage,
           builder: _build,
-          redirect: (context, state) {
-            if (!context.isDesktopPlatform) {
-              return AppRouter.initialLocation;
+          redirect: (context, state) async {
+            if (context.isDesktopPlatform) {
+              return null;
+            } else {
+              return AppRouter.initialAppPage.path;
             }
-            return null;
           },
         );
 
