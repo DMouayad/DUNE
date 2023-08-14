@@ -32,7 +32,7 @@ class AppTitleBar extends StatelessWidget {
                 Flexible(
                   flex: 0,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.only(right: 20.0, left: 10),
                     child: Text(
                       'DUNE',
                       textAlign: TextAlign.start,

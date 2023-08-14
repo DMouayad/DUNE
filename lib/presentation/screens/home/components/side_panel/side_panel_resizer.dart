@@ -1,38 +1,27 @@
 import 'dart:math';
 
-import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 import 'package:dune/support/themes/fluent_app_themes.dart';
 
-class SidePanelResizer extends ConsumerWidget {
-  const SidePanelResizer({
-    super.key,
-    required this.maxWidth,
-    required this.minWidth,
-    required this.railWidth,
-  });
+const _kSidePanelMinWidth = 50.0;
 
-  final double maxWidth;
-  final double minWidth;
-  final double railWidth;
+class SidePanelResizer extends ConsumerWidget {
+  const SidePanelResizer({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
+    final railWidth =
+        ref.watch(navigationRailSizeProvider) ?? _kSidePanelMinWidth;
+    final double maxWidth = context.maxNavRailWidth;
     void setRailWidth(double newWidth) {
-      if (newWidth != ref.watch(navigationRailSizeProvider)) {
+      if (newWidth != railWidth) {
         ref
             .read(navigationRailSizeProvider.notifier)
             .update((state) => newWidth);
-        EasyDebounce.debounce("nav rail width", const Duration(seconds: 3), () {
-          ref
-              .read(appPreferencesController.notifier)
-              .setLastSidePanelWidth(ref.watch(navigationRailSizeProvider));
-        });
       }
     }
 
@@ -44,7 +33,7 @@ class SidePanelResizer extends ConsumerWidget {
       /// and new dx position of the resizer
       double newWidth = railWidth + d.localPosition.dx;
       // asserting its not bigger than the minimum rail width
-      newWidth = max(minWidth, newWidth);
+      newWidth = max(_kSidePanelMinWidth, newWidth);
 
       if (isExpanding) {
         if (newWidth < maxWidth) {
@@ -55,10 +44,10 @@ class SidePanelResizer extends ConsumerWidget {
           setRailWidth(newWidth);
         }
       } else {
-        if ((newWidth) > minWidth) {
+        if ((newWidth) > _kSidePanelMinWidth) {
           // if we reached 80px width, make it compact immediately.
           if (newWidth <= 90) {
-            newWidth = minWidth;
+            newWidth = _kSidePanelMinWidth;
           }
           setRailWidth(newWidth);
         }
@@ -71,20 +60,14 @@ class SidePanelResizer extends ConsumerWidget {
       style: FluentAppThemes.getTooltipTheme(context.isDarkMode),
       child: GestureDetector(
         onDoubleTap: () {
-          setRailWidth(isExtended ? minWidth : maxWidth);
+          setRailWidth(isExtended ? _kSidePanelMinWidth : maxWidth);
         },
-        child: SizedBox(
-          width: 4,
-          child: fluent_ui.HoverButton(
-            onHorizontalDragUpdate: onResizeRail,
-            cursor: fluent_ui.SystemMouseCursors.resizeColumn,
-            builder: (context, state) {
-              return VerticalDivider(
-                width: 1,
-                color: context.colorScheme.surfaceVariant.withOpacity(.8),
-              );
-            },
-          ),
+        child: fluent_ui.HoverButton(
+          onHorizontalDragUpdate: onResizeRail,
+          cursor: fluent_ui.SystemMouseCursors.resizeColumn,
+          builder: (context, state) {
+            return const VerticalDivider(width: 8, color: Colors.transparent);
+          },
         ),
       ),
     );

@@ -119,7 +119,7 @@ class TrackCardMainContent extends StatelessWidget {
           ),
         ),
         wideSpacer,
-        if (track.album != null && showAlbumName)
+        if (track.album != null && !context.isMobile)
           ...() {
             final text = track.album!.title +
                 (track.album?.releaseDate != null

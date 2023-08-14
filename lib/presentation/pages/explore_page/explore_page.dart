@@ -129,14 +129,15 @@ class ExplorePageState extends ConsumerState<ExplorePage>
           ];
         },
         body: ListView.builder(
-          padding: const EdgeInsets.only(left: 8, top: 30, bottom: 20),
-          itemExtent: 360.0,
+          padding: EdgeInsets.only(
+              left: context.isMobile ? 8 : 0, top: 30, bottom: 20),
+          itemExtent: 340.0,
           scrollDirection: Axis.vertical,
           itemCount:
               isLoading ? collectionsCountWhenLoading : collections.length,
           itemBuilder: (context, index) {
             return ExploreMusicCollectionWidget(
-              height: 360,
+              height: 340,
               collection: isLoading
                   ? const AsyncValue.loading()
                   : AsyncValue.data(collections[index]),

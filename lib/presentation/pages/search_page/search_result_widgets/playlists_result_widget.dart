@@ -1,5 +1,4 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
-import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/utils/navigation_helper.dart';
@@ -30,7 +29,6 @@ class _PlaylistCard extends ConsumerWidget {
           context,
           ref,
           playlist: playlist,
-          currentLocation: RoutePath.searchPage,
         );
       },
     );

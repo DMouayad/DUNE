@@ -22,7 +22,7 @@ class AdaptiveChip<T> extends StatelessWidget {
     return AdaptiveBuilder(
       fallBackChild: _materialChip(context),
       windowsChild: _fluentUiChip(context),
-    ).of(context);
+    ).of(context)!;
   }
 
   Widget _materialChip(BuildContext context) {

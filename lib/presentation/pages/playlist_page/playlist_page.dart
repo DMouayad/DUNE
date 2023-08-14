@@ -61,8 +61,8 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
     }
     if (ref.watch(playlistControllerProvider).hasValue) {
       final newPlaylist = ref.watch(playlistControllerProvider).value;
-      if (newPlaylist?.id == widget.playlistId) {
-        if (playlist?.hasSameTracksAsOther(newPlaylist) ?? false) {
+      if (newPlaylist != null && newPlaylist.id == widget.playlistId) {
+        if ((playlist?.hasSameTracksAsOther(newPlaylist) ?? false)) {
           playlistState = AsyncData(playlistState.value);
           updateKeepAlive();
         } else {

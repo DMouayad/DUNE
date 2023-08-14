@@ -25,7 +25,7 @@ class FullScreenSearchBar extends ConsumerWidget with SearchHelper {
       isFullScreen: false,
       viewConstraints: BoxConstraints.expand(
         width: context.screenWidth * .8,
-        height: context.screenWidth * .7,
+        height: context.screenHeight * .7,
       ),
       viewTrailing: const [SearchMusicSourceOptionButton()],
       viewElevation: 3,

@@ -155,7 +155,7 @@ class PlaylistPageHeader extends StatelessWidget {
             child: Wrap(
               direction: Axis.horizontal,
               children: [
-                if (AppRouter.canPop())
+                if (AppRouter.showAppBarBackButton)
                   BackButton(
                     color: context.colorScheme.secondary,
                   ),

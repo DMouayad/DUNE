@@ -48,17 +48,23 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
   }
 }
 
-class _AlbumsGridView extends ConsumerStatefulWidget {
+class _AlbumsGridView extends StatefulWidget {
   const _AlbumsGridView(this.albumsInfo);
 
   final AsyncValue<({DateTime date, List<BaseAlbum> items})> albumsInfo;
 
   @override
-  ConsumerState<_AlbumsGridView> createState() => _AlbumsGridViewState();
+  State<_AlbumsGridView> createState() => _AlbumsGridViewState();
 }
 
-class _AlbumsGridViewState extends ConsumerState<_AlbumsGridView> {
-  late final scrollController = ScrollController();
+class _AlbumsGridViewState extends State<_AlbumsGridView> {
+  late final ScrollController scrollController;
+
+  @override
+  void initState() {
+    scrollController = ScrollController();
+    super.initState();
+  }
 
   @override
   void dispose() {

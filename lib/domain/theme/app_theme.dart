@@ -35,7 +35,7 @@ class AppTheme extends Equatable {
   Color get cardColor {
     return acrylicWindowEffectEnabled
         ? _colorScheme.background.withOpacity(.4)
-        : _colorScheme.surfaceVariant.withOpacity(.2);
+        : _colorScheme.surfaceVariant.withOpacity(.25);
   }
 
   factory AppTheme.fromDefaultValues() {

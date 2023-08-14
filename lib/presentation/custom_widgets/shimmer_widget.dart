@@ -24,8 +24,9 @@ class ShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = Shimmer(
+      interval: const Duration(milliseconds: 600),
       direction: direction,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
       color: context.colorScheme.primaryContainer,
       colorOpacity: .6,
       enabled: enabled,

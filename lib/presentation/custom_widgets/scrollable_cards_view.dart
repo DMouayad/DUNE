@@ -78,9 +78,9 @@ class ScrollableCardsView extends StatelessWidget {
                 child: ListView.builder(
                   itemExtent: itemCardWidth,
                   controller: scrollController,
-                  physics: context.isDesktopPlatform
-                      ? const NeverScrollableScrollPhysics()
-                      : null,
+                  // physics: context.isDesktopPlatform
+                  //     ? const NeverScrollableScrollPhysics()
+                  //     : null,
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                   itemCount: isLoading ? 5 : itemsState.requireValue.itemCount,

@@ -13,6 +13,7 @@ import 'package:dune/navigation/app_router.dart';
 import 'components/app_title_bar.dart';
 import 'components/player_bottom_bar/player_bottom_bar.dart';
 import 'components/side_panel/side_panel.dart';
+import 'components/side_panel/side_panel_resizer.dart';
 import 'desktop_home_screen_wrapper.dart';
 
 class WideHomeScreen extends ConsumerWidget {
@@ -25,11 +26,11 @@ class WideHomeScreen extends ConsumerWidget {
     // effect on the next time the app is opened
     final tabsModeEnabled = ref.read(appPreferencesController).tabsModeEnabled;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsModeEnabled ? 85.5 : 41.5;
-    final screen = Material(
-      type: MaterialType.transparency,
-      child: Theme(
-        data: appTheme.materialThemeData,
+    final topSpacing = tabsModeEnabled ? 87.5 : 44.5;
+    final screen = Theme(
+      data: appTheme.materialThemeData,
+      child: Material(
+        color: ref.watch(appThemeControllerProvider).cardColor,
         child: Builder(
           builder: (context) {
             return Stack(
@@ -50,19 +51,11 @@ class WideHomeScreen extends ConsumerWidget {
                     onTabChanged: (i) => _onTabChanged(i, ref),
                     onAddNewTab: () {
                       ref.read(tabsStateProvider.notifier).update(
-                            (state) => state.withTabAdded(
-                              TabData(
-                                  tabIndex: navigationShell.currentIndex + 1),
-                            ),
+                            (state) => state.withTabAdded(TabData(
+                                tabIndex: navigationShell.currentIndex + 1)),
                           );
                     },
                   ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: topSpacing - 1,
-                  child: const Divider(height: 1, thickness: .8),
                 ),
                 Positioned.fill(
                   // top margins for the [AppTitleBar]
@@ -79,8 +72,7 @@ class WideHomeScreen extends ConsumerWidget {
                           },
                         ),
                       ),
-                      const VerticalDivider(
-                          width: 16, thickness: .8), // the main body widget
+                      const SidePanelResizer(),
                       Expanded(child: navigationShell),
                     ],
                   ),
