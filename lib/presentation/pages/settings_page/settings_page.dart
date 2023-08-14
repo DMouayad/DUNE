@@ -10,7 +10,6 @@ import 'about_section.dart';
 import 'appearance/primary_color_settings_component.dart';
 import 'appearance/layout_settings_component.dart';
 import 'appearance/app_window_size_setting_component.dart';
-import 'appearance/side_panel_size_setting_component.dart';
 import 'behaviour/initial_page_setting_component.dart';
 import 'common/setting_section.dart';
 import 'behaviour/shortcuts_setting_component.dart';
@@ -45,7 +44,6 @@ class SettingsPage extends StatelessWidget {
               if (!context.isMobile || context.isDesktopPlatform) ...[
                 if (!kIsWeb) const AppWindowSizeSettingComponent(),
                 const LayoutModeSettingComponent(),
-                const SidePanelSizeSettingComponent(),
               ]
             ],
           ),

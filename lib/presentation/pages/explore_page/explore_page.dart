@@ -95,7 +95,7 @@ class ExplorePageState extends ConsumerState<ExplorePage>
         updateKeepAlive();
       }
     }
-    if (hasError && !state.isLoading) {
+    if (hasError && !isLoading) {
       return DuneErrorWidget(
         state.error,
         onRetry: () => ref
@@ -120,9 +120,12 @@ class ExplorePageState extends ConsumerState<ExplorePage>
                   borderRadius: BorderRadius.circular(8)),
               pinned: false,
               flexibleSpace: FlexibleSpaceBar(
-                background: ShimmerWidget(
-                  enabled: isLoading,
-                  childBuilder: () => TrendingHeader(items: trendingItems),
+                background: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ShimmerWidget(
+                    enabled: isLoading,
+                    childBuilder: () => TrendingHeader(items: trendingItems),
+                  ),
                 ),
               ),
             ),
@@ -153,15 +156,15 @@ class ExplorePageState extends ConsumerState<ExplorePage>
       _getDataFromState(
     ExploreMusicState state,
   ) {
-    List<BaseExploreMusicCollection> _collections = [];
-    List<BaseExploreMusicItem> _trendingItems = [];
+    List<BaseExploreMusicCollection> collections = [];
+    List<BaseExploreMusicItem> trendingItems = [];
     for (BaseExploreMusicCollection collection in state.homeCollections) {
       if (collection.isTrending) {
-        _trendingItems.addAll(collection.items);
+        trendingItems.addAll(collection.items);
       } else {
-        _collections.add(collection);
+        collections.add(collection);
       }
     }
-    return (_collections, _trendingItems);
+    return (collections, trendingItems);
   }
 }
