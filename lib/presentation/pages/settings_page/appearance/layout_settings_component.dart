@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/setting_component_card.dart';
 
+final _tabsModeEnabledProvider =
+    StateProvider((ref) => ref.watch(appPreferencesController).tabsModeEnabled);
+
 class LayoutModeSettingComponent extends ConsumerWidget {
   const LayoutModeSettingComponent({super.key});
 
@@ -22,11 +25,22 @@ class LayoutModeSettingComponent extends ConsumerWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          subtitle: const Text(
-            "If enabled, newly opened pages will appear in a separate tab.",
+          subtitle: RichText(
+            text: TextSpan(
+                text:
+                    "If enabled, newly opened pages will appear in a separate tab.\n",
+                style: context.textTheme.bodyMedium,
+                children: [
+                  TextSpan(
+                    text:
+                        "Note: changes will take effect after restarting the app.",
+                    style: context.textTheme.titleSmall,
+                  ),
+                ]),
           ),
-          value: ref.watch(appPreferencesController).tabsModeEnabled,
+          value: ref.watch(_tabsModeEnabledProvider),
           onChanged: (value) {
+            ref.read(_tabsModeEnabledProvider.notifier).state = value;
             ref
                 .read(appPreferencesController.notifier)
                 .setTabModeIsEnabled(value);

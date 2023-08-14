@@ -1,12 +1,10 @@
 import 'package:dune/presentation/custom_widgets/page_title.dart';
-import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/utils/constants.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'about_section.dart';
 import 'appearance/primary_color_settings_component.dart';
@@ -23,13 +21,11 @@ import 'media_and_network_usage/explore_music_source_setting_component.dart';
 import 'media_and_network_usage/music_search_source_setting_component.dart';
 import 'media_and_network_usage/thumbnail_quality_option_setting_component.dart';
 
-class SettingsPage extends ConsumerWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
-    final appThemeController = ref.watch(appThemeControllerProvider.notifier);
-    final appTheme = ref.watch(appThemeControllerProvider);
+  Widget build(BuildContext context) {
     const biggerSpacer = SizedBox(height: 40.0);
 
     return fluent.ScaffoldPage(
@@ -42,17 +38,8 @@ class SettingsPage extends ConsumerWidget {
           SettingSection(
             title: 'Appearance & Layout',
             contents: [
-              AppThemeSettingComponent(
-                currentThemeMode: appTheme.themeMode,
-                onChanged: (themeMode) =>
-                    appThemeController.setThemeMode(themeMode),
-              ),
-              PrimaryColorSettingComponent(
-                currentPrimaryColor: appTheme.primaryColor,
-                onChanged: (MaterialColor color) {
-                  appThemeController.setAccentColor(color);
-                },
-              ),
+              const AppThemeSettingComponent(),
+              const PrimaryColorSettingComponent(),
               if (kIsWindowEffectsSupported)
                 const WindowEffectSettingComponent(),
               if (!context.isMobile || context.isDesktopPlatform) ...[

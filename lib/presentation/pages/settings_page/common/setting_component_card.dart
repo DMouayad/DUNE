@@ -56,7 +56,11 @@ class SettingComponentCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(iconData, size: 18),
+            Icon(
+              iconData,
+              size: 18,
+              color: context.colorScheme.secondary,
+            ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(

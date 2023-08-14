@@ -1,23 +1,21 @@
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/helpers/platform_helpers.dart';
 import 'package:dune/support/helpers/provider_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_theme/system_theme.dart';
 
 import '../common/setting_component_card.dart';
 
-class PrimaryColorSettingComponent extends StatelessWidget {
-  final MaterialColor currentPrimaryColor;
-  final void Function(MaterialColor color) onChanged;
-
-  const PrimaryColorSettingComponent({
-    super.key,
-    required this.currentPrimaryColor,
-    required this.onChanged,
-  });
+class PrimaryColorSettingComponent extends ConsumerWidget {
+  const PrimaryColorSettingComponent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final controller = ref.watch(appThemeControllerProvider.notifier);
+    final currentPrimaryColor =
+        ref.watch(appThemeControllerProvider).primaryColor;
     return SettingComponentCard(
       iconData: Icons.format_color_fill_outlined,
       title: 'Accent color',
@@ -34,7 +32,7 @@ class PrimaryColorSettingComponent extends StatelessWidget {
           children: [
             ...Colors.primaries.map((color) {
               return _ColorBlock(
-                onSelected: () => onChanged(color),
+                onSelected: () => controller.setAccentColor(color),
                 isCurrent: currentPrimaryColor.value == color.value,
                 color: color,
               );
@@ -47,7 +45,7 @@ class PrimaryColorSettingComponent extends StatelessWidget {
                   Tooltip(
                     message: "System color",
                     child: _ColorBlock(
-                      onSelected: () => onChanged(systemColor),
+                      onSelected: () => controller.setAccentColor(systemColor),
                       isCurrent: currentPrimaryColor.value == systemColor.value,
                       color: systemColor,
                     ),
