@@ -12,6 +12,12 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   final BaseAppPreferencesDataSource _dataSource;
 
+  @override
+  bool updateShouldNotify(BaseAppPreferences old, BaseAppPreferences current) {
+    if (old.tabsModeEnabled != current.tabsModeEnabled) return false;
+    return super.updateShouldNotify(old, current);
+  }
+
   Future<void> _handleUpdatingAppPreferences(
     BaseAppPreferences newPreferences,
   ) async {
