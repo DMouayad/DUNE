@@ -1,3 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
+import 'package:system_theme/system_theme.dart';
+import 'package:media_kit/media_kit.dart' as mediaKit;
+
+//
 import 'package:dune/data/app_preferences/isar/isar_app_preferences.dart';
 import 'package:dune/data/app_preferences/isar/isar_app_preferences_data_source.dart';
 import 'package:dune/data/theme/isar_theme_data_source.dart';
@@ -16,11 +23,6 @@ import 'package:dune/presentation/controllers/playback_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_controller.dart';
 import 'package:dune/presentation/controllers/playlist_controller.dart';
 import 'package:dune/presentation/utils/listening_history_helper.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
-import 'package:system_theme/system_theme.dart';
-import 'package:media_kit/media_kit.dart' as mediaKit;
 
 AudioPlayer registerAudioPlayer(Ref ref) {
   final listeningHistoryHelper = ListeningHistoryHelper(

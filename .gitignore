@@ -49,3 +49,4 @@ app.*.map.json
 /default.isar
 /default.isar-lck
 /isar.dll
+/test/unit/presentation/models/libmpv-2.dll

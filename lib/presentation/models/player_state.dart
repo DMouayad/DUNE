@@ -68,7 +68,7 @@ class PlayerState extends Equatable {
 
   factory PlayerState.initial() {
     return const PlayerState(
-      volume: 70.0,
+      volume: 100.0,
       position: Duration.zero,
       buffer: Duration.zero,
       duration: Duration.zero,

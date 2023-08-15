@@ -26,7 +26,7 @@ class WideHomeScreen extends ConsumerWidget {
     // effect on the next time the app is opened
     final tabsModeEnabled = ref.read(appPreferencesController).tabsModeEnabled;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsModeEnabled ? 87.5 : 44.5;
+    final topSpacing = tabsModeEnabled ? 85.5 : 44.5;
     final screen = Theme(
       data: appTheme.materialThemeData,
       child: Material(
@@ -56,6 +56,12 @@ class WideHomeScreen extends ConsumerWidget {
                           );
                     },
                   ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: topSpacing - 1,
+                  child: const Divider(height: 1, thickness: .5),
                 ),
                 Positioned.fill(
                   // top margins for the [AppTitleBar]

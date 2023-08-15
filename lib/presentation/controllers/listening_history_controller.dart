@@ -11,7 +11,9 @@ class ListeningHistoryController
   ListeningHistoryController()
       : super(
           AsyncValue.data(ListeningHistoryCollection([])),
-        );
+        ) {
+    loadListeningHistoryOverLastMonth();
+  }
 
   Future<void> loadListeningHistoryOnDay(DateTime day) async {}
 
