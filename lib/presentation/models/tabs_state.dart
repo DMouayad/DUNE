@@ -1,6 +1,7 @@
 import 'package:dune/support/logger_service.dart';
+import 'package:equatable/equatable.dart';
 
-final class TabsState {
+final class TabsState extends Equatable {
   final int selectedTabIndex;
   final List<TabData> tabs;
   final List<int> pinnedTabs;
@@ -97,11 +98,14 @@ final class TabsState {
     tabs.insert(selectedTabIndex, updatedTab);
     return _copyWith(tabs: tabs);
   }
+
+  @override
+  List<Object?> get props => [tabs, selectedTabIndex, pinnedTabs];
 }
 
 typedef TabPageData = ({String path, String title});
 
-final class TabData {
+final class TabData extends Equatable {
   final int tabIndex;
   final List<TabPageData> pages;
   final int selectedPageIndex;
@@ -145,4 +149,7 @@ final class TabData {
         "You're already at the page with index (0)");
     return _copyWith(selectedPageIndex: selectedPageIndex - 1);
   }
+
+  @override
+  List<Object?> get props => [selectedPageIndex, pages, tabIndex];
 }
