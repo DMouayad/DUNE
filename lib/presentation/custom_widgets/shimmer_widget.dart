@@ -16,7 +16,7 @@ class ShimmerWidget extends StatelessWidget {
     this.borderRadius = 10,
     this.shimmerSize,
     this.shape = BoxShape.rectangle,
-    this.direction = const ShimmerDirection.fromLeftToRight(),
+    this.direction = const ShimmerDirection.fromLTRB(),
     required this.enabled,
     super.key,
   });
@@ -28,7 +28,7 @@ class ShimmerWidget extends StatelessWidget {
       direction: direction,
       duration: const Duration(milliseconds: 2000),
       color: context.colorScheme.primaryContainer,
-      colorOpacity: .6,
+      colorOpacity: .7,
       enabled: enabled,
       child: enabled
           ? shimmerSize != null
@@ -41,8 +41,20 @@ class ShimmerWidget extends StatelessWidget {
     return shape == BoxShape.rectangle
         ? ClipRRect(
             borderRadius: BorderRadius.circular(borderRadius),
-            child: child,
+            child: enabled
+                ? Container(
+                    color: context.colorScheme.onBackground.withOpacity(.05),
+                    child: child,
+                  )
+                : child,
           )
-        : ClipOval(child: child);
+        : ClipOval(
+            child: enabled
+                ? Container(
+                    color: context.colorScheme.onBackground.withOpacity(.05),
+                    child: child,
+                  )
+                : child,
+          );
   }
 }

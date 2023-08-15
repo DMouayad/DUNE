@@ -778,7 +778,7 @@ class __TabState extends State<_Tab>
           }
         }).resolve(states);
 
-        const borderRadius = BorderRadius.vertical(top: Radius.circular(6));
+        const borderRadius = BorderRadius.vertical(top: Radius.circular(10));
         Widget child = FocusBorder(
           focused: states.isFocused,
           renderOutside: false,
@@ -919,7 +919,7 @@ class _TabPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final path = Path();
-    const radius = 6.0;
+    const radius = 8.0;
     path
       ..moveTo(-radius, size.height)
       ..quadraticBezierTo(0, size.height, 0, size.height - radius)
