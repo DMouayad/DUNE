@@ -12,6 +12,7 @@ import 'package:dune/domain/audio/repositories/artist_repository.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
+import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:dune/domain/audio/repositories/search_repository.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
@@ -21,6 +22,8 @@ import 'package:dune/support/extensions/extensions.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
+
+import 'local_music_library_facade.dart';
 
 part 'playlist_facade.dart';
 
@@ -34,6 +37,7 @@ part 'user_listening_history_facade.dart';
 
 final class MusicFacade {
   MusicFacade._({
+    required LocalMusicLibraryRepository localMusicLibraryRepository,
     required CacheMusicRepository cacheMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
@@ -54,6 +58,7 @@ final class MusicFacade {
     );
     _userListeningHistory =
         UserListeningHistoryFacade(listeningHistoryRepository);
+    _localMusicLibrary = LocalMusicLibraryFacade(localMusicLibraryRepository);
   }
 
   static late MusicFacade _instance;
@@ -79,7 +84,13 @@ final class MusicFacade {
   static UserListeningHistoryFacade get userListeningHistory =>
       _instance._userListeningHistory;
 
+  late final LocalMusicLibraryFacade _localMusicLibrary;
+
+  static LocalMusicLibraryFacade get localMusicLibrary =>
+      _instance._localMusicLibrary;
+
   static void setInstance({
+    required LocalMusicLibraryRepository localMusicLibraryRepository,
     required CacheMusicRepository cacheMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
@@ -88,6 +99,7 @@ final class MusicFacade {
       cacheMusicRepository: cacheMusicRepository,
       youtubeMusicRepository: youtubeMusicRepository,
       listeningHistoryRepository: listeningHistoryRepository,
+      localMusicLibraryRepository: localMusicLibraryRepository,
     );
   }
 }
