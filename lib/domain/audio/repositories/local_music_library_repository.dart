@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
 import 'package:dune/domain/audio/repositories/album_repository.dart';
@@ -31,18 +32,28 @@ class LocalMusicLibraryRepository {
   MusicSource get _localSource => MusicSource.local;
 
   FutureOrResult<List<BaseArtist>> getArtists(
-      QuerySortOptions sortOptions) async {
+    QuerySortOptions sortOptions,
+  ) async {
     return await _artistRepository.findAllWhereSource(
-        _localSource, sortOptions);
+      _localSource,
+      sortOptions,
+    );
   }
 
   FutureOrResult<List<BaseTrack>> getTracks(
-      QuerySortOptions sortOptions) async {
-    throw UnimplementedError();
+    QuerySortOptions sortOptions,
+  ) async {
+    return await _trackRepository.findAllWhereSource(_localSource, sortOptions);
   }
 
   FutureOrResult<List<BaseAlbum>> getAlbums(
       QuerySortOptions sortOptions) async {
-    throw UnimplementedError();
+    return await _albumRepository.findAllWhereSource(_localSource, sortOptions);
+  }
+
+  FutureOrResult<List<BasePlaylist>> getPlaylists(
+      QuerySortOptions sortOptions) async {
+    return await _playlistRepository.findAllWhereSource(
+        _localSource, sortOptions);
   }
 }
