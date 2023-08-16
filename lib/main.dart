@@ -29,7 +29,7 @@ Future<void> _registerDependencies() async {
   // IsarTrackListeningHistorySeeder(isarMusicRepository, isar).seedCount();
 
   MusicFacade.setInstance(
-    cacheMusicRepository: isarMusicRepository,
+    localMusicRepository: isarMusicRepository,
     listeningHistoryRepository: isarMusicRepository.listeningHistory,
     youtubeMusicRepository: YoutubeMusicRepository(),
   );
