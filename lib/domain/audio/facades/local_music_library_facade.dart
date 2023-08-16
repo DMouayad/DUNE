@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
 import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
@@ -28,5 +29,10 @@ final class LocalMusicLibraryFacade {
   FutureOrResult<List<BaseAlbum>> getAlbums(
       QuerySortOptions sortOptions) async {
     return await _repository.getAlbums(sortOptions);
+  }
+
+  FutureOrResult<List<BasePlaylist>> getPlaylists(
+      QuerySortOptions sortOptions) async {
+    return await _repository.getPlaylists(sortOptions);
   }
 }
