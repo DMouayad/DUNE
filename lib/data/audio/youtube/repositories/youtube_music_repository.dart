@@ -1,25 +1,27 @@
-import 'package:dune/data/audio/youtube/repositories/youtube_track_repository.dart';
+import 'package:dune/data/audio/youtube/data_sources/youtube_explore_music_data_source.dart';
+import 'package:dune/data/audio/youtube/data_sources/youtube_playlist_data_source.dart';
+import 'package:dune/data/audio/youtube/data_sources/youtube_search_data_source.dart';
+import 'package:dune/data/audio/youtube/data_sources/youtube_track_data_source.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
+import 'package:dune/domain/audio/repositories/search_repository.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
 
-import 'youtube_explore_music_repository.dart';
-import 'youtube_playlist_repository.dart';
-import 'youtube_search_repository.dart';
-
 final class YoutubeMusicRepository implements BaseOnlineSourceMusicRepository {
-  YoutubeMusicRepository() {
-    _trackRepository = YoutubeTrackRepository();
-    _playlistRepository = YoutubePlaylistRepository();
-    _exploreMusicRepository = YoutubeExploreMusicRepository();
-    _searchRepository = YoutubeSearchRepository();
-  }
+  YoutubeMusicRepository()
+      : _trackRepository =
+            const OnlineSourceTrackRepository(YoutubeTrackDataSource()),
+        _playlistRepository =
+            const PlaylistRepository(YoutubePlaylistDataSource()),
+        _exploreMusicRepository =
+            ExploreMusicRepository(const YoutubeExploreMusicDataSource()),
+        _searchRepository = const SearchRepository(YoutubeSearchDataSource());
 
-  late final YoutubeSearchRepository _searchRepository;
-  late final YoutubeTrackRepository _trackRepository;
-  late final YoutubePlaylistRepository _playlistRepository;
-  late final YoutubeExploreMusicRepository _exploreMusicRepository;
+  final SearchRepository _searchRepository;
+  final OnlineSourceTrackRepository _trackRepository;
+  final PlaylistRepository _playlistRepository;
+  final ExploreMusicRepository _exploreMusicRepository;
 
   @override
   // TODO: implement albums

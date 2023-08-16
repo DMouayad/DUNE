@@ -2,7 +2,10 @@ import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';
 import 'package:isar/isar.dart';
 
-// extension IsarQueryBuilderExtension<Obj, R, S> on QueryBuilder<Obj, R, S> {
+/// Returns a [QueryBuilder] after adding the right sorting to it based on the
+/// provided [QuerySortOptions].
+///
+/// If no matching sort query is available, [baseQuery] will be returned.
 QueryBuilder<Obj, R, S> sortIsarQueryByOptions<Obj, R, S>(
   QueryBuilder<Obj, R, S> baseQuery,
   QuerySortOptions sortOptions, {
@@ -15,13 +18,12 @@ QueryBuilder<Obj, R, S> sortIsarQueryByOptions<Obj, R, S>(
 }) {
   return switch (sortOptions.sortBy) {
         SortType.dateAdded =>
-          (sortOptions.desc ? sortByCreatedAtQuery : sortByCreatedAtDescQuery),
+          (sortOptions.desc ? sortByCreatedAtDescQuery : sortByCreatedAtQuery),
         SortType.alphabetically =>
-          (sortOptions.desc ? sortByNameQuery : sortByNameDescQuery),
+          (sortOptions.desc ? sortByNameDescQuery : sortByNameQuery),
         SortType.releaseDate => (sortOptions.desc
-            ? sortByDateReleasedQuery
-            : sortByDateReleasedDescQuery),
+            ? sortByDateReleasedDescQuery
+            : sortByDateReleasedQuery),
       } ??
       baseQuery;
 }
-// }

@@ -12,6 +12,8 @@ abstract class BasePlaylistDataSource<T extends BasePlaylist> {
 
 abstract class BaseSavablePlaylistDataSource<T extends BasePlaylist>
     extends BasePlaylistDataSource<T> with FindsByMusicSource<T> {
+  const BaseSavablePlaylistDataSource();
+
   FutureOrResult<T> save(T playlist);
 
   FutureOrResult<List<T>> saveCategoryPlaylists(

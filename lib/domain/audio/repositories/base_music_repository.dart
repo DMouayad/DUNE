@@ -35,6 +35,7 @@ abstract interface class BaseOnlineSourceMusicRepository<
         ExploreMusic extends ExploreMusicRepository>
     implements BaseMusicRepository<Playlists, Tracks, Artists, Albums, Search> {
   ExploreMusic get exploreMusic;
+  const BaseOnlineSourceMusicRepository();
 }
 
 abstract interface class BaseLocalMusicRepository<

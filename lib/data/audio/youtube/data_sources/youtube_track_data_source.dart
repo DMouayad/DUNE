@@ -9,6 +9,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../helpers/youtube_explode_proxy.dart';
 
 final class YoutubeTrackDataSource implements BaseRemoteTrackDataSource {
+  const YoutubeTrackDataSource();
+
   @override
   FutureOrResult<BaseTrack?> find(String trackId) async {
     return await Result.fromAsync(() async {

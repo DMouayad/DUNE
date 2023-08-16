@@ -17,6 +17,8 @@ abstract class BaseSearchDataSource {
   FutureOrResult<List<BasePlaylist>> searchPlaylists(String term, int page);
 
   FutureOrResult<AllCategoriesSearchResult> searchAll(String term, int page);
+
+  const BaseSearchDataSource();
 }
 
 final class AllCategoriesSearchResult {

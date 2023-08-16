@@ -9,7 +9,7 @@ import '../base_models/base_playlist.dart';
 base class SearchRepository {
   final BaseSearchDataSource _dataSource;
 
-  SearchRepository(this._dataSource);
+  const SearchRepository(this._dataSource);
 
   FutureOrResult<List<SearchSuggestion>> getSearchSuggestionsFor(
     String term,
