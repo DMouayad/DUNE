@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/traits/finds_by_music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 abstract base class PlaylistRepository<T extends BasePlaylistDataSource> {
@@ -19,7 +20,8 @@ abstract base class PlaylistRepository<T extends BasePlaylistDataSource> {
 }
 
 abstract base class SavablePlaylistRepository<
-    T extends BaseSavablePlaylistDataSource> extends PlaylistRepository<T> {
+        T extends BaseSavablePlaylistDataSource> extends PlaylistRepository<T>
+    with FindsByMusicSource<BasePlaylist> {
   SavablePlaylistRepository(super.dataSource);
 
   FutureOrResult<BasePlaylist> save(BasePlaylist playlist);

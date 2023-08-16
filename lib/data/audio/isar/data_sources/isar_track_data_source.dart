@@ -1,5 +1,7 @@
 import 'package:dune/data/audio/isar/models/isar_track.dart';
 import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart';
+import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:isar/isar.dart';
 
@@ -11,7 +13,10 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
   @override
   FutureOrResult<IsarTrack?> find(String trackId) async {
     return await Result.fromAsync(
-      () async => await _isar.isarTracks.where().idEqualTo(trackId).findFirst(),
+      () async => await _isar.isarTracks
+          .where()
+          .idEqualToAnySource(trackId)
+          .findFirst(),
     );
   }
 
@@ -38,8 +43,30 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
     return await Result.fromAsync(() async {
       return await _isar.isarTracks
           .where()
-          .anyOf(ids, (q, id) => q.idEqualTo(id))
+          .anyOf(ids, (q, id) => q.idEqualToAnySource(id))
           .findAll();
     });
+  }
+
+  @override
+  FutureOrResult<List<IsarTrack>> findAllWhereSource(
+    MusicSource musicSource,
+    QuerySortOptions sortOptions,
+  ) async {
+    return await Result.fromAsync(
+      () async =>
+          await _isar.isarTracks.where().sourceEqualTo(musicSource).findAll(),
+    );
+  }
+
+  @override
+  FutureOrResult<IsarTrack?> findWhereSource(
+      String id, MusicSource musicSource) async {
+    return await Result.fromAsync(
+      () async => await _isar.isarTracks
+          .where()
+          .idSourceEqualTo(id, musicSource)
+          .findFirst(),
+    );
   }
 }

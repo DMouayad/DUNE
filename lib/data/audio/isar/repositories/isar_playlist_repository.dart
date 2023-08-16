@@ -5,6 +5,8 @@ import 'package:dune/data/audio/isar/models/isar_thumbnails_set.dart';
 import 'package:dune/data/audio/isar/repositories/isar_track_repository.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
+import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 final class IsarPlaylistRepository
@@ -38,7 +40,7 @@ final class IsarPlaylistRepository
         name: playlist.author?.name,
         id: playlist.author?.id,
       ),
-      source: playlist.source,
+      musicSource: playlist.musicSource,
       tracksIds: tracksIds,
       isarThumbnails: IsarThumbnailsSet.fromMap(playlist.thumbnails.toMap()),
       description: playlist.description,
@@ -96,6 +98,38 @@ final class IsarPlaylistRepository
         playlists,
         loadTracksRelations: false,
       );
+    });
+  }
+
+  @override
+  FutureOrResult<List<BasePlaylist>> findAllWhereSource(
+      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    return (await _playlistDataSource.findAllWhereSource(
+      musicSource,
+      sortOptions,
+    ))
+        .flatMapSuccessAsync((value) async {
+      if (value.isNotEmpty) {
+        return await _relationHelper.loadRelationsForPlaylists(
+          value,
+          loadTracksRelations: true,
+        );
+      }
+      return value.asResult;
+    });
+  }
+
+  @override
+  FutureOrResult<BasePlaylist?> findWhereSource(
+    String id,
+    MusicSource musicSource,
+  ) async {
+    return (await _playlistDataSource.findWhereSource(id, musicSource))
+        .flatMapSuccessAsync((value) async {
+      if (value != null) {
+        return await _relationHelper.loadRelationsForPlaylist(value, true);
+      }
+      return value.asResult;
     });
   }
 }

@@ -2,7 +2,9 @@ import 'package:dune/data/audio/isar/models/isar_category_playlists.dart';
 import 'package:dune/data/audio/isar/models/isar_playlist.dart';
 import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:isar/isar.dart';
 
@@ -17,7 +19,7 @@ class IsarPlaylistDataSource
     return await Result.fromAsync(() async {
       return await _isar.isarPlaylists
           .where()
-          .idEqualTo(playlistId)
+          .idEqualToAnyMusicSource(playlistId)
           .findFirst();
     });
   }
@@ -46,7 +48,7 @@ class IsarPlaylistDataSource
     return await Result.fromAsync(() async {
       return await _isar.isarPlaylists
           .where()
-          .anyOf(ids, (q, id) => q.idEqualTo(id))
+          .anyOf(ids, (q, id) => q.idEqualToAnyMusicSource(id))
           .findAll();
     });
   }
@@ -107,5 +109,29 @@ class IsarPlaylistDataSource
       }
     }
     return result.asResult;
+  }
+
+  @override
+  FutureOrResult<List<IsarPlaylist>> findAllWhereSource(
+      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    return await Result.fromAsync(() async {
+      return await _isar.isarPlaylists
+          .filter()
+          .musicSourceEqualTo(musicSource)
+          .findAll();
+    });
+  }
+
+  @override
+  FutureOrResult<IsarPlaylist?> findWhereSource(
+    String id,
+    MusicSource musicSource,
+  ) async {
+    return await Result.fromAsync(() async {
+      return await _isar.isarPlaylists
+          .where()
+          .idMusicSourceEqualTo(id, musicSource)
+          .findFirst();
+    });
   }
 }

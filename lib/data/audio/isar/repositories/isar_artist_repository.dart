@@ -3,7 +3,9 @@ import 'package:dune/data/audio/isar/helpers/isar_models_relation_helper.dart';
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/repositories/artist_repository.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 final class IsarArtistRepository
@@ -81,5 +83,34 @@ final class IsarArtistRepository
         ...newInstance.albumsIds,
       }.toList(),
     );
+  }
+
+  @override
+  FutureOrResult<List<BaseArtist>> findAllWhereSource(
+      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    return (await artistDataSource.findAllWhereSource(
+      musicSource,
+      sortOptions,
+    ))
+        .flatMapSuccessAsync((value) async {
+      if (value.isNotEmpty) {
+        return await _relationHelper.loadRelationsForArtists(value);
+      }
+      return value.asResult;
+    });
+  }
+
+  @override
+  FutureOrResult<BaseArtist?> findWhereSource(
+    String id,
+    MusicSource musicSource,
+  ) async {
+    return (await artistDataSource.findWhereSource(id, musicSource))
+        .flatMapSuccessAsync((value) async {
+      if (value != null) {
+        return await _relationHelper.loadRelationsForArtist(value);
+      }
+      return value.asResult;
+    });
   }
 }

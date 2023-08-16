@@ -1,9 +1,11 @@
 import 'package:dune/data/audio/isar/models/isar_album.dart';
 import 'package:dune/domain/audio/base_data_sources/base_album_data_source.dart';
+import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:isar/isar.dart';
 
-class IsarAlbumDataSource implements BaseAlbumDataSource<IsarAlbum> {
+class IsarAlbumDataSource implements BaseSavableAlbumDataSource<IsarAlbum> {
   IsarAlbumDataSource(this._isar);
 
   final Isar _isar;
@@ -11,7 +13,10 @@ class IsarAlbumDataSource implements BaseAlbumDataSource<IsarAlbum> {
   @override
   FutureOrResult<IsarAlbum?> find(String albumId) async {
     return await Result.fromAsync(
-      () async => await _isar.isarAlbums.where().idEqualTo(albumId).findFirst(),
+      () async => await _isar.isarAlbums
+          .where()
+          .idEqualToAnyMusicSource(albumId)
+          .findFirst(),
     );
   }
 
@@ -38,8 +43,30 @@ class IsarAlbumDataSource implements BaseAlbumDataSource<IsarAlbum> {
     return await Result.fromAsync(() async {
       return await _isar.isarAlbums
           .where()
-          .anyOf(ids, (q, id) => q.idEqualTo(id))
+          .anyOf(ids, (q, id) => q.idEqualToAnyMusicSource(id))
           .findAll();
     });
+  }
+
+  @override
+  FutureOrResult<List<IsarAlbum>> findAllWhereSource(
+      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    return await Result.fromAsync(
+      () async => await _isar.isarAlbums
+          .where()
+          .musicSourceEqualTo(musicSource)
+          .findAll(),
+    );
+  }
+
+  @override
+  FutureOrResult<IsarAlbum?> findWhereSource(
+      String id, MusicSource musicSource) async {
+    return await Result.fromAsync(
+      () async => await _isar.isarAlbums
+          .where()
+          .idMusicSourceEqualTo(id, musicSource)
+          .findFirst(),
+    );
   }
 }

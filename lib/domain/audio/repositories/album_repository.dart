@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_data_sources/base_album_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/traits/finds_by_music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 abstract base class AlbumRepository<DataSource extends BaseAlbumDataSource> {
@@ -15,8 +16,8 @@ abstract base class AlbumRepository<DataSource extends BaseAlbumDataSource> {
 }
 
 abstract base class SavableAlbumRepository<
-        DataSource extends BaseAlbumDataSource>
-    extends AlbumRepository<DataSource> {
+        DataSource extends BaseSavableAlbumDataSource>
+    extends AlbumRepository<DataSource> with FindsByMusicSource<BaseAlbum> {
   SavableAlbumRepository(super.albumDataSource);
 
   FutureOrResult<BaseAlbum> save(BaseAlbum album);
