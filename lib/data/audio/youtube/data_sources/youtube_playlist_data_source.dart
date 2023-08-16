@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import '../models/youtube_playlist.dart';
 
 class YoutubePlaylistDataSource extends BasePlaylistDataSource {
+  const YoutubePlaylistDataSource();
+
   static const String _serverAddress =
       'https://drip-server-fv6tn36q0-spsden.vercel.app/';
 

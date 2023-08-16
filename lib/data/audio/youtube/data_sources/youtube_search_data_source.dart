@@ -13,6 +13,8 @@ import 'package:dune/support/utils/result/result.dart';
 import 'package:http/http.dart' as http;
 
 class YoutubeSearchDataSource extends BaseSearchDataSource {
+  const YoutubeSearchDataSource();
+
   static const String serverAddress =
       'https://drip-server-fv6tn36q0-spsden.vercel.app/';
 
