@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/traits/finds_by_music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 abstract base class TrackRepository<DataSource extends BaseTrackDataSource> {
@@ -15,7 +16,7 @@ abstract base class TrackRepository<DataSource extends BaseTrackDataSource> {
 
 abstract base class SavableTrackRepository<
         DataSource extends BaseSavableTrackDataSource>
-    extends TrackRepository<DataSource> {
+    extends TrackRepository<DataSource> with FindsByMusicSource<BaseTrack> {
   SavableTrackRepository(super.trackDataSource);
 
   FutureOrResult<BaseTrack> save(BaseTrack track);

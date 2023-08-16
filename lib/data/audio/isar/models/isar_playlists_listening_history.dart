@@ -1,4 +1,3 @@
-import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:isar/isar.dart';
 

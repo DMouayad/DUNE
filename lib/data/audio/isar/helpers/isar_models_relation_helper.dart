@@ -345,4 +345,15 @@ final class IsarModelsRelationHelper {
   ) async {
     return summary.asResult;
   }
+
+  FutureResult<List<IsarAlbum>> loadRelationsForAlbums(
+    List<IsarAlbum> albums,
+  ) async {
+    return await _loadRelationsForMany(
+      albums,
+      loadRelationsForAlbum,
+      itemRelationsAlreadyLoaded: (instance) =>
+          instance.artists.isNotEmpty && instance.tracks.isNotEmpty,
+    );
+  }
 }

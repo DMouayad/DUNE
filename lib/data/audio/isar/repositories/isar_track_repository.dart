@@ -7,7 +7,9 @@ import 'package:dune/data/audio/isar/repositories/isar_artist_repository.dart';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 import '../models/isar_artist.dart';
@@ -113,6 +115,34 @@ final class IsarTrackRepository extends SavableTrackRepository {
         isarAudioInfoSet: IsarAudioInfoSet.from(audioInfo),
       );
       return (await save(updatedTrack)).mapSuccessToVoid();
+    });
+  }
+
+  @override
+  FutureOrResult<List<BaseTrack>> findAllWhereSource(
+    MusicSource musicSource,
+    QuerySortOptions sortOptions,
+  ) async {
+    return (await _trackDataSource.findAllWhereSource(musicSource, sortOptions))
+        .flatMapSuccessAsync((value) async {
+      if (value.isNotEmpty) {
+        return await _relationHelper.loadRelationsForTracks(value);
+      }
+      return value.asResult;
+    });
+  }
+
+  @override
+  FutureOrResult<BaseTrack?> findWhereSource(
+    String id,
+    MusicSource musicSource,
+  ) async {
+    return (await _trackDataSource.findWhereSource(id, musicSource))
+        .flatMapSuccessAsync((value) async {
+      if (value != null) {
+        return await _relationHelper.loadRelationsForTrack(value);
+      }
+      return value.asResult;
     });
   }
 }

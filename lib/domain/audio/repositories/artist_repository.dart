@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_data_sources/base_artist_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/traits/finds_by_music_source.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 abstract base class ArtistRepository<DataSource extends BaseArtistDataSource> {
@@ -15,8 +16,8 @@ abstract base class ArtistRepository<DataSource extends BaseArtistDataSource> {
 }
 
 abstract base class SavableArtistRepository<
-        DataSource extends BaseArtistDataSource>
-    extends ArtistRepository<DataSource> {
+        DataSource extends BaseSavableArtistDataSource>
+    extends ArtistRepository<DataSource> with FindsByMusicSource<BaseArtist> {
   SavableArtistRepository(super.artistDataSource);
 
   FutureOrResult<BaseArtist> save(BaseArtist artist);
