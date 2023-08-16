@@ -28,10 +28,12 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
 
   @override
   @enumerated
-  MusicSource get source => super.source;
+  @Index()
+  MusicSource get musicSource => super.musicSource;
 
   @override
-  @Index(unique: true, replace: true)
+  @Index(
+      unique: true, replace: true, composite: [CompositeIndex('musicSource')])
   String? get id => super.id;
 
   IsarPlaylist({
@@ -46,7 +48,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
     super.title = '',
     super.tracks = const [],
     super.createdAt,
-    super.source = MusicSource.youtube,
+    super.musicSource = MusicSource.youtube,
   }) : super(author: author, thumbnails: isarThumbnails);
 
   @override
@@ -64,7 +66,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
     String? description,
     String? duration,
     int? durationSeconds,
-    MusicSource? source,
+    MusicSource? musicSource,
     DateTime? createdAt,
     List<String>? tracksIds,
   }) {
@@ -75,7 +77,7 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
       duration: duration ?? this.duration,
       durationSeconds: durationSeconds ?? this.durationSeconds,
       createdAt: createdAt ?? this.createdAt,
-      source: source ?? this.source,
+      musicSource: musicSource ?? this.musicSource,
       description: description ?? this.description,
       tracks: tracks ?? this.tracks,
       isarThumbnails: thumbnails ?? isarThumbnails,

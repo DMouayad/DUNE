@@ -40,7 +40,7 @@ final class PlaylistFactory extends BaseModelFactory<FakePlaylist> {
       title: _title ?? faker.lorem.sentence(),
       tracks: _tracks ?? [],
       createdAt: _createdAt ?? faker.date.dateTime(),
-      source: _source ??
+      musicSource: _source ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
     );
   }

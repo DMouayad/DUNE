@@ -16,7 +16,7 @@ class YoutubePlaylist extends BasePlaylist {
     required super.title,
     required super.tracks,
     super.createdAt,
-  }) : super(source: MusicSource.youtube);
+  }) : super(musicSource: MusicSource.youtube);
 
   @override
   Set<Type> get derived => {BasePlaylist};

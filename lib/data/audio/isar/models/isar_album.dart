@@ -1,5 +1,6 @@
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
@@ -27,10 +28,16 @@ class IsarAlbum extends BaseAlbum {
   @override
   Set<Type> get derived => {BaseAlbum};
 
+  @override
+  @enumerated
+  @Index()
+  MusicSource get musicSource => super.musicSource;
+
   final IsarThumbnailsSet isarThumbnails;
 
   @override
-  @Index(unique: true, replace: true)
+  @Index(
+      unique: true, replace: true, composite: [CompositeIndex('musicSource')])
   String? get id => super.id;
 
   IsarAlbum({
@@ -49,6 +56,7 @@ class IsarAlbum extends BaseAlbum {
     super.type = '',
     super.tracks = const [],
     super.releaseDate,
+    super.musicSource = MusicSource.unknown,
   }) : super(thumbnails: isarThumbnails);
 
   factory IsarAlbum.fromMap(Map<String, dynamic> map) {
@@ -57,6 +65,7 @@ class IsarAlbum extends BaseAlbum {
     final artistsListMap = map.whereKey('artists');
     return IsarAlbum(
       id: map.whereKey('id'),
+      musicSource: MusicSource.byNameOrUnknown(map.whereKey('musicSource')),
       artists: artistsListMap is List
           ? artistsListMap.map((e) => IsarArtist.fromMap(e)).toList()
           : [],
@@ -93,6 +102,7 @@ class IsarAlbum extends BaseAlbum {
     IsarThumbnailsSet? thumbnails,
     List<IsarArtist>? artists,
     List<IsarTrack>? tracks,
+    MusicSource? musicSource,
   }) {
     return IsarAlbum(
       isarId: isarId ?? this.isarId,
@@ -105,6 +115,7 @@ class IsarAlbum extends BaseAlbum {
       isarThumbnails: thumbnails ?? isarThumbnails,
       artists: artists ?? this.artists,
       tracks: tracks ?? this.tracks,
+      musicSource: musicSource ?? this.musicSource,
       duration: duration,
       title: title,
       releaseDate: releaseDate,

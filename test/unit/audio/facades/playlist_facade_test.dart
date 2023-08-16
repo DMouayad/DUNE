@@ -67,7 +67,7 @@ void main() {
       expectLater(playlistsResult.isSuccess, true);
       expectLater(
         playlistsResult.requireValue
-            ?.every((e) => e.source == MusicSource.youtube),
+            ?.every((e) => e.musicSource == MusicSource.youtube),
         true,
       );
     });
@@ -193,7 +193,7 @@ void assertTwoListsHaveSamePlaylists(
 
 void assertPlaylistsHasSameProps(BasePlaylist? actual, BasePlaylist matcher) {
   expectLater(actual?.id, matcher.id);
-  expectLater(actual?.source, matcher.source);
+  expectLater(actual?.musicSource, matcher.musicSource);
   expectLater(actual?.title, matcher.title);
   expectLater(actual?.description, matcher.description);
   expectLater(actual?.thumbnails, matcher.thumbnails);

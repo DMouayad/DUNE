@@ -54,11 +54,11 @@ const IsarPlaylistSchema = CollectionSchema(
       type: IsarType.object,
       target: r'IsarThumbnailsSet',
     ),
-    r'source': PropertySchema(
+    r'musicSource': PropertySchema(
       id: 7,
-      name: r'source',
+      name: r'musicSource',
       type: IsarType.byte,
-      enumMap: _IsarPlaylistsourceEnumValueMap,
+      enumMap: _IsarPlaylistmusicSourceEnumValueMap,
     ),
     r'title': PropertySchema(
       id: 8,
@@ -77,9 +77,22 @@ const IsarPlaylistSchema = CollectionSchema(
   deserializeProp: _isarPlaylistDeserializeProp,
   idName: r'isarId',
   indexes: {
-    r'id': IndexSchema(
-      id: -3268401673993471357,
-      name: r'id',
+    r'musicSource': IndexSchema(
+      id: -7444336687380187352,
+      name: r'musicSource',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'musicSource',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'id_musicSource': IndexSchema(
+      id: -6463270181635692098,
+      name: r'id_musicSource',
       unique: true,
       replace: true,
       properties: [
@@ -87,6 +100,11 @@ const IsarPlaylistSchema = CollectionSchema(
           name: r'id',
           type: IndexType.hash,
           caseSensitive: true,
+        ),
+        IndexPropertySchema(
+          name: r'musicSource',
+          type: IndexType.value,
+          caseSensitive: false,
         )
       ],
     )
@@ -172,7 +190,7 @@ void _isarPlaylistSerialize(
     IsarThumbnailsSetSchema.serialize,
     object.isarThumbnails,
   );
-  writer.writeByte(offsets[7], object.source.index);
+  writer.writeByte(offsets[7], object.musicSource.index);
   writer.writeString(offsets[8], object.title);
   writer.writeStringList(offsets[9], object.tracksIds);
 }
@@ -201,9 +219,9 @@ IsarPlaylist _isarPlaylistDeserialize(
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
-    source:
-        _IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offsets[7])] ??
-            MusicSource.youtube,
+    musicSource: _IsarPlaylistmusicSourceValueEnumMap[
+            reader.readByteOrNull(offsets[7])] ??
+        MusicSource.youtube,
     title: reader.readStringOrNull(offsets[8]),
     tracksIds: reader.readStringList(offsets[9]) ?? const [],
   );
@@ -241,7 +259,8 @@ P _isarPlaylistDeserializeProp<P>(
           ) ??
           const IsarThumbnailsSet()) as P;
     case 7:
-      return (_IsarPlaylistsourceValueEnumMap[reader.readByteOrNull(offset)] ??
+      return (_IsarPlaylistmusicSourceValueEnumMap[
+              reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
     case 8:
       return (reader.readStringOrNull(offset)) as P;
@@ -252,13 +271,13 @@ P _isarPlaylistDeserializeProp<P>(
   }
 }
 
-const _IsarPlaylistsourceEnumValueMap = {
+const _IsarPlaylistmusicSourceEnumValueMap = {
   'youtube': 0,
   'spotify': 1,
   'local': 2,
   'unknown': 3,
 };
-const _IsarPlaylistsourceValueEnumMap = {
+const _IsarPlaylistmusicSourceValueEnumMap = {
   0: MusicSource.youtube,
   1: MusicSource.spotify,
   2: MusicSource.local,
@@ -279,56 +298,90 @@ void _isarPlaylistAttach(
 }
 
 extension IsarPlaylistByIndex on IsarCollection<IsarPlaylist> {
-  Future<IsarPlaylist?> getById(String? id) {
-    return getByIndex(r'id', [id]);
+  Future<IsarPlaylist?> getByIdMusicSource(
+      String? id, MusicSource musicSource) {
+    return getByIndex(r'id_musicSource', [id, musicSource]);
   }
 
-  IsarPlaylist? getByIdSync(String? id) {
-    return getByIndexSync(r'id', [id]);
+  IsarPlaylist? getByIdMusicSourceSync(String? id, MusicSource musicSource) {
+    return getByIndexSync(r'id_musicSource', [id, musicSource]);
   }
 
-  Future<bool> deleteById(String? id) {
-    return deleteByIndex(r'id', [id]);
+  Future<bool> deleteByIdMusicSource(String? id, MusicSource musicSource) {
+    return deleteByIndex(r'id_musicSource', [id, musicSource]);
   }
 
-  bool deleteByIdSync(String? id) {
-    return deleteByIndexSync(r'id', [id]);
+  bool deleteByIdMusicSourceSync(String? id, MusicSource musicSource) {
+    return deleteByIndexSync(r'id_musicSource', [id, musicSource]);
   }
 
-  Future<List<IsarPlaylist?>> getAllById(List<String?> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndex(r'id', values);
+  Future<List<IsarPlaylist?>> getAllByIdMusicSource(
+      List<String?> idValues, List<MusicSource> musicSourceValues) {
+    final len = idValues.length;
+    assert(musicSourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], musicSourceValues[i]]);
+    }
+
+    return getAllByIndex(r'id_musicSource', values);
   }
 
-  List<IsarPlaylist?> getAllByIdSync(List<String?> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'id', values);
+  List<IsarPlaylist?> getAllByIdMusicSourceSync(
+      List<String?> idValues, List<MusicSource> musicSourceValues) {
+    final len = idValues.length;
+    assert(musicSourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], musicSourceValues[i]]);
+    }
+
+    return getAllByIndexSync(r'id_musicSource', values);
   }
 
-  Future<int> deleteAllById(List<String?> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'id', values);
+  Future<int> deleteAllByIdMusicSource(
+      List<String?> idValues, List<MusicSource> musicSourceValues) {
+    final len = idValues.length;
+    assert(musicSourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], musicSourceValues[i]]);
+    }
+
+    return deleteAllByIndex(r'id_musicSource', values);
   }
 
-  int deleteAllByIdSync(List<String?> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'id', values);
+  int deleteAllByIdMusicSourceSync(
+      List<String?> idValues, List<MusicSource> musicSourceValues) {
+    final len = idValues.length;
+    assert(musicSourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], musicSourceValues[i]]);
+    }
+
+    return deleteAllByIndexSync(r'id_musicSource', values);
   }
 
-  Future<Id> putById(IsarPlaylist object) {
-    return putByIndex(r'id', object);
+  Future<Id> putByIdMusicSource(IsarPlaylist object) {
+    return putByIndex(r'id_musicSource', object);
   }
 
-  Id putByIdSync(IsarPlaylist object, {bool saveLinks = true}) {
-    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  Id putByIdMusicSourceSync(IsarPlaylist object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id_musicSource', object, saveLinks: saveLinks);
   }
 
-  Future<List<Id>> putAllById(List<IsarPlaylist> objects) {
-    return putAllByIndex(r'id', objects);
+  Future<List<Id>> putAllByIdMusicSource(List<IsarPlaylist> objects) {
+    return putAllByIndex(r'id_musicSource', objects);
   }
 
-  List<Id> putAllByIdSync(List<IsarPlaylist> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  List<Id> putAllByIdMusicSourceSync(List<IsarPlaylist> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id_musicSource', objects, saveLinks: saveLinks);
   }
 }
 
@@ -337,6 +390,14 @@ extension IsarPlaylistQueryWhereSort
   QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhere> anyMusicSource() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'musicSource'),
+      );
     });
   }
 }
@@ -412,19 +473,114 @@ extension IsarPlaylistQueryWhere
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause> idIsNull() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      musicSourceEqualTo(MusicSource musicSource) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
+        indexName: r'musicSource',
+        value: [musicSource],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      musicSourceNotEqualTo(MusicSource musicSource) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'musicSource',
+              lower: [],
+              upper: [musicSource],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'musicSource',
+              lower: [musicSource],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'musicSource',
+              lower: [musicSource],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'musicSource',
+              lower: [],
+              upper: [musicSource],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      musicSourceGreaterThan(
+    MusicSource musicSource, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'musicSource',
+        lower: [musicSource],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      musicSourceLessThan(
+    MusicSource musicSource, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'musicSource',
+        lower: [],
+        upper: [musicSource],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      musicSourceBetween(
+    MusicSource lowerMusicSource,
+    MusicSource upperMusicSource, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'musicSource',
+        lower: [lowerMusicSource],
+        includeLower: includeLower,
+        upper: [upperMusicSource],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idIsNullAnyMusicSource() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id_musicSource',
         value: [null],
       ));
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause> idIsNotNull() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idIsNotNullAnyMusicSource() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'id',
+        indexName: r'id_musicSource',
         lower: [null],
         includeLower: false,
         upper: [],
@@ -432,29 +588,29 @@ extension IsarPlaylistQueryWhere
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause> idEqualTo(
-      String? id) {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idEqualToAnyMusicSource(String? id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
+        indexName: r'id_musicSource',
         value: [id],
       ));
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause> idNotEqualTo(
-      String? id) {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idNotEqualToAnyMusicSource(String? id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_musicSource',
               lower: [],
               upper: [id],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_musicSource',
               lower: [id],
               includeLower: false,
               upper: [],
@@ -462,18 +618,114 @@ extension IsarPlaylistQueryWhere
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_musicSource',
               lower: [id],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_musicSource',
               lower: [],
               upper: [id],
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idMusicSourceEqualTo(String? id, MusicSource musicSource) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id_musicSource',
+        value: [id, musicSource],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idEqualToMusicSourceNotEqualTo(String? id, MusicSource musicSource) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_musicSource',
+              lower: [id],
+              upper: [id, musicSource],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_musicSource',
+              lower: [id, musicSource],
+              includeLower: false,
+              upper: [id],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_musicSource',
+              lower: [id, musicSource],
+              includeLower: false,
+              upper: [id],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_musicSource',
+              lower: [id],
+              upper: [id, musicSource],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idEqualToMusicSourceGreaterThan(
+    String? id,
+    MusicSource musicSource, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_musicSource',
+        lower: [id, musicSource],
+        includeLower: include,
+        upper: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idEqualToMusicSourceLessThan(
+    String? id,
+    MusicSource musicSource, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_musicSource',
+        lower: [id],
+        upper: [id, musicSource],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterWhereClause>
+      idEqualToMusicSourceBetween(
+    String? id,
+    MusicSource lowerMusicSource,
+    MusicSource upperMusicSource, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_musicSource',
+        lower: [id, lowerMusicSource],
+        includeLower: includeLower,
+        upper: [id, upperMusicSource],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -1157,45 +1409,46 @@ extension IsarPlaylistQueryFilter
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition> sourceEqualTo(
-      MusicSource value) {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition>
+      musicSourceEqualTo(MusicSource value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'source',
+        property: r'musicSource',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition>
-      sourceGreaterThan(
+      musicSourceGreaterThan(
     MusicSource value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'source',
+        property: r'musicSource',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition>
-      sourceLessThan(
+      musicSourceLessThan(
     MusicSource value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'source',
+        property: r'musicSource',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition> sourceBetween(
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterFilterCondition>
+      musicSourceBetween(
     MusicSource lower,
     MusicSource upper, {
     bool includeLower = true,
@@ -1203,7 +1456,7 @@ extension IsarPlaylistQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'source',
+        property: r'musicSource',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1675,15 +1928,16 @@ extension IsarPlaylistQuerySortBy
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> sortBySource() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> sortByMusicSource() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.asc);
+      return query.addSortBy(r'musicSource', Sort.asc);
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> sortBySourceDesc() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy>
+      sortByMusicSourceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.desc);
+      return query.addSortBy(r'musicSource', Sort.desc);
     });
   }
 
@@ -1777,15 +2031,16 @@ extension IsarPlaylistQuerySortThenBy
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> thenBySource() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> thenByMusicSource() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.asc);
+      return query.addSortBy(r'musicSource', Sort.asc);
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy> thenBySourceDesc() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QAfterSortBy>
+      thenByMusicSourceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.desc);
+      return query.addSortBy(r'musicSource', Sort.desc);
     });
   }
 
@@ -1838,9 +2093,9 @@ extension IsarPlaylistQueryWhereDistinct
     });
   }
 
-  QueryBuilder<IsarPlaylist, IsarPlaylist, QDistinct> distinctBySource() {
+  QueryBuilder<IsarPlaylist, IsarPlaylist, QDistinct> distinctByMusicSource() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'source');
+      return query.addDistinctBy(r'musicSource');
     });
   }
 
@@ -1910,9 +2165,10 @@ extension IsarPlaylistQueryProperty
     });
   }
 
-  QueryBuilder<IsarPlaylist, MusicSource, QQueryOperations> sourceProperty() {
+  QueryBuilder<IsarPlaylist, MusicSource, QQueryOperations>
+      musicSourceProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'source');
+      return query.addPropertyName(r'musicSource');
     });
   }
 

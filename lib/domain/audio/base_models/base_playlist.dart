@@ -16,7 +16,7 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
     required this.tracks,
     required this.createdAt,
     required this.id,
-    required this.source,
+    required this.musicSource,
   });
 
   @override
@@ -27,7 +27,7 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
         tracks,
         createdAt,
         id,
-        source,
+        musicSource,
         description,
         duration,
         durationSeconds
@@ -35,7 +35,7 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType{id: $id, source: $source, author: $author, description: $description, duration: $duration, durationSeconds: $durationSeconds, thumbnails: $thumbnails, title: $title, tracks:[${tracks.map((e) => '${e.runtimeType}(${e.id})')}], createdAt: $createdAt}';
+    return '$runtimeType{id: $id, musicSource: $musicSource, author: $author, description: $description, duration: $duration, durationSeconds: $durationSeconds, thumbnails: $thumbnails, title: $title, tracks:[${tracks.map((e) => '${e.runtimeType}(${e.id})')}], createdAt: $createdAt}';
   }
 
   final String? id;
@@ -47,7 +47,7 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
   final String? title;
   final List<T> tracks;
   final DateTime? createdAt;
-  final MusicSource source;
+  final MusicSource musicSource;
 
   Map<String?, dynamic> toMap() {
     return {
@@ -60,7 +60,7 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
       "title": title,
       "tracks": List.from(tracks.map((x) => x.toMap())),
       "createdAt": createdAt?.toIso8601String(),
-      'source': source.name,
+      'musicSource': musicSource.name,
     };
   }
 

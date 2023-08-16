@@ -2,6 +2,7 @@ import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/fake_models/fake_artist.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
 import 'base_model_factory.dart';
@@ -18,9 +19,10 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   late final ThumbnailsSet? _thumbnails;
   late final List<BaseTrack>? _tracks;
   late final List<BaseAlbum>? _albums;
+  late final MusicSource? musicSource;
 
   ArtistFactory() {
-    _id = _name = _description = _browseId = _radioId =
+    _id = _name = _description = _browseId = musicSource = _radioId =
         _shuffleId = _category = _thumbnails = _tracks = _albums = null;
   }
 
@@ -28,6 +30,8 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   FakeArtist create() {
     return FakeArtist(
       id: _id ?? faker.randomGenerator.string(20, min: 6) + faker.date.time(),
+      musicSource: musicSource ??
+          faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
       browseId:
           _browseId ?? faker.randomGenerator.string(10) + faker.lorem.word(),
       radioId: _radioId ?? faker.randomGenerator.string(10),

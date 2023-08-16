@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 
 import 'youtube_artist.dart';
@@ -8,7 +9,7 @@ class YoutubeAlbum extends BaseAlbum {
   @override
   Set<Type> get derived => {BaseAlbum};
 
-  YoutubeAlbum({
+  const YoutubeAlbum({
     required super.id,
     required super.title,
     super.artists = const [],
@@ -20,7 +21,7 @@ class YoutubeAlbum extends BaseAlbum {
     super.type,
     super.tracks = const [],
     super.releaseDate,
-  });
+  }) : super(musicSource: MusicSource.youtube);
 
   factory YoutubeAlbum.fromMap(Map<String, dynamic> map) {
     return YoutubeAlbum(

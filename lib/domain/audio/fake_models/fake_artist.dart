@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/support/enums/music_source.dart';
 
 import 'fake_album.dart';
 import 'fake_track.dart';
@@ -16,6 +17,7 @@ final class FakeArtist extends BaseArtist {
     required super.thumbnails,
     required super.tracks,
     required super.albums,
+    required super.musicSource,
   });
 
   @override
@@ -32,6 +34,7 @@ final class FakeArtist extends BaseArtist {
     ThumbnailsSet? thumbnails,
     List<FakeTrack>? tracks,
     List<FakeAlbum>? albums,
+    MusicSource? musicSource,
   }) {
     return FakeArtist(
       id: id ?? this.id,
@@ -44,6 +47,7 @@ final class FakeArtist extends BaseArtist {
       thumbnails: thumbnails ?? this.thumbnails,
       tracks: tracks ?? this.tracks,
       albums: albums ?? this.albums,
+      musicSource: musicSource ?? this.musicSource,
     );
   }
 }

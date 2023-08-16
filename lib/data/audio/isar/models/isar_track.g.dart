@@ -88,9 +88,22 @@ const IsarTrackSchema = CollectionSchema(
   deserializeProp: _isarTrackDeserializeProp,
   idName: r'isarId',
   indexes: {
-    r'id': IndexSchema(
-      id: -3268401673993471357,
-      name: r'id',
+    r'source': IndexSchema(
+      id: -836881197531269605,
+      name: r'source',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'source',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'id_source': IndexSchema(
+      id: 5991521114892468208,
+      name: r'id_source',
       unique: true,
       replace: true,
       properties: [
@@ -98,6 +111,11 @@ const IsarTrackSchema = CollectionSchema(
           name: r'id',
           type: IndexType.hash,
           caseSensitive: true,
+        ),
+        IndexPropertySchema(
+          name: r'source',
+          type: IndexType.value,
+          caseSensitive: false,
         )
       ],
     )
@@ -317,56 +335,89 @@ void _isarTrackAttach(IsarCollection<dynamic> col, Id id, IsarTrack object) {
 }
 
 extension IsarTrackByIndex on IsarCollection<IsarTrack> {
-  Future<IsarTrack?> getById(String id) {
-    return getByIndex(r'id', [id]);
+  Future<IsarTrack?> getByIdSource(String id, MusicSource source) {
+    return getByIndex(r'id_source', [id, source]);
   }
 
-  IsarTrack? getByIdSync(String id) {
-    return getByIndexSync(r'id', [id]);
+  IsarTrack? getByIdSourceSync(String id, MusicSource source) {
+    return getByIndexSync(r'id_source', [id, source]);
   }
 
-  Future<bool> deleteById(String id) {
-    return deleteByIndex(r'id', [id]);
+  Future<bool> deleteByIdSource(String id, MusicSource source) {
+    return deleteByIndex(r'id_source', [id, source]);
   }
 
-  bool deleteByIdSync(String id) {
-    return deleteByIndexSync(r'id', [id]);
+  bool deleteByIdSourceSync(String id, MusicSource source) {
+    return deleteByIndexSync(r'id_source', [id, source]);
   }
 
-  Future<List<IsarTrack?>> getAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndex(r'id', values);
+  Future<List<IsarTrack?>> getAllByIdSource(
+      List<String> idValues, List<MusicSource> sourceValues) {
+    final len = idValues.length;
+    assert(sourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], sourceValues[i]]);
+    }
+
+    return getAllByIndex(r'id_source', values);
   }
 
-  List<IsarTrack?> getAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'id', values);
+  List<IsarTrack?> getAllByIdSourceSync(
+      List<String> idValues, List<MusicSource> sourceValues) {
+    final len = idValues.length;
+    assert(sourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], sourceValues[i]]);
+    }
+
+    return getAllByIndexSync(r'id_source', values);
   }
 
-  Future<int> deleteAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'id', values);
+  Future<int> deleteAllByIdSource(
+      List<String> idValues, List<MusicSource> sourceValues) {
+    final len = idValues.length;
+    assert(sourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], sourceValues[i]]);
+    }
+
+    return deleteAllByIndex(r'id_source', values);
   }
 
-  int deleteAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'id', values);
+  int deleteAllByIdSourceSync(
+      List<String> idValues, List<MusicSource> sourceValues) {
+    final len = idValues.length;
+    assert(sourceValues.length == len,
+        'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([idValues[i], sourceValues[i]]);
+    }
+
+    return deleteAllByIndexSync(r'id_source', values);
   }
 
-  Future<Id> putById(IsarTrack object) {
-    return putByIndex(r'id', object);
+  Future<Id> putByIdSource(IsarTrack object) {
+    return putByIndex(r'id_source', object);
   }
 
-  Id putByIdSync(IsarTrack object, {bool saveLinks = true}) {
-    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  Id putByIdSourceSync(IsarTrack object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id_source', object, saveLinks: saveLinks);
   }
 
-  Future<List<Id>> putAllById(List<IsarTrack> objects) {
-    return putAllByIndex(r'id', objects);
+  Future<List<Id>> putAllByIdSource(List<IsarTrack> objects) {
+    return putAllByIndex(r'id_source', objects);
   }
 
-  List<Id> putAllByIdSync(List<IsarTrack> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  List<Id> putAllByIdSourceSync(List<IsarTrack> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id_source', objects, saveLinks: saveLinks);
   }
 }
 
@@ -375,6 +426,14 @@ extension IsarTrackQueryWhereSort
   QueryBuilder<IsarTrack, IsarTrack, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhere> anySource() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'source'),
+      );
     });
   }
 }
@@ -450,28 +509,119 @@ extension IsarTrackQueryWhere
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idEqualTo(String id) {
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> sourceEqualTo(
+      MusicSource source) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
+        indexName: r'source',
+        value: [source],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> sourceNotEqualTo(
+      MusicSource source) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'source',
+              lower: [],
+              upper: [source],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'source',
+              lower: [source],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'source',
+              lower: [source],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'source',
+              lower: [],
+              upper: [source],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> sourceGreaterThan(
+    MusicSource source, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'source',
+        lower: [source],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> sourceLessThan(
+    MusicSource source, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'source',
+        lower: [],
+        upper: [source],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> sourceBetween(
+    MusicSource lowerSource,
+    MusicSource upperSource, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'source',
+        lower: [lowerSource],
+        includeLower: includeLower,
+        upper: [upperSource],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idEqualToAnySource(
+      String id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id_source',
         value: [id],
       ));
     });
   }
 
-  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idNotEqualTo(
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idNotEqualToAnySource(
       String id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_source',
               lower: [],
               upper: [id],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_source',
               lower: [id],
               includeLower: false,
               upper: [],
@@ -479,18 +629,112 @@ extension IsarTrackQueryWhere
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_source',
               lower: [id],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
+              indexName: r'id_source',
               lower: [],
               upper: [id],
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idSourceEqualTo(
+      String id, MusicSource source) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id_source',
+        value: [id, source],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause>
+      idEqualToSourceNotEqualTo(String id, MusicSource source) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_source',
+              lower: [id],
+              upper: [id, source],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_source',
+              lower: [id, source],
+              includeLower: false,
+              upper: [id],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_source',
+              lower: [id, source],
+              includeLower: false,
+              upper: [id],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id_source',
+              lower: [id],
+              upper: [id, source],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause>
+      idEqualToSourceGreaterThan(
+    String id,
+    MusicSource source, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_source',
+        lower: [id, source],
+        includeLower: include,
+        upper: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idEqualToSourceLessThan(
+    String id,
+    MusicSource source, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_source',
+        lower: [id],
+        upper: [id, source],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterWhereClause> idEqualToSourceBetween(
+    String id,
+    MusicSource lowerSource,
+    MusicSource upperSource, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id_source',
+        lower: [id, lowerSource],
+        includeLower: includeLower,
+        upper: [id, upperSource],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }

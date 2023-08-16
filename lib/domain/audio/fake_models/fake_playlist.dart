@@ -11,7 +11,7 @@ final class FakePlaylist extends BasePlaylist {
     required super.tracks,
     required super.createdAt,
     required super.id,
-    required super.source,
+    required super.musicSource,
   });
 
   @override

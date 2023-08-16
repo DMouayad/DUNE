@@ -6,7 +6,7 @@ import 'isar_playlist.dart';
 
 part 'isar_playlists_listening_history.g.dart';
 
-@Collection(ignore: {'playlists', 'props', 'derived', 'stringify'})
+@Collection(ignore: {'items', 'props', 'derived', 'stringify'})
 class IsarPlaylistsListeningHistory
     extends BasePlaylistsListeningHistory<IsarPlaylist> {
   @override
