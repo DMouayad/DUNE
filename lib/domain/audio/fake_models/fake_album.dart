@@ -13,5 +13,6 @@ final class FakeAlbum extends BaseAlbum {
     required super.type,
     required super.tracks,
     required super.releaseDate,
+    required super.musicSource,
   });
 }

@@ -43,10 +43,11 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
 
   @override
   @enumerated
+  @Index()
   MusicSource get source => super.source;
 
   @override
-  @Index(unique: true, replace: true)
+  @Index(unique: true, replace: true, composite: [CompositeIndex('source')])
   String get id => super.id;
 
   final IsarDuration isarDuration;

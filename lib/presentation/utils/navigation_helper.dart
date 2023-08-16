@@ -16,14 +16,14 @@ class NavigationHelper {
     String? currentLocation,
   }) {
     assert(playlist != null || exploreItem != null);
-    final source = exploreItem?.source ?? playlist!.source;
+    final source = exploreItem?.source ?? playlist!.musicSource;
     final title = exploreItem?.title ?? playlist!.title;
     final sourceId = exploreItem?.sourceId ?? playlist!.id!;
     // fetch playlist tracks and data
     final description = exploreItem?.description ?? playlist!.description;
     final thumbnails = exploreItem?.thumbnails ?? playlist!.thumbnails;
     final tracksCount = exploreItem?.count;
-    final musicSource = exploreItem?.source ?? playlist!.source;
+    final musicSource = exploreItem?.source ?? playlist!.musicSource;
     ref.read(playlistControllerProvider.notifier).get(sourceId, source);
 
     context.push(

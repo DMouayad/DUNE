@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
 
 import 'base_track.dart';
@@ -16,6 +17,7 @@ abstract class BaseAlbum extends Equatable {
   final ThumbnailsSet thumbnails;
   final List<BaseArtist> artists;
   final List<BaseTrack> tracks;
+  final MusicSource musicSource;
 
   const BaseAlbum({
     required this.id,
@@ -29,6 +31,7 @@ abstract class BaseAlbum extends Equatable {
     required this.type,
     required this.tracks,
     required this.releaseDate,
+    required this.musicSource,
   });
 
   Map<String, dynamic> toMap() {
@@ -42,6 +45,7 @@ abstract class BaseAlbum extends Equatable {
       'title': title,
       'type': type,
       'id': id,
+      'musicSource': musicSource.name,
       'tracks': tracks.map((e) => e.toMap()).toList(),
       'releaseDate': releaseDate?.toIso8601String(),
     };
@@ -58,6 +62,7 @@ abstract class BaseAlbum extends Equatable {
         title,
         type,
         tracks,
-        releaseDate
+        releaseDate,
+        musicSource
       ];
 }

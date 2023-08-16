@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 
 class YoutubeArtist extends BaseArtist {
@@ -14,7 +15,7 @@ class YoutubeArtist extends BaseArtist {
     super.thumbnails = const ThumbnailsSet(),
     super.category,
     super.tracks = const [],
-  });
+  }) : super(musicSource: MusicSource.youtube);
 
   @override
   Set<Type> get derived => {BaseArtist};

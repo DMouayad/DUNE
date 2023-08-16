@@ -16,6 +16,15 @@ enum MusicSource {
     return [youtube, spotify].contains(this);
   }
 
+  static MusicSource byNameOrUnknown(String? name) {
+    if (name == null) return MusicSource.unknown;
+    try {
+      return values.byName(name);
+    } catch (_) {
+      return MusicSource.unknown;
+    }
+  }
+
   static List<MusicSource> get valuesWithoutUnknown =>
       [youtube, spotify, local];
 

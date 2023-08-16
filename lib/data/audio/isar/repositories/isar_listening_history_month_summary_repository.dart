@@ -42,7 +42,7 @@ class IsarListeningHistoryMonthSummaryRepository
     if (tracksIds.isNotEmpty) {
       tracks = await _isar.isarTracks
           .where()
-          .anyOf(tracksIds, (q, element) => q.idEqualTo(element!))
+          .anyOf(tracksIds, (q, element) => q.idEqualToAnySource(element!))
           .findAll();
     } else {
       tracks = [];
@@ -91,7 +91,7 @@ class IsarListeningHistoryMonthSummaryRepository
 
     final artists = await _isar.isarArtists
         .where()
-        .anyOf(artistsIds, (q, element) => q.idEqualTo(element))
+        .anyOf(artistsIds, (q, element) => q.idEqualToAnyMusicSource(element))
         .findAll();
     final topArtists = <IsarMonthListeningHistoryArtistSummary>[];
     for (var artist in artists) {
