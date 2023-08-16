@@ -1,3 +1,4 @@
+import 'package:dune/data/audio/isar/helpers/isar_sort_helper.dart';
 import 'package:dune/data/audio/isar/models/isar_category_playlists.dart';
 import 'package:dune/data/audio/isar/models/isar_playlist.dart';
 import 'package:dune/domain/audio/base_data_sources/base_playlist_data_source.dart';
@@ -113,12 +114,20 @@ class IsarPlaylistDataSource
 
   @override
   FutureOrResult<List<IsarPlaylist>> findAllWhereSource(
-      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    MusicSource musicSource,
+    QuerySortOptions sortOptions,
+  ) async {
     return await Result.fromAsync(() async {
-      return await _isar.isarPlaylists
-          .filter()
-          .musicSourceEqualTo(musicSource)
-          .findAll();
+      final baseQuery =
+          _isar.isarPlaylists.where().musicSourceEqualTo(musicSource);
+      return await sortIsarQueryByOptions(
+        baseQuery,
+        sortOptions,
+        sortByCreatedAtQuery: baseQuery.sortByCreatedAt(),
+        sortByCreatedAtDescQuery: baseQuery.sortByCreatedAtDesc(),
+        sortByNameQuery: baseQuery.sortByTitle(),
+        sortByNameDescQuery: baseQuery.sortByTitleDesc(),
+      ).findAll();
     });
   }
 
