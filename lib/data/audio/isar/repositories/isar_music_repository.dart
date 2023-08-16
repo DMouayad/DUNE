@@ -10,17 +10,17 @@ import 'package:dune/data/audio/isar/repositories/isar_listening_history_month_s
 import 'package:dune/data/audio/isar/repositories/isar_playlist_repository.dart';
 import 'package:dune/data/audio/isar/repositories/isar_playlists_listening_history_repository.dart';
 import 'package:dune/data/audio/isar/repositories/isar_tracks_listening_history_repository.dart';
-import 'package:dune/domain/audio/facades/music_facade.dart';
+import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
+import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
-import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:isar/isar.dart';
 
 import 'isar_album_repository.dart';
 import 'isar_artist_repository.dart';
 import 'isar_track_repository.dart';
 
-final class IsarMusicRepository implements CacheMusicRepository {
+final class IsarMusicRepository implements BaseLocalMusicRepository {
   IsarMusicRepository({required Isar isar}) {
     final trackDataSource = IsarTrackDataSource(isar);
     final artistDataSource = IsarArtistDataSource(isar);
@@ -61,6 +61,8 @@ final class IsarMusicRepository implements CacheMusicRepository {
         isar,
       ),
     );
+    _localMusicLibrary =
+        LocalMusicLibraryRepository(_tracks, _albums, _artists, _playlists);
   }
 
   late final IsarPlaylistRepository _playlists;
@@ -68,13 +70,14 @@ final class IsarMusicRepository implements CacheMusicRepository {
   late final IsarArtistRepository _artists;
   late final IsarAlbumRepository _albums;
   late final ListeningHistoryRepository _listeningHistory;
+  late final LocalMusicLibraryRepository _localMusicLibrary;
   late final IsarModelsRelationHelper _relationHelper;
 
   @override
   SavablePlaylistRepository get playlists => _playlists;
 
   @override
-  SavableTrackRepository get tracks => _tracks;
+  IsarTrackRepository get tracks => _tracks;
 
   ListeningHistoryRepository get listeningHistory => _listeningHistory;
 
@@ -87,4 +90,7 @@ final class IsarMusicRepository implements CacheMusicRepository {
   @override
   // TODO: implement search
   get search => throw UnimplementedError();
+
+  @override
+  LocalMusicLibraryRepository get localMusicLibrary => _localMusicLibrary;
 }
