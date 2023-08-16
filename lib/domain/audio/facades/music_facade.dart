@@ -7,6 +7,8 @@ import 'package:dune/domain/audio/base_models/base_listening_history_month_summa
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
+import 'package:dune/domain/audio/repositories/album_repository.dart';
+import 'package:dune/domain/audio/repositories/artist_repository.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
@@ -20,8 +22,6 @@ import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
 
-import 'local_music_library_facade.dart';
-
 part 'playlist_facade.dart';
 
 part 'track_facade.dart';
@@ -34,17 +34,17 @@ part 'user_listening_history_facade.dart';
 
 final class MusicFacade {
   MusicFacade._({
-    required BaseLocalMusicRepository localMusicRepository,
+    required CacheMusicRepository cacheMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
   }) {
     _playlists = PlaylistFacade(
       youtubePlaylistRepository: youtubeMusicRepository.playlists,
-      localPlaylistRepository: localMusicRepository.playlists,
+      localPlaylistRepository: cacheMusicRepository.playlists,
     );
     _tracks = TrackFacade(
       youtubeTrackRepository: youtubeMusicRepository.tracks,
-      localTrackRepository: localMusicRepository.tracks,
+      localTrackRepository: cacheMusicRepository.tracks,
     );
     _search = SearchFacade(
       youtubeSearchRepository: youtubeMusicRepository.search,
@@ -54,8 +54,6 @@ final class MusicFacade {
     );
     _userListeningHistory =
         UserListeningHistoryFacade(listeningHistoryRepository);
-    _localMusicLibrary =
-        LocalMusicLibraryFacade(localMusicRepository.localMusicLibrary);
   }
 
   static late MusicFacade _instance;
@@ -81,20 +79,22 @@ final class MusicFacade {
   static UserListeningHistoryFacade get userListeningHistory =>
       _instance._userListeningHistory;
 
-  late final LocalMusicLibraryFacade _localMusicLibrary;
-
-  static LocalMusicLibraryFacade get localMusicLibrary =>
-      _instance._localMusicLibrary;
-
   static void setInstance({
-    required BaseLocalMusicRepository localMusicRepository,
+    required CacheMusicRepository cacheMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
   }) {
     _instance = MusicFacade._(
-      localMusicRepository: localMusicRepository,
+      cacheMusicRepository: cacheMusicRepository,
       youtubeMusicRepository: youtubeMusicRepository,
       listeningHistoryRepository: listeningHistoryRepository,
     );
   }
 }
+
+typedef CacheMusicRepository = BaseMusicRepository<
+    SavablePlaylistRepository,
+    SavableTrackRepository,
+    ArtistRepository,
+    AlbumRepository,
+    SearchRepository>;
