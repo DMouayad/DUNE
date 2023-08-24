@@ -138,7 +138,8 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
   }
 
   @override
-  T copyWith<T extends BaseTrack>({
+  IsarTrack copyWith({
+    Id? isarId,
     String? id,
     AudioInfoSet? audioInfoSet,
     IsarAlbum? album,
@@ -168,7 +169,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       isarAudioInfoSet: isarAudioInfoSet,
       isExplicit: isExplicit ?? this.isExplicit,
       category: category ?? this.category,
-    ) as T;
+    );
   }
 
   factory IsarTrack.fromBase(BaseTrack baseTrack) {
@@ -207,20 +208,13 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
   ) {
     final artistsIds = <String>[];
     final extractedArtists = track.artists.map((e) {
-      final String id;
-      if (e.id != null) {
-        id = e.id!;
-        artistsIds.add(e.id!);
-      } else {
-        id = e.browseId ?? shortHash(e.name);
-      }
-      return IsarArtist.fromMap(e.toMap())
-          .copyWith(
-            albumsIds: track.album?.id != null ? [track.album!.id!] : [],
-            tracksIds: [track.id],
-            id: id,
-          )
-          .setIdIfNull();
+      final id = e.id != null ? e.id! : e.browseId ?? shortHash(e.name);
+      artistsIds.add(id);
+      return IsarArtist.fromMap(e.toMap()).copyWith(
+        albumsIds: track.album?.id != null ? [track.album!.id!] : [],
+        tracksIds: [track.id],
+        id: id,
+      );
     }).toList();
     return (artists: extractedArtists, artistsIds: artistsIds);
   }

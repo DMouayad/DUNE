@@ -32,4 +32,18 @@ abstract base class SavablePlaylistRepository<
   ) async {
     return await _dataSource.saveCategoryPlaylists(categoryId, playlists);
   }
+
+  FutureOrResult<List<BasePlaylist>> saveAll(
+    List<BasePlaylist> playlists,
+  ) async {
+    final List<BasePlaylist> result = [];
+
+    for (BasePlaylist playlist in playlists) {
+      final savingPlaylistResult = await save(playlist);
+      if (savingPlaylistResult.isSuccess) {
+        result.add(savingPlaylistResult.requireValue);
+      }
+    }
+    return result.asResult;
+  }
 }

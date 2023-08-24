@@ -4,7 +4,6 @@ import 'package:http/http.dart';
 import 'package:isar/isar.dart';
 
 import 'app_error.dart';
-import 'app_exception.dart';
 
 class ExceptionHandler {
   static Result<U, V> getResult<U, V extends AppError>(

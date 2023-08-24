@@ -1,5 +1,8 @@
 import 'package:dune/data/audio/isar/models/isar_artist.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
@@ -92,17 +95,28 @@ class IsarAlbum extends BaseAlbum {
     return null;
   }
 
+  IsarAlbum setIdIfNull() {
+    return copyWith(id: id ?? browseId ?? shortHash(title));
+  }
+
+  @override
   IsarAlbum copyWith({
     Id? isarId,
-    String? albumArtistId,
     String? id,
     String? browseId,
+    String? category,
+    String? duration,
+    bool? isExplicit,
+    String? title,
+    String? type,
+    DateTime? releaseDate,
+    ThumbnailsSet? thumbnails,
+    List<BaseArtist>? artists,
+    List<BaseTrack<BaseAlbum, BaseArtist>>? tracks,
+    MusicSource? musicSource,
+    String? albumArtistId,
     List<String>? featuredArtistsIds,
     List<String>? tracksIds,
-    IsarThumbnailsSet? thumbnails,
-    List<IsarArtist>? artists,
-    List<IsarTrack>? tracks,
-    MusicSource? musicSource,
   }) {
     return IsarAlbum(
       isarId: isarId ?? this.isarId,
@@ -112,20 +126,18 @@ class IsarAlbum extends BaseAlbum {
       featuredArtistsIds: featuredArtistsIds ?? this.featuredArtistsIds,
       tracksIds:
           tracksIds ?? tracks?.map((e) => e.id).toList() ?? this.tracksIds,
-      isarThumbnails: thumbnails ?? isarThumbnails,
+      isarThumbnails: thumbnails != null
+          ? IsarThumbnailsSet.fromMap(thumbnails.toMap())
+          : isarThumbnails,
       artists: artists ?? this.artists,
       tracks: tracks ?? this.tracks,
       musicSource: musicSource ?? this.musicSource,
-      duration: duration,
-      title: title,
-      releaseDate: releaseDate,
-      category: category,
-      isExplicit: isExplicit,
+      duration: duration ?? this.duration,
+      title: title ?? this.title,
+      releaseDate: releaseDate ?? this.releaseDate,
+      category: category ?? this.category,
+      isExplicit: isExplicit ?? this.isExplicit,
       type: type,
     );
-  }
-
-  IsarAlbum setIdIfNull() {
-    return copyWith(id: id ?? browseId ?? shortHash(title));
   }
 }

@@ -39,6 +39,12 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
 
   String get artistsNames => artists.map((e) => e.name ?? '').join(', ');
 
+  DateTime? get releaseDate {
+    return year != null && int.tryParse(year!) != null
+        ? DateTime(int.parse(year!))
+        : null;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -72,7 +78,7 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
         category,
       ];
 
-  T copyWith<T extends BaseTrack>({
+  BaseTrack copyWith({
     String? id,
     AudioInfoSet? audioInfoSet,
     AlbumType? album,

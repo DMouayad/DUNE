@@ -25,7 +25,7 @@ final class FakeTrack extends BaseTrack<FakeAlbum, FakeArtist> {
   Set<Type> get derived => {BaseTrack};
 
   @override
-  T copyWith<T extends BaseTrack>({
+  BaseTrack copyWith({
     String? id,
     AudioInfoSet? audioInfoSet,
     FakeAlbum? album,
@@ -52,6 +52,6 @@ final class FakeTrack extends BaseTrack<FakeAlbum, FakeArtist> {
       isExplicit: isExplicit ?? this.isExplicit,
       thumbnails: thumbnails ?? this.thumbnails,
       source: source ?? this.source,
-    ) as T;
+    );
   }
 }

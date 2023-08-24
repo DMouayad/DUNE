@@ -10,7 +10,7 @@ abstract base class ArtistRepository<DataSource extends BaseArtistDataSource> {
 
   ArtistRepository(this._artistDataSource);
 
-  FutureOrResult<BaseArtist?> getById(String id) async {
+  FutureResult<BaseArtist?> getById(String id) async {
     return await _artistDataSource.find(id);
   }
 }
@@ -20,7 +20,7 @@ abstract base class SavableArtistRepository<
     extends ArtistRepository<DataSource> with FindsByMusicSource<BaseArtist> {
   SavableArtistRepository(super.artistDataSource);
 
-  FutureOrResult<BaseArtist> save(BaseArtist artist);
+  FutureResult<BaseArtist> save(BaseArtist artist);
 
-  FutureOrResult<List<BaseArtist>> saveAll(List<BaseArtist> artists);
+  FutureResult<List<BaseArtist>> saveAll(List<BaseArtist> artists);
 }
