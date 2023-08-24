@@ -3,7 +3,7 @@ import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
-import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
+import 'package:dune/domain/audio/facades/local_music_library_facade.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';
@@ -13,18 +13,23 @@ import '../../../utils/isar_testing_utils.dart';
 import '../../../utils/test_with_datasets.dart';
 
 void main() {
-  late LocalMusicLibraryRepository repo;
+  late LocalMusicLibraryFacade facade;
 
   setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
   setUp(() async {
     await IsarTestingUtils.refreshDatabase();
-    repo = IsarTestingUtils.isarMusicRepo.localMusicLibrary;
+    facade = LocalMusicLibraryFacade(
+      IsarTestingUtils.isarMusicRepo.tracks,
+      IsarTestingUtils.isarMusicRepo.albums,
+      IsarTestingUtils.isarMusicRepo.artists,
+      IsarTestingUtils.isarMusicRepo.playlists,
+    );
   });
   group('loading library', () {
     test('it returns an empty [MusicLibrary] when no data exists', () async {
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await repo.loadLibrary(queryOptions)).requireValue;
+          (await facade.loadLibrary(queryOptions)).requireValue;
       expectLater(fetchedLibrary, _getEmptyMusicLibraryFor(queryOptions));
     });
     test('it returns a [MusicLibrary] containing available local tracks',
@@ -35,7 +40,7 @@ void main() {
       // act
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await repo.loadLibrary(queryOptions)).requireValue;
+          (await facade.loadLibrary(queryOptions)).requireValue;
       // expect
       expectLater(
         EqualityHelper.trackListsHaveSameIds(
@@ -51,7 +56,7 @@ void main() {
       // act
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await repo.loadLibrary(queryOptions)).requireValue;
+          (await facade.loadLibrary(queryOptions)).requireValue;
       // expect
       expectLater(
         EqualityHelper.albumListsHaveSameIds(
@@ -67,7 +72,7 @@ void main() {
       // act
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await repo.loadLibrary(queryOptions)).requireValue;
+          (await facade.loadLibrary(queryOptions)).requireValue;
       // expect
       expectLater(
         EqualityHelper.playlistListsHaveSameIds(
@@ -84,7 +89,7 @@ void main() {
         // act
         const queryOptions = QueryOptions();
         final fetchedLibrary =
-            (await repo.loadLibrary(queryOptions)).requireValue;
+            (await facade.loadLibrary(queryOptions)).requireValue;
         // expect
         expectLater(
           EqualityHelper.artistListsHaveSameIds(
@@ -104,7 +109,7 @@ void main() {
       await IsarTestingUtils.seedTracks(10, MusicSource.spotify);
       // act
       final fetchedTracks =
-          (await repo.getTracks(QueryOptions.defaultOptions())).requireValue;
+          (await facade.getTracks(QueryOptions.defaultOptions())).requireValue;
       expect(
         EqualityHelper.trackListsHaveSameIds(fetchedTracks, localTracks),
         true,
@@ -117,7 +122,7 @@ void main() {
       await IsarTestingUtils.seedTracks(5, MusicSource.local);
       const queryOptions = QueryOptions(limit: 2);
       // act
-      final fetchedTracks = (await repo.getTracks(queryOptions)).requireValue;
+      final fetchedTracks = (await facade.getTracks(queryOptions)).requireValue;
       // assert
       expectLater(fetchedTracks.length, queryOptions.limit);
     });
@@ -136,7 +141,8 @@ void main() {
         final seededTracks =
             await IsarTestingUtils.seedTracks(5, MusicSource.local);
 
-        final fetchedTracks = (await repo.getTracks(queryOptions)).requireValue;
+        final fetchedTracks =
+            (await facade.getTracks(queryOptions)).requireValue;
 
         sortItems<BaseTrack>(
           seededTracks,
@@ -166,7 +172,8 @@ void main() {
 
         // act
         final fetchedAlbums =
-            (await repo.getAlbums(QueryOptions.defaultOptions())).requireValue;
+            (await facade.getAlbums(QueryOptions.defaultOptions()))
+                .requireValue;
         expect(
           EqualityHelper.albumListsHaveSameIds(
               fetchedAlbums, seededLocalAlbums),
@@ -178,7 +185,7 @@ void main() {
         datasets: [
           (limit: 2, seedingCount: 4),
           (limit: 10, seedingCount: 6),
-          (limit: 10, seedingCount: 20),
+          (limit: 12, seedingCount: 20),
           (limit: 50, seedingCount: 50),
         ],
         testBody: (dataset) async {
@@ -188,12 +195,12 @@ void main() {
           final queryOptions = QueryOptions(limit: dataset.limit);
           // act
           final fetchedAlbums =
-              (await repo.getAlbums(queryOptions)).requireValue;
+              (await facade.getAlbums(queryOptions)).requireValue;
           // assert
-          if (dataset.seedingCount < dataset.limit) {
-            expectLater(fetchedAlbums.length, dataset.seedingCount);
+          if (dataset.seedingCount <= dataset.limit) {
+            expect(fetchedAlbums.length, dataset.seedingCount);
           } else {
-            expectLater(fetchedAlbums.length, dataset.limit);
+            expect(fetchedAlbums.length, dataset.limit);
           }
         },
       );
@@ -212,7 +219,7 @@ void main() {
           final seededAlbums =
               await IsarTestingUtils.seedAlbums(5, MusicSource.local);
           final fetchedAlbums =
-              (await repo.getAlbums(queryOptions)).requireValue;
+              (await facade.getAlbums(queryOptions)).requireValue;
 
           sortItems<BaseAlbum>(
             seededAlbums,
@@ -241,7 +248,7 @@ void main() {
 
       // act
       final fetchedArtists =
-          (await repo.getArtists(QueryOptions.defaultOptions())).requireValue;
+          (await facade.getArtists(QueryOptions.defaultOptions())).requireValue;
       expect(
         EqualityHelper.artistListsHaveSameIds(fetchedArtists, seededArtists),
         true,
@@ -254,7 +261,8 @@ void main() {
       await IsarTestingUtils.seedArtists(5, MusicSource.local);
       const queryOptions = QueryOptions(limit: 2);
       // act
-      final fetchedArtists = (await repo.getArtists(queryOptions)).requireValue;
+      final fetchedArtists =
+          (await facade.getArtists(queryOptions)).requireValue;
       // assert
       expectLater(fetchedArtists.length, queryOptions.limit);
     });
@@ -270,7 +278,7 @@ void main() {
             await IsarTestingUtils.seedArtists(5, MusicSource.local);
 
         final fetchedArtists =
-            (await repo.getArtists(queryOptions)).requireValue;
+            (await facade.getArtists(queryOptions)).requireValue;
 
         sortItems<BaseArtist>(
           seededArtists,

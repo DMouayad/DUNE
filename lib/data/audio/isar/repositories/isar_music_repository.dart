@@ -12,7 +12,6 @@ import 'package:dune/data/audio/isar/repositories/isar_playlists_listening_histo
 import 'package:dune/data/audio/isar/repositories/isar_tracks_listening_history_repository.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
-import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:isar/isar.dart';
 
@@ -61,8 +60,6 @@ final class IsarMusicRepository implements BaseLocalMusicRepository {
         isar,
       ),
     );
-    _localMusicLibrary =
-        LocalMusicLibraryRepository(_tracks, _albums, _artists, _playlists);
   }
 
   late final IsarPlaylistRepository _playlists;
@@ -70,7 +67,6 @@ final class IsarMusicRepository implements BaseLocalMusicRepository {
   late final IsarArtistRepository _artists;
   late final IsarAlbumRepository _albums;
   late final ListeningHistoryRepository _listeningHistory;
-  late final LocalMusicLibraryRepository _localMusicLibrary;
   late final IsarModelsRelationHelper _relationHelper;
 
   @override
@@ -90,7 +86,4 @@ final class IsarMusicRepository implements BaseLocalMusicRepository {
   @override
   // TODO: implement search
   get search => throw UnimplementedError();
-
-  @override
-  LocalMusicLibraryRepository get localMusicLibrary => _localMusicLibrary;
 }

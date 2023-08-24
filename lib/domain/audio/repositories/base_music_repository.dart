@@ -1,5 +1,3 @@
-import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
-
 import 'album_repository.dart';
 import 'artist_repository.dart';
 import 'explore_music_repository.dart';
@@ -43,8 +41,6 @@ abstract interface class BaseLocalMusicRepository<
         Tracks extends SavableTrackRepository,
         Artists extends SavableArtistRepository,
         Albums extends SavableAlbumRepository,
-        Search extends SearchRepository,
-        LocalMusicLibrary extends LocalMusicLibraryRepository>
-    implements BaseMusicRepository<Playlists, Tracks, Artists, Albums, Search> {
-  LocalMusicLibrary get localMusicLibrary;
-}
+        Search extends SearchRepository>
+    implements
+        BaseMusicRepository<Playlists, Tracks, Artists, Albums, Search> {}

@@ -10,7 +10,7 @@ import 'package:dune/domain/audio/base_models/listening_history_collection.dart'
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
-import 'package:dune/domain/audio/repositories/local_music_library_repository.dart';
+import 'package:dune/domain/audio/facades/local_music_library_facade.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:dune/domain/audio/repositories/search_repository.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
@@ -53,7 +53,12 @@ final class MusicFacade {
     );
     _userListeningHistory =
         UserListeningHistoryFacade(listeningHistoryRepository);
-    _localMusicLibrary = localMusicRepository.localMusicLibrary;
+    _localMusicLibrary = LocalMusicLibraryFacade(
+      localMusicRepository.tracks,
+      localMusicRepository.albums,
+      localMusicRepository.artists,
+      localMusicRepository.playlists,
+    );
   }
 
   static late MusicFacade _instance;
@@ -79,9 +84,9 @@ final class MusicFacade {
   static UserListeningHistoryFacade get userListeningHistory =>
       _instance._userListeningHistory;
 
-  late final LocalMusicLibraryRepository _localMusicLibrary;
+  late final LocalMusicLibraryFacade _localMusicLibrary;
 
-  static LocalMusicLibraryRepository get localMusicLibrary =>
+  static LocalMusicLibraryFacade get localMusicLibrary =>
       _instance._localMusicLibrary;
 
   static void setInstance({
