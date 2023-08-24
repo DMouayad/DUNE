@@ -12,48 +12,112 @@ import 'package:dune/support/utils/result/result.dart';
 
 import 'playlist_repository.dart';
 
-class LocalMusicLibraryRepository {
+class LocalMusicLibraryRepository with TrackDataExtractor {
   final SavableTrackRepository _trackRepository;
   final SavableAlbumRepository _albumRepository;
   final SavableArtistRepository _artistRepository;
   final SavablePlaylistRepository _playlistRepository;
 
-  const LocalMusicLibraryRepository(
+  LocalMusicLibraryRepository(
     this._trackRepository,
     this._albumRepository,
     this._artistRepository,
     this._playlistRepository,
   );
 
-  FutureOrResult<MusicLibrary> loadLibrary() async {
-    throw UnimplementedError();
+  MusicLibrary _cachedLibrary = MusicLibrary();
+
+  /// Loads local library from local database.
+  /// the [queryOptions] will be used to load this library media(tracks, artists,
+  /// albums, playlists).
+  FutureOrResult<MusicLibrary> loadLibrary(QueryOptions queryOptions) async {
+    final library = MusicLibrary();
+
+    await _trackRepository
+        .findAllWhereSource(_localSource, queryOptions)
+        .foldThen(
+          onSuccess: (fetchedTracks) =>
+              library.setTracks(fetchedTracks, queryOptions),
+        );
+    //
+    await _playlistRepository
+        .findAllWhereSource(_localSource, queryOptions)
+        .foldThen(
+          onSuccess: (playlists) =>
+              library.setPlaylists(playlists, queryOptions),
+        );
+    await _artistRepository
+        .findAllWhereSource(_localSource, queryOptions)
+        .foldThen(
+          onSuccess: (artists) => library.setArtists(artists, queryOptions),
+        );
+    await _albumRepository
+        .findAllWhereSource(_localSource, queryOptions)
+        .foldThen(
+          onSuccess: (albums) => library.setAlbums(albums, queryOptions),
+        );
+    //
+    _cachedLibrary = library;
+    return library.asResult;
   }
 
   MusicSource get _localSource => MusicSource.local;
 
-  FutureOrResult<List<BaseArtist>> getArtists(
-    QuerySortOptions sortOptions,
+  FutureResult<MusicLibrary> createLibraryFromTracks(
+    List<BaseTrack> tracks,
   ) async {
-    return await _artistRepository.findAllWhereSource(
-      _localSource,
-      sortOptions,
-    );
+    //
+    final savingTracks = await _trackRepository.saveAll(tracks);
+    if (savingTracks.isFailure) {
+      return savingTracks.mapFailure((error) => error);
+    }
+    return await loadLibrary(QueryOptions.defaultOptions());
   }
 
-  FutureOrResult<List<BaseTrack>> getTracks(
-    QuerySortOptions sortOptions,
-  ) async {
-    return await _trackRepository.findAllWhereSource(_localSource, sortOptions);
+  FutureOrResult<List<BaseArtist>> getArtists(QueryOptions queryOptions) async {
+    return _cachedLibrary.getArtists(queryOptions)?.asResult ??
+        (await _artistRepository.findAllWhereSource(_localSource, queryOptions))
+            .fold(
+                onSuccess: (value) =>
+                    _cachedLibrary.setArtists(value, queryOptions));
   }
 
-  FutureOrResult<List<BaseAlbum>> getAlbums(
-      QuerySortOptions sortOptions) async {
-    return await _albumRepository.findAllWhereSource(_localSource, sortOptions);
+  FutureOrResult<List<BaseTrack>> getTracks(QueryOptions queryOptions) async {
+    return _cachedLibrary.getTracks(queryOptions)?.asResult ??
+        (await _trackRepository.findAllWhereSource(_localSource, queryOptions))
+            .fold(onSuccess: (value) {
+          _cachedLibrary.setTracks(value, queryOptions);
+        });
   }
 
-  FutureOrResult<List<BasePlaylist>> getPlaylists(
-      QuerySortOptions sortOptions) async {
-    return await _playlistRepository.findAllWhereSource(
-        _localSource, sortOptions);
+  FutureOrResult<List<BaseAlbum>> getAlbums(QueryOptions queryOptions) async {
+    return _cachedLibrary.getAlbums(queryOptions)?.asResult ??
+        (await _albumRepository.findAllWhereSource(_localSource, queryOptions))
+            .fold(
+          onSuccess: (value) => _cachedLibrary.setAlbums(value, queryOptions),
+        );
+  }
+}
+
+mixin TrackDataExtractor {
+  (List<BaseArtist> artists, List<BaseAlbum> albums) extractDataFromTracks(
+    List<BaseTrack> tracks,
+  ) {
+    final Map<String, BaseArtist> artists = {};
+    final Map<String, BaseAlbum> albums = {};
+    for (var track in tracks) {
+      final albumId = track.album?.id;
+      if (albumId != null && !albums.containsKey(albumId)) {
+        albums[albumId] = track.album!;
+      }
+      if (track.artists.isNotEmpty) {
+        for (var artist in track.artists) {
+          if (artist.id != null && !artists.containsKey(artist.id)) {
+            artists[artist.id!] = artist;
+          }
+        }
+      }
+    }
+    return (artists.values.toList(), albums.values.toList());
   }
 }
