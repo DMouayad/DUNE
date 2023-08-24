@@ -1,6 +1,5 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
-import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
 import 'package:dune/domain/audio/repositories/album_repository.dart';
@@ -10,15 +9,15 @@ import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 
-import 'playlist_repository.dart';
+import '../repositories/playlist_repository.dart';
 
-class LocalMusicLibraryRepository with TrackDataExtractor {
+class LocalMusicLibraryFacade {
   final SavableTrackRepository _trackRepository;
   final SavableAlbumRepository _albumRepository;
   final SavableArtistRepository _artistRepository;
   final SavablePlaylistRepository _playlistRepository;
 
-  LocalMusicLibraryRepository(
+  LocalMusicLibraryFacade(
     this._trackRepository,
     this._albumRepository,
     this._artistRepository,
@@ -27,7 +26,7 @@ class LocalMusicLibraryRepository with TrackDataExtractor {
 
   MusicLibrary _cachedLibrary = MusicLibrary();
 
-  /// Loads local library from local database.
+  /// Loads local library from the local database.
   /// the [queryOptions] will be used to load this library media(tracks, artists,
   /// albums, playlists).
   FutureOrResult<MusicLibrary> loadLibrary(QueryOptions queryOptions) async {
@@ -63,7 +62,7 @@ class LocalMusicLibraryRepository with TrackDataExtractor {
 
   MusicSource get _localSource => MusicSource.local;
 
-  FutureResult<MusicLibrary> createLibraryFromTracks(
+  FutureResult<MusicLibrary> addTracksToLibrary(
     List<BaseTrack> tracks,
   ) async {
     //
@@ -96,28 +95,5 @@ class LocalMusicLibraryRepository with TrackDataExtractor {
             .fold(
           onSuccess: (value) => _cachedLibrary.setAlbums(value, queryOptions),
         );
-  }
-}
-
-mixin TrackDataExtractor {
-  (List<BaseArtist> artists, List<BaseAlbum> albums) extractDataFromTracks(
-    List<BaseTrack> tracks,
-  ) {
-    final Map<String, BaseArtist> artists = {};
-    final Map<String, BaseAlbum> albums = {};
-    for (var track in tracks) {
-      final albumId = track.album?.id;
-      if (albumId != null && !albums.containsKey(albumId)) {
-        albums[albumId] = track.album!;
-      }
-      if (track.artists.isNotEmpty) {
-        for (var artist in track.artists) {
-          if (artist.id != null && !artists.containsKey(artist.id)) {
-            artists[artist.id!] = artist;
-          }
-        }
-      }
-    }
-    return (artists.values.toList(), albums.values.toList());
   }
 }
