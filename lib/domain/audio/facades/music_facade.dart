@@ -7,17 +7,19 @@ import 'package:dune/domain/audio/base_models/base_listening_history_month_summa
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
+import 'package:dune/domain/audio/base_models/music_library.dart';
+import 'package:dune/domain/audio/repositories/album_repository.dart';
+import 'package:dune/domain/audio/repositories/artist_repository.dart';
 import 'package:dune/domain/audio/repositories/base_music_repository.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:dune/domain/audio/repositories/explore_music_repository.dart';
-import 'package:dune/domain/audio/facades/local_music_library_facade.dart';
 import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:dune/domain/audio/repositories/search_repository.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
-import 'package:dune/support/logger_service.dart';
+import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,8 @@ part 'search_facade.dart';
 part 'explore_music_facade.dart';
 
 part 'user_listening_history_facade.dart';
+
+part 'local_music_library_facade.dart';
 
 final class MusicFacade {
   MusicFacade._({

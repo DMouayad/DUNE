@@ -3,7 +3,7 @@ import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
-import 'package:dune/domain/audio/facades/local_music_library_facade.dart';
+import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';

@@ -22,7 +22,8 @@ class ExploreMusicCategoriesController
         .copyWithPrevious(state.hasValue && state.value != null
             ? AsyncData(state.value!)
             : initialState);
-    (await MusicFacade.playlists.getCachedCategoryPlaylists(categoryId))
+    (await MusicFacade.playlists
+            .getCategoryPlaylistsFromLocalStorage(categoryId))
         .foldAsync(
       onSuccess: (playlists) async {
         if (playlists != null) {

@@ -1,15 +1,4 @@
-import 'package:dune/domain/audio/base_models/base_album.dart';
-import 'package:dune/domain/audio/base_models/base_artist.dart';
-import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/base_models/music_library.dart';
-import 'package:dune/domain/audio/repositories/album_repository.dart';
-import 'package:dune/domain/audio/repositories/artist_repository.dart';
-import 'package:dune/domain/audio/repositories/track_repository.dart';
-import 'package:dune/support/enums/music_source.dart';
-import 'package:dune/support/models/query_options.dart';
-import 'package:dune/support/utils/result/result.dart';
-
-import '../repositories/playlist_repository.dart';
+part of 'music_facade.dart';
 
 class LocalMusicLibraryFacade {
   final SavableTrackRepository _trackRepository;
@@ -65,7 +54,6 @@ class LocalMusicLibraryFacade {
   FutureResult<MusicLibrary> addTracksToLibrary(
     List<BaseTrack> tracks,
   ) async {
-    //
     final savingTracks = await _trackRepository.saveAll(tracks);
     if (savingTracks.isFailure) {
       return savingTracks.mapFailure((error) => error);

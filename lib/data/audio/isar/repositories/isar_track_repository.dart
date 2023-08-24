@@ -107,9 +107,10 @@ final class IsarTrackRepository extends SavableTrackRepository {
   @override
   FutureOrResult<List<BaseTrack>> findAllWhereSource(
     MusicSource musicSource,
-    QueryOptions sortOptions,
+    QueryOptions queryOptions,
   ) async {
-    return (await _trackDataSource.findAllWhereSource(musicSource, sortOptions))
+    return (await _trackDataSource.findAllWhereSource(
+            musicSource, queryOptions))
         .flatMapSuccessAsync((value) async {
       if (value.isNotEmpty) {
         return await _relationHelper.loadRelationsForTracks(value);

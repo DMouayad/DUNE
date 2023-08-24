@@ -46,7 +46,7 @@ void main() {
     test(
         'it returns a playlist with a list of tracks with [MusicSource.youtube]',
         () async {
-      final playlistResult = await facade.getPlaylist(
+      final playlistResult = await facade.getPlaylistFromOriginSource(
         playlist.id!,
         MusicSource.youtube,
       );
@@ -99,8 +99,8 @@ void main() {
     test(
       'it saves playlist data after its fetched from [youtubePlaylistRepository]',
       () async {
-        final result =
-            await facade.getPlaylist(youtubePlaylist.id!, MusicSource.youtube);
+        final result = await facade.getPlaylistFromOriginSource(
+            youtubePlaylist.id!, MusicSource.youtube);
         expectLater(result.isSuccess, true);
         // assert playlist was fetched from youtube source
         expectLater(result.requireValue, youtubePlaylist);
@@ -108,7 +108,7 @@ void main() {
         await Future.delayed(const Duration(seconds: 1));
         //
         final fetchingLocalPlaylistResult =
-            await facade.getCachedPlaylistInfo(youtubePlaylist.id!);
+            await facade.getPlaylistFromLocalStorage(youtubePlaylist.id!);
         expectLater(fetchingLocalPlaylistResult.isSuccess, true);
         assertPlaylistsHasSameProps(
             fetchingLocalPlaylistResult.requireValue, youtubePlaylist);
@@ -118,7 +118,8 @@ void main() {
       'it saves playlist data after its fetched from [spotifyPlaylistRepository]',
       () async {
         final fetchingRemotePlaylistResult =
-            await facade.getPlaylist(spotifyPlaylist.id!, MusicSource.spotify);
+            await facade.getPlaylistFromOriginSource(
+                spotifyPlaylist.id!, MusicSource.spotify);
         expectLater(fetchingRemotePlaylistResult.isSuccess, true);
         // assert playlist was fetched from youtube source
         expectLater(fetchingRemotePlaylistResult.requireValue, spotifyPlaylist);
@@ -126,7 +127,7 @@ void main() {
         await Future.delayed(const Duration(seconds: 1));
         //
         final fetchingLocalPlaylistResult =
-            await facade.getCachedPlaylistInfo(spotifyPlaylist.id!);
+            await facade.getPlaylistFromLocalStorage(spotifyPlaylist.id!);
         expectLater(fetchingLocalPlaylistResult.isSuccess, true);
         assertPlaylistsHasSameProps(
           fetchingLocalPlaylistResult.requireValue,
@@ -147,7 +148,7 @@ void main() {
         await Future.delayed(const Duration(seconds: 2));
         //
         final localPlaylistsResult =
-            await facade.getCachedCategoryPlaylists(categoryId);
+            await facade.getCategoryPlaylistsFromLocalStorage(categoryId);
         expectLater(localPlaylistsResult.isSuccess, true);
         expectLater(localPlaylistsResult.requireValue != null, true);
         assertTwoListsHaveSamePlaylists(
@@ -169,7 +170,7 @@ void main() {
         await Future.delayed(const Duration(seconds: 2));
         //
         final localPlaylistsResult =
-            await facade.getCachedCategoryPlaylists(categoryId);
+            await facade.getCategoryPlaylistsFromLocalStorage(categoryId);
         expectLater(localPlaylistsResult.isSuccess, true);
         expectLater(localPlaylistsResult.requireValue != null, true);
         assertTwoListsHaveSamePlaylists(
