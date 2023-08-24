@@ -56,7 +56,7 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
       duration:
           _duration ?? Duration(seconds: faker.randomGenerator.integer(400)),
       title: _title ?? faker.lorem.sentence(),
-      year: _year ?? faker.date.year(),
+      year: _year ?? faker.date.dateTime().year.toString(),
       views: _views ?? faker.randomGenerator.integer(9999),
       category: _category,
       isExplicit: _isExplicit ?? faker.randomGenerator.boolean(),

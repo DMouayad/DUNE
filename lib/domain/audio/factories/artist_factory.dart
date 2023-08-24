@@ -19,10 +19,10 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   late final ThumbnailsSet? _thumbnails;
   late final List<BaseTrack>? _tracks;
   late final List<BaseAlbum>? _albums;
-  late final MusicSource? musicSource;
+  late final MusicSource? _musicSource;
 
   ArtistFactory() {
-    _id = _name = _description = _browseId = musicSource = _radioId =
+    _id = _name = _description = _browseId = _musicSource = _radioId =
         _shuffleId = _category = _thumbnails = _tracks = _albums = null;
   }
 
@@ -30,7 +30,7 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   FakeArtist create() {
     return FakeArtist(
       id: _id ?? faker.randomGenerator.string(20, min: 6) + faker.date.time(),
-      musicSource: musicSource ??
+      musicSource: _musicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
       browseId:
           _browseId ?? faker.randomGenerator.string(10) + faker.lorem.word(),
@@ -56,6 +56,7 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
     ThumbnailsSet? thumbnails,
     List<BaseTrack>? tracks,
     List<BaseAlbum>? albums,
+    MusicSource? musicSource,
   }) {
     return ArtistFactory._(
       id: id ?? _id,
@@ -66,6 +67,7 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
       shuffleId: shuffleId ?? _shuffleId,
       category: category ?? _category,
       thumbnails: thumbnails ?? _thumbnails,
+      musicSource: musicSource ?? _musicSource,
       tracks: tracks ?? _tracks,
       albums: albums ?? _albums,
     );
@@ -79,6 +81,10 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
     return _copyWith(albums: albums);
   }
 
+  ArtistFactory setMusicSource(MusicSource? musicSource) {
+    return _copyWith(musicSource: musicSource);
+  }
+
   ArtistFactory._({
     required String? id,
     required String? name,
@@ -90,6 +96,7 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
     required ThumbnailsSet? thumbnails,
     required List<BaseTrack>? tracks,
     required List<BaseAlbum>? albums,
+    required MusicSource? musicSource,
   })  : _id = id,
         _name = name,
         _description = description,
@@ -99,5 +106,6 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
         _category = category,
         _thumbnails = thumbnails,
         _tracks = tracks,
+        _musicSource = musicSource,
         _albums = albums;
 }
