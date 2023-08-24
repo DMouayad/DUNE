@@ -20,13 +20,17 @@ base class TrackListeningHistorySeeder {
     return trackHistory;
   }
 
-  Future<List<BaseTrackListeningHistory>> seedCount([
+  Future<List<BaseTrackListeningHistory>> seedRandomCount(
+      [DateTime? date]) async {
+    return await seedCount(faker.randomGenerator.integer(100), date);
+  }
+
+  Future<List<BaseTrackListeningHistory>> seedCount(
+    int count, [
     DateTime? date,
-    int? count,
   ]) async {
-    final tracksHistories = TrackListeningHistoryFactory()
-        .setDate(date)
-        .createCount(count ?? faker.randomGenerator.integer(100));
+    final tracksHistories =
+        TrackListeningHistoryFactory().setDate(date).createCount(count);
     for (int i = 0; i < tracksHistories.length; i++) {
       await onSaveTrackHistory(tracksHistories[i]);
       Log.d("Seeding TrackListeningHistories: [${i + 1}] Done.");

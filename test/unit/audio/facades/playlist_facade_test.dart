@@ -7,7 +7,7 @@ import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/fake_repositories/fake_playlist_repository.dart';
-import '../../../utils/isar_test_db.dart';
+import '../../../utils/isar_testing_utils.dart';
 
 Future<PlaylistFacade> _setupFacadeWith({
   required FakePlaylistRepository youtubeRepository,
@@ -16,7 +16,7 @@ Future<PlaylistFacade> _setupFacadeWith({
   return PlaylistFacade(
     youtubePlaylistRepository: youtubeRepository,
     spotifyPlaylistRepository: spotifyRepository,
-    localPlaylistRepository: isarMusicRepo.playlists,
+    localPlaylistRepository: IsarTestingUtils.isarMusicRepo.playlists,
   );
 }
 
@@ -26,8 +26,8 @@ final fakeSpotifyPlaylistFactory =
     PlaylistFactory().setMusicSource(MusicSource.spotify);
 
 void main() {
-  setUpAll(() async => await initIsarForTesting());
-  setUp(() async => await refreshDatabase());
+  setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
+  setUp(() async => await IsarTestingUtils.refreshDatabase());
   group(
       'test it fetches items from YoutubeRepository when provided source is'
       '[MusicSource.youtube]', () {

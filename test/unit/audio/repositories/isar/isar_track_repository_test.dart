@@ -5,22 +5,25 @@ import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/domain/audio/fake_models/fake_track.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../utils/isar_test_db.dart';
+import '../../../../utils/isar_testing_utils.dart';
 import '../../../../utils/equality_helper.dart';
 
 void main() {
-  setUpAll(() async => await initIsarForTesting());
-  setUp(() async => await refreshDatabase());
+  setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
+  setUp(() async => await IsarTestingUtils.refreshDatabase());
   Future<BaseTrack?> saveThenFetchTrack(FakeTrack track) async {
-    final savingResult = await isarMusicRepo.tracks.save(track);
+    final savingResult =
+        await IsarTestingUtils.isarMusicRepo.tracks.save(track);
     if (savingResult.isFailure) return null;
-    // now get the track by id and assert it's the same as saved one
-    return (await isarMusicRepo.tracks.getById(track.id)).requireValue;
+    // now get the track by id
+    return (await IsarTestingUtils.isarMusicRepo.tracks.getById(track.id))
+        .requireValue;
   }
 
   test('it should save track in DB', () async {
     final track = TrackFactory().create();
-    final fetchingTrackBefore = await isarMusicRepo.tracks.getById(track.id);
+    final fetchingTrackBefore =
+        await IsarTestingUtils.isarMusicRepo.tracks.getById(track.id);
     // assert track isn't already saved in the database
     expectLater(fetchingTrackBefore.requireValue == null, true);
     // now save the track then fetch it again
@@ -51,15 +54,20 @@ void main() {
   });
   test('it should save track audio info in DB', () async {
     final track = TrackFactory().withoutAudioInfo().create();
-    final fetchingTrackBefore = await isarMusicRepo.tracks.getById(track.id);
+    final fetchingTrackBefore =
+        await IsarTestingUtils.isarMusicRepo.tracks.getById(track.id);
     // assert track doesn't already have an [AudioInfoSet]
     expectLater(fetchingTrackBefore.requireValue?.audioInfoSet, null);
+
     final audioInfoSet = AudioInfoSetFactory().create();
     final trackWithAudio = track.copyWith(audioInfoSet: audioInfoSet);
+
     // save the updated version of track which has an [AudioInfoSet]
-    await isarMusicRepo.tracks.save(trackWithAudio);
+    await IsarTestingUtils.isarMusicRepo.tracks.save(trackWithAudio);
+
     // now get the track by id and assert it has the same [audioInfoSet]
-    final fetchingTrackAfter = await isarMusicRepo.tracks.getById(track.id);
+    final fetchingTrackAfter =
+        await IsarTestingUtils.isarMusicRepo.tracks.getById(track.id);
     expectLater(fetchingTrackAfter.requireValue?.audioInfoSet, audioInfoSet);
   });
 }

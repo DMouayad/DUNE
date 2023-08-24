@@ -7,22 +7,22 @@ import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/fake_repositories/fake_track_repository.dart';
-import '../../../utils/isar_test_db.dart';
+import '../../../utils/isar_testing_utils.dart';
 
 Future<TrackFacade> _setupFacadeWith({
   required FakeOnlineSourceTrackRepository youtubeRepository,
 }) async {
   return TrackFacade(
-    localTrackRepository: isarMusicRepo.tracks,
+    localTrackRepository: IsarTestingUtils.isarMusicRepo.tracks,
     youtubeTrackRepository: youtubeRepository,
   );
 }
 
 void main() {
-  setUpAll(() async => await initIsarForTesting());
-  setUp(() async => await refreshDatabase());
+  setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
+  setUp(() async => await IsarTestingUtils.refreshDatabase());
   group(
-    'test it fetches items from YoutubeRepository when provided source is'
+    'fetching items from YoutubeRepository when provided source is'
     '[MusicSource.youtube]',
     () {
       final ytTrackAudioInfo = TrackAudioInfoFactory()
@@ -38,7 +38,7 @@ void main() {
         );
       });
       test(
-          'it returns a [TrackAudioInfo] with a source of [MusicSource.youtube]'
+          'it returns a list of [TrackAudioInfo] with the source([MusicSource.youtube])'
           'when provided source is [MusicSource.youtube]', () async {
         final audioInfoResult = await facade.getTrackAudioInfo(
           TrackFactory().setMusicSource(MusicSource.youtube).create(),

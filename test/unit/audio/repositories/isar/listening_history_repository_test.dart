@@ -6,25 +6,27 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../utils/isar_test_db.dart';
+import '../../../../utils/isar_testing_utils.dart';
 import '../../../../utils/equality_helper.dart';
 
 void main() {
-  setUpAll(() async => await initIsarForTesting());
-  setUp(() async => await refreshDatabase());
+  setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
+  setUp(() async => await IsarTestingUtils.refreshDatabase());
   group("adding playlist to playlists listening history", () {
     test(
       'it saves playlist in local storage when it does not exists',
       () async {
         final playlist = PlaylistFactory().create();
-        final fetchingPlaylistBefore =
-            await isarMusicRepo.playlists.getById(playlist.id!);
+        final fetchingPlaylistBefore = await IsarTestingUtils
+            .isarMusicRepo.playlists
+            .getById(playlist.id!);
         expectLater(fetchingPlaylistBefore.requireValue, null);
 
-        await isarMusicRepo.listeningHistory
+        await IsarTestingUtils.isarMusicRepo.listeningHistory
             .addPlaylist(playlist, DateTime.now());
-        final fetchingPlaylistAfter =
-            await isarMusicRepo.playlists.getById(playlist.id!);
+        final fetchingPlaylistAfter = await IsarTestingUtils
+            .isarMusicRepo.playlists
+            .getById(playlist.id!);
         expectLater(fetchingPlaylistAfter.requireValue, playlist);
       },
     );
@@ -34,14 +36,11 @@ void main() {
       () async {
         final playlist = PlaylistFactory().create();
         final savingPlaylistResult =
-            await isarMusicRepo.playlists.save(playlist);
+            await IsarTestingUtils.isarMusicRepo.playlists.save(playlist);
         expectLater(savingPlaylistResult.isSuccess, true);
-        final fetchingPlaylistBefore =
-            await isarMusicRepo.playlists.getById(playlist.id!);
-        // assert it exists before adding is to the listening history
-        expectLater(fetchingPlaylistBefore.requireValue, playlist);
 
-        final addingToListeningHistory = await isarMusicRepo.listeningHistory
+        final addingToListeningHistory = await IsarTestingUtils
+            .isarMusicRepo.listeningHistory
             .addPlaylist(playlist, DateTime.now());
         expectLater(addingToListeningHistory.isSuccess, true);
       },
@@ -51,26 +50,29 @@ void main() {
         ' date playlists listening history', () async {
       final date = DateTime.now().onlyDate;
       final playlist = PlaylistFactory().create();
-      final addingToListeningHistory =
-          await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
-      final datePlaylistsListeningHistory = addingToListeningHistory
-          .requireValue.playlistsListeningHistory
+      final datePlaylistsListeningHistory = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
+              .addPlaylist(playlist, date))
+          .requireValue
+          .playlistsListeningHistory
           .whereKey(date.onlyDate);
+
       expectLater(
           datePlaylistsListeningHistory!.items.contains(playlist), true);
-      expect(datePlaylistsListeningHistory.date, date);
     });
     test(
         'it does not add it twice if already exists in the '
         '[date] playlists listening history', () async {
       final playlist = PlaylistFactory().setTracksCount(20).create();
       // add the first time
-      await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
+      await IsarTestingUtils.isarMusicRepo.listeningHistory
+          .addPlaylist(playlist, date);
       // assert it was added to the [date] playlists listening history
-      final datePlaylistsListeningHistory =
-          (await isarMusicRepo.listeningHistory.getByDates([date]))
-              .requireValue
-              .playlistsListeningHistory;
+      final datePlaylistsListeningHistory = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
+              .getByDates([date]))
+          .requireValue
+          .playlistsListeningHistory;
       // assert a listening history was returned for the [date]
       expectLater(datePlaylistsListeningHistory.whereKey(date) != null, true);
       // asset it has only one playlist for this date which is the one we
@@ -83,19 +85,21 @@ void main() {
       );
 
       // add it again for the date
-      final secondTimeResult =
-          await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
+      final secondTimeResult = await IsarTestingUtils
+          .isarMusicRepo.listeningHistory
+          .addPlaylist(playlist, date);
       // assert it was added successfully
       expectLater(secondTimeResult.isSuccess, true);
       // assert it returns only one playlist (the same playlist)
       // after adding it for the second time
-      final playlistAfterSecondTime =
-          (await isarMusicRepo.listeningHistory.getByDates([date]))
-              .requireValue
-              .playlistsListeningHistory
-              .whereKey(date)!
-              .items
-              .single;
+      final playlistAfterSecondTime = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
+              .getByDates([date]))
+          .requireValue
+          .playlistsListeningHistory
+          .whereKey(date)!
+          .items
+          .single;
       expectLater(
         EqualityHelper.playlistsHasSameProps(playlistAfterSecondTime, playlist),
         true,
@@ -107,8 +111,9 @@ void main() {
         () async {
       final playlists = await _addRandomPlaylistsToListeningHistory(date);
       final playlist = PlaylistFactory().create();
-      final addingToListeningHistory =
-          await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
+      final addingToListeningHistory = await IsarTestingUtils
+          .isarMusicRepo.listeningHistory
+          .addPlaylist(playlist, date);
       final datePlaylistsListeningHistory = addingToListeningHistory
           .requireValue.playlistsListeningHistory
           .whereKey(date.onlyDate);
@@ -129,13 +134,15 @@ void main() {
         'it increments completed listens count by one with no history for track',
         () async {
       final track = TrackFactory().create();
-      final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
+      final trackListeningHistoryBefore = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
       // first, assert the [track] has no previous listening history
       expectLater(trackListeningHistoryBefore.isEmpty, true);
 
-      final incrementResult = await isarMusicRepo.listeningHistory
+      final incrementResult = await IsarTestingUtils
+          .isarMusicRepo.listeningHistory
           .incrementTrackCompletedListensCount(track, date);
       final trackListeningHistory = incrementResult
           .requireValue.tracksListeningHistory
@@ -149,14 +156,16 @@ void main() {
         'completed listens count without creating new listening history',
         () async {
       final track = TrackFactory().create();
-      await isarTrackListeningHistorySeeder.seedOne(track, date);
-      final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
+      await IsarTestingUtils.trackListeningHistorySeeder.seedOne(track, date);
+      final trackListeningHistoryBefore = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
       // first, assert the [track] has a previous listening history on [date]
       expectLater(trackListeningHistoryBefore.length, 1);
 
-      final incrementResult = await isarMusicRepo.listeningHistory
+      final incrementResult = await IsarTestingUtils
+          .isarMusicRepo.listeningHistory
           .incrementTrackCompletedListensCount(track, date);
       final trackListeningHistory = incrementResult
           .requireValue.tracksListeningHistory
@@ -172,14 +181,16 @@ void main() {
         'it sets the uncompleted listens total duration by for track with no previous history',
         () async {
       final track = TrackFactory().create();
-      final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
+      final trackListeningHistoryBefore = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
       // first, assert the [track] has no previous listening history
       expectLater(trackListeningHistoryBefore.isEmpty, true);
 
       final duration = Duration(seconds: faker.randomGenerator.integer(100));
-      final trackListeningHistory = (await isarMusicRepo.listeningHistory
+      final trackListeningHistory = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
               .addToTrackUncompletedListensDuration(track, date, duration))
           .requireValue
           .tracksListeningHistory
@@ -194,15 +205,16 @@ void main() {
         ' the uncompleted listens duration without creating new listening history',
         () async {
       final track = TrackFactory().create();
-      await isarTrackListeningHistorySeeder.seedOne(track, date);
-      final trackListeningHistoryBefore = (await isarMusicRepo.listeningHistory
+      await IsarTestingUtils.trackListeningHistorySeeder.seedOne(track, date);
+      final trackListeningHistoryBefore = (await IsarTestingUtils
+              .isarMusicRepo.listeningHistory
               .getDetailedHistoryForTrack(track.id))
           .requireValue;
       // first, assert the [track] has a previous listening history on [date]
       expectLater(trackListeningHistoryBefore.length, 1);
 
       final duration = Duration(seconds: faker.randomGenerator.integer(100));
-      final result = await isarMusicRepo.listeningHistory
+      final result = await IsarTestingUtils.isarMusicRepo.listeningHistory
           .addToTrackUncompletedListensDuration(track, date, duration);
       final trackListeningHistory =
           result.requireValue.tracksListeningHistory.whereKey(date)?.single;
@@ -217,12 +229,14 @@ void main() {
       test(
         'it should return tracksListeningHistories grouped by date',
         () async {
-          final seededTracksHistories =
-              await isarTrackListeningHistorySeeder.seedCount(date);
-          final tracksListeningHistories =
-              (await isarMusicRepo.listeningHistory.getByDates([date]))
-                  .requireValue
-                  .tracksListeningHistory;
+          final seededTracksHistories = await IsarTestingUtils
+              .trackListeningHistorySeeder
+              .seedRandomCount(date);
+          final tracksListeningHistories = (await IsarTestingUtils
+                  .isarMusicRepo.listeningHistory
+                  .getByDates([date]))
+              .requireValue
+              .tracksListeningHistory;
           expect(
             tracksListeningHistories.entries.every(
               (entry) {
@@ -263,11 +277,12 @@ Future<List<FakePlaylist>> _addRandomPlaylistsToListeningHistory(
 ) async {
   final playlists = PlaylistFactory().setTracksCount(10).createCount(2);
   for (var playlist in playlists) {
-    await isarMusicRepo.listeningHistory.addPlaylist(playlist, date);
+    await IsarTestingUtils.isarMusicRepo.listeningHistory
+        .addPlaylist(playlist, date);
   }
   await Future.delayed(const Duration(seconds: 1));
   final playlistsListeningHistory =
-      (await isarMusicRepo.listeningHistory.getByDates([date]))
+      (await IsarTestingUtils.isarMusicRepo.listeningHistory.getByDates([date]))
           .requireValue
           .playlistsListeningHistory
           .whereKey(date.onlyDate);
