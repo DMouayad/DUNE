@@ -45,7 +45,7 @@ final class PlaylistFactory extends BaseModelFactory<FakePlaylist> {
     );
   }
 
-  PlaylistFactory setMusicSource(MusicSource source) {
+  PlaylistFactory setMusicSource(MusicSource? source) {
     return _copyWith(source: source);
   }
 
