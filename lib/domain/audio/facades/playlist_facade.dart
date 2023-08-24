@@ -1,29 +1,27 @@
 part of 'music_facade.dart';
 
 final class PlaylistFacade {
-  final PlaylistRepository _youtubePlaylistRepository;
-  final SavablePlaylistRepository _localRepository;
-  final PlaylistRepository? _spotifyPlaylistRepository;
+  final PlaylistRepository? _youtubePlaylistRepo;
+  final PlaylistRepository? _spotifyPlaylistRepo;
+  final SavablePlaylistRepository _localPlaylistRepo;
 
   PlaylistFacade({
-    required PlaylistRepository youtubePlaylistRepository,
+    PlaylistRepository? youtubePlaylistRepository,
     PlaylistRepository? spotifyPlaylistRepository,
     required SavablePlaylistRepository localPlaylistRepository,
-  })  : _localRepository = localPlaylistRepository,
-        _youtubePlaylistRepository = youtubePlaylistRepository,
-        _spotifyPlaylistRepository = spotifyPlaylistRepository;
+  })  : _localPlaylistRepo = localPlaylistRepository,
+        _youtubePlaylistRepo = youtubePlaylistRepository,
+        _spotifyPlaylistRepo = spotifyPlaylistRepository;
 
-  FutureOrResult<BasePlaylist?> getPlaylist(
+  FutureOrResult<BasePlaylist?> getPlaylistFromOriginSource(
     String id,
     MusicSource musicSource,
   ) async {
-    final repository = _getRemoteRepository(musicSource);
-
-    return (await repository.getById(id)).fold(onSuccess: (playlist) {
+    final remoteRepo = _getRemoteRepository(musicSource);
+    if (remoteRepo == null) return null.asResult;
+    return (await remoteRepo.getById(id)).fold(onSuccess: (playlist) {
       if (playlist != null) {
-        _localRepository
-            .save(playlist)
-            .foldThen(onFailure: (error) => Log.e(error));
+        _localPlaylistRepo.save(playlist);
       }
     });
   }
@@ -32,30 +30,31 @@ final class PlaylistFacade {
     String id,
     MusicSource musicSource,
   ) async {
-    final repository = _getRemoteRepository(musicSource);
-
-    return (await repository.getCategoryPlaylists(id)).fold(
+    final remoteRepo = _getRemoteRepository(musicSource);
+    if (remoteRepo == null) return null.asResult;
+    return (await remoteRepo.getCategoryPlaylists(id)).fold(
         onSuccess: (playlists) {
       if (playlists != null) {
-        _localRepository.saveCategoryPlaylists(id, playlists);
+        _localPlaylistRepo.saveCategoryPlaylists(id, playlists);
       }
     });
   }
 
-  FutureOrResult<BasePlaylist?> getCachedPlaylistInfo(String id) async {
-    return await _localRepository.getById(id);
+  FutureOrResult<BasePlaylist?> getPlaylistFromLocalStorage(String id) async {
+    return await _localPlaylistRepo.getById(id);
   }
 
-  FutureOrResult<List<BasePlaylist>?> getCachedCategoryPlaylists(
-      String id) async {
-    return await _localRepository.getCategoryPlaylists(id);
+  FutureOrResult<List<BasePlaylist>?> getCategoryPlaylistsFromLocalStorage(
+    String id,
+  ) async {
+    return await _localPlaylistRepo.getCategoryPlaylists(id);
   }
 
-  PlaylistRepository _getRemoteRepository(MusicSource musicSource) {
+  PlaylistRepository? _getRemoteRepository(MusicSource musicSource) {
     return switch (musicSource) {
-      MusicSource.youtube => _youtubePlaylistRepository,
-      MusicSource.spotify => _spotifyPlaylistRepository!,
-      _ => throw UnimplementedError(),
+      MusicSource.youtube => _youtubePlaylistRepo,
+      MusicSource.spotify => _spotifyPlaylistRepo,
+      _ => _localPlaylistRepo,
     };
   }
 }

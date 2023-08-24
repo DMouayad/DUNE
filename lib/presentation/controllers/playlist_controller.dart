@@ -16,7 +16,7 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
     state = const AsyncLoading<BasePlaylist?>()
         .copyWithPrevious(AsyncData(state.valueOrNull));
 
-    (await _playlistData.getCachedPlaylistInfo(playlistId)).foldAsync(
+    (await _playlistData.getPlaylistFromLocalStorage(playlistId)).foldAsync(
       onSuccess: (playlist) async {
         print('fetched local playlist');
         if (playlist != null) {
@@ -24,7 +24,9 @@ class PlaylistController extends StateNotifier<AsyncValue<BasePlaylist?>> {
           state = const AsyncLoading<BasePlaylist?>()
               .copyWithPrevious(AsyncValue.data(playlist));
         }
-        (await _playlistData.getPlaylist(playlistId, musicSource)).fold(
+        (await _playlistData.getPlaylistFromOriginSource(
+                playlistId, musicSource))
+            .fold(
           onSuccess: (playlist) {
             print('fetched playlist from remote datasource');
             if (playlist?.hasSameTracksAsOther(state.valueOrNull) ?? true) {
