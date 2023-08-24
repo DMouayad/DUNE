@@ -76,4 +76,48 @@ class EqualityHelper {
 
     return const ListEquality().equals(firstProps, secondProps);
   }
+
+  static List<String> _extractTracksIds(List<BaseTrack> items) {
+    return items.map((e) => e.id).toSet().toList();
+  }
+
+  static List<String> _extractPlaylistsIds(List<BasePlaylist> items) {
+    return items.map((e) => e.id!).toSet().toList();
+  }
+
+  static List<String> _extractAlbumsIds(List<BaseAlbum> items) {
+    return items.map((e) => e.id!).toSet().toList();
+  }
+
+  static List<String> _extractArtistsIds(List<BaseArtist> items) {
+    return items.map((e) => e.id!).toSet().toList();
+  }
+
+  static bool playlistListsHaveSameIds(
+    List<BasePlaylist> first,
+    List<BasePlaylist> second,
+  ) {
+    return const UnorderedIterableEquality()
+        .equals(_extractPlaylistsIds(first), _extractPlaylistsIds(second));
+  }
+
+  static bool trackListsHaveSameIds(
+      List<BaseTrack> first, List<BaseTrack> second) {
+    return const UnorderedIterableEquality()
+        .equals(_extractTracksIds(first), _extractTracksIds(second));
+  }
+
+  static bool artistListsHaveSameIds(
+      List<BaseArtist> first, List<BaseArtist> second) {
+    return const UnorderedIterableEquality()
+        .equals(_extractArtistsIds(first), _extractArtistsIds(second));
+  }
+
+  static bool albumListsHaveSameIds(
+    List<BaseAlbum> first,
+    List<BaseAlbum> second,
+  ) {
+    return const UnorderedIterableEquality()
+        .equals(_extractAlbumsIds(first), _extractAlbumsIds(second));
+  }
 }
