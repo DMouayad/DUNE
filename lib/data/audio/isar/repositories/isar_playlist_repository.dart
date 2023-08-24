@@ -73,7 +73,7 @@ final class IsarPlaylistRepository
       final tracks = tracksResult.requireValue;
 
       final isarPlaylist =
-          _getIsarPlaylistFromBase(playlist).copyWith(tracks: tracks);
+          _getIsarPlaylistFromBase(playlist).copyWith(tracks: tracks.cast());
       return await _playlistDataSource.save(isarPlaylist);
     });
   }
@@ -103,10 +103,10 @@ final class IsarPlaylistRepository
 
   @override
   FutureOrResult<List<BasePlaylist>> findAllWhereSource(
-      MusicSource musicSource, QuerySortOptions sortOptions) async {
+      MusicSource musicSource, QueryOptions queryOptions) async {
     return (await _playlistDataSource.findAllWhereSource(
       musicSource,
-      sortOptions,
+      queryOptions,
     ))
         .flatMapSuccessAsync((value) async {
       if (value.isNotEmpty) {

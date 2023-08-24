@@ -8,7 +8,6 @@ import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:dune/support/enums/music_source.dart';
-import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 
@@ -35,19 +34,6 @@ final class IsarTrackRepository extends SavableTrackRepository {
       }
       return value.asResult;
     });
-  }
-
-  FutureOrResult<List<IsarTrack>> saveAll(List<BaseTrack> tracks) async {
-    List<IsarTrack> result = [];
-    for (BaseTrack track in tracks) {
-      final savingTrackResult = await save(track);
-      if (savingTrackResult.isFailure) {
-        Log.e(savingTrackResult);
-      } else {
-        result.add(savingTrackResult.requireValue);
-      }
-    }
-    return result.asResult;
   }
 
   @override
@@ -121,7 +107,7 @@ final class IsarTrackRepository extends SavableTrackRepository {
   @override
   FutureOrResult<List<BaseTrack>> findAllWhereSource(
     MusicSource musicSource,
-    QuerySortOptions sortOptions,
+    QueryOptions sortOptions,
   ) async {
     return (await _trackDataSource.findAllWhereSource(musicSource, sortOptions))
         .flatMapSuccessAsync((value) async {

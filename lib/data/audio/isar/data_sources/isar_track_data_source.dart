@@ -1,4 +1,4 @@
-import 'package:dune/data/audio/isar/helpers/isar_sort_helper.dart';
+import 'package:dune/data/audio/isar/helpers/isar_query_builder_helpers.dart';
 import 'package:dune/data/audio/isar/models/isar_track.dart';
 import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart';
 import 'package:dune/support/enums/music_source.dart';
@@ -52,14 +52,14 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
   @override
   FutureOrResult<List<IsarTrack>> findAllWhereSource(
     MusicSource musicSource,
-    QuerySortOptions sortOptions,
+    QueryOptions queryOptions,
   ) async {
     return await Result.fromAsync(
       () async {
         final baseQuery = _isar.isarTracks.where().sourceEqualTo(musicSource);
-        return await sortIsarQueryByOptions(
+        return await applyQueryOptionsOnIsarQueryBuilder(
           baseQuery,
-          sortOptions,
+          queryOptions,
           sortByDateReleasedQuery: baseQuery.sortByYear(),
           sortByDateReleasedDescQuery: baseQuery.sortByYearDesc(),
           sortByNameQuery: baseQuery.sortByTitle(),
