@@ -21,6 +21,20 @@ abstract base class SavableTrackRepository<
 
   FutureOrResult<BaseTrack> save(BaseTrack track);
 
+  /// Stores all of the passed [BaseTrack] instances in the database.
+  ///
+  /// All function[save] function this
+  FutureOrResult<List<BaseTrack>> saveAll(List<BaseTrack> tracks) async {
+    final List<BaseTrack> result = [];
+    for (BaseTrack track in tracks) {
+      final savingTrackResult = await save(track);
+      if (savingTrackResult.isSuccess) {
+        result.add(savingTrackResult.requireValue);
+      }
+    }
+    return result.asResult;
+  }
+
   FutureVoidResult saveTrackAudioInfo(BaseTrack track, AudioInfoSet audioInfo);
 }
 

@@ -117,7 +117,6 @@ final class ListeningHistoryRepository
     return (await _trackRepository.getById(track.id))
         .flatMapSuccessAsync((existingTrack) async {
       if (existingTrack == null) {
-        // if it doesn't exists => save it and on success return a void [SuccessResult].
         return await _trackRepository.save(track);
       }
       return existingTrack.asResult;

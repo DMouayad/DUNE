@@ -74,29 +74,26 @@ class DateListeningHistory extends Equatable
 
 mixin ListeningHistoryDataExtractor {
   List<BaseAlbum> getAlbumsFromTracks(
-      List<BaseTrackListeningHistory> tracksListeningHistory) {
-    final albumsList = <BaseAlbum>[];
-    for (BaseTrackListeningHistory listeningHistory in tracksListeningHistory) {
-      if (listeningHistory.track?.album != null) {
-        final alreadyAdded = albumsList.firstWhereOrNull(
-                (e) => e.id == listeningHistory.track!.album!.id) !=
-            null;
-        if (!alreadyAdded) {
-          albumsList.add(listeningHistory.track!.album!);
-        }
+    List<BaseTrackListeningHistory> histories,
+  ) {
+    final albumsList = <BaseAlbum>{};
+    for (var history in histories) {
+      if (history.track?.album != null) {
+        albumsList.add(history.track!.album!);
       }
     }
-    return albumsList;
+    return albumsList.toList();
   }
 
   List<BaseArtist> getArtistsFromTracks(
-      List<BaseTrackListeningHistory> tracks) {
-    final artists = <BaseArtist>[];
-    for (BaseTrackListeningHistory listeningHistory in tracks) {
-      if (listeningHistory.track?.artists != null) {
-        artists.addAll(listeningHistory.track!.artists);
+    List<BaseTrackListeningHistory> histories,
+  ) {
+    final artists = <BaseArtist>{};
+    for (var history in histories) {
+      if (history.track?.artists != null) {
+        artists.addAll(history.track!.artists);
       }
     }
-    return artists.toSet().toList();
+    return artists.toList();
   }
 }

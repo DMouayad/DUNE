@@ -65,4 +65,19 @@ abstract class BaseAlbum extends Equatable {
         releaseDate,
         musicSource
       ];
+
+  BaseAlbum copyWith({
+    String? id,
+    String? browseId,
+    String? category,
+    String? duration,
+    bool? isExplicit,
+    String? title,
+    String? type,
+    DateTime? releaseDate,
+    ThumbnailsSet? thumbnails,
+    List<BaseArtist>? artists,
+    List<BaseTrack>? tracks,
+    MusicSource? musicSource,
+  });
 }

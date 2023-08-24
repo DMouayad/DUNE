@@ -224,10 +224,7 @@ final class IsarModelsRelationHelper {
           withTracks: false,
         ))
             .mapSuccess((albumWithRelations) {
-          return trackWithArtists.copyWith(
-            album: albumWithRelations,
-            artists: artistsOfTrack,
-          );
+          return trackWithArtists.copyWith(album: albumWithRelations);
         });
       });
     });

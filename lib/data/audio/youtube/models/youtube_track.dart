@@ -66,7 +66,7 @@ class YoutubeTrack extends BaseTrack {
   }
 
   @override
-  T copyWith<T extends BaseTrack>({
+  YoutubeTrack copyWith({
     String? id,
     AudioInfoSet? audioInfoSet,
     BaseAlbum? album,
@@ -92,6 +92,6 @@ class YoutubeTrack extends BaseTrack {
       category: category ?? this.category,
       isExplicit: isExplicit ?? this.isExplicit,
       thumbnails: thumbnails ?? this.thumbnails,
-    ) as T;
+    );
   }
 }
