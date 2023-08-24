@@ -84,10 +84,12 @@ final class IsarAlbumRepository
 
   @override
   FutureOrResult<List<BaseAlbum>> findAllWhereSource(
-      MusicSource musicSource, QuerySortOptions sortOptions) async {
+    MusicSource musicSource,
+    QueryOptions queryOptions,
+  ) async {
     return (await albumDataSource.findAllWhereSource(
       musicSource,
-      sortOptions,
+      queryOptions,
     ))
         .flatMapSuccessAsync((value) async {
       if (value.isNotEmpty) {
@@ -99,7 +101,9 @@ final class IsarAlbumRepository
 
   @override
   FutureOrResult<BaseAlbum?> findWhereSource(
-      String id, MusicSource musicSource) async {
+    String id,
+    MusicSource musicSource,
+  ) async {
     return (await albumDataSource.findWhereSource(id, musicSource))
         .flatMapSuccessAsync((value) async {
       if (value != null) {

@@ -1,4 +1,4 @@
-import 'package:dune/data/audio/isar/helpers/isar_sort_helper.dart';
+import 'package:dune/data/audio/isar/helpers/isar_query_builder_helpers.dart';
 import 'package:dune/domain/audio/base_data_sources/base_artist_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/support/enums/music_source.dart';
@@ -66,13 +66,13 @@ class IsarArtistDataSource extends BaseSavableArtistDataSource {
 
   @override
   FutureOrResult<List<IsarArtist>> findAllWhereSource(
-      MusicSource musicSource, QuerySortOptions sortOptions) async {
+      MusicSource musicSource, QueryOptions queryOptions) async {
     return await Result.fromAsync(() async {
       final baseQuery =
           _isar.isarArtists.where().musicSourceEqualTo(musicSource);
-      return await sortIsarQueryByOptions(
+      return await applyQueryOptionsOnIsarQueryBuilder(
         baseQuery,
-        sortOptions,
+        queryOptions,
         sortByNameQuery: baseQuery.sortByName(),
         sortByNameDescQuery: baseQuery.sortByNameDesc(),
       ).findAll();

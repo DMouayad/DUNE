@@ -15,7 +15,7 @@ final class IsarArtistRepository
   final IsarModelsRelationHelper _relationHelper;
 
   @override
-  FutureOrResult<IsarArtist?> getById(String id) async {
+  FutureResult<IsarArtist?> getById(String id) async {
     return (await artistDataSource.find(id)).flatMapSuccessAsync((value) async {
       if (value != null) {
         return await _relationHelper.loadRelationsForArtist(value);
@@ -25,7 +25,7 @@ final class IsarArtistRepository
   }
 
   @override
-  FutureOrResult<IsarArtist> save(BaseArtist artist) async {
+  FutureResult<IsarArtist> save(BaseArtist artist) async {
     final newIsarArtist = _getIsarArtistFromBase(artist);
 
     // first check if an [IsarArtist] was saved in the DB for this artist id.
@@ -56,7 +56,7 @@ final class IsarArtistRepository
   }
 
   @override
-  FutureOrResult<List<IsarArtist>> saveAll(List<BaseArtist> artists) async {
+  FutureResult<List<IsarArtist>> saveAll(List<BaseArtist> artists) async {
     List<IsarArtist> result = [];
     for (BaseArtist artist in artists) {
       final savingArtistResult = await save(artist);
@@ -87,10 +87,10 @@ final class IsarArtistRepository
 
   @override
   FutureOrResult<List<BaseArtist>> findAllWhereSource(
-      MusicSource musicSource, QuerySortOptions sortOptions) async {
+      MusicSource musicSource, QueryOptions queryOptions) async {
     return (await artistDataSource.findAllWhereSource(
       musicSource,
-      sortOptions,
+      queryOptions,
     ))
         .flatMapSuccessAsync((value) async {
       if (value.isNotEmpty) {
