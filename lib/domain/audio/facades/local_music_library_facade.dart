@@ -4,21 +4,19 @@ class LocalMusicLibraryFacade {
   final SavableTrackRepository _trackRepository;
   final SavableAlbumRepository _albumRepository;
   final SavableArtistRepository _artistRepository;
-  final SavablePlaylistRepository _playlistRepository;
 
   LocalMusicLibraryFacade(
     this._trackRepository,
     this._albumRepository,
     this._artistRepository,
-    this._playlistRepository,
   );
 
   MusicLibrary _cachedLibrary = MusicLibrary();
 
-  /// Loads local library from the local database.
-  /// the [queryOptions] will be used to load this library media(tracks, artists,
+  /// Loads a `MusicLibrary` from local storage.
+  /// the [queryOptions] will be used to retrieve this library media(tracks, artists,
   /// albums, playlists).
-  FutureOrResult<MusicLibrary> loadLibrary([
+  FutureOrResult<MusicLibrary> getLibrary([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) async {
     final library = MusicLibrary();
@@ -28,13 +26,6 @@ class LocalMusicLibraryFacade {
         .foldThen(
           onSuccess: (fetchedTracks) =>
               library.setTracks(fetchedTracks, queryOptions),
-        );
-    //
-    await _playlistRepository
-        .findAllWhereSource(_localSource, queryOptions)
-        .foldThen(
-          onSuccess: (playlists) =>
-              library.setPlaylists(playlists, queryOptions),
         );
     await _artistRepository
         .findAllWhereSource(_localSource, queryOptions)
@@ -60,7 +51,7 @@ class LocalMusicLibraryFacade {
     if (savingTracks.isFailure) {
       return savingTracks.mapFailure((error) => error);
     }
-    return await loadLibrary();
+    return await getLibrary();
   }
 
   FutureOrResult<List<BaseArtist>> getArtists(QueryOptions queryOptions) async {

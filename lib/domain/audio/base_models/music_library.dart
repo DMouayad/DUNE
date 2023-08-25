@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:dune/support/models/query_options.dart';
 import 'package:equatable/equatable.dart';
@@ -11,22 +10,16 @@ import 'base_track.dart';
 
 class MusicLibrary extends Equatable {
   late final HashMap<QueryOptions, List<BaseTrack>> _tracksCollection;
-  late final HashMap<QueryOptions, List<BasePlaylist>> _playlistsCollection;
   late final HashMap<QueryOptions, List<BaseAlbum>> _albumsCollection;
   late final HashMap<QueryOptions, List<BaseArtist>> _artistsCollection;
 
   MusicLibrary()
       : _tracksCollection = HashMap(),
-        _playlistsCollection = HashMap(),
         _albumsCollection = HashMap(),
         _artistsCollection = HashMap();
 
   void setTracks(List<BaseTrack> tracks, QueryOptions queryOptions) {
     _setCollectionKeyValue(_tracksCollection, tracks, queryOptions);
-  }
-
-  void setPlaylists(List<BasePlaylist> playlists, QueryOptions queryOptions) {
-    _setCollectionKeyValue(_playlistsCollection, playlists, queryOptions);
   }
 
   void setAlbums(List<BaseAlbum> albums, QueryOptions queryOptions) {
@@ -45,35 +38,33 @@ class MusicLibrary extends Equatable {
     collection.update(queryOptions, (value) => values, ifAbsent: () => values);
   }
 
-  List<BaseTrack>? getTracks([
+  List<BaseTrack> getTracks([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _tracksCollection.whereKey(queryOptions);
+    return _tracksCollection.whereKey(queryOptions) ?? [];
   }
 
-  List<BaseAlbum>? getAlbums([
+  List<BaseAlbum> getAlbums([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _albumsCollection.whereKey(queryOptions);
+    return _albumsCollection.whereKey(queryOptions) ?? [];
   }
 
-  List<BasePlaylist>? getPlaylists([
+  List<BaseArtist> getArtists([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _playlistsCollection.whereKey(queryOptions);
+    return _artistsCollection.whereKey(queryOptions) ?? [];
   }
 
-  List<BaseArtist>? getArtists([
-    QueryOptions queryOptions = QueryOptions.defaultOptions,
-  ]) {
-    return _artistsCollection.whereKey(queryOptions);
-  }
+  bool get isEmpty =>
+      _tracksCollection.isEmpty &&
+      _albumsCollection.isEmpty &&
+      _artistsCollection.isEmpty;
 
   @override
   List<Object?> get props => [
         _tracksCollection,
         _albumsCollection,
         _artistsCollection,
-        _playlistsCollection
       ];
 }

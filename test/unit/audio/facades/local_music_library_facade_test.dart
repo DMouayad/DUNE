@@ -4,6 +4,9 @@ import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/music_library.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
+import 'package:dune/domain/audio/factories/album_factory.dart';
+import 'package:dune/domain/audio/factories/artist_factory.dart';
+import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';
@@ -22,14 +25,48 @@ void main() {
       IsarTestingUtils.isarMusicRepo.tracks,
       IsarTestingUtils.isarMusicRepo.albums,
       IsarTestingUtils.isarMusicRepo.artists,
-      IsarTestingUtils.isarMusicRepo.playlists,
     );
+  });
+  group('adding library tracks', () {
+    test('it adds tracks to local library', () async {
+      final tracks =
+          TrackFactory().setMusicSource(MusicSource.local).createCount(2);
+      final createdLibrary =
+          (await facade.addTracksToLibrary(tracks)).requireValue;
+      expect(
+        EqualityHelper.trackListsHaveSameIds(
+            createdLibrary.getTracks(), tracks),
+        true,
+      );
+    });
+    test('it adds tracks albums to local library', () async {
+      final tracks = _createLocalTrackWithAlbum(2);
+      final createdLibrary =
+          (await facade.addTracksToLibrary(tracks)).requireValue;
+      expect(
+          EqualityHelper.albumListsHaveSameIds(
+            createdLibrary.getAlbums(),
+            tracks.map((e) => e.album!).toList(),
+          ),
+          true);
+    });
+    test('it adds tracks artists to local library', () async {
+      final tracks = _createLocalTrackWithArtists(2);
+      final createdLibrary =
+          (await facade.addTracksToLibrary(tracks)).requireValue;
+      expect(
+          EqualityHelper.artistListsHaveSameIds(
+            createdLibrary.getArtists(),
+            tracks.map((e) => e.artists).expand((element) => element).toList(),
+          ),
+          true);
+    });
   });
   group('loading library', () {
     test('it returns an empty [MusicLibrary] when no data exists', () async {
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await facade.loadLibrary(queryOptions)).requireValue;
+          (await facade.getLibrary(queryOptions)).requireValue;
       expectLater(fetchedLibrary, _getEmptyMusicLibraryFor(queryOptions));
     });
     test('it returns a [MusicLibrary] containing available local tracks',
@@ -40,11 +77,11 @@ void main() {
       // act
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await facade.loadLibrary(queryOptions)).requireValue;
+          (await facade.getLibrary(queryOptions)).requireValue;
       // expect
       expectLater(
         EqualityHelper.trackListsHaveSameIds(
-            fetchedLibrary.getTracks(queryOptions) ?? [], seededTracks),
+            fetchedLibrary.getTracks(queryOptions), seededTracks),
         true,
       );
     });
@@ -56,30 +93,15 @@ void main() {
       // act
       const queryOptions = QueryOptions();
       final fetchedLibrary =
-          (await facade.loadLibrary(queryOptions)).requireValue;
+          (await facade.getLibrary(queryOptions)).requireValue;
       // expect
       expectLater(
         EqualityHelper.albumListsHaveSameIds(
-            fetchedLibrary.getAlbums(queryOptions) ?? [], seededAlbums),
+            fetchedLibrary.getAlbums(queryOptions), seededAlbums),
         true,
       );
     });
-    test('it returns a [MusicLibrary] containing available local playlists',
-        () async {
-      // setup
-      final seededPlaylists =
-          await IsarTestingUtils.seedPlaylists(4, MusicSource.local, 5);
-      // act
-      const queryOptions = QueryOptions();
-      final fetchedLibrary =
-          (await facade.loadLibrary(queryOptions)).requireValue;
-      // expect
-      expectLater(
-        EqualityHelper.playlistListsHaveSameIds(
-            fetchedLibrary.getPlaylists(queryOptions) ?? [], seededPlaylists),
-        true,
-      );
-    });
+
     test(
       'it returns a [MusicLibrary] containing available local artists',
       () async {
@@ -89,11 +111,11 @@ void main() {
         // act
         const queryOptions = QueryOptions();
         final fetchedLibrary =
-            (await facade.loadLibrary(queryOptions)).requireValue;
+            (await facade.getLibrary(queryOptions)).requireValue;
         // expect
         expectLater(
           EqualityHelper.artistListsHaveSameIds(
-              fetchedLibrary.getArtists(queryOptions) ?? [], seededArtists),
+              fetchedLibrary.getArtists(queryOptions), seededArtists),
           true,
         );
       },
@@ -295,12 +317,34 @@ void main() {
   });
 }
 
+List<BaseTrack> _createLocalTrackWithArtists(int count) {
+  return TrackFactory().createCountFromCustomBuilder(
+    count,
+    () => TrackFactory()
+        .setMusicSource(MusicSource.local)
+        .withArtists(
+          artists:
+              ArtistFactory().setMusicSource(MusicSource.local).createCount(2),
+        )
+        .create(),
+  );
+}
+
+List<BaseTrack> _createLocalTrackWithAlbum(int count) {
+  return TrackFactory().createCountFromCustomBuilder(
+    count,
+    () => TrackFactory()
+        .setMusicSource(MusicSource.local)
+        .withAlbum(AlbumFactory().setMusicSource(MusicSource.local).create())
+        .create(),
+  );
+}
+
 MusicLibrary _getEmptyMusicLibraryFor(QueryOptions queryOptions) {
   return MusicLibrary()
     ..setArtists([], queryOptions)
     ..setAlbums([], queryOptions)
-    ..setTracks([], queryOptions)
-    ..setPlaylists([], queryOptions);
+    ..setTracks([], queryOptions);
 }
 
 void sortItems<T>(

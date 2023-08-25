@@ -61,7 +61,6 @@ final class MusicFacade {
       localMusicRepository.tracks,
       localMusicRepository.albums,
       localMusicRepository.artists,
-      localMusicRepository.playlists,
     );
   }
 
