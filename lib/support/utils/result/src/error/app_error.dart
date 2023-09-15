@@ -1,4 +1,4 @@
-import 'app_exception.dart';
+part of result;
 
 /// App Context Error
 class AppError extends Error {

@@ -7,7 +7,7 @@ import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/models/search_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/support/utils/error/app_error.dart';
+import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
