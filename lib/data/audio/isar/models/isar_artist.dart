@@ -1,4 +1,7 @@
+import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
@@ -82,10 +85,12 @@ class IsarArtist extends BaseArtist {
     );
   }
 
+  @override
   IsarArtist setIdIfNull() {
     return copyWith(id: id ?? browseId ?? shortHash(name));
   }
 
+  @override
   IsarArtist copyWith({
     String? id,
     String? name,
@@ -94,9 +99,9 @@ class IsarArtist extends BaseArtist {
     String? radioId,
     String? shuffleId,
     String? category,
-    IsarThumbnailsSet? thumbnails,
-    List<IsarTrack>? tracks,
-    List<IsarAlbum>? albums,
+    ThumbnailsSet? thumbnails,
+    List<BaseTrack>? tracks,
+    List<BaseAlbum>? albums,
     Id? isarId,
     List<String>? tracksIds,
     List<String>? albumsIds,
@@ -111,7 +116,9 @@ class IsarArtist extends BaseArtist {
       radioId: radioId ?? this.radioId,
       shuffleId: shuffleId ?? this.shuffleId,
       category: category ?? this.category,
-      isarThumbnails: thumbnails ?? isarThumbnails,
+      isarThumbnails: thumbnails != null
+          ? IsarThumbnailsSet.fromMap(thumbnails.toMap())
+          : isarThumbnails,
       musicSource: musicSource ?? this.musicSource,
       tracks: tracks ?? this.tracks,
       albums: albums ?? this.albums,

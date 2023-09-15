@@ -1,6 +1,6 @@
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/factories/playlist_factory.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
@@ -272,7 +272,7 @@ DateTimeRange get currentMonth {
   );
 }
 
-Future<List<FakePlaylist>> _addRandomPlaylistsToListeningHistory(
+Future<List<BasePlaylist>> _addRandomPlaylistsToListeningHistory(
   DateTime date,
 ) async {
   final playlists = PlaylistFactory().setTracksCount(10).createCount(2);

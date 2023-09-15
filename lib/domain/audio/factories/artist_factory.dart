@@ -1,14 +1,14 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/domain/audio/fake_models/fake_artist.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
 import 'base_model_factory.dart';
 import 'thumbnail_set_factory.dart';
 
-class ArtistFactory extends BaseModelFactory<FakeArtist> {
+final class ArtistFactory extends BaseModelFactory<BaseArtist> {
   late final String? _id;
   late final String? _name;
   late final String? _description;
@@ -27,8 +27,8 @@ class ArtistFactory extends BaseModelFactory<FakeArtist> {
   }
 
   @override
-  FakeArtist create() {
-    return FakeArtist(
+  BaseArtist create() {
+    return BaseArtist(
       id: _id ?? faker.randomGenerator.string(20, min: 6) + faker.date.time(),
       musicSource: _musicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),

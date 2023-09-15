@@ -1,11 +1,11 @@
+import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/audio/factories/base_model_factory.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 
-import '../fake_models/fake_playlists_listening_history.dart';
-import '../fake_models/fake_track.dart';
-import '../fake_models/fake_track_listening_history.dart';
 import 'track_listening_history_factory.dart';
 
 final class FakeDateListeningHistory extends DateListeningHistory {
@@ -22,8 +22,8 @@ final class DateListeningHistoryFactory
 
   /// The listening histories of all tracks
   /// which were listened-to on the specified [date]
-  late final List<FakeTrackListeningHistory>? _tracksListeningHistory;
-  late final FakePlaylistsListeningHistory? _playlists;
+  late final List<BaseTrackListeningHistory>? _tracksListeningHistory;
+  late final BasePlaylistsListeningHistory? _playlists;
 
   DateListeningHistoryFactory() {
     _date = _tracksListeningHistory = _playlists = null;
@@ -48,7 +48,7 @@ final class DateListeningHistoryFactory
   }
 
   DateListeningHistoryFactory createListeningHistoriesForTracks(
-    List<FakeTrack> tracks,
+    List<BaseTrack> tracks,
   ) {
     return _copyWith(
       tracks: tracks
@@ -60,16 +60,16 @@ final class DateListeningHistoryFactory
 
   DateListeningHistoryFactory._({
     required DateTime? date,
-    required List<FakeTrackListeningHistory>? tracks,
-    required FakePlaylistsListeningHistory? playlists,
+    required List<BaseTrackListeningHistory>? tracks,
+    required BasePlaylistsListeningHistory? playlists,
   })  : _date = date,
         _tracksListeningHistory = tracks,
         _playlists = playlists;
 
   DateListeningHistoryFactory _copyWith({
     DateTime? date,
-    List<FakeTrackListeningHistory>? tracks,
-    FakePlaylistsListeningHistory? playlists,
+    List<BaseTrackListeningHistory>? tracks,
+    BasePlaylistsListeningHistory? playlists,
   }) {
     return DateListeningHistoryFactory._(
       date: date ?? _date,

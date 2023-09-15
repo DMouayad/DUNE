@@ -1,18 +1,18 @@
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:dune/domain/audio/factories/base_model_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
-import 'package:dune/domain/audio/fake_models/fake_playlists_listening_history.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 
 import 'playlist_factory.dart';
 
 final class PlaylistsListeningHistoryFactory
-    extends BaseModelFactory<FakePlaylistsListeningHistory> {
+    extends BaseModelFactory<BasePlaylistsListeningHistory> {
   /// The date the [playlists] were listened to on.
   late final DateTime? _date;
 
   /// List of playlists which were played on the specified [date]
-  late final List<FakePlaylist>? _playlists;
+  late final List<BasePlaylist>? _playlists;
   late final int _playlistsCount;
 
   PlaylistsListeningHistoryFactory() {
@@ -21,8 +21,8 @@ final class PlaylistsListeningHistoryFactory
   }
 
   @override
-  FakePlaylistsListeningHistory create() {
-    return FakePlaylistsListeningHistory(
+  BasePlaylistsListeningHistory create() {
+    return BasePlaylistsListeningHistory(
       date: _date ?? faker.randomDateFromCurrentMonth,
       items: _playlists ?? PlaylistFactory().createCount(_playlistsCount),
     );
@@ -38,7 +38,7 @@ final class PlaylistsListeningHistoryFactory
 
   PlaylistsListeningHistoryFactory._({
     required DateTime? date,
-    required List<FakePlaylist>? playlists,
+    required List<BasePlaylist>? playlists,
     required int? playlistsCount,
   })  : _date = date,
         _playlists = playlists,
@@ -46,7 +46,7 @@ final class PlaylistsListeningHistoryFactory
 
   PlaylistsListeningHistoryFactory _copyWith({
     DateTime? date,
-    List<FakePlaylist>? playlists,
+    List<BasePlaylist>? playlists,
     int? playlistsCount,
   }) {
     return PlaylistsListeningHistoryFactory._(

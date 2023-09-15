@@ -50,11 +50,11 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
   @Index(unique: true, replace: true, composite: [CompositeIndex('source')])
   String get id => super.id;
 
-  final IsarDuration isarDuration;
+  final IsarDuration? isarDuration;
 
   IsarTrack({
     this.isarAudioInfoSet,
-    this.isarDuration = const IsarDuration(),
+    this.isarDuration,
     this.isarId,
     this.albumId,
     this.artistsIds = const [],
@@ -70,7 +70,9 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
     super.artists = const [],
   }) : super(
           thumbnails: isarThumbnails,
-          duration: Duration(seconds: isarDuration.inSeconds),
+          duration: isarDuration != null
+              ? Duration(seconds: isarDuration.inSeconds)
+              : null,
           audioInfoSet: isarAudioInfoSet,
         );
 
@@ -180,7 +182,9 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       source: baseTrack.source,
       isarThumbnails: IsarThumbnailsSet.fromMap(baseTrack.thumbnails.toMap()),
       views: baseTrack.views,
-      isarDuration: IsarDuration(inSeconds: baseTrack.duration.inSeconds),
+      isarDuration: baseTrack.duration != null
+          ? IsarDuration(inSeconds: baseTrack.duration!.inSeconds)
+          : null,
       category: baseTrack.category,
       year: baseTrack.year,
       isarAudioInfoSet: IsarAudioInfoSet.from(baseTrack.audioInfoSet),

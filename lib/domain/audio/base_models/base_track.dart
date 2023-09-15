@@ -3,11 +3,12 @@ import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 import 'audio_info_set.dart';
 
-abstract class BaseTrack<AlbumType extends BaseAlbum,
-    ArtistType extends BaseArtist> extends Equatable {
+class BaseTrack<AlbumType extends BaseAlbum, ArtistType extends BaseArtist>
+    extends Equatable {
   const BaseTrack({
     required this.id,
     required this.album,
@@ -28,7 +29,7 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
   final AudioInfoSet? audioInfoSet;
   final AlbumType? album;
   final List<ArtistType> artists;
-  final Duration duration;
+  final Duration? duration;
   final String title;
   final String? year;
   final int? views;
@@ -49,7 +50,7 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
     return {
       'id': id,
       'album': album?.toMap(),
-      'length': duration.inSeconds,
+      'length': duration?.inSeconds,
       'title': title,
       'year': year,
       'views': views,
@@ -91,5 +92,26 @@ abstract class BaseTrack<AlbumType extends BaseAlbum,
     bool? isExplicit,
     ThumbnailsSet? thumbnails,
     MusicSource? source,
-  });
+  }) {
+    return BaseTrack(
+      id: id ?? this.id,
+      audioInfoSet: audioInfoSet ?? this.audioInfoSet,
+      album: album ?? this.album,
+      artists: artists ?? this.artists,
+      duration: duration ?? this.duration,
+      title: title ?? this.title,
+      year: year ?? this.year,
+      views: views ?? this.views,
+      category: category ?? this.category,
+      isExplicit: isExplicit ?? this.isExplicit,
+      thumbnails: thumbnails ?? this.thumbnails,
+      source: source ?? this.source,
+    );
+  }
+
+  BaseTrack assignIdIfEmpty() {
+    return id.isEmpty ? copyWith(id: _generateId) : this;
+  }
+
+  String get _generateId => shortHash(title);
 }

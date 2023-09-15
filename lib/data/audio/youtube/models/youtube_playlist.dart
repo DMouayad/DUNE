@@ -28,7 +28,7 @@ class YoutubePlaylist extends BasePlaylist {
       author: authorData is String
           ? PlaylistAuthor(name: authorData)
           : authorData is Map<String, dynamic>
-              ? PlaylistAuthor.fromJson(authorData)
+              ? PlaylistAuthor.fromMap(authorData)
               : null,
       description: map.whereKey("description") ?? '',
       duration: map.whereKey("duration"),

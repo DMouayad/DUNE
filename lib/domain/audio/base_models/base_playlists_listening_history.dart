@@ -3,8 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import 'base_playlist.dart';
 
-abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
-    extends Equatable {
+class BasePlaylistsListeningHistory<P extends BasePlaylist> extends Equatable {
   /// The date the [items] were listened to on.
   final DateTime date;
 
@@ -26,10 +25,19 @@ abstract class BasePlaylistsListeningHistory<P extends BasePlaylist>
   @override
   List<Object?> get props => [date.onlyDate, items];
 
+  BasePlaylistsListeningHistory copyWithAddedPlaylists(List<P> items) {
+    return copyWith(
+      items: {...this.items, ...items}.toList(),
+    );
+  }
+
   BasePlaylistsListeningHistory copyWith({
     DateTime? date,
     List<P>? items,
-  });
-
-  BasePlaylistsListeningHistory copyWithAddedPlaylists(List<P> items);
+  }) {
+    return BasePlaylistsListeningHistory(
+      date: date ?? this.date,
+      items: items ?? this.items,
+    );
+  }
 }

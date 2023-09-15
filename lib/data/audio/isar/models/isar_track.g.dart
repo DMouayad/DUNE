@@ -60,24 +60,29 @@ const IsarTrackSchema = CollectionSchema(
       type: IsarType.object,
       target: r'IsarThumbnailsSet',
     ),
-    r'source': PropertySchema(
+    r'releaseDate': PropertySchema(
       id: 8,
+      name: r'releaseDate',
+      type: IsarType.dateTime,
+    ),
+    r'source': PropertySchema(
+      id: 9,
       name: r'source',
       type: IsarType.byte,
       enumMap: _IsarTracksourceEnumValueMap,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'title',
       type: IsarType.string,
     ),
     r'views': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'views',
       type: IsarType.long,
     ),
     r'year': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'year',
       type: IsarType.string,
     )
@@ -168,9 +173,14 @@ int _isarTrackEstimateSize(
               value, allOffsets[IsarAudioInfoSet]!, allOffsets);
     }
   }
-  bytesCount += 3 +
-      IsarDurationSchema.estimateSize(
-          object.isarDuration, allOffsets[IsarDuration]!, allOffsets);
+  {
+    final value = object.isarDuration;
+    if (value != null) {
+      bytesCount += 3 +
+          IsarDurationSchema.estimateSize(
+              value, allOffsets[IsarDuration]!, allOffsets);
+    }
+  }
   bytesCount += 3 +
       IsarThumbnailsSetSchema.estimateSize(
           object.isarThumbnails, allOffsets[IsarThumbnailsSet]!, allOffsets);
@@ -213,10 +223,11 @@ void _isarTrackSerialize(
     IsarThumbnailsSetSchema.serialize,
     object.isarThumbnails,
   );
-  writer.writeByte(offsets[8], object.source.index);
-  writer.writeString(offsets[9], object.title);
-  writer.writeLong(offsets[10], object.views);
-  writer.writeString(offsets[11], object.year);
+  writer.writeDateTime(offsets[8], object.releaseDate);
+  writer.writeByte(offsets[9], object.source.index);
+  writer.writeString(offsets[10], object.title);
+  writer.writeLong(offsets[11], object.views);
+  writer.writeString(offsets[12], object.year);
 }
 
 IsarTrack _isarTrackDeserialize(
@@ -237,11 +248,10 @@ IsarTrack _isarTrackDeserialize(
       allOffsets,
     ),
     isarDuration: reader.readObjectOrNull<IsarDuration>(
-          offsets[6],
-          IsarDurationSchema.deserialize,
-          allOffsets,
-        ) ??
-        const IsarDuration(),
+      offsets[6],
+      IsarDurationSchema.deserialize,
+      allOffsets,
+    ),
     isarId: id,
     isarThumbnails: reader.readObjectOrNull<IsarThumbnailsSet>(
           offsets[7],
@@ -249,11 +259,11 @@ IsarTrack _isarTrackDeserialize(
           allOffsets,
         ) ??
         const IsarThumbnailsSet(),
-    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[8])] ??
+    source: _IsarTracksourceValueEnumMap[reader.readByteOrNull(offsets[9])] ??
         MusicSource.youtube,
-    title: reader.readStringOrNull(offsets[9]) ?? '',
-    views: reader.readLongOrNull(offsets[10]),
-    year: reader.readStringOrNull(offsets[11]),
+    title: reader.readStringOrNull(offsets[10]) ?? '',
+    views: reader.readLongOrNull(offsets[11]),
+    year: reader.readStringOrNull(offsets[12]),
   );
   return object;
 }
@@ -283,11 +293,10 @@ P _isarTrackDeserializeProp<P>(
       )) as P;
     case 6:
       return (reader.readObjectOrNull<IsarDuration>(
-            offset,
-            IsarDurationSchema.deserialize,
-            allOffsets,
-          ) ??
-          const IsarDuration()) as P;
+        offset,
+        IsarDurationSchema.deserialize,
+        allOffsets,
+      )) as P;
     case 7:
       return (reader.readObjectOrNull<IsarThumbnailsSet>(
             offset,
@@ -296,13 +305,15 @@ P _isarTrackDeserializeProp<P>(
           ) ??
           const IsarThumbnailsSet()) as P;
     case 8:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 9:
       return (_IsarTracksourceValueEnumMap[reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 9:
-      return (reader.readStringOrNull(offset) ?? '') as P;
     case 10:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 11:
+      return (reader.readLongOrNull(offset)) as P;
+    case 12:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1419,6 +1430,24 @@ extension IsarTrackQueryFilter
     });
   }
 
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
+      isarDurationIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isarDuration',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
+      isarDurationIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isarDuration',
+      ));
+    });
+  }
+
   QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> isarIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1480,6 +1509,78 @@ extension IsarTrackQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'isarId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
+      releaseDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'releaseDate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
+      releaseDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'releaseDate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> releaseDateEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'releaseDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition>
+      releaseDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'releaseDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> releaseDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'releaseDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterFilterCondition> releaseDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'releaseDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1963,6 +2064,18 @@ extension IsarTrackQuerySortBy on QueryBuilder<IsarTrack, IsarTrack, QSortBy> {
     });
   }
 
+  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortByReleaseDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'releaseDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortByReleaseDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'releaseDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> sortBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'source', Sort.asc);
@@ -2074,6 +2187,18 @@ extension IsarTrackQuerySortThenBy
     });
   }
 
+  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenByReleaseDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'releaseDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenByReleaseDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'releaseDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarTrack, IsarTrack, QAfterSortBy> thenBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'source', Sort.asc);
@@ -2158,6 +2283,12 @@ extension IsarTrackQueryWhereDistinct
     });
   }
 
+  QueryBuilder<IsarTrack, IsarTrack, QDistinct> distinctByReleaseDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'releaseDate');
+    });
+  }
+
   QueryBuilder<IsarTrack, IsarTrack, QDistinct> distinctBySource() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'source');
@@ -2230,7 +2361,7 @@ extension IsarTrackQueryProperty
     });
   }
 
-  QueryBuilder<IsarTrack, IsarDuration, QQueryOperations>
+  QueryBuilder<IsarTrack, IsarDuration?, QQueryOperations>
       isarDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarDuration');
@@ -2241,6 +2372,12 @@ extension IsarTrackQueryProperty
       isarThumbnailsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarThumbnails');
+    });
+  }
+
+  QueryBuilder<IsarTrack, DateTime?, QQueryOperations> releaseDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'releaseDate');
     });
   }
 

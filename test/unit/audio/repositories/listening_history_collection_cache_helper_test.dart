@@ -1,10 +1,9 @@
-//
 import 'package:collection/collection.dart';
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_playlists_listening_history.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/factories/playlists_listening_history_factory.dart';
 import 'package:dune/domain/audio/factories/track_listening_history_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_playlists_listening_history.dart';
 import 'package:dune/domain/audio/repositories/listening_history_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -92,7 +91,7 @@ void main() {
               final addedHistoriesList =
                   playlistsListeningHistories.where((h) => h.date == entry.key);
               final dateHistory = addedHistoriesList.fold(
-                FakePlaylistsListeningHistory(
+                BasePlaylistsListeningHistory<BasePlaylist>(
                   date: addedHistoriesList.first.date,
                   items: const [],
                 ),

@@ -1,15 +1,17 @@
+import 'package:faker/faker.dart';
+
+//
+import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_album.dart';
-import 'package:dune/domain/audio/fake_models/fake_artist.dart';
-import 'package:dune/domain/audio/fake_models/fake_track.dart';
 import 'package:dune/support/enums/music_source.dart';
-import 'package:faker/faker.dart';
 
 import 'base_model_factory.dart';
 import 'thumbnail_set_factory.dart';
 
-final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
+final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
   late final String? _id;
   late final String? _browseId;
   late final String? _category;
@@ -19,8 +21,8 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
   late final String? _type;
   late final DateTime? _releaseDate;
   late final ThumbnailsSet? _thumbnails;
-  late final List<FakeArtist>? _artists;
-  late final List<FakeTrack>? _tracks;
+  late final List<BaseArtist>? _artists;
+  late final List<BaseTrack>? _tracks;
   late final MusicSource? _musicSource;
 
   AlbumFactory() {
@@ -29,8 +31,8 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
   }
 
   @override
-  FakeAlbum create() {
-    return FakeAlbum(
+  BaseAlbum create() {
+    return BaseAlbum(
       id: _id ??
           faker.randomGenerator.string(15, min: 6) + faker.address.citySuffix(),
       musicSource: _musicSource ??
@@ -59,8 +61,8 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
     String? type,
     DateTime? releaseDate,
     ThumbnailsSet? thumbnails,
-    List<FakeArtist>? artists,
-    List<FakeTrack>? tracks,
+    List<BaseArtist>? artists,
+    List<BaseTrack>? tracks,
     MusicSource? musicSource,
   }) {
     return AlbumFactory._(
@@ -79,7 +81,7 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
     );
   }
 
-  AlbumFactory setTracks(List<FakeTrack> tracks) {
+  AlbumFactory setTracks(List<BaseTrack> tracks) {
     return _copyWith(tracks: tracks);
   }
 
@@ -93,7 +95,7 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
     return _copyWith(musicSource: source);
   }
 
-  AlbumFactory setArtists(List<FakeArtist> artists) {
+  AlbumFactory setArtists(List<BaseArtist> artists) {
     return _copyWith(artists: artists);
   }
 
@@ -107,8 +109,8 @@ final class AlbumFactory extends BaseModelFactory<FakeAlbum> {
     required String? type,
     required DateTime? releaseDate,
     required ThumbnailsSet? thumbnails,
-    required List<FakeArtist>? artists,
-    required List<FakeTrack>? tracks,
+    required List<BaseArtist>? artists,
+    required List<BaseTrack>? tracks,
     required MusicSource? musicSource,
   })  : _id = id,
         _browseId = browseId,

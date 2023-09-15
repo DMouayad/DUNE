@@ -1,7 +1,6 @@
 import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/fake_models/fake_track.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:dune/support/utils/result/result.dart';
 
@@ -18,7 +17,7 @@ final class FakeOnlineSourceTrackRepository
 }
 
 final class FakeRemoteTrackDataSource
-    extends BaseRemoteTrackDataSource<FakeTrack> {
+    extends BaseRemoteTrackDataSource<BaseTrack> {
   final FutureOrResult<BaseTrack?>? findTrackResult;
   final FutureOrResult<AudioInfoSet>? getTrackAudioInfoResult;
   final FutureOrResult<List<BaseTrack>>? getWhereIdsResult;
