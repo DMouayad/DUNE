@@ -1,9 +1,8 @@
-// import 'package:easy_localization/easy_localization.dart';
+part of result;
 
 /// Custom app exception
 ///
-/// Usage:
-/// - determining the error message
+/// Used to determine the error message.
 enum AppException {
   noConnectionFound,
   cannotConnectToServer,
@@ -16,6 +15,7 @@ enum AppException {
   failedLoadingBooks,
   usernameNotRegistered,
   actionNotSupported,
+  directoryNotFound,
 
   /// indicates that an undefined exception was thrown/returned.
   ///

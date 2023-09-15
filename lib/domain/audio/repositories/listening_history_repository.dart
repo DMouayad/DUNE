@@ -6,7 +6,6 @@ import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/use_cases/listening_history_month_summary_use_cases.dart';
 import 'package:dune/support/extensions/extensions.dart';
-import 'package:dune/support/utils/error/app_error.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
 

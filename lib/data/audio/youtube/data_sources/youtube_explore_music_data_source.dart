@@ -5,7 +5,6 @@ import 'package:dune/data/audio/youtube/models/youtube_explore_music_collection.
 import 'package:dune/data/audio/youtube/models/youtube_explore_music_item.dart';
 import 'package:dune/domain/audio/base_data_sources/base_explore_music_data_source.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
-import 'package:dune/support/utils/error/app_error.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:http/http.dart' as http;

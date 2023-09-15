@@ -1,6 +1,5 @@
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/support/utils/error/app_error.dart';
-import 'package:dune/support/utils/error/app_exception.dart';
+import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
