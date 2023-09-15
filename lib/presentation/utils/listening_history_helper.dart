@@ -22,8 +22,10 @@ base class ListeningHistoryHelper {
   void saveListeningDuration(PlayerState state) {
     if (_lastTrackListeningDuration != null &&
         _lastTrackListeningDuration! > const Duration(seconds: 5)) {
-      final completedOneListen = _lastTrackListeningDuration!.inSeconds >=
-          state.currentTrack!.duration.inSeconds;
+      final completedOneListen = state.currentTrack!.duration == null
+          ? state.isCompleted
+          : _lastTrackListeningDuration!.inSeconds >=
+              state.currentTrack!.duration!.inSeconds;
       if (completedOneListen) {
         incrementTodayTrackCompletedListensCount(state.currentTrack!);
       } else {

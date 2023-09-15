@@ -3,8 +3,9 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class BaseArtist extends Equatable {
+class BaseArtist extends Equatable {
   final String? id;
   final String? name;
   final String description;
@@ -47,6 +48,10 @@ abstract class BaseArtist extends Equatable {
     };
   }
 
+  BaseArtist setIdIfNull() {
+    return copyWith(id: id ?? shortHash(name));
+  }
+
   @override
   List<Object?> get props => [
         id,
@@ -61,4 +66,32 @@ abstract class BaseArtist extends Equatable {
         musicSource,
         albums
       ];
+
+  BaseArtist copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? browseId,
+    String? radioId,
+    String? shuffleId,
+    String? category,
+    ThumbnailsSet? thumbnails,
+    List<BaseTrack>? tracks,
+    List<BaseAlbum>? albums,
+    MusicSource? musicSource,
+  }) {
+    return BaseArtist(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      browseId: browseId ?? this.browseId,
+      radioId: radioId ?? this.radioId,
+      shuffleId: shuffleId ?? this.shuffleId,
+      category: category ?? this.category,
+      thumbnails: thumbnails ?? this.thumbnails,
+      tracks: tracks ?? this.tracks,
+      albums: albums ?? this.albums,
+      musicSource: musicSource ?? this.musicSource,
+    );
+  }
 }

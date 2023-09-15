@@ -1,13 +1,13 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
 import 'package:dune/domain/audio/factories/base_model_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_track_listening_history.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 
 import 'track_factory.dart';
 
 final class TrackListeningHistoryFactory
-    extends BaseModelFactory<FakeTrackListeningHistory> {
+    extends BaseModelFactory<BaseTrackListeningHistory> {
   late final BaseTrack? _track;
   late final DateTime? _date;
   late final Duration? _uncompletedListensTotalDuration;
@@ -19,8 +19,8 @@ final class TrackListeningHistoryFactory
   }
 
   @override
-  FakeTrackListeningHistory create() {
-    return FakeTrackListeningHistory(
+  BaseTrackListeningHistory create() {
+    return BaseTrackListeningHistory(
       date: _date ?? faker.randomDateFromCurrentMonth,
       track: _track ?? TrackFactory().create(),
       uncompletedListensTotalDuration: _uncompletedListensTotalDuration ??

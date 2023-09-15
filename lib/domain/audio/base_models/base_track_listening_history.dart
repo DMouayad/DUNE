@@ -2,8 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import 'base_track.dart';
 
-abstract class BaseTrackListeningHistory<T extends BaseTrack>
-    extends Equatable {
+class BaseTrackListeningHistory<T extends BaseTrack> extends Equatable {
   final T? track;
   final DateTime? date;
   final Duration? uncompletedListensTotalDuration;
@@ -24,13 +23,6 @@ abstract class BaseTrackListeningHistory<T extends BaseTrack>
     this.track,
   });
 
-  Type copyWith<Type extends BaseTrackListeningHistory>({
-    T? track,
-    DateTime? date,
-    Duration? uncompletedListensTotalDuration,
-    int? completedListensCount,
-  });
-
   Map<String, dynamic> toMap() {
     return {
       'track': track?.toMap(),
@@ -43,6 +35,22 @@ abstract class BaseTrackListeningHistory<T extends BaseTrack>
   @override
   List<Object?> get props =>
       [track, date, uncompletedListensTotalDuration, completedListensCount];
+
+  F copyWith<F extends BaseTrackListeningHistory>({
+    T? track,
+    DateTime? date,
+    Duration? uncompletedListensTotalDuration,
+    int? completedListensCount,
+  }) {
+    return BaseTrackListeningHistory(
+      track: track ?? this.track,
+      date: date ?? this.date,
+      uncompletedListensTotalDuration: uncompletedListensTotalDuration ??
+          this.uncompletedListensTotalDuration,
+      completedListensCount:
+          completedListensCount ?? this.completedListensCount,
+    ) as F;
+  }
 }
 
 class TrackListeningHistoryHelper {

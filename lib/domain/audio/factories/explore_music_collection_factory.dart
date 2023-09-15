@@ -1,13 +1,13 @@
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
+import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/factories/base_model_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
-import '../fake_models/fake_explore_music_item.dart';
 import 'explore_music_item_factory.dart';
 
 final class FakeExploreMusicCollection
-    extends BaseExploreMusicCollection<FakeExploreMusicItem> {
+    extends BaseExploreMusicCollection<BaseExploreMusicItem> {
   const FakeExploreMusicCollection({
     required super.isTrending,
     required super.title,
@@ -24,7 +24,7 @@ final class ExploreMusicCollectionFactory
 
   late final bool? _isTrending;
   late final String? _title;
-  late final List<FakeExploreMusicItem>? _items;
+  late final List<BaseExploreMusicItem>? _items;
   late final MusicSource? _source;
 
   @override
@@ -61,7 +61,7 @@ final class ExploreMusicCollectionFactory
   ExploreMusicCollectionFactory _copyWith({
     bool? isTrending,
     String? title,
-    List<FakeExploreMusicItem>? items,
+    List<BaseExploreMusicItem>? items,
     MusicSource? source,
   }) {
     return ExploreMusicCollectionFactory._(
@@ -75,7 +75,7 @@ final class ExploreMusicCollectionFactory
   ExploreMusicCollectionFactory._({
     required bool? isTrending,
     required String? title,
-    required List<FakeExploreMusicItem>? items,
+    required List<BaseExploreMusicItem>? items,
     required MusicSource? source,
   })  : _isTrending = isTrending,
         _title = title,

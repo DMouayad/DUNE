@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/domain/audio/factories/explore_music_collection_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
-import 'package:dune/support/utils/error/app_error.dart';
 import 'package:dune/support/utils/result/result.dart';
 
 import '../../../utils/fake_repositories/fake_explore_music_repository.dart';

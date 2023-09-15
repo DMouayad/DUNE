@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 
 import 'base_track.dart';
 
-abstract class BaseExploreMusicItem extends Equatable {
+class BaseExploreMusicItem extends Equatable {
   final ExploreMusicItemType type;
   final String title;
   final String sourceId;
@@ -56,6 +56,28 @@ abstract class BaseExploreMusicItem extends Equatable {
 
   String toJson() {
     return jsonEncode(toMap());
+  }
+
+  BaseExploreMusicItem copyWith({
+    ExploreMusicItemType? type,
+    String? title,
+    String? sourceId,
+    ThumbnailsSet? thumbnails,
+    String? count,
+    String? description,
+    MusicSource? source,
+    BaseTrack? track,
+  }) {
+    return BaseExploreMusicItem(
+      type: type ?? this.type,
+      title: title ?? this.title,
+      sourceId: sourceId ?? this.sourceId,
+      thumbnails: thumbnails ?? this.thumbnails,
+      count: count ?? this.count,
+      description: description ?? this.description,
+      source: source ?? this.source,
+      track: track ?? this.track,
+    );
   }
 }
 

@@ -2,10 +2,11 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 import 'base_track.dart';
 
-abstract class BaseAlbum extends Equatable {
+class BaseAlbum extends Equatable {
   final String? id;
   final String? browseId;
   final String? category;
@@ -66,6 +67,12 @@ abstract class BaseAlbum extends Equatable {
         musicSource
       ];
 
+  BaseAlbum setIdIfNull() {
+    return copyWith(id: id ?? _generateId);
+  }
+
+  String get _generateId => shortHash(title);
+
   BaseAlbum copyWith({
     String? id,
     String? browseId,
@@ -79,5 +86,20 @@ abstract class BaseAlbum extends Equatable {
     List<BaseArtist>? artists,
     List<BaseTrack>? tracks,
     MusicSource? musicSource,
-  });
+  }) {
+    return BaseAlbum(
+      id: id ?? this.id,
+      browseId: browseId ?? this.browseId,
+      category: category ?? this.category,
+      duration: duration ?? this.duration,
+      isExplicit: isExplicit ?? this.isExplicit,
+      title: title ?? this.title,
+      type: type ?? this.type,
+      releaseDate: releaseDate ?? this.releaseDate,
+      thumbnails: thumbnails ?? this.thumbnails,
+      artists: artists ?? this.artists,
+      tracks: tracks ?? this.tracks,
+      musicSource: musicSource ?? this.musicSource,
+    );
+  }
 }
