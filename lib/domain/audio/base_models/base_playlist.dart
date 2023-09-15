@@ -1,11 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 import 'thumbnails_set.dart';
 import 'base_track.dart';
 
-abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
+class BasePlaylist<T extends BaseTrack> extends Equatable {
   const BasePlaylist({
     required this.author,
     required this.description,
@@ -64,11 +65,41 @@ abstract class BasePlaylist<T extends BaseTrack> extends Equatable {
     };
   }
 
+  BasePlaylist setIdIfNull() {
+    return copyWith(id: id ?? shortHash(title));
+  }
+
   bool hasSameTracksAsOther(BasePlaylist? other) {
     final firstTracksIds = tracks.map((e) => (e.id, e.album?.id)).toList();
     final secondTracksIds =
         other?.tracks.map((e) => (e.id, e.album?.id)).toList();
     return const ListEquality().equals(firstTracksIds, secondTracksIds);
+  }
+
+  BasePlaylist copyWith({
+    String? id,
+    PlaylistAuthor? author,
+    String? description,
+    String? duration,
+    int? durationSeconds,
+    ThumbnailsSet? thumbnails,
+    String? title,
+    List<T>? tracks,
+    DateTime? createdAt,
+    MusicSource? musicSource,
+  }) {
+    return BasePlaylist(
+      id: id ?? this.id,
+      author: author ?? this.author,
+      description: description ?? this.description,
+      duration: duration ?? this.duration,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      thumbnails: thumbnails ?? this.thumbnails,
+      title: title ?? this.title,
+      tracks: tracks ?? this.tracks,
+      createdAt: createdAt ?? this.createdAt,
+      musicSource: musicSource ?? this.musicSource,
+    );
   }
 }
 
@@ -78,8 +109,8 @@ class PlaylistAuthor extends Equatable {
   final String? id;
   final String? name;
 
-  factory PlaylistAuthor.fromJson(Map<String?, dynamic> json) {
-    return PlaylistAuthor(id: json["id"], name: json["name"]);
+  factory PlaylistAuthor.fromMap(Map<String?, dynamic> map) {
+    return PlaylistAuthor(id: map["id"], name: map["name"]);
   }
 
   Map<String?, dynamic> toMap() => {"id": id, "name": name};

@@ -1,4 +1,5 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:isar/isar.dart';
 
@@ -56,10 +57,11 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
     return '${super.toString()} tracksIds:$tracksIds';
   }
 
+  @override
   IsarPlaylist copyWith({
     Id? isarId,
-    IsarPlaylistAuthor? author,
-    IsarThumbnailsSet? thumbnails,
+    PlaylistAuthor? author,
+    ThumbnailsSet? thumbnails,
     List<IsarTrack>? tracks,
     String? title,
     String? id,
@@ -80,8 +82,12 @@ class IsarPlaylist extends BasePlaylist<IsarTrack> {
       musicSource: musicSource ?? this.musicSource,
       description: description ?? this.description,
       tracks: tracks ?? this.tracks,
-      isarThumbnails: thumbnails ?? isarThumbnails,
-      author: author ?? this.author,
+      isarThumbnails: thumbnails != null
+          ? IsarThumbnailsSet.fromMap(thumbnails.toMap())
+          : isarThumbnails,
+      author: author != null
+          ? IsarPlaylistAuthor(id: author.id, name: author.name)
+          : this.author,
       tracksIds: tracksIds ?? this.tracksIds,
     );
   }

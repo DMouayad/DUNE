@@ -1,9 +1,9 @@
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
+import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
-import 'package:dune/domain/audio/fake_models/fake_album.dart';
-import 'package:dune/domain/audio/fake_models/fake_artist.dart';
-import 'package:dune/domain/audio/fake_models/fake_track.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
@@ -13,11 +13,11 @@ import 'artist_factory.dart';
 import 'base_model_factory.dart';
 import 'thumbnail_set_factory.dart';
 
-final class TrackFactory extends BaseModelFactory<FakeTrack> {
+final class TrackFactory extends BaseModelFactory<BaseTrack> {
   late final String? _id;
   late final AudioInfoSet? _audioInfoSet;
-  late final FakeAlbum? _album;
-  late final List<FakeArtist>? _artists;
+  late final BaseAlbum? _album;
+  late final List<BaseArtist>? _artists;
   late final Duration? _duration;
   late final String? _title;
   late final String? _year;
@@ -42,10 +42,10 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
   }
 
   @override
-  FakeTrack create() {
+  BaseTrack create() {
     final source = _source ??
         faker.randomGenerator.element(MusicSource.valuesWithoutUnknown);
-    return FakeTrack(
+    return BaseTrack(
       id: _id ??
           faker.lorem.random.string(20, min: 6) +
               faker.randomGenerator.numberOfLength(3),
@@ -67,12 +67,12 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
     );
   }
 
-  TrackFactory withAlbum([FakeAlbum? album]) {
+  TrackFactory withAlbum([BaseAlbum? album]) {
     return _copyWith(shouldCreateAlbum: true, album: album);
   }
 
   TrackFactory withArtists({
-    List<FakeArtist>? artists,
+    List<BaseArtist>? artists,
     int count = 1,
   }) {
     return _copyWith(artistsToCreateCount: count, artists: artists);
@@ -81,8 +81,8 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
   TrackFactory _copyWith({
     String? id,
     AudioInfoSet? audioInfoSet,
-    FakeAlbum? album,
-    List<FakeArtist>? artists,
+    BaseAlbum? album,
+    List<BaseArtist>? artists,
     Duration? duration,
     String? title,
     String? year,
@@ -143,8 +143,8 @@ final class TrackFactory extends BaseModelFactory<FakeTrack> {
   TrackFactory._({
     required String? id,
     required AudioInfoSet? audioInfoSet,
-    required FakeAlbum? album,
-    required List<FakeArtist>? artists,
+    required BaseAlbum? album,
+    required List<BaseArtist>? artists,
     required Duration? duration,
     required String? title,
     required String? year,

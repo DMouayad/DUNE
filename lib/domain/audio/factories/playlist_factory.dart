@@ -2,14 +2,13 @@ import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/factories/thumbnail_set_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_playlist.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
 import 'base_model_factory.dart';
 import 'track_factory.dart';
 
-final class PlaylistFactory extends BaseModelFactory<FakePlaylist> {
+final class PlaylistFactory extends BaseModelFactory<BasePlaylist> {
   late final String? _id;
   late final PlaylistAuthor? _author;
   late final String? _description;
@@ -27,8 +26,8 @@ final class PlaylistFactory extends BaseModelFactory<FakePlaylist> {
   }
 
   @override
-  FakePlaylist create() {
-    return FakePlaylist(
+  BasePlaylist create() {
+    return BasePlaylist(
       id: _id ??
           '${faker.address.countryCode()}'
               '-${faker.randomGenerator.string(10)}',

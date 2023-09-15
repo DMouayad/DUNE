@@ -1,14 +1,13 @@
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/factories/base_model_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_explore_music_item.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
 import 'track_factory.dart';
 
 final class ExploreMusicItemFactory
-    extends BaseModelFactory<FakeExploreMusicItem> {
+    extends BaseModelFactory<BaseExploreMusicItem> {
   ExploreMusicItemFactory._(
     this._type,
     this._source,
@@ -44,10 +43,10 @@ final class ExploreMusicItemFactory
   late final String? _description;
 
   @override
-  FakeExploreMusicItem create() {
+  BaseExploreMusicItem create() {
     final source = _source ??
         faker.randomGenerator.element(MusicSource.valuesWithoutUnknown);
-    return FakeExploreMusicItem(
+    return BaseExploreMusicItem(
       type: _type ?? faker.randomGenerator.element(ExploreMusicItemType.values),
       title: _title ?? faker.lorem.sentence(),
       sourceId: _sourceId ?? faker.lorem.word(),

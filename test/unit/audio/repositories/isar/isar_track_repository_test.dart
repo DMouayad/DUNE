@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/factories/audio_info_set_factory.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_track.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../utils/isar_testing_utils.dart';
@@ -11,7 +10,7 @@ import '../../../../utils/equality_helper.dart';
 void main() {
   setUpAll(() async => await IsarTestingUtils.initIsarForTesting());
   setUp(() async => await IsarTestingUtils.refreshDatabase());
-  Future<BaseTrack?> saveThenFetchTrack(FakeTrack track) async {
+  Future<BaseTrack?> saveThenFetchTrack(BaseTrack track) async {
     final savingResult =
         await IsarTestingUtils.isarMusicRepo.tracks.save(track);
     if (savingResult.isFailure) return null;

@@ -160,7 +160,7 @@ class TrackCardMainContent extends StatelessWidget {
           Expanded(
             flex: 0,
             child: Text(
-              track.duration.formatInHhMmSs,
+              track.duration?.formatInHhMmSs ?? 'N/A',
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.bodySmall,
             ),

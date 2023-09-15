@@ -95,8 +95,9 @@ class IsarAlbum extends BaseAlbum {
     return null;
   }
 
+  @override
   IsarAlbum setIdIfNull() {
-    return copyWith(id: id ?? browseId ?? shortHash(title));
+    return copyWith(id: id ?? shortHash(title));
   }
 
   @override
