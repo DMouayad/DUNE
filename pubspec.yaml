@@ -46,8 +46,6 @@ dependencies:
   collection: ^1.17.1
   path_provider:
   flagsmith: ^4.0.0
-  metadata_god:
-    path: ./external/metadata_god
   faker: ^2.1.0
   device_preview: ^1.1.0
 

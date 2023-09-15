@@ -748,13 +748,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  metadata_god:
-    dependency: "direct main"
-    description:
-      path: "external/metadata_god"
-      relative: true
-    source: path
-    version: "0.4.1"
   mime:
     dependency: transitive
     description:
