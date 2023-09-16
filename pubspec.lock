@@ -340,10 +340,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: ed5337a5660c506388a9f012be0288fb38b49020ce2b45fe1f8b8323fe429f99
+      sha256: "7bf0adc28a23d395f19f3f1eb21dd7cfd1dd9f8e1c50051c069122e6853bc878"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
   file:
     dependency: transitive
     description:
@@ -446,10 +446,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_rust_bridge
-      sha256: dcb436ba4b466e19da1656ef14622b5ac2ed90efc8fcb0946942c6cd185578d1
+      sha256: a2ff791f96ed03be0d4a8d249130688371ab3612ef95efeddef23600b904a1ef
       url: "https://pub.dev"
     source: hosted
-    version: "1.79.0"
+    version: "1.81.0"
   flutter_staggered_animations:
     dependency: "direct main"
     description:
@@ -458,6 +458,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  flutter_taggy:
+    dependency: "direct main"
+    description:
+      name: flutter_taggy
+      sha256: "87576bea572675b883eda818f70a7ba87865472a479fcb54c20c7ee194594a1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -712,26 +720,26 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: eb47c2d51b7c06b319d8c776b47be912c5a4f53af7ab4814927a52a76442609e
+      sha256: "92c7f59e075d74471b31e703f81ccc1d7102739ebcce945b30a6417fa2f751d5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2+1"
+    version: "1.1.7"
   media_kit_libs_android_audio:
     dependency: "direct main"
     description:
       name: media_kit_libs_android_audio
-      sha256: "304b6d4045280b11bf7b4f9a4330556dbc98d7431f2c20e9dec133ed80d3ec78"
+      sha256: "109f5907b4ba2b464e7dc8fcc3062900a9fdce1fdf81e43a9fe1722c3e5fe618"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.3"
   media_kit_libs_windows_audio:
     dependency: "direct main"
     description:
       name: media_kit_libs_windows_audio
-      sha256: "34b768e385181b2e475dd846345ed1191bde85a4c64db014d239d4c9f844c5fd"
+      sha256: "9f2dda645ef2d28f7945259848a6dcc6b0b36cb537d8e79d59d5054f08dbce13"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.8"
   media_kit_native_event_loop:
     dependency: "direct main"
     description:
@@ -789,7 +797,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "8829d8a55c13fc0e37127c29fedf290c102f4e40ae94ada574091fe0ff96c917"
@@ -1185,6 +1193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  taggy:
+    dependency: transitive
+    description:
+      name: taggy
+      sha256: a4540c2dc84cf0c6a02456205affb408fd7589ca2d98b70f67037c35b15ccdf4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2+1"
   term_glyph:
     dependency: transitive
     description:
