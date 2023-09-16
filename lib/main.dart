@@ -7,6 +7,8 @@ import 'package:media_kit/media_kit.dart';
 import 'package:dune/dune_app.dart';
 import 'package:dune/support/helpers/app_window_helper.dart';
 import 'package:dune/support/helpers/platform_helpers.dart';
+import 'package:dune/data/audio/local/services/taggy_track_from_file_extractor.dart';
+import 'package:path_provider/path_provider.dart';
 import 'data/audio/isar/repositories/isar_music_repository.dart';
 import 'data/audio/youtube/repositories/youtube_music_repository.dart';
 import 'domain/audio/facades/music_facade.dart';
@@ -26,12 +28,15 @@ Future<void> _registerDependencies() async {
   // await isar.writeTxn(() async => await isar.clear());
   final isarMusicRepository = IsarMusicRepository(isar: isar);
   // IsarTrackListeningHistorySeeder(isarMusicRepository, isar).seedCount();
-
+  final appDocumentsDir = await getApplicationDocumentsDirectory();
   MusicFacade.setInstance(
     localMusicRepository: isarMusicRepository,
     listeningHistoryRepository: isarMusicRepository.listeningHistory,
     youtubeMusicRepository: YoutubeMusicRepository(),
-    audioLibraryScanner: AudioLibraryScanner(),
+    audioLibraryScanner: AudioLibraryScanner(
+      trackExtractor: TaggyTrackFromFileExtractor(),
+      directoryToSaveExtractedImages: appDocumentsDir.path,
+    ),
   );
 
   final currentTheme = await registerThemeProvider(isar);

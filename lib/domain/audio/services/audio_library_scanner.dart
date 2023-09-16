@@ -1,19 +1,25 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:path/path.dart' as p;
 
+//
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/utils/result/result.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import 'base_file_track_extractor.dart';
 
 /// Responsible for scanning a given folder(directory) for audio tracks.
-///
 class AudioLibraryScanner with AudioFilesScanner {
-  const AudioLibraryScanner(this._trackExtractor);
+  const AudioLibraryScanner({
+    required BaseTrackFromFileExtractor trackExtractor,
+    required this.directoryToSaveExtractedImages,
+  }) : _trackExtractor = trackExtractor;
+
+  /// The path to the directory in which all extracted images from audio files
+  /// will be saved.
+  final String directoryToSaveExtractedImages;
 
   final BaseTrackFromFileExtractor _trackExtractor;
 
@@ -68,11 +74,10 @@ class AudioLibraryScanner with AudioFilesScanner {
   ) async {
     return await Isolate.run(() async {
       return await Result.fromAsync(() async {
-        final appDir = await getApplicationDocumentsDirectory();
-        final imageFilePath = p.absolute(appDir.path, '$trackTitle.png}');
-        final imageFile = File(imageFilePath);
+        final imageFilePath =
+            p.absolute(directoryToSaveExtractedImages, '$trackTitle.png}');
         // [writeAsBytes] will automatically closes the writer sink when done
-        await imageFile.writeAsBytes(pictureData);
+        await File(imageFilePath).writeAsBytes(pictureData);
         return imageFilePath;
       });
     });
