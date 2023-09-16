@@ -32,7 +32,7 @@ final class YoutubeTrackDataSource implements BaseRemoteTrackDataSource {
           .map((e) => TrackAudioInfo(
                 url: e.url.toString(),
                 format: e.container.name,
-                bitrateInKb: e.bitrate.kiloBitsPerSecond,
+                bitsPerSecond: e.bitrate.kiloBitsPerSecond,
                 totalBytes: e.size.totalBytes,
                 musicSource: MusicSource.youtube,
               ))

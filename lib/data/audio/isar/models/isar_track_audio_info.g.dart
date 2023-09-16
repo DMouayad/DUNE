@@ -13,35 +13,65 @@ const IsarTrackAudioInfoSchema = Schema(
   name: r'IsarTrackAudioInfo',
   id: 526569056173480730,
   properties: {
-    r'bitrateInKb': PropertySchema(
+    r'bitDepth': PropertySchema(
       id: 0,
-      name: r'bitrateInKb',
+      name: r'bitDepth',
+      type: IsarType.long,
+    ),
+    r'bitsPerSecond': PropertySchema(
+      id: 1,
+      name: r'bitsPerSecond',
       type: IsarType.double,
     ),
+    r'channelMask': PropertySchema(
+      id: 2,
+      name: r'channelMask',
+      type: IsarType.long,
+    ),
+    r'channels': PropertySchema(
+      id: 3,
+      name: r'channels',
+      type: IsarType.long,
+    ),
     r'format': PropertySchema(
-      id: 1,
+      id: 4,
       name: r'format',
       type: IsarType.string,
     ),
+    r'kiloBitsPerSecond': PropertySchema(
+      id: 5,
+      name: r'kiloBitsPerSecond',
+      type: IsarType.double,
+    ),
     r'musicSource': PropertySchema(
-      id: 2,
+      id: 6,
       name: r'musicSource',
       type: IsarType.byte,
       enumMap: _IsarTrackAudioInfomusicSourceEnumValueMap,
     ),
+    r'overallBitrate': PropertySchema(
+      id: 7,
+      name: r'overallBitrate',
+      type: IsarType.long,
+    ),
     r'quality': PropertySchema(
-      id: 3,
+      id: 8,
       name: r'quality',
       type: IsarType.byte,
       enumMap: _IsarTrackAudioInfoqualityEnumValueMap,
     ),
+    r'samplingRate': PropertySchema(
+      id: 9,
+      name: r'samplingRate',
+      type: IsarType.long,
+    ),
     r'totalBytes': PropertySchema(
-      id: 4,
+      id: 10,
       name: r'totalBytes',
       type: IsarType.long,
     ),
     r'url': PropertySchema(
-      id: 5,
+      id: 11,
       name: r'url',
       type: IsarType.string,
     )
@@ -79,12 +109,18 @@ void _isarTrackAudioInfoSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.bitrateInKb);
-  writer.writeString(offsets[1], object.format);
-  writer.writeByte(offsets[2], object.musicSource.index);
-  writer.writeByte(offsets[3], object.quality.index);
-  writer.writeLong(offsets[4], object.totalBytes);
-  writer.writeString(offsets[5], object.url);
+  writer.writeLong(offsets[0], object.bitDepth);
+  writer.writeDouble(offsets[1], object.bitsPerSecond);
+  writer.writeLong(offsets[2], object.channelMask);
+  writer.writeLong(offsets[3], object.channels);
+  writer.writeString(offsets[4], object.format);
+  writer.writeDouble(offsets[5], object.kiloBitsPerSecond);
+  writer.writeByte(offsets[6], object.musicSource.index);
+  writer.writeLong(offsets[7], object.overallBitrate);
+  writer.writeByte(offsets[8], object.quality.index);
+  writer.writeLong(offsets[9], object.samplingRate);
+  writer.writeLong(offsets[10], object.totalBytes);
+  writer.writeString(offsets[11], object.url);
 }
 
 IsarTrackAudioInfo _isarTrackAudioInfoDeserialize(
@@ -94,16 +130,21 @@ IsarTrackAudioInfo _isarTrackAudioInfoDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = IsarTrackAudioInfo(
-    bitrateInKb: reader.readDoubleOrNull(offsets[0]),
-    format: reader.readStringOrNull(offsets[1]),
+    bitDepth: reader.readLongOrNull(offsets[0]),
+    bitsPerSecond: reader.readDoubleOrNull(offsets[1]),
+    channelMask: reader.readLongOrNull(offsets[2]),
+    channels: reader.readLongOrNull(offsets[3]),
+    format: reader.readStringOrNull(offsets[4]),
     musicSource: _IsarTrackAudioInfomusicSourceValueEnumMap[
-            reader.readByteOrNull(offsets[2])] ??
+            reader.readByteOrNull(offsets[6])] ??
         MusicSource.unknown,
+    overallBitrate: reader.readLongOrNull(offsets[7]),
     quality: _IsarTrackAudioInfoqualityValueEnumMap[
-            reader.readByteOrNull(offsets[3])] ??
+            reader.readByteOrNull(offsets[8])] ??
         AudioStreamingQuality.undefined,
-    totalBytes: reader.readLongOrNull(offsets[4]),
-    url: reader.readStringOrNull(offsets[5]),
+    samplingRate: reader.readLongOrNull(offsets[9]),
+    totalBytes: reader.readLongOrNull(offsets[10]),
+    url: reader.readStringOrNull(offsets[11]),
   );
   return object;
 }
@@ -116,20 +157,32 @@ P _isarTrackAudioInfoDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 2:
+      return (reader.readLongOrNull(offset)) as P;
+    case 3:
+      return (reader.readLongOrNull(offset)) as P;
+    case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 6:
       return (_IsarTrackAudioInfomusicSourceValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MusicSource.unknown) as P;
-    case 3:
+    case 7:
+      return (reader.readLongOrNull(offset)) as P;
+    case 8:
       return (_IsarTrackAudioInfoqualityValueEnumMap[
               reader.readByteOrNull(offset)] ??
           AudioStreamingQuality.undefined) as P;
-    case 4:
+    case 9:
       return (reader.readLongOrNull(offset)) as P;
-    case 5:
+    case 10:
+      return (reader.readLongOrNull(offset)) as P;
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -168,31 +221,105 @@ const _IsarTrackAudioInfoqualityValueEnumMap = {
 extension IsarTrackAudioInfoQueryFilter
     on QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QFilterCondition> {
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbIsNull() {
+      bitDepthIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'bitrateInKb',
+        property: r'bitDepth',
       ));
     });
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbIsNotNull() {
+      bitDepthIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'bitrateInKb',
+        property: r'bitDepth',
       ));
     });
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbEqualTo(
+      bitDepthEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bitDepth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitDepthGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bitDepth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitDepthLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bitDepth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitDepthBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bitDepth',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitsPerSecondIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'bitsPerSecond',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitsPerSecondIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'bitsPerSecond',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      bitsPerSecondEqualTo(
     double? value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'bitrateInKb',
+        property: r'bitsPerSecond',
         value: value,
         epsilon: epsilon,
       ));
@@ -200,7 +327,7 @@ extension IsarTrackAudioInfoQueryFilter
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbGreaterThan(
+      bitsPerSecondGreaterThan(
     double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -208,7 +335,7 @@ extension IsarTrackAudioInfoQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'bitrateInKb',
+        property: r'bitsPerSecond',
         value: value,
         epsilon: epsilon,
       ));
@@ -216,7 +343,7 @@ extension IsarTrackAudioInfoQueryFilter
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbLessThan(
+      bitsPerSecondLessThan(
     double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -224,7 +351,7 @@ extension IsarTrackAudioInfoQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'bitrateInKb',
+        property: r'bitsPerSecond',
         value: value,
         epsilon: epsilon,
       ));
@@ -232,7 +359,7 @@ extension IsarTrackAudioInfoQueryFilter
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
-      bitrateInKbBetween(
+      bitsPerSecondBetween(
     double? lower,
     double? upper, {
     bool includeLower = true,
@@ -241,12 +368,160 @@ extension IsarTrackAudioInfoQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'bitrateInKb',
+        property: r'bitsPerSecond',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'channelMask',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'channelMask',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'channelMask',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'channelMask',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'channelMask',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelMaskBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'channelMask',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'channels',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'channels',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'channels',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'channels',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'channels',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      channelsBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'channels',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -406,6 +681,90 @@ extension IsarTrackAudioInfoQueryFilter
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'kiloBitsPerSecond',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'kiloBitsPerSecond',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'kiloBitsPerSecond',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'kiloBitsPerSecond',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'kiloBitsPerSecond',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      kiloBitsPerSecondBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'kiloBitsPerSecond',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
       musicSourceEqualTo(MusicSource value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -462,6 +821,80 @@ extension IsarTrackAudioInfoQueryFilter
   }
 
   QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'overallBitrate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'overallBitrate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'overallBitrate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'overallBitrate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'overallBitrate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      overallBitrateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'overallBitrate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
       qualityEqualTo(AudioStreamingQuality value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -509,6 +942,80 @@ extension IsarTrackAudioInfoQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'quality',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'samplingRate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'samplingRate',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'samplingRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'samplingRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'samplingRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTrackAudioInfo, IsarTrackAudioInfo, QAfterFilterCondition>
+      samplingRateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'samplingRate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,

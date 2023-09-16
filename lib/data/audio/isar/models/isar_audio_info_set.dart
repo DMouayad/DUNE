@@ -33,7 +33,7 @@ class IsarAudioInfoSet extends AudioInfoSet {
     if (audioInfo == null) return null;
     final items = audioInfo.items
         .map((e) => IsarTrackAudioInfo(
-              bitrateInKb: e.bitrateInKb,
+              bitsPerSecond: e.bitsPerSecond,
               format: e.format,
               totalBytes: e.totalBytes,
               url: e.url,

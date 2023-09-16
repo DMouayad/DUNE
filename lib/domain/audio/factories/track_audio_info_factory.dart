@@ -22,7 +22,7 @@ final class TrackAudioInfoFactory extends BaseModelFactory<TrackAudioInfo> {
       format: _format ?? faker.lorem.word(),
       musicSource: _musicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
-      bitrateInKb:
+      bitsPerSecond:
           _bitrateInKb ?? faker.randomGenerator.integer(320).toDouble(),
       totalBytes:
           _totalBytes ?? faker.randomGenerator.integer(3000000, min: 20000),
