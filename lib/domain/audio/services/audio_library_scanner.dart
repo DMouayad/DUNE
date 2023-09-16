@@ -57,13 +57,24 @@ class AudioLibraryScanner with AudioFilesScanner {
     if (track == null || extractedThumbnail == null) {
       return track;
     } else {
-      return (await _savePictureToFile(extractedThumbnail.data, track.title))
+      return (await _savePictureToFile(
+        extractedThumbnail.data,
+        // it's better to use the album name to minimize the chance of
+        // saving an image multiple times.
+        track.album?.title ?? track.title,
+      ))
           .mapTo(
         onSuccess: (imagePath) {
           final thumb = extractedThumbnail.thumb.copyWith(url: imagePath);
           return track.copyWith(thumbnails: ThumbnailsSet(thumbnails: [thumb]));
         },
-        onFailure: (_) => track,
+        onFailure: (e) {
+          Log.e(
+            "Failed to save image. for track: ${track.title}\n"
+            "Thumb:${extractedThumbnail.thumb}",
+          );
+          return track;
+        },
       );
     }
   }
@@ -101,5 +112,12 @@ mixin AudioFilesScanner {
   bool _isAudioFile(File file) {
     final extension = p.extension(file.path.toLowerCase());
     return _audioFilesExtensions.contains(extension);
+  }
+
+  int getDirectoryAudioFilesNumber(String path) {
+    return Directory(path)
+        .listSync(recursive: true)
+        .where((e) => e is File && _isAudioFile(e))
+        .length;
   }
 }
