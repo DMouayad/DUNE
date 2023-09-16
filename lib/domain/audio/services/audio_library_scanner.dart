@@ -12,7 +12,7 @@ import 'base_file_track_extractor.dart';
 
 /// Responsible for scanning a given folder(directory) for audio tracks.
 ///
-class AudioLibraryScanner {
+class AudioLibraryScanner with AudioFilesScanner {
   const AudioLibraryScanner(this._trackExtractor);
 
   final BaseTrackFromFileExtractor _trackExtractor;
@@ -27,7 +27,7 @@ class AudioLibraryScanner {
     if (dir.existsSync()) {
       // first get all of the audio files in the [dir] and its sub-directories
       // then extract a track from each file, if possible.
-      return (await (_getAudioFiles(dir))
+      return (await (getAudioFiles(dir))
               .asyncMap((file) async => await _getTrackFromFile(file))
               .takeWhile((track) => track != null)
               .toList())
@@ -36,25 +36,6 @@ class AudioLibraryScanner {
     } else {
       return FailureResult.withAppException(AppException.directoryNotFound);
     }
-  }
-
-  /// Scans the provided [Directory] recursively for audio files only.
-  /// Returns the files in a [Stream]
-  Stream<File> _getAudioFiles(Directory dir) {
-    return dir.list(recursive: true).takeWhile((fileEntity) {
-      return fileEntity is File && _isAudioFile(fileEntity);
-    }).cast();
-    // (fileEntity) async {
-    //   } else if (fileEntity is Directory) {
-    //     await _getAudioFilesPaths(fileEntity)
-    //         .foldThen(onSuccess: (subDirFiles) => paths.addAll(subDirFiles));
-    //   }
-    // });
-  }
-
-  /// Returns whether the provided [file] is an audio file based on its type
-  bool _isAudioFile(File file) {
-    return _audioFilesExtensions.contains(p.extension(file.path.toLowerCase()));
   }
 
   Future<BaseTrack?> _getTrackFromFile(File file) async {
@@ -98,4 +79,19 @@ class AudioLibraryScanner {
   }
 }
 
-const _audioFilesExtensions = ['.mp3', '.mp4', '.m4a', '.wav', '.aac', 'flac'];
+const _audioFilesExtensions = ['.mp3', '.mp4', '.m4a', '.wav', '.aac', '.flac'];
+mixin AudioFilesScanner {
+  /// Scans the provided [Directory] recursively for audio files only.
+  /// Returns the files in a [Stream]
+  Stream<File> getAudioFiles(Directory dir) {
+    return dir.list(recursive: true).where((fileEntity) {
+      return fileEntity is File && _isAudioFile(fileEntity);
+    }).cast();
+  }
+
+  /// Returns whether the provided [file] is an audio file based on its type
+  bool _isAudioFile(File file) {
+    final extension = p.extension(file.path.toLowerCase());
+    return _audioFilesExtensions.contains(extension);
+  }
+}
