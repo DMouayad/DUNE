@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
+import 'package:dune/support/logger_service.dart';
 import 'package:path/path.dart' as p;
 
 //
@@ -70,16 +70,19 @@ class AudioLibraryScanner with AudioFilesScanner {
 
   FutureResult<String> _savePictureToFile(
     List<int> pictureData,
-    String trackTitle,
+    String imageTitle,
   ) async {
-    return await Isolate.run(() async {
-      return await Result.fromAsync(() async {
-        final imageFilePath =
-            p.absolute(directoryToSaveExtractedImages, '$trackTitle.png}');
-        // [writeAsBytes] will automatically closes the writer sink when done
-        await File(imageFilePath).writeAsBytes(pictureData);
-        return imageFilePath;
-      });
+    return await Result.fromAsync(() async {
+      final imageFilePath =
+          p.absolute(directoryToSaveExtractedImages, '$imageTitle.png');
+      // [writeAsBytes] will automatically closes the writer sink when done
+      final imageFile = File(imageFilePath);
+      if (imageFile.existsSync()) {
+        // if it already exists, don't save again
+      } else {
+        await imageFile.writeAsBytes(pictureData);
+      }
+      return imageFilePath;
     });
   }
 }
