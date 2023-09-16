@@ -26,7 +26,7 @@ class AudioLibraryScanner {
 
     if (dir.existsSync()) {
       // first get all of the audio files in the [dir] and its sub-directories
-      // then create a track, if possible, from each file
+      // then extract a track from each file, if possible.
       return (await (_getAudioFiles(dir))
               .asyncMap((file) async => await _getTrackFromFile(file))
               .takeWhile((track) => track != null)
@@ -61,25 +61,24 @@ class AudioLibraryScanner {
     final extractor = await _trackExtractor.newExtractor(file);
     if (extractor == null) return null;
 
-    final track = extractor.extractTrackAndAttachProps();
-    final coverImageBytes = extractor.extractCoverImageBytes();
+    final track = extractor.getTrackWithPropsAttached();
+    final coverThumbnails = extractor.extractThumbnails();
 
-    if (track == null || coverImageBytes == null) {
+    // for now, we'll be saving only one image
+    final extractedThumbnail = coverThumbnails.firstOrNull;
+
+    if (track == null || extractedThumbnail == null) {
       return track;
     } else {
-      return (await _savePictureToFile(coverImageBytes, track.title)).mapTo(
+      return (await _savePictureToFile(extractedThumbnail.data, track.title))
+          .mapTo(
         onSuccess: (imagePath) {
-          return track.copyWith(thumbnails: _createThumbnailsSet(imagePath));
+          final thumb = extractedThumbnail.thumb.copyWith(url: imagePath);
+          return track.copyWith(thumbnails: ThumbnailsSet(thumbnails: [thumb]));
         },
         onFailure: (_) => track,
       );
     }
-  }
-
-  ThumbnailsSet _createThumbnailsSet(String imagePath) {
-    final thumb = BaseThumbnail(
-        url: imagePath, quality: ThumbnailQuality.standard, isNetwork: false);
-    return ThumbnailsSet(thumbnails: [thumb]);
   }
 
   FutureResult<String> _savePictureToFile(
