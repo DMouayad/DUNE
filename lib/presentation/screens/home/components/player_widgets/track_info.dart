@@ -91,8 +91,8 @@ class PlayerBarTrackInfo extends ConsumerWidget {
 
   String _getTrackAudioInfoFormatted(TrackAudioInfo? audioInfo) {
     if (audioInfo == null) return '';
-    return (audioInfo.bitrateInKb != null
-        ? '${audioInfo.bitrateInKb!.toInt()} kbps'
+    return (audioInfo.kiloBitsPerSecond != null
+        ? '${audioInfo.kiloBitsPerSecond!.toInt()} kbps'
         : '');
   }
 }

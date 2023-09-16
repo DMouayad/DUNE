@@ -56,13 +56,14 @@ class AudioInfoSet extends Equatable {
       TrackAudioInfo? highQualityAudio;
       TrackAudioInfo bestQualityAudio = list.first;
       for (TrackAudioInfo item in list) {
-        if (item.bitrateInKb == null) {
+        if (item.bitsPerSecond == null) {
           _audioInfo.add(item);
           continue;
         }
 
-        final isGreaterThanCurrentBest = bestQualityAudio.bitrateInKb != null &&
-            item.bitrateInKb! > bestQualityAudio.bitrateInKb!;
+        final isGreaterThanCurrentBest =
+            bestQualityAudio.bitsPerSecond != null &&
+                item.bitsPerSecond! > bestQualityAudio.bitsPerSecond!;
         if (isGreaterThanCurrentBest) {
           // Assign high quality to the previous best quality
           // audio and update the best quality audio
@@ -86,8 +87,8 @@ class AudioInfoSet extends Equatable {
           continue;
         }
         final isGreaterThanCurrentHigh =
-            highQualityAudio?.bitrateInKb != null &&
-                item.bitrateInKb! > highQualityAudio!.bitrateInKb!;
+            highQualityAudio?.bitsPerSecond != null &&
+                item.bitsPerSecond! > highQualityAudio!.bitsPerSecond!;
         if (isGreaterThanCurrentHigh) {
           if (lowQualityAudio != null) {
             lowestQualityAudio =
@@ -105,8 +106,8 @@ class AudioInfoSet extends Equatable {
           continue;
         }
         final isGreaterThanCurrentBalanced =
-            balancedQualityAudio?.bitrateInKb != null &&
-                item.bitrateInKb! > balancedQualityAudio!.bitrateInKb!;
+            balancedQualityAudio?.bitsPerSecond != null &&
+                item.bitsPerSecond! > balancedQualityAudio!.bitsPerSecond!;
         if (isGreaterThanCurrentBalanced) {
           if (lowQualityAudio != null) {
             lowestQualityAudio =
@@ -120,8 +121,9 @@ class AudioInfoSet extends Equatable {
               item.copyWith(quality: AudioStreamingQuality.balanced);
           continue;
         }
-        final isGreaterThanCurrentLow = lowQualityAudio?.bitrateInKb != null &&
-            item.bitrateInKb! > lowQualityAudio!.bitrateInKb!;
+        final isGreaterThanCurrentLow =
+            lowQualityAudio?.bitsPerSecond != null &&
+                item.bitsPerSecond! > lowQualityAudio!.bitsPerSecond!;
         if (isGreaterThanCurrentLow) {
           // Assign lowest quality to the current low quality
           // audio and update the low quality audio
@@ -133,14 +135,14 @@ class AudioInfoSet extends Equatable {
         }
 
         final isGreaterThanCurrentLowest =
-            lowestQualityAudio?.bitrateInKb != null &&
-                item.bitrateInKb! > lowestQualityAudio!.bitrateInKb!;
+            lowestQualityAudio?.bitsPerSecond != null &&
+                item.bitsPerSecond! > lowestQualityAudio!.bitsPerSecond!;
         if (isGreaterThanCurrentLowest) {
           lowQualityAudio = item.copyWith(quality: AudioStreamingQuality.low);
           continue;
         }
         if (lowestQualityAudio == null &&
-            (item.bitrateInKb! < bestQualityAudio.bitrateInKb!)) {
+            (item.bitsPerSecond! < bestQualityAudio.bitsPerSecond!)) {
           lowestQualityAudio =
               item.copyWith(quality: AudioStreamingQuality.lowest);
         } else {
