@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_thumbnail.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/support/extensions/file_extension.dart';
 
@@ -19,9 +20,7 @@ typedef ArtistsFromFile = ({
 abstract class BaseTrackFromFileExtractor {
   BaseTrackFromFileExtractor();
 
-  /// Returns a new extractor instance.
-  /// This exists in case the process of creating this instance may take some
-  /// time i.e. it's an async op
+  /// Returns a new extractor instance for the given file.
   FutureOr<BaseTrackFromFileExtractor?> newExtractor(File file);
 
   /// The file to extract the track data from.
@@ -32,7 +31,7 @@ abstract class BaseTrackFromFileExtractor {
   /// It's different from the [extractTrack] method since the later only return
   /// the acquired track without setting its [BaseAlbum], [BaseArtist],
   /// or [AudioInfoSet].
-  BaseTrack? extractTrackAndAttachProps() {
+  BaseTrack? getTrackWithPropsAttached() {
     var track = extractTrack();
     if (track == null) return null;
 
@@ -78,5 +77,5 @@ abstract class BaseTrackFromFileExtractor {
 
   AudioInfoSet? extractAudioInfoSet();
 
-  List<int>? extractCoverImageBytes();
+  List<({BaseThumbnail thumb, List<int> data})> extractThumbnails();
 }
