@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:dune/data/audio/local/services/taggy_track_from_file_extractor.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
@@ -7,6 +8,7 @@ import 'package:dune/domain/audio/facades/music_facade.dart';
 import 'package:dune/domain/audio/factories/album_factory.dart';
 import 'package:dune/domain/audio/factories/artist_factory.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
+import 'package:dune/domain/audio/services/audio_library_scanner.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';
@@ -25,6 +27,10 @@ void main() {
       IsarTestingUtils.isarMusicRepo.tracks,
       IsarTestingUtils.isarMusicRepo.albums,
       IsarTestingUtils.isarMusicRepo.artists,
+      AudioLibraryScanner(
+        trackExtractor: TaggyTrackFromFileExtractor(),
+        directoryToSaveExtractedImages: '/not/used/in/these/tests',
+      ),
     );
   });
   group('adding library tracks', () {
