@@ -138,7 +138,7 @@ class IsarAlbum extends BaseAlbum {
       releaseDate: releaseDate ?? this.releaseDate,
       category: category ?? this.category,
       isExplicit: isExplicit ?? this.isExplicit,
-      type: type,
+      type: type ?? this.type,
     );
   }
 }
