@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
-import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
@@ -15,15 +14,12 @@ import 'package:flutter_taggy/flutter_taggy.dart';
 final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
   TaggyTrackFromFileExtractor();
 
-  @override
-  late final File file;
-
   /// Contains the [file]'s metadata.
   /// should be assigned in [newExtractor] function.
   late final TaggyFile _taggyFile;
   late final Tag? _tag;
 
-  TaggyTrackFromFileExtractor._(this.file, this._taggyFile, this._tag);
+  TaggyTrackFromFileExtractor._(this._taggyFile, this._tag, {super.file});
 
   @override
   FutureOr<BaseTrackFromFileExtractor?> newExtractor(File file) async {
@@ -31,9 +27,9 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
       final taggy = await Taggy.readAll(file.path);
 
       return TaggyTrackFromFileExtractor._(
-        file,
         taggy,
         taggy.primaryTag ?? taggy.firstTagIfAny,
+        file: file,
       );
     } catch (e) {
       Log.e(e);
@@ -65,7 +61,7 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
   AudioInfoSet? extractAudioInfoSet() {
     final trackAudio = TrackAudioInfo(
       musicSource: MusicSource.local,
-      url: file.absolute.path,
+      url: file!.absolute.path,
       format: _taggyFile.fileType?.name,
       overallBitrate: _taggyFile.audio.overallBitrate,
       bitDepth: _taggyFile.audio.bitDepth,
@@ -116,26 +112,8 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
   }
 
   @override
-  ArtistsFromFile extractArtists() =>
-      (trackArtists: _getTrackArtists(), albumArtists: []);
+  String? get getAlbumArtistString => _tag?.albumArtist;
 
-  List<BaseArtist> _getTrackArtists() {
-    return _tag?.trackArtist?.split(', ').map(_artistFromName).toList() ?? [];
-  }
-
-  BaseArtist _artistFromName(String name) {
-    return BaseArtist(
-      id: null,
-      browseId: null,
-      radioId: null,
-      shuffleId: null,
-      category: null,
-      name: name,
-      description: '',
-      thumbnails: const ThumbnailsSet(),
-      tracks: const [],
-      albums: const [],
-      musicSource: MusicSource.local,
-    ).setIdIfNull();
-  }
+  @override
+  String? get getTrackArtistString => _tag?.trackArtist;
 }
