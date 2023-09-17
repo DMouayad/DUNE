@@ -92,7 +92,12 @@ abstract class BaseTrackFromFileExtractor {
   }
 
   List<BaseArtist> _getArtistsFromString(String? str) {
-    return str?.split(', ').map(_artistFromName).toList() ?? [];
+    return str
+            ?.split(', ')
+            .where((name) => name.isNotEmpty)
+            .map(_artistFromName)
+            .toList() ??
+        [];
   }
 
   BaseArtist _artistFromName(String name) {
