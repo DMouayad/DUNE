@@ -28,17 +28,18 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
   late final MusicSource? _source;
   late final int _artistsToCreateCount;
   late final bool _shouldCreateAlbum;
-  late final bool _shouldCreateAudioInfoSet;
+  late final int? _audioInfoSetItemsCount;
 
   ArtistFactory get _artistFactory => ArtistFactory();
 
   AlbumFactory get _albumFactory => AlbumFactory();
 
   TrackFactory() {
-    _id = _audioInfoSet = _album = _artists = _duration = _title =
-        _year = _views = _category = _isExplicit = _thumbnails = _source = null;
+    _id = _audioInfoSet = _album = _artists = _duration = _title = _year =
+        _views = _category = _isExplicit =
+            _thumbnails = _source = _audioInfoSetItemsCount = null;
     _artistsToCreateCount = 1;
-    _shouldCreateAudioInfoSet = _shouldCreateAlbum = true;
+    _shouldCreateAlbum = true;
   }
 
   @override
@@ -50,8 +51,10 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
           faker.lorem.random.string(20, min: 6) +
               faker.randomGenerator.numberOfLength(3),
       audioInfoSet: _audioInfoSet ??
-          (source!.isLocal || _shouldCreateAudioInfoSet
-              ? AudioInfoSetFactory().setItems(4, source).create()
+          (source!.isLocal || _audioInfoSetItemsCount != 0
+              ? AudioInfoSetFactory()
+                  .setItems(_audioInfoSetItemsCount!, source)
+                  .create()
               : null),
       duration:
           _duration ?? Duration(seconds: faker.randomGenerator.integer(400)),
@@ -93,7 +96,7 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
     MusicSource? source,
     int? artistsToCreateCount,
     bool? shouldCreateAlbum,
-    bool? shouldCreateAudioInfoSet,
+    int? audioInfoSetItemsCount,
   }) {
     return TrackFactory._(
       id: id ?? _id,
@@ -109,8 +112,7 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
       thumbnails: thumbnails ?? _thumbnails,
       source: source ?? _source,
       artistsToCreateCount: artistsToCreateCount ?? _artistsToCreateCount,
-      shouldCreateAudioInfoSet:
-          shouldCreateAudioInfoSet ?? _shouldCreateAudioInfoSet,
+      audioInfoSetItemsCount: audioInfoSetItemsCount ?? _audioInfoSetItemsCount,
       shouldCreateAlbum: shouldCreateAlbum ?? _shouldCreateAlbum,
     );
   }
@@ -119,11 +121,12 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
     return _copyWith(source: source);
   }
 
-  TrackFactory withAudioInfo([
+  TrackFactory withAudioInfo({
     List<TrackAudioInfo>? trackAudioInfo,
-  ]) {
+    int? itemsCount,
+  }) {
     return _copyWith(
-      shouldCreateAudioInfoSet: true,
+      audioInfoSetItemsCount: itemsCount,
       audioInfoSet:
           trackAudioInfo != null ? AudioInfoSet(items: trackAudioInfo) : null,
     );
@@ -136,7 +139,7 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
       // a source of [MusicSource.local]
       source: faker.randomGenerator
           .element([MusicSource.youtube, MusicSource.spotify]),
-      shouldCreateAudioInfoSet: false,
+      audioInfoSetItemsCount: null,
     );
   }
 
@@ -155,7 +158,7 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
     required MusicSource? source,
     int artistsToCreateCount = 0,
     bool shouldCreateAlbum = true,
-    bool shouldCreateAudioInfoSet = true,
+    int? audioInfoSetItemsCount,
   })  : _id = id,
         _audioInfoSet = audioInfoSet,
         _album = album,
@@ -170,5 +173,5 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
         _source = source,
         _artistsToCreateCount = artistsToCreateCount,
         _shouldCreateAlbum = shouldCreateAlbum,
-        _shouldCreateAudioInfoSet = shouldCreateAudioInfoSet;
+        _audioInfoSetItemsCount = audioInfoSetItemsCount;
 }
