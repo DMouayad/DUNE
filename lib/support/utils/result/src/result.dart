@@ -146,22 +146,24 @@ abstract class Result<V extends Object?, E extends AppError> {
   /// else a [FailureResult] will be returned.
   /// - A [FailureResult], then its [AppError] will be wrapped in a new
   /// [FailureResult] which respects the bound of [U].
-  static Future<Result<U, AppError>> fromAnother<U>(
+  static Future<Result<U, AppError>> fromAnother<U extends Object>(
     Future<Result> Function() process, {
     bool logError = true,
   }) async {
     try {
       final processResult = await process();
-      if (processResult is SuccessResult<U, NoError>) {
-        return SuccessResult(processResult.value);
-      }
-      // throws an exception if it's also a [SuccessResult] but with different
-      // type of value
+
       if (processResult is SuccessResult) {
-        throw StateError(
+        // check if it's the type we want.
+        if (processResult.value is U) {
+          return SuccessResult(processResult.value as U);
+        } else {
+          throw StateError(
             "In a [Result.fromAnother], You returned a [SuccessResult] with "
             "a value of type <${processResult.asSuccess.value.runtimeType}> "
-            "but the expected type was <$U>");
+            "but the expected type was <$U>",
+          );
+        }
       }
       return FailureResult(processResult.asFailure.error);
     } catch (e, stack) {
