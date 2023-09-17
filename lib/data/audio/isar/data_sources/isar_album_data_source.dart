@@ -78,4 +78,16 @@ class IsarAlbumDataSource implements BaseSavableAlbumDataSource<IsarAlbum> {
           .findFirst(),
     );
   }
+
+  @override
+  FutureOrResult<List<IsarAlbum>> removeAllById(List<String> ids) async {
+    return await Result.fromAsync(() async {
+      final query = _isar.isarAlbums
+          .where()
+          .anyOf(ids, (q, id) => q.idEqualToAnyMusicSource(id));
+      final albums = await query.findAll();
+      await _isar.writeTxn(() async => await query.deleteAll());
+      return albums;
+    });
+  }
 }

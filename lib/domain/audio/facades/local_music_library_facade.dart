@@ -4,18 +4,72 @@ class LocalMusicLibraryFacade {
   final SavableTrackRepository _trackRepository;
   final SavableAlbumRepository _albumRepository;
   final SavableArtistRepository _artistRepository;
+  final AudioLibraryScanner _libraryScanner;
 
   LocalMusicLibraryFacade(
     this._trackRepository,
     this._albumRepository,
     this._artistRepository,
+    this._libraryScanner,
   );
 
   MusicLibrary _cachedLibrary = MusicLibrary();
 
+  /// Scans the given [path] for audio files and save their info as [BaseTrack]s
+  /// in the local storage.
+  ///
+  /// returns a [MusicLibrary] with the newly added tracks, albums and artists.
+  FutureOrResult<MusicLibrary> addMusicDirectory(String path) async {
+    return (await _libraryScanner.scanDirectory(path))
+        .flatMapSuccessAsync((value) async => await addTracksToLibrary(value));
+  }
+
+  /// Deletes all [BaseTrack] from local storage which exists in the directory
+  /// at given [path].
+  ///
+  /// returns a [MusicLibrary] **without** the removed tracks, albums and artists.
+  FutureOrResult<MusicLibrary> removeMusicDirectory(String path) async {
+    return await Result.fromAnother(() async {
+      // 1. remove all tracks in the directory at path.
+      final removeTracksResult = await _trackRepository.removeByDirectory(path);
+      if (removeTracksResult.isFailure) return removeTracksResult;
+
+      // 2. remove those tracks albums
+      final albumsIds = _extractAlbumsIds(removeTracksResult.requireValue);
+      final removeAlbumsResult =
+          await _albumRepository.removeAllById(albumsIds);
+      if (removeAlbumsResult.isFailure) return removeAlbumsResult;
+
+      // 3. remove those tracks artists
+      final artistsIds = _extractArtistsIds(removeTracksResult.requireValue);
+      final removeArtistsResult =
+          await _artistRepository.removeAllById(artistsIds);
+      if (removeArtistsResult.isFailure) return removeArtistsResult;
+      // 4. re-load the library from storage and return it
+      return await getLibrary();
+    });
+  }
+
+  List<String> _extractAlbumsIds(List<BaseTrack> tracks) {
+    return tracks
+        .map((e) => e.album?.id)
+        .where((id) => id != null)
+        .toList()
+        .cast<String>();
+  }
+
+  List<String> _extractArtistsIds(List<BaseTrack> tracks) {
+    return tracks
+        .map((e) => e.artists.map((e) => e.id))
+        .expand((ids) => ids)
+        .where((id) => id != null)
+        .toList()
+        .cast<String>();
+  }
+
   /// Loads a `MusicLibrary` from local storage.
   /// the [queryOptions] will be used to retrieve this library
-  /// media: tracks, artists, albums, playlists.
+  /// media: tracks, artists, albums.
   FutureOrResult<MusicLibrary> getLibrary([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) async {
