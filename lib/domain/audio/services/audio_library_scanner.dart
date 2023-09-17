@@ -84,8 +84,9 @@ class AudioLibraryScanner with AudioFilesScanner {
     String imageTitle,
   ) async {
     return await Result.fromAsync(() async {
+      final titleFiltered = imageTitle.replaceAll(RegExp(r'[/?*<>:|"]'), '_');
       final imageFilePath =
-          p.absolute(directoryToSaveExtractedImages, '$imageTitle.png');
+          p.absolute(directoryToSaveExtractedImages, '$titleFiltered.png');
       // [writeAsBytes] will automatically closes the writer sink when done
       final imageFile = File(imageFilePath);
       if (imageFile.existsSync()) {
