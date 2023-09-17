@@ -1,5 +1,7 @@
 import 'package:dune/data/audio/isar/helpers/isar_query_builder_helpers.dart';
+import 'package:dune/data/audio/isar/models/isar_audio_info_set.dart';
 import 'package:dune/data/audio/isar/models/isar_track.dart';
+import 'package:dune/data/audio/isar/models/isar_track_audio_info.dart';
 import 'package:dune/domain/audio/base_data_sources/base_track_data_source.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/models/query_options.dart';
@@ -71,12 +73,36 @@ class IsarTrackDataSource implements BaseSavableTrackDataSource<IsarTrack> {
 
   @override
   FutureOrResult<IsarTrack?> findWhereSource(
-      String id, MusicSource musicSource) async {
+    String id,
+    MusicSource musicSource,
+  ) async {
     return await Result.fromAsync(
       () async => await _isar.isarTracks
           .where()
           .idSourceEqualTo(id, musicSource)
           .findFirst(),
+    );
+  }
+
+  @override
+  FutureResult<List<IsarTrack>> getByDirectory(String path) async {
+    return await Result.fromAsync(() async {
+      final query = _isar.isarTracks.filter().isarAudioInfoSet(
+          (q) => q.isarAudioInfoListElement((q) => q.urlStartsWith(path)));
+      return await query.findAll();
+    });
+  }
+
+  @override
+  FutureResult<List<IsarTrack>> removeByDirectory(String path) async {
+    return await Result.fromAsync(
+      () async {
+        final query = _isar.isarTracks.filter().isarAudioInfoSet(
+            (q) => q.isarAudioInfoListElement((q) => q.urlStartsWith(path)));
+        final tracks = await query.findAll();
+        await _isar.writeTxn(() async => await query.deleteAll());
+        return tracks;
+      },
     );
   }
 }

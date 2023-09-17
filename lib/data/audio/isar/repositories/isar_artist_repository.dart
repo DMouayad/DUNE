@@ -113,4 +113,9 @@ final class IsarArtistRepository
       return value.asResult;
     });
   }
+
+  @override
+  FutureResult<List<BaseArtist>> removeAllById(List<String> ids) async {
+    return await artistDataSource.removeAllById(ids);
+  }
 }

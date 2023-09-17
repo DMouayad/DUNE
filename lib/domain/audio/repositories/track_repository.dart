@@ -36,6 +36,11 @@ abstract base class SavableTrackRepository<
   }
 
   FutureVoidResult saveTrackAudioInfo(BaseTrack track, AudioInfoSet audioInfo);
+
+  /// Removes all tracks in the directory at given [path].
+  ///
+  /// Returns the list of removed tracks.
+  FutureResult<List<BaseTrack>> removeByDirectory(String path);
 }
 
 base class OnlineSourceTrackRepository<

@@ -51,9 +51,9 @@ final class TrackFactory extends BaseModelFactory<BaseTrack> {
           faker.lorem.random.string(20, min: 6) +
               faker.randomGenerator.numberOfLength(3),
       audioInfoSet: _audioInfoSet ??
-          (source!.isLocal || _audioInfoSetItemsCount != 0
+          (source!.isLocal || _audioInfoSetItemsCount != null
               ? AudioInfoSetFactory()
-                  .setItems(_audioInfoSetItemsCount!, source)
+                  .setItems(_audioInfoSetItemsCount ?? 0, source)
                   .create()
               : null),
       duration:

@@ -23,4 +23,12 @@ abstract class BaseSavableTrackDataSource<T extends BaseTrack>
   FutureOrResult<T> save(T track);
 
   const BaseSavableTrackDataSource();
+
+  /// Returns all local tracks where [TrackAudioInfo.url] is contained in
+  /// the directory at given [path]
+  FutureResult<List<T>> getByDirectory(String path);
+
+  /// Deletes all local tracks where [TrackAudioInfo.url] is contained in
+  /// the directory at given [path]
+  FutureResult<List<T>> removeByDirectory(String path);
 }

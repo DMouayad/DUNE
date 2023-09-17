@@ -23,4 +23,6 @@ abstract base class SavableArtistRepository<
   FutureResult<BaseArtist> save(BaseArtist artist);
 
   FutureResult<List<BaseArtist>> saveAll(List<BaseArtist> artists);
+
+  FutureResult<List<BaseArtist>> removeAllById(List<String> ids);
 }

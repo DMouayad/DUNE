@@ -14,6 +14,7 @@ class IsarAudioInfoSet extends AudioInfoSet {
   Set<Type> get derived => {AudioInfoSet};
 
   @override
+  @Index(type: IndexType.hash)
   List<IsarTrackAudioInfo> get items => isarAudioInfoList;
 
   IsarAudioInfoSet({this.isarAudioInfoList = const []})
@@ -39,6 +40,11 @@ class IsarAudioInfoSet extends AudioInfoSet {
               url: e.url,
               musicSource: e.musicSource,
               quality: e.quality,
+              bitDepth: e.bitDepth,
+              samplingRate: e.samplingRate,
+              channels: e.channels,
+              channelMask: e.channelMask,
+              overallBitrate: e.overallBitrate,
             ))
         .toList();
     return IsarAudioInfoSet(isarAudioInfoList: items);

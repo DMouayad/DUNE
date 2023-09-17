@@ -132,4 +132,12 @@ final class IsarTrackRepository extends SavableTrackRepository {
       return value.asResult;
     });
   }
+
+  @override
+  FutureResult<List<BaseTrack>> removeByDirectory(String path) async {
+    return (await _trackDataSource.removeByDirectory(path))
+        .flatMapSuccessAsync((tracks) async {
+      return await _relationHelper.loadRelationsForTracks(tracks);
+    });
+  }
 }

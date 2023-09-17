@@ -12,7 +12,10 @@ abstract class BaseAlbumDataSource<T extends BaseAlbum> {
 
 abstract class BaseSavableAlbumDataSource<T extends BaseAlbum>
     extends BaseAlbumDataSource<T> with FindsByMusicSource<T> {
+  const BaseSavableAlbumDataSource();
+
   FutureOrResult<T> save(T artist);
 
-  const BaseSavableAlbumDataSource();
+  /// Deletes any [BaseAlbum] if its `id` in the given [ids].
+  FutureOrResult<List<T>> removeAllById(List<String> ids);
 }

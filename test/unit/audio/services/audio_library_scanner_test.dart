@@ -14,15 +14,15 @@ void main() {
   setUpAll(() async {
     Taggy.initialize();
     // create the temporary folder to hold any extracted images
-    await imagesDir.create();
 
     scanner = AudioLibraryScanner(
       trackExtractor: TaggyTrackFromFileExtractor(),
       directoryToSaveExtractedImages: imagesDir.absolute.path,
     );
   });
+  setUp(() async => await imagesDir.create());
   // remove the images directory with its files
-  tearDownAll(() => imagesDir.delete(recursive: true));
+  tearDown(() async => await imagesDir.delete(recursive: true));
 
   group('scanning a directory tests', () {
     test('it returns failure for a non-existing directory', () async {
@@ -42,8 +42,10 @@ void main() {
       expect(imagesDir.listSync().isEmpty, true);
       final result =
           await scanner.scanDirectory(kPathToFolderOfTracksWithDifferentCovers);
+      final uniqueFileNames =
+          result.requireValue.map((e) => e.album?.title ?? e.title).toSet();
       // assert it saved each track cover image
-      expectLater(imagesDir.listSync().length, result.requireValue.length);
+      expectLater(imagesDir.listSync().length, uniqueFileNames.length);
     });
   });
 }

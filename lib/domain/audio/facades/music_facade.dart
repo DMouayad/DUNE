@@ -17,6 +17,7 @@ import 'package:dune/domain/audio/repositories/playlist_repository.dart';
 import 'package:dune/domain/audio/repositories/search_repository.dart';
 import 'package:dune/domain/audio/repositories/track_repository.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
+import 'package:dune/domain/audio/services/audio_library_scanner.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:dune/support/models/query_options.dart';
@@ -40,6 +41,7 @@ final class MusicFacade {
     required BaseLocalMusicRepository localMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
+    required AudioLibraryScanner audioLibraryScanner,
   }) {
     _playlists = PlaylistFacade(
       youtubePlaylistRepository: youtubeMusicRepository.playlists,
@@ -61,6 +63,7 @@ final class MusicFacade {
       localMusicRepository.tracks,
       localMusicRepository.albums,
       localMusicRepository.artists,
+      audioLibraryScanner,
     );
   }
 
@@ -96,11 +99,13 @@ final class MusicFacade {
     required BaseLocalMusicRepository localMusicRepository,
     required BaseOnlineSourceMusicRepository youtubeMusicRepository,
     required ListeningHistoryRepository listeningHistoryRepository,
+    required AudioLibraryScanner audioLibraryScanner,
   }) {
     _instance = MusicFacade._(
       localMusicRepository: localMusicRepository,
       youtubeMusicRepository: youtubeMusicRepository,
       listeningHistoryRepository: listeningHistoryRepository,
+      audioLibraryScanner: audioLibraryScanner,
     );
   }
 }

@@ -112,4 +112,9 @@ final class IsarAlbumRepository
       return value.asResult;
     });
   }
+
+  @override
+  FutureOrResult<List<BaseAlbum>> removeAllById(List<String> ids) async {
+    return await albumDataSource.removeAllById(ids);
+  }
 }

@@ -91,4 +91,16 @@ class IsarArtistDataSource extends BaseSavableArtistDataSource {
           .findFirst();
     });
   }
+
+  @override
+  FutureOrResult<List<BaseArtist>> removeAllById(List<String> ids) async {
+    return await Result.fromAsync(() async {
+      final query = _isar.isarArtists
+          .where()
+          .anyOf(ids, (q, id) => q.idEqualToAnyMusicSource(id));
+      final artists = await query.findAll();
+      await _isar.writeTxn(() async => await query.deleteAll());
+      return artists;
+    });
+  }
 }

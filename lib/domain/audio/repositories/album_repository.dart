@@ -23,4 +23,6 @@ abstract base class SavableAlbumRepository<
   FutureOrResult<BaseAlbum> save(BaseAlbum album);
 
   FutureOrResult<List<BaseAlbum>> saveAll(List<BaseAlbum> albums);
+
+  FutureOrResult<List<BaseAlbum>> removeAllById(List<String> ids);
 }
