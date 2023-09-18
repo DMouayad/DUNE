@@ -119,7 +119,6 @@ class _TrackInfoPart extends StatelessWidget {
                 child: ThumbnailWidget(
                   thumbnailsSet: track.thumbnails,
                   dimension: context.trackThumbnailDimension,
-                  cacheNetworkImage: true,
                   placeholder: const TrackCoverPlaceholder(),
                 ),
               ),

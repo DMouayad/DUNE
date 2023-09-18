@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:extended_image/extended_image.dart';
@@ -17,7 +16,7 @@ class ThumbnailWidget extends ConsumerWidget {
     required this.dimension,
     this.placeholder,
     this.shape = BoxShape.rectangle,
-    this.cacheNetworkImage = true,
+    this.cacheNetworkImage = false,
     super.key,
   });
 
@@ -69,6 +68,7 @@ class ThumbnailWidget extends ConsumerWidget {
           image: imageProvider,
           fit: BoxFit.cover,
           shape: shape,
+          clearMemoryCacheWhenDispose: true,
           width: dimension,
           height: dimension,
         ),
