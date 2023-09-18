@@ -5,19 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'tabs_bar.dart';
-
 class AppTitleBar extends StatelessWidget {
   const AppTitleBar({
-    required this.tabsModeEnabled,
-    this.onTabChanged,
-    this.onAddNewTab,
     super.key,
   });
-
-  final void Function()? onAddNewTab;
-  final void Function(int index)? onTabChanged;
-  final bool tabsModeEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +43,6 @@ class AppTitleBar extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 6),
-          if (tabsModeEnabled)
-            TabsBar(onTabChanged: onTabChanged, onAddNewTab: onAddNewTab),
         ],
       ),
     );

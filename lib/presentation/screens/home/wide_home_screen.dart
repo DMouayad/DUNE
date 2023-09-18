@@ -13,7 +13,7 @@ import 'package:dune/navigation/app_router.dart';
 import 'components/app_title_bar.dart';
 import 'components/player_bottom_bar/player_bottom_bar.dart';
 import 'components/side_panel/side_panel.dart';
-import 'components/side_panel/side_panel_resizer.dart';
+import 'components/tabs_bar.dart';
 import 'desktop_home_screen_wrapper.dart';
 
 class WideHomeScreen extends ConsumerWidget {
@@ -24,10 +24,9 @@ class WideHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     // [ref.read] is used since enabling/disabling tabs layout will only takes
     // effect on the next time the app is opened
-    final tabsModeEnabled =
-        ref.read(appPreferencesController).tabsMode.isEnabled;
+    final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsModeEnabled ? 85.5 : 44.5;
+    final topSpacing = tabsMode.isHorizontal ? 85.5 : 48.5;
     final screen = Theme(
       data: appTheme.materialThemeData,
       child: Material(
@@ -38,48 +37,48 @@ class WideHomeScreen extends ConsumerWidget {
               children: [
                 if (context.isMobile)
                   const Positioned(
-                    bottom: 0,
+                      bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
+                const Positioned(
+                    top: 0, right: 0, left: 0, child: AppTitleBar()),
+                if (tabsMode.isHorizontal)
+                  Positioned(
                     right: 0,
                     left: 0,
-                    child: PlayerBottomBar(),
+                    top: 30,
+                    child: SizedBox(
+                      height: 70,
+                      child: TabsBar(
+                        onTabChanged: (i) => _onTabChanged(i, ref),
+                        onAddNewTab: () {
+                          ref.read(tabsStateProvider.notifier).update(
+                                (state) => state.withTabAdded(
+                                  TabData(
+                                      tabIndex:
+                                          navigationShell.currentIndex + 1),
+                                ),
+                              );
+                        },
+                      ),
+                    ),
                   ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: AppTitleBar(
-                    tabsModeEnabled: tabsModeEnabled,
-                    onTabChanged: (i) => _onTabChanged(i, ref),
-                    onAddNewTab: () {
-                      ref.read(tabsStateProvider.notifier).update(
-                            (state) => state.withTabAdded(TabData(
-                                tabIndex: navigationShell.currentIndex + 1)),
-                          );
-                    },
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: topSpacing - 1,
-                  child: const Divider(height: 1, thickness: .5),
-                ),
                 Positioned.fill(
                   // top margins for the [AppTitleBar]
                   top: topSpacing,
                   bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         flex: 0,
                         child: SidePanel(
-                          onDestinationSelected: (index) {
+                          onDestinationSelected: (dest) {
                             AppRouter.onQuickNavDestinationSelected(
-                                index, navigationShell);
+                              dest,
+                              navigationShell,
+                            );
                           },
                         ),
                       ),
-                      const SidePanelResizer(),
                       Expanded(child: navigationShell),
                     ],
                   ),
