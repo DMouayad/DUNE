@@ -1,7 +1,7 @@
 part of app_router;
 
 abstract class BaseHomeScreenBodyRoute extends GoRoute {
-  final QuickNavigationDestination index;
+  final QuickNavDestination index;
 
   BaseHomeScreenBodyRoute({
     required String path,
@@ -59,7 +59,7 @@ class ExplorePageRoute extends BaseHomeScreenBodyRoute {
     super.isSubRoute,
     super.routes,
   }) : super(
-          index: QuickNavigationDestination.explorePage,
+          index: QuickNavDestination.explorePage,
           path: RoutePath.explorePage,
           page: (context, state) => const ExplorePage(),
         );
@@ -71,23 +71,23 @@ class ListeningHistoryPageRoute extends BaseHomeScreenBodyRoute {
     super.isSubRoute,
     super.routes,
   }) : super(
-          index: QuickNavigationDestination.listeningHistoryPage,
+          index: QuickNavDestination.listeningHistoryPage,
           path: RoutePath.listeningHistoryPage,
           page: (context, state) => const ListeningHistoryPage(),
         );
 }
 
-class LibraryPageRoute extends BaseHomeScreenBodyRoute {
-  LibraryPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
-          index: QuickNavigationDestination.libraryPage,
-          path: RoutePath.libraryPage,
-          page: (context, state) => const LibraryPage(),
-        );
-}
+// class LibraryPageRoute extends BaseHomeScreenBodyRoute {
+//   LibraryPageRoute({
+//     super.name,
+//     super.isSubRoute,
+//     super.routes,
+//   }) : super(
+//           index: QuickNavDestination.libraryPage,
+//           path: RoutePath.libraryPage,
+//           page: (context, state) => const LibraryPage(),
+//         );
+// }
 
 class SettingsPageRoute extends BaseHomeScreenBodyRoute {
   SettingsPageRoute({
@@ -95,7 +95,7 @@ class SettingsPageRoute extends BaseHomeScreenBodyRoute {
     super.isSubRoute,
     super.routes,
   }) : super(
-          index: QuickNavigationDestination.settingsPage,
+          index: QuickNavDestination.settingsPage,
           path: RoutePath.settingsPage,
           page: (context, state) => const SettingsPage(),
         );

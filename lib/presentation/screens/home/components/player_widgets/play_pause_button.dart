@@ -21,8 +21,7 @@ class PlayPauseButton extends ConsumerWidget {
           ? const DuneLoadingWidget(size: 20)
           : InkWell(
               key: Key(playerState.isPlaying.toString()),
-              radius: 50,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(12),
               onTap: playerState.isIdle
                   ? null
                   : () => ref
@@ -35,7 +34,7 @@ class PlayPauseButton extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: context.colorScheme.secondaryContainer,
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 child: Center(

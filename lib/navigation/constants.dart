@@ -18,14 +18,14 @@ class RouteName {
       playlistPage = 'Playlist';
 }
 
-enum QuickNavigationDestination {
+enum QuickNavDestination {
   explorePage(0, RoutePath.explorePage),
   listeningHistoryPage(1, RoutePath.listeningHistoryPage),
   libraryPage(2, RoutePath.libraryPage),
   settingsPage(3, RoutePath.settingsPage);
 
-  const QuickNavigationDestination(this.value, this.path);
+  const QuickNavDestination(this.destinationIndex, this.path);
 
-  final int value;
+  final int destinationIndex;
   final String path;
 }

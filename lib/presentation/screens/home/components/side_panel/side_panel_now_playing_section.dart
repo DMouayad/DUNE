@@ -90,17 +90,18 @@ class _SidePanelNowPlayingSectionState
                     const SizedBox(height: 20),
                     const Expanded(child: SeekBar()),
                     const Expanded(
-                      child:
-                          SizedBox(height: 40, child: PlaybackControlButtons()),
+                      child: SizedBox(
+                        height: 50,
+                        child: PlaybackControlButtons(),
+                      ),
                     ),
-                    const Spacer(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
               const Positioned(
                 right: 4,
-                bottom: 6,
+                bottom: 10,
                 child: VolumeControls(),
               ),
             ],

@@ -1,16 +1,17 @@
-import 'package:dune/presentation/utils/constants.dart';
+import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'navigation_grid.dart';
 import 'side_panel_now_playing_section.dart';
 
-const kSidePanelMinWidth = 50.0;
+const kSidePanelMinWidth = 54.0;
 
 class SidePanel extends ConsumerStatefulWidget {
   const SidePanel({required this.onDestinationSelected, super.key});
 
-  final void Function(int index) onDestinationSelected;
+  final void Function(QuickNavDestination dest) onDestinationSelected;
 
   @override
   ConsumerState<SidePanel> createState() => _SidePanelState();
@@ -39,40 +40,34 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
     return AnimatedContainer(
       curve: Curves.fastOutSlowIn,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 300),
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.minWidth == context.maxNavRailWidth;
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               flex: 0,
-              child: Container(
-                height: 300,
-                width: constraints.minWidth,
-                padding: const EdgeInsets.only(left: 6),
-                child: NavigationRail(
-                  backgroundColor: Colors.transparent,
-                  leading: const _SidePanelButton(),
-                  extended: extended,
-                  destinations: destinations,
-                  minWidth: kSidePanelMinWidth,
-                  labelType: extended ? null : NavigationRailLabelType.none,
-                  selectedIndex: null,
-                  onDestinationSelected: widget.onDestinationSelected,
-                ),
+              child: NavGrid(
+                extended: extended,
+                width: railWidth,
+                onDestinationSelected: widget.onDestinationSelected,
               ),
             ),
             const Spacer(flex: 1),
             // UserPlaylistsSection(),
-            if (extended)
-              Container(
+            Visibility(
+              visible: extended,
+              child: Container(
                 constraints: BoxConstraints.loose(
-                  const Size.fromHeight(180),
+                  const Size.fromHeight(160),
                 ),
                 child: const SidePanelNowPlayingSection(),
               ),
+            ),
           ],
         );
       }),
@@ -81,32 +76,4 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class _SidePanelButton extends ConsumerWidget {
-  const _SidePanelButton();
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final isExtended =
-        ref.watch(navigationRailSizeProvider) == context.maxNavRailWidth;
-    return IconButton(
-      tooltip: isExtended ? 'Close side panel' : 'Open side panel',
-      onPressed: () {
-        if (isExtended) {
-          ref.read(navigationRailSizeProvider.notifier).state =
-              kSidePanelMinWidth;
-        } else {
-          ref.read(navigationRailSizeProvider.notifier).state =
-              context.maxNavRailWidth;
-        }
-      },
-      padding: EdgeInsets.zero,
-      icon: Icon(
-        Icons.menu_rounded,
-        size: 22,
-        color: context.colorScheme.onSurfaceVariant,
-      ),
-    );
-  }
 }
