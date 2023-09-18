@@ -68,7 +68,7 @@ extension ContextScreenSizeExtension on BuildContext {
   bool get isDesktop => screenWidth >= 980;
 
   double get maxNavRailWidth {
-    return max(240.0, min(400.0, screenWidth * .2));
+    return max(250.0, min(400.0, screenWidth * .2));
   }
 
   double get bottomPlayerBarHeight => isDesktopPlatform ? 76 : 100;

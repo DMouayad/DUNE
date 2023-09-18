@@ -5,7 +5,6 @@ import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/models/tabs_state.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
-import 'package:dune/presentation/pages/library_page/library_page.dart';
 import 'package:dune/presentation/pages/listening_history_page/listening_history_page.dart';
 import 'package:dune/presentation/pages/playlist_page/playlist_page.dart';
 import 'package:dune/presentation/pages/settings_page/settings_page.dart';
@@ -42,25 +41,24 @@ class AppRouter {
 
   static bool get showAppBarBackButton => !_tabsModeEnabled && router.canPop();
 
-  /// called when a [NavigationRailDestination] from the [SidePanel] is pressed
+  /// called when a Navigation button from the [SidePanel] is pressed
   static void onQuickNavDestinationSelected(
-    int index,
+    QuickNavDestination dest,
     StatefulNavigationShell navigationShell,
   ) {
+    final destinationIndex = dest.destinationIndex;
     if (_tabsModeEnabled) {
       final currentTab = navigationShell.currentIndex;
 
-      /// selected destination on the side panel
-      final destination = QuickNavigationDestination.values.elementAt(index);
-      final destinationPath = '/tabs/$currentTab${destination.path}';
-      // the [router] will push [destinationPath] into the [currentTab]
+      final destinationPath = '/tabs/$currentTab${dest.path}';
+      // the [router] will push [destinationPath] into the [currentTab]'s
       // [StatefulShellBranch]
       router.push(destinationPath);
     } else {
-      if (navigationShell.currentIndex != index) {
+      if (navigationShell.currentIndex != destinationIndex) {
         // since we're not using a tabs-layout-router, we simply go
         // to the [StatefulShellBranch] at provided [index]
-        navigationShell.goBranch(index);
+        navigationShell.goBranch(destinationIndex);
       }
     }
   }
