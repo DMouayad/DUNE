@@ -37,7 +37,7 @@ class _DuneAppState extends ConsumerState<DuneApp>
     final appPrefs = ref.watch(appPreferencesController);
 
     final shouldUseTabs = (!context.isMobile || context.isDesktopPlatform) &&
-        appPrefs.tabsModeEnabled;
+        appPrefs.tabsMode.isEnabled;
     // at the app start we assign it to one if [shouldUseTabs]
     tabsCount ??= shouldUseTabs ? 1 : null;
     if (router == null) {

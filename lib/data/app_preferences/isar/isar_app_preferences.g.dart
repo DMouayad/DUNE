@@ -67,10 +67,11 @@ const IsarAppPreferencesSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _IsarAppPreferencessearchEngineEnumValueMap,
     ),
-    r'tabsModeEnabled': PropertySchema(
+    r'tabsMode': PropertySchema(
       id: 9,
-      name: r'tabsModeEnabled',
-      type: IsarType.bool,
+      name: r'tabsMode',
+      type: IsarType.byte,
+      enumMap: _IsarAppPreferencestabsModeEnumValueMap,
     ),
     r'thumbnailQualitiesOrder': PropertySchema(
       id: 10,
@@ -127,7 +128,7 @@ void _isarAppPreferencesSerialize(
   writer.writeBool(offsets[6], object.rememberLastSidePanelSize);
   writer.writeBool(offsets[7], object.rememberLastWindowSize);
   writer.writeByte(offsets[8], object.searchEngine.index);
-  writer.writeBool(offsets[9], object.tabsModeEnabled);
+  writer.writeByte(offsets[9], object.tabsMode.index);
   writer.writeByte(offsets[10], object.thumbnailQualitiesOrder.index);
   writer.writeBool(offsets[11], object.usePrimaryColorInCardColor);
   writer.writeDouble(offsets[12], object.volumeStep);
@@ -158,7 +159,9 @@ IsarAppPreferences _isarAppPreferencesDeserialize(
     searchEngine: _IsarAppPreferencessearchEngineValueEnumMap[
             reader.readByteOrNull(offsets[8])] ??
         MusicSource.youtube,
-    tabsModeEnabled: reader.readBoolOrNull(offsets[9]) ?? true,
+    tabsMode: _IsarAppPreferencestabsModeValueEnumMap[
+            reader.readByteOrNull(offsets[9])] ??
+        TabsMode.vertical,
     thumbnailQualitiesOrder:
         _IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
                 reader.readByteOrNull(offsets[10])] ??
@@ -203,7 +206,9 @@ P _isarAppPreferencesDeserializeProp<P>(
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
     case 9:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (_IsarAppPreferencestabsModeValueEnumMap[
+              reader.readByteOrNull(offset)] ??
+          TabsMode.vertical) as P;
     case 10:
       return (_IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
               reader.readByteOrNull(offset)] ??
@@ -264,6 +269,16 @@ const _IsarAppPreferencessearchEngineValueEnumMap = {
   1: MusicSource.spotify,
   2: MusicSource.local,
   3: MusicSource.unknown,
+};
+const _IsarAppPreferencestabsModeEnumValueMap = {
+  'disabled': 0,
+  'vertical': 1,
+  'horizontal': 2,
+};
+const _IsarAppPreferencestabsModeValueEnumMap = {
+  0: TabsMode.disabled,
+  1: TabsMode.vertical,
+  2: TabsMode.horizontal,
 };
 const _IsarAppPreferencesthumbnailQualitiesOrderEnumValueMap = {
   'best': 0,
@@ -943,11 +958,57 @@ extension IsarAppPreferencesQueryFilter
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      tabsModeEnabledEqualTo(bool value) {
+      tabsModeEqualTo(TabsMode value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tabsModeEnabled',
+        property: r'tabsMode',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      tabsModeGreaterThan(
+    TabsMode value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tabsMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      tabsModeLessThan(
+    TabsMode value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tabsMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      tabsModeBetween(
+    TabsMode lower,
+    TabsMode upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tabsMode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1220,16 +1281,16 @@ extension IsarAppPreferencesQuerySortBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByTabsModeEnabled() {
+      sortByTabsMode() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsModeEnabled', Sort.asc);
+      return query.addSortBy(r'tabsMode', Sort.asc);
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByTabsModeEnabledDesc() {
+      sortByTabsModeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsModeEnabled', Sort.desc);
+      return query.addSortBy(r'tabsMode', Sort.desc);
     });
   }
 
@@ -1419,16 +1480,16 @@ extension IsarAppPreferencesQuerySortThenBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByTabsModeEnabled() {
+      thenByTabsMode() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsModeEnabled', Sort.asc);
+      return query.addSortBy(r'tabsMode', Sort.asc);
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByTabsModeEnabledDesc() {
+      thenByTabsModeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsModeEnabled', Sort.desc);
+      return query.addSortBy(r'tabsMode', Sort.desc);
     });
   }
 
@@ -1541,9 +1602,9 @@ extension IsarAppPreferencesQueryWhereDistinct
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
-      distinctByTabsModeEnabled() {
+      distinctByTabsMode() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'tabsModeEnabled');
+      return query.addDistinctBy(r'tabsMode');
     });
   }
 
@@ -1640,10 +1701,10 @@ extension IsarAppPreferencesQueryProperty
     });
   }
 
-  QueryBuilder<IsarAppPreferences, bool, QQueryOperations>
-      tabsModeEnabledProperty() {
+  QueryBuilder<IsarAppPreferences, TabsMode, QQueryOperations>
+      tabsModeProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'tabsModeEnabled');
+      return query.addPropertyName(r'tabsMode');
     });
   }
 

@@ -44,7 +44,7 @@ class IsarAppPreferencesDataSource extends BaseAppPreferencesDataSource {
       usePrimaryColorInCardColor: base.usePrimaryColorInCardColor,
       initialPageOnStartup: base.initialPageOnStartup,
       volumeStep: base.volumeStep,
-      tabsModeEnabled: base.tabsModeEnabled,
+      tabsMode: base.tabsMode,
       thumbnailQualitiesOrder: base.thumbnailQualitiesOrder,
       rememberLastSidePanelSize: base.rememberLastSidePanelSize,
       lastWindowHeight: base.lastWindowSize?.height,

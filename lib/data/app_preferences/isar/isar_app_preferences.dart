@@ -43,6 +43,10 @@ class IsarAppPreferences extends BaseAppPreferences {
   final double? lastWindowHeight;
 
   @override
+  @enumerated
+  TabsMode get tabsMode => super.tabsMode;
+
+  @override
   Size? get lastWindowSize =>
       lastWindowWidth != null && lastWindowHeight != null
           ? Size(lastWindowWidth!, lastWindowHeight!)
@@ -58,7 +62,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     super.usePrimaryColorInCardColor,
     super.searchEngine,
     super.volumeStep,
-    super.tabsModeEnabled,
+    super.tabsMode,
     super.thumbnailQualitiesOrder,
     super.rememberLastSidePanelSize,
     super.lastSidePanelWidth,
@@ -69,7 +73,7 @@ class IsarAppPreferences extends BaseAppPreferences {
   IsarAppPreferences copyWith({
     NowPlayingSectionDisplayMode? defaultNowPlayingSectionDisplayMode,
     bool? usePrimaryColorInCardColor,
-    bool? tabsModeEnabled,
+    TabsMode? tabsMode,
     InitialPageOnStartup? initialPageOnStartup,
     MusicSource? exploreMusicSource,
     MusicSource? searchEngine,
@@ -92,7 +96,7 @@ class IsarAppPreferences extends BaseAppPreferences {
       initialPageOnStartup: initialPageOnStartup ?? this.initialPageOnStartup,
       exploreMusicSource: exploreMusicSource ?? this.exploreMusicSource,
       volumeStep: volumeStep ?? this.volumeStep,
-      tabsModeEnabled: tabsModeEnabled ?? this.tabsModeEnabled,
+      tabsMode: tabsMode ?? this.tabsMode,
       searchEngine: searchEngine ?? this.searchEngine,
       thumbnailQualitiesOrder:
           thumbnailQualitiesOrder ?? this.thumbnailQualitiesOrder,
