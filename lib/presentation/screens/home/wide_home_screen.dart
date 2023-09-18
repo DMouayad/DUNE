@@ -24,7 +24,8 @@ class WideHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     // [ref.read] is used since enabling/disabling tabs layout will only takes
     // effect on the next time the app is opened
-    final tabsModeEnabled = ref.read(appPreferencesController).tabsModeEnabled;
+    final tabsModeEnabled =
+        ref.read(appPreferencesController).tabsMode.isEnabled;
     final appTheme = ref.watch(appThemeControllerProvider);
     final topSpacing = tabsModeEnabled ? 85.5 : 44.5;
     final screen = Theme(

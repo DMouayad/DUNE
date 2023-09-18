@@ -25,9 +25,12 @@ abstract class BaseAppPreferences extends Equatable {
 
   final double volumeStep;
 
-  /// Whether to show newly opened pages in a tab view or use the default
-  /// navigation methode.
-  final bool tabsModeEnabled;
+  /// Indicates the display mode of the tabs.
+  ///
+  /// when [tabsMode.isEnabled] is `ture`, the navigation will be somewhat
+  /// similar to that of a web browser and if its `false`, it'll the
+  /// default navigation behaviour.
+  final TabsMode tabsMode;
 
   /// On a desktop platform, this indicates if last window size will be saved
   /// for the next time.
@@ -52,7 +55,7 @@ abstract class BaseAppPreferences extends Equatable {
     this.exploreMusicSource = MusicSource.youtube,
     this.searchEngine = MusicSource.youtube,
     this.volumeStep = 5.0,
-    this.tabsModeEnabled = true,
+    this.tabsMode = TabsMode.vertical,
     this.rememberLastWindowSize = true,
     this.lastWindowSize,
     this.rememberLastSidePanelSize = true,
@@ -72,7 +75,7 @@ abstract class BaseAppPreferences extends Equatable {
       'lastWindowSize': lastWindowSize,
       'rememberLastSidePanelSize': rememberLastSidePanelSize,
       'lastSidePanelWidth': lastSidePanelWidth,
-      'tabsModeEnabled': tabsModeEnabled,
+      'tabsMode': tabsMode.name,
       'audioStreamingQuality': audioStreamingQuality,
       'thumbnailQualitiesOrder': thumbnailQualitiesOrder,
     };
@@ -84,7 +87,7 @@ abstract class BaseAppPreferences extends Equatable {
     MusicSource? exploreMusicSource,
     MusicSource? searchEngine,
     double? volumeStep,
-    bool? tabsModeEnabled,
+    TabsMode? tabsMode,
     Size? lastWindowSize,
     bool? rememberLastWindowSize,
     bool? rememberLastSidePanelSize,
@@ -95,7 +98,7 @@ abstract class BaseAppPreferences extends Equatable {
 
   @override
   String toString() {
-    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsModeEnabled: $tabsModeEnabled, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, rememberLastSidePanelSize: $rememberLastSidePanelSize, lastSidePanelWidth: $lastSidePanelWidth, thumbnailQualitiesOrder: $thumbnailQualitiesOrder}';
+    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, rememberLastSidePanelSize: $rememberLastSidePanelSize, lastSidePanelWidth: $lastSidePanelWidth, thumbnailQualitiesOrder: $thumbnailQualitiesOrder}';
   }
 
   @override
@@ -109,7 +112,7 @@ abstract class BaseAppPreferences extends Equatable {
         lastWindowSize,
         rememberLastSidePanelSize,
         lastSidePanelWidth,
-        tabsModeEnabled,
+        tabsMode,
         audioStreamingQuality,
         thumbnailQualitiesOrder,
       ];
@@ -140,4 +143,22 @@ enum ThumbnailQualitiesOrderOption {
   final Set<ThumbnailQuality> qualities;
 
   const ThumbnailQualitiesOrderOption(this.qualities);
+}
+
+/// Represent the current display mode of the tabs feature.
+enum TabsMode {
+  // Tabs are disabled(not shown).
+  disabled,
+
+  /// Tabs are enabled and displayed vertically in the side panel.
+  vertical,
+
+  /// Tabs are enabled and displayed horizontally below the title bar.
+  horizontal;
+
+  bool get isEnabled => this != disabled;
+
+  bool get isVertical => this == vertical;
+
+  bool get isHorizontal => this == horizontal;
 }

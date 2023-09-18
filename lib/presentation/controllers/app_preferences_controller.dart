@@ -14,7 +14,7 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   @override
   bool updateShouldNotify(BaseAppPreferences old, BaseAppPreferences current) {
-    if (old.tabsModeEnabled != current.tabsModeEnabled) return false;
+    if (old.tabsMode != current.tabsMode) return false;
     return super.updateShouldNotify(old, current);
   }
 
@@ -27,8 +27,8 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
     }
   }
 
-  Future<void> setTabModeIsEnabled(bool value) async {
-    _handleUpdatingAppPreferences(state.copyWith(tabsModeEnabled: value));
+  Future<void> setTabMode(TabsMode tabsMode) async {
+    _handleUpdatingAppPreferences(state.copyWith(tabsMode: tabsMode));
   }
 
   Future<void> setShouldRememberLastWindowSize(bool value) async {

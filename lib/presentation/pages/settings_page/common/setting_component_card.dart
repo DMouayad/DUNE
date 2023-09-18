@@ -65,7 +65,7 @@ class SettingComponentCard extends ConsumerWidget {
             Expanded(
               child: Text(
                 title,
-                style: context.textTheme.titleSmall?.copyWith(
+                style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colorScheme.onPrimaryContainer.withOpacity(.9),
                 ),
               ),
