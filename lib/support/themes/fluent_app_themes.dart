@@ -45,7 +45,7 @@ class FluentAppThemes {
       visualDensity: VisualDensity.standard,
       menuColor: colorScheme.surface,
       scaffoldBackgroundColor: Colors.transparent,
-      accentColor: _getAccentColor(colorScheme),
+      accentColor: colorScheme.primary.toAccentColor(),
       tooltipTheme: FluentAppThemes.getTooltipTheme(appTheme.isDarkMode),
       dialogTheme: ContentDialogThemeData(
         decoration: BoxDecoration(
@@ -64,10 +64,4 @@ class FluentAppThemes {
 
   static FluentThemeData lightTheme(AppTheme appTheme) =>
       getThemeDataFrom(appTheme);
-
-  static AccentColor _getAccentColor(material.ColorScheme colorScheme) {
-    return AccentColor.swatch({
-      "normal": colorScheme.primary,
-    });
-  }
 }
