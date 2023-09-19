@@ -89,6 +89,7 @@ class TrackCardMainContent extends StatelessWidget {
             thumbnailsSet: track.thumbnails,
             dimension: context.trackThumbnailDimension,
             placeholder: const TrackCoverPlaceholder(),
+            cacheNetworkImage: true,
           ),
         ),
         wideSpacer,
