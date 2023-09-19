@@ -12,11 +12,13 @@ class ThumbnailWithGesturesWidget extends StatelessWidget {
     required this.constraints,
     required this.thumbnailsSet,
     required this.placeholder,
+    this.cacheImage = false,
   });
 
   final BoxConstraints constraints;
   final ThumbnailsSet? thumbnailsSet;
   final Widget placeholder;
+  final bool cacheImage;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class ThumbnailWithGesturesWidget extends StatelessWidget {
       child: ThumbnailWidget(
         thumbnailsSet: thumbnailsSet!,
         dimension: constraints.maxWidth,
+        cacheNetworkImage: cacheImage,
       ),
     );
   }
