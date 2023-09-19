@@ -69,13 +69,8 @@ class TrackCardMainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleTextStyle = context.textTheme.bodyMedium?.copyWith(
-      color: context.colorScheme.onBackground,
-      fontWeight: FontWeight.w500,
-    );
-    final secondaryTextStyle = context.textTheme.bodySmall?.copyWith(
-      color: context.colorScheme.onSurfaceVariant,
-    );
+    final titleTextStyle = context.textTheme.titleSmall;
+    final secondaryTextStyle = context.textTheme.bodyMedium;
     final wideSpacer = SizedBox(width: context.screenWidth > 900 ? 36 : 24);
 
     return Row(

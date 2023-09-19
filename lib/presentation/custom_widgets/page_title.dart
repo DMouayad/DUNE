@@ -12,10 +12,7 @@ class PageTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
       child: Text(
         title,
-        style: context.textTheme.headlineSmall?.copyWith(
-          color: context.colorScheme.secondary,
-          fontFamily: 'baloo2',
-        ),
+        style: context.textTheme.titleLarge,
       ),
     );
   }

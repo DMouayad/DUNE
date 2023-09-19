@@ -93,10 +93,7 @@ class _CustomCardState extends State<CustomCard> {
                   widget.title ?? '',
                   textAlign: TextAlign.center,
                   softWrap: false,
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    color: context.colorScheme.onBackground,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: context.textTheme.titleSmall,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
