@@ -1,3 +1,4 @@
+import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -21,28 +22,25 @@ class TabsBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return CustomTabView(
-      onChanged: onTabChanged,
-      currentIndex: ref.watch(tabsStateProvider).selectedTabIndex,
-      minTabWidth: 130,
-      onNewPressed: onAddNewTab,
-      header: Row(
-        children: [
-          const SizedBox(width: 4),
-          fluent.GestureDetector(
-            onSecondaryTap: () {},
-            onTap: () {
-              final canPop = AppRouter.router.canPop();
-              if (canPop) {
-                AppRouter.router.pop();
-                ref
-                    .read(tabsStateProvider.notifier)
-                    .update((state) => state.withPreviousPageSelected());
-              }
-            },
-            child: fluent.IconButton(
-              icon: const fluent.Icon(fluent.FluentIcons.back),
-              onPressed: () {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: context.colorScheme.background,
+      ),
+      padding: const EdgeInsets.all(4),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: CustomTabView(
+        onChanged: onTabChanged,
+        currentIndex: ref.watch(tabsStateProvider).selectedTabIndex,
+        minTabWidth: 130,
+        onNewPressed: onAddNewTab,
+        showScrollButtons: false,
+        header: Row(
+          children: [
+            const SizedBox(width: 4),
+            fluent.GestureDetector(
+              onSecondaryTap: () {},
+              onTap: () {
                 final canPop = AppRouter.router.canPop();
                 if (canPop) {
                   AppRouter.router.pop();
@@ -51,29 +49,41 @@ class TabsBar extends ConsumerWidget {
                       .update((state) => state.withPreviousPageSelected());
                 }
               },
+              child: fluent.IconButton(
+                icon: const fluent.Icon(fluent.FluentIcons.back),
+                onPressed: () {
+                  final canPop = AppRouter.router.canPop();
+                  if (canPop) {
+                    AppRouter.router.pop();
+                    ref
+                        .read(tabsStateProvider.notifier)
+                        .update((state) => state.withPreviousPageSelected());
+                  }
+                },
+              ),
             ),
-          ),
-          const SizedBox(width: 4),
-          fluent.IconButton(
-            icon: const fluent.Icon(fluent.FluentIcons.history),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 12),
-        ],
+            const SizedBox(width: 4),
+            fluent.IconButton(
+              icon: const fluent.Icon(fluent.FluentIcons.history),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 12),
+          ],
+        ),
+        footer: footer != null
+            ? Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: footer,
+              )
+            : null,
+        tabs: ref
+            .watch(tabsStateProvider.select((s) => s.tabs.asMap().entries))
+            .map((entry) => CustomTab(
+                  text: Text(entry.value.selectedPage?.title ?? 'New tab'),
+                  onClosed: () => _onCloseTab(entry.key, ref),
+                ))
+            .toList(),
       ),
-      footer: footer != null
-          ? Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8),
-              child: footer,
-            )
-          : null,
-      tabs: ref
-          .watch(tabsStateProvider.select((s) => s.tabs.asMap().entries))
-          .map((entry) => CustomTab(
-                text: Text(entry.value.selectedPage?.title ?? 'New tab'),
-                onClosed: () => _onCloseTab(entry.key, ref),
-              ))
-          .toList(),
     );
   }
 

@@ -919,15 +919,15 @@ class _TabPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final path = Path();
-    const radius = 8.0;
+    const radius = 10.0;
     path
       ..moveTo(-radius, size.height)
-      ..quadraticBezierTo(0, size.height, 0, size.height - radius)
+      ..quadraticBezierTo(0, size.height, 0, size.height)
       ..lineTo(0, radius)
       ..quadraticBezierTo(0, 0, radius, 0)
       ..lineTo(size.width - radius, 0)
       ..quadraticBezierTo(size.width, 0, size.width, radius)
-      ..lineTo(size.width, size.height - radius)
+      ..lineTo(size.width, size.height)
       ..quadraticBezierTo(
         size.width,
         size.height,
