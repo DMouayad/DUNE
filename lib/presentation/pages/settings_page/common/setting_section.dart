@@ -14,11 +14,7 @@ class SettingSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 12.0, bottom: 2),
-          child: Text(title,
-              style: context.textTheme.titleMedium?.copyWith(
-                // fontWeight: FontWeight.w500,
-                color: context.colorScheme.secondary,
-              )),
+          child: Text(title, style: context.textTheme.titleMedium),
         ),
         Expanded(
           flex: 0,

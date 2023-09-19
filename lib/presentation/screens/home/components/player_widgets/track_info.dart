@@ -49,9 +49,8 @@ class PlayerBarTrackInfo extends ConsumerWidget {
                   flex: 0,
                   child: Text(
                     trackTitle ?? '',
-                    style: context.textTheme.bodySmall?.copyWith(
+                    style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: context.colorScheme.secondary,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines:
@@ -61,16 +60,11 @@ class PlayerBarTrackInfo extends ConsumerWidget {
                 ),
                 if (artistsNames != null && artistsNames.isNotEmpty) ...[
                   Expanded(
-                    // flex: 0,
                     child: Text(
                       artistsNames,
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color:
-                            context.colorScheme.onBackground.withOpacity(.88),
-                      ),
+                      style: context.textTheme.bodyMedium,
                     ),
                   ),
                 ],
