@@ -5,24 +5,59 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SidePanelNavButtons extends ConsumerWidget {
-  const SidePanelNavButtons({super.key});
+  const SidePanelNavButtons(this.showAll, {super.key});
+
+  final bool showAll;
 
   @override
   Widget build(BuildContext context, ref) {
-    return fluent.IconButton(
-      style: fluent.ButtonStyle(
-        iconSize: fluent.ButtonState.all(16),
-      ),
-      onPressed: () {
-        final canPop = AppRouter.router.canPop();
-        if (canPop) {
-          AppRouter.router.pop();
-          ref
-              .read(tabsStateProvider.notifier)
-              .update((state) => state.withPreviousPageSelected());
-        }
-      },
-      icon: const fluent.Icon(fluent.FluentIcons.back),
+    final canGoBack = ref.watch(showBackButtonProvider);
+    return Wrap(
+      clipBehavior: Clip.hardEdge,
+      alignment: WrapAlignment.spaceBetween,
+      runAlignment: WrapAlignment.center,
+      runSpacing: 4,
+      spacing: 16,
+      children: [
+        Visibility(
+          visible: showAll,
+          child: fluent.IconButton(
+            style: fluent.ButtonStyle(
+              iconSize: fluent.ButtonState.all(16),
+            ),
+            icon: const fluent.Icon(fluent.FluentIcons.history),
+            onPressed: null,
+          ),
+        ),
+        if (showAll) const SizedBox(width: 80),
+        fluent.IconButton(
+          style: fluent.ButtonStyle(
+            iconSize: fluent.ButtonState.all(16),
+          ),
+          icon: const fluent.Icon(fluent.FluentIcons.back),
+          onPressed: canGoBack
+              ? () {
+                  final canPop = AppRouter.router.canPop();
+                  if (canPop) {
+                    AppRouter.router.pop();
+                    ref
+                        .read(tabsStateProvider.notifier)
+                        .update((state) => state.withPreviousPageSelected());
+                  }
+                }
+              : null,
+        ),
+        Visibility(
+          visible: showAll,
+          child: fluent.IconButton(
+            style: fluent.ButtonStyle(
+              iconSize: fluent.ButtonState.all(16),
+            ),
+            icon: const fluent.Icon(fluent.FluentIcons.forward),
+            onPressed: null,
+          ),
+        ),
+      ],
     );
   }
 }

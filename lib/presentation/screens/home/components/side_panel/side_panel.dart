@@ -44,9 +44,9 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
     return AnimatedContainer(
       curve: Curves.fastOutSlowIn,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin: const EdgeInsets.only(left: 12, right: 10),
+      margin: const EdgeInsets.only(left: 12, right: 10, top: 10),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.minWidth == context.maxNavRailWidth;
         return Column(
@@ -64,12 +64,10 @@ class _SidePanelState extends ConsumerState<SidePanel>
                   runSpacing: 10,
                   children: [
                     if (!tabsMode.isHorizontal)
-                      AnimatedSlide(
-                        duration: const Duration(milliseconds: 200),
-                        offset: ref.watch(showBackButtonProvider)
-                            ? Offset.zero
-                            : const Offset(1.3, 0),
-                        child: const SidePanelNavButtons(),
+                      SizedBox(
+                        width: railWidth * .99,
+                        height: 40,
+                        child: SidePanelNavButtons(extended),
                       ),
                     const AnimatedSize(
                       duration: Duration(milliseconds: 200),

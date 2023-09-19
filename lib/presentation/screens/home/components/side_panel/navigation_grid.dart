@@ -1,6 +1,7 @@
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -35,6 +36,7 @@ class NavGrid extends StatelessWidget {
           Consumer(builder: (context, ref, _) {
             return _NavButton(
               iconData: CupertinoIcons.sidebar_left,
+              backgroundColor: Colors.transparent,
               iconColor: extended
                   ? context.colorScheme.primary
                   : context.colorScheme.onPrimaryContainer,
@@ -51,7 +53,6 @@ class NavGrid extends StatelessWidget {
           }),
           _NavButton(
             iconData: fluent.FluentIcons.settings,
-            iconSize: 20,
             onPressed: () =>
                 onDestinationSelected(QuickNavDestination.settingsPage),
           ),
@@ -75,38 +76,34 @@ class _NavButton extends StatelessWidget {
   const _NavButton({
     required this.onPressed,
     required this.iconData,
-    this.iconSize,
     this.iconColor,
+    this.backgroundColor,
   });
 
   final void Function() onPressed;
   final IconData iconData;
-  final double? iconSize;
   final Color? iconColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        )),
+        shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(borderRadius: kBorderRadius)),
         fixedSize: MaterialStateProperty.all(const Size.square(_kButtonWidth)),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.hovered)) {
-            return context.colorScheme.surfaceVariant.withOpacity(.21);
+            return context.colorScheme.onInverseSurface;
           }
-          if (states.contains(MaterialState.selected)) {
-            return Colors.red;
-          }
-          return context.colorScheme.background;
+          return backgroundColor ?? context.colorScheme.background;
         }),
       ),
       onPressed: onPressed,
       child: Icon(
         iconData,
-        size: iconSize ?? 23,
-        color: iconColor ?? context.colorScheme.secondary,
+        size: 22,
+        color: iconColor ?? context.colorScheme.onBackground,
       ),
     );
   }
