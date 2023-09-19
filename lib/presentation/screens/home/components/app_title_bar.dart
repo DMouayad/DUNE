@@ -10,38 +10,35 @@ class AppTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DragToMoveArea(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 0,
-                child: Container(
-                  width: context.maxNavRailWidth + 16,
-                  padding: const EdgeInsets.only(left: 18, top: 6),
-                  child: Text(
-                    'D',
-                    textAlign: TextAlign.start,
-                    style: context.textTheme.headlineMedium?.copyWith(
-                      color: context.colorScheme.secondary,
-                      fontFamily: 'bruno_ace',
-                    ),
-                  ),
+    return DragToMoveArea(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+            flex: 0,
+            child: Container(
+              width: context.maxNavRailWidth + 16,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(top: 10, left: 12, right: 10),
+              child: Text(
+                'DUNE',
+                textAlign: TextAlign.center,
+                style: context.textTheme.titleSmall?.copyWith(
+                  color: context.colorScheme.secondary,
+                  fontFamily: 'bruno_ace',
                 ),
               ),
-              Flexible(
-                flex: context.screenWidth > 860 ? 0 : 1,
-                child: const TopSearchBar(),
-              ),
-              if (context.isDesktopPlatform && !kIsWeb)
-                const Expanded(flex: 1, child: DesktopAppBarButtons()),
-            ],
+            ),
           ),
-        ),
-      ],
+          Flexible(
+            flex: context.screenWidth > 860 ? 0 : 1,
+            child: const TopSearchBar(),
+          ),
+          if (context.isDesktopPlatform && !kIsWeb)
+            const Expanded(flex: 1, child: DesktopAppBarButtons()),
+        ],
+      ),
     );
   }
 }
