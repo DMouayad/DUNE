@@ -24,11 +24,11 @@ class TabsBar extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         color: context.colorScheme.background,
       ),
-      padding: const EdgeInsets.all(4),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
       child: CustomTabView(
         onChanged: onTabChanged,
         currentIndex: ref.watch(tabsStateProvider).selectedTabIndex,
@@ -38,9 +38,20 @@ class TabsBar extends ConsumerWidget {
         header: Row(
           children: [
             const SizedBox(width: 4),
-            fluent.GestureDetector(
-              onSecondaryTap: () {},
-              onTap: () {
+            fluent.IconButton(
+              style: fluent.ButtonStyle(
+                iconSize: fluent.ButtonState.all(18),
+              ),
+              icon: const fluent.Icon(fluent.FluentIcons.history),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 10),
+            fluent.IconButton(
+              style: fluent.ButtonStyle(
+                iconSize: fluent.ButtonState.all(18),
+              ),
+              icon: const fluent.Icon(fluent.FluentIcons.back),
+              onPressed: () {
                 final canPop = AppRouter.router.canPop();
                 if (canPop) {
                   AppRouter.router.pop();
@@ -49,23 +60,6 @@ class TabsBar extends ConsumerWidget {
                       .update((state) => state.withPreviousPageSelected());
                 }
               },
-              child: fluent.IconButton(
-                icon: const fluent.Icon(fluent.FluentIcons.back),
-                onPressed: () {
-                  final canPop = AppRouter.router.canPop();
-                  if (canPop) {
-                    AppRouter.router.pop();
-                    ref
-                        .read(tabsStateProvider.notifier)
-                        .update((state) => state.withPreviousPageSelected());
-                  }
-                },
-              ),
-            ),
-            const SizedBox(width: 4),
-            fluent.IconButton(
-              icon: const fluent.Icon(fluent.FluentIcons.history),
-              onPressed: () {},
             ),
             const SizedBox(width: 12),
           ],
