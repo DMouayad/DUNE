@@ -13,3 +13,4 @@ const supportedDesktopWindowEffects = [
 ];
 
 bool get kIsWindowEffectsSupported => isDesktopNotWebPlatform;
+const kBorderRadius = BorderRadius.all(Radius.circular(14));
