@@ -74,6 +74,11 @@ flutter:
     - family: bruno_ace
       fonts:
         - asset: assets/fonts/BrunoAceSC.ttf
+    - family: work_sans
+      fonts:
+        - asset: assets/fonts/WorkSans-Light.ttf
+        - asset: assets/fonts/WorkSans-Medium.ttf
+        - asset: assets/fonts/WorkSans-Regular.ttf
 
 msix_config:
   display_name: DUNE
