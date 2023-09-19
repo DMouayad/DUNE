@@ -1,11 +1,10 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
-import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
+import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
-import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -146,91 +145,86 @@ class PlaylistPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
       color: context.colorScheme.background,
-      alignment: Alignment.topCenter,
-      child: Stack(
+      constraints: BoxConstraints.expand(
+        height: height,
+        width: double.infinity,
+      ),
+      child: Flex(
+        direction: Axis.horizontal,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned.fill(
-            child: Wrap(
-              direction: Axis.horizontal,
+          Hero(
+            tag: title,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8, right: 18),
+              child: ThumbnailWithGesturesWidget(
+                cacheImage: true,
+                constraints: BoxConstraints.loose(Size.square(height)),
+                thumbnailsSet: thumbnailsSet!,
+                placeholder: const PlaylistCoverPlaceholder(),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Stack(
               children: [
-                if (AppRouter.showAppBarBackButton)
-                  BackButton(
-                    color: context.colorScheme.secondary,
-                  ),
-                Hero(
-                  tag: title,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ThumbnailWithGesturesWidget(
-                      cacheImage: true,
-                      constraints:
-                          BoxConstraints.loose(Size(height * .9, height * .8)),
-                      thumbnailsSet: thumbnailsSet!,
-                      placeholder: const PlaylistCoverPlaceholder(),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  child: Text(
+                    title,
+                    softWrap: true,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: context.colorScheme.primary,
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: height,
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    runAlignment: WrapAlignment.center,
-                    direction: isMinimized ? Axis.horizontal : Axis.vertical,
-                    spacing: 10,
-                    children: [
-                      Text(
-                        title,
-                        style: context.textTheme.titleLarge?.copyWith(
-                          color: context.colorScheme.primary,
+                if (description != null)
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 200),
+                    bottom: isMinimized ? 6 : height * .3,
+                    left: 0,
+                    child: SizedBox(
+                      width: 330,
+                      child: Text(
+                        description!,
+                        // softWrap: true,
+                        maxLines: 3,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
                         ),
-                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
                       ),
-                      if (!isMinimized) ...[
-                        if (tracksCount != null)
-                          Text(
-                            '▪ $tracksCount tracks ▪',
-                            softWrap: true,
-                            style: context.textTheme.titleSmall?.copyWith(
-                              color: context.colorScheme.secondary,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        if (description != null)
-                          SizedBox(
-                            width: 300,
-                            child: Text(
-                              description!,
-                              softWrap: true,
-                              maxLines: 2,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                color: context.colorScheme.secondary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                      ],
-                      TextButton.icon(
-                        onPressed: onShuffle,
-                        icon: const Icon(Icons.shuffle),
-                        label: const Text("shuffle"),
-                      ),
-                    ],
+                    ),
+                  ),
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 250),
+                  bottom: height * .1,
+                  top: isMinimized ? 0 : null,
+                  right: isMinimized ? 0 : null,
+                  left: isMinimized ? null : 0,
+                  child: TextButton.icon(
+                    onPressed: onShuffle,
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                          context.colorScheme.onPrimaryContainer),
+                    ),
+                    icon: const Icon(Icons.shuffle, size: 20),
+                    label: Text("shuffle (${tracksCount ?? 0} tracks)"),
                   ),
                 ),
+                if (isFetchingPlaylistInfo)
+                  Positioned(
+                    top: 0,
+                    right: 6,
+                    child: DuneLoadingWidget(size: isMinimized ? 14 : 24),
+                  ),
               ],
             ),
           ),
-          if (isFetchingPlaylistInfo)
-            const Positioned(
-              right: 6,
-              top: 6,
-              child: DuneLoadingWidget(size: 24),
-            ),
         ],
       ),
     );
