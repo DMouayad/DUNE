@@ -10,6 +10,9 @@ import 'package:dune/support/enums/now_playing_section_display_mode.dart';
 
 import 'state_controllers.dart';
 
+/// Provide whether a back button should be visible or not.
+final showBackButtonProvider = StateProvider((_) => false);
+
 /// used to determine the current display mode of the [NowPlayingCard] widget.
 final nowPlayingSectionDisplayModeProvider =
     StateProvider((_) => NowPlayingSectionDisplayMode.hidden);
