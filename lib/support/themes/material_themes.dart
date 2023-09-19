@@ -13,19 +13,39 @@ final class MaterialThemes {
 
   static ThemeData themeDataFromAppTheme(AppTheme appTheme) {
     return appTheme.isDarkMode
-        ? ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: appTheme.primaryColor,
-              brightness: Brightness.dark,
-            ),
-            buttonTheme: _baseTheme.buttonTheme,
-          )
-        : ThemeData.light().copyWith(
-            buttonTheme: _baseTheme.buttonTheme,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: appTheme.primaryColor,
-              brightness: Brightness.light,
-            ),
-          );
+        ? _getDarkTheme(appTheme)
+        : _getLightTheme(appTheme);
+  }
+
+  static ThemeData _getDarkTheme(AppTheme appTheme) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: appTheme.primaryColor,
+      brightness: Brightness.dark,
+    );
+    return ThemeData.dark().copyWith(
+      colorScheme: colorScheme,
+      textTheme: Typography().white.apply(
+            fontFamily: 'work_sans',
+            bodyColor: colorScheme.onBackground,
+            displayColor: colorScheme.secondary,
+          ),
+      buttonTheme: _baseTheme.buttonTheme,
+    );
+  }
+
+  static ThemeData _getLightTheme(AppTheme appTheme) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: appTheme.primaryColor,
+      brightness: Brightness.light,
+    );
+    return ThemeData.light().copyWith(
+      buttonTheme: _baseTheme.buttonTheme,
+      colorScheme: colorScheme,
+      textTheme: Typography().black.apply(
+            fontFamily: 'work_sans',
+            bodyColor: colorScheme.onBackground,
+            displayColor: colorScheme.secondary,
+          ),
+    );
   }
 }
