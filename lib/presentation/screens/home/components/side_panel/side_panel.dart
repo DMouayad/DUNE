@@ -28,7 +28,6 @@ class _SidePanelState extends ConsumerState<SidePanel>
   Widget build(BuildContext context) {
     super.build(context);
     final tabsMode = ref.read(appPreferencesController).tabsMode;
-
     if (railWidth != ref.watch(navigationRailSizeProvider)) {
       if (context.isMobile) {
         if (railWidth != kSidePanelMinWidth) {
@@ -37,7 +36,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
           railWidth = kSidePanelMinWidth;
         }
       } else {
-        railWidth = ref.watch(navigationRailSizeProvider) ?? kSidePanelMinWidth;
+        railWidth =
+            ref.watch(navigationRailSizeProvider) ?? context.maxNavRailWidth;
       }
       updateKeepAlive();
     }
@@ -57,21 +57,20 @@ class _SidePanelState extends ConsumerState<SidePanel>
               flex: 0,
               // a [Clip] is used to clip-out [SidePanelNavButtons]'s
               // offset is not zero.
-              child: ClipRRect(
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  runSpacing: 10,
-                  children: [
-                    if (!tabsMode.isHorizontal)
-                      SizedBox(
-                        width: railWidth * .99,
-                        height: 40,
-                        child: SidePanelNavButtons(extended),
-                      ),
-                    const TopSearchBar(),
-                  ],
-                ),
+              child: Wrap(
+                clipBehavior: Clip.hardEdge,
+                alignment: WrapAlignment.end,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runSpacing: 10,
+                children: [
+                  if (!tabsMode.isHorizontal)
+                    SizedBox(
+                      width: railWidth * .99,
+                      height: 40,
+                      child: SidePanelNavButtons(extended),
+                    ),
+                  const TopSearchBar(),
+                ],
               ),
             ),
             Expanded(
