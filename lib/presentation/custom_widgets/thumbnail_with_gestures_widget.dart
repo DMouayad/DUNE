@@ -1,5 +1,6 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -56,7 +57,7 @@ class ThumbnailWithGesturesWidget extends StatelessWidget {
                     );
                   },
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: kBorderRadius,
                 ),
               ),
             );

@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
@@ -48,7 +49,7 @@ class TrackCardWrapper extends StatelessWidget {
       childWidget: Material(
         color: cardColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: kBorderRadius,
           side: isSelected
               ? BorderSide(
                   color: context.colorScheme.onPrimaryContainer.withOpacity(.9),
@@ -72,11 +73,10 @@ class TrackCardWrapper extends StatelessWidget {
             hoverColor: playOnTap ? context.colorScheme.primaryContainer : null,
             mouseCursor: playOnTap ? null : MouseCursor.defer,
             focusColor: context.colorScheme.primaryContainer,
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            customBorder:
+                const RoundedRectangleBorder(borderRadius: kBorderRadius),
             onTap: onTap,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(14),
             child: child,
           ),
         ),
