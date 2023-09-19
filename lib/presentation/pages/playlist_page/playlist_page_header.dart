@@ -160,7 +160,7 @@ class PlaylistPageHeader extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8, right: 18),
               child: ThumbnailWithGesturesWidget(
                 cacheImage: true,
-                constraints: BoxConstraints.loose(Size.square(height)),
+                constraints: BoxConstraints.loose(Size.square(height * .9)),
                 thumbnailsSet: thumbnailsSet!,
                 placeholder: const PlaylistCoverPlaceholder(),
               ),
