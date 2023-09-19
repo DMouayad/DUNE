@@ -86,6 +86,7 @@ class ExploreMusicItemCard extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return CustomCard(
       tag: item.title,
+      cacheImage: true,
       width: itemBoxWidth,
       title: item.title,
       subtitle: item.type.isVideo
