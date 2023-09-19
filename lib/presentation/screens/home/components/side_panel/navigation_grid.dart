@@ -24,27 +24,21 @@ class NavGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
+    return Container(
       height: _kButtonWidth,
-      duration: const Duration(milliseconds: 170),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      alignment: Alignment.center,
       width: extended ? width : _kButtonWidth,
-      child: GridView(
-        padding: EdgeInsets.zero,
-        scrollDirection: Axis.horizontal,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent: _kButtonWidth,
-          mainAxisSpacing: 10,
-          crossAxisCount: 1,
-        ),
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 10,
         children: [
           Consumer(builder: (context, ref, _) {
             return _NavButton(
               iconData: CupertinoIcons.sidebar_left,
-              iconColor: extended ? context.colorScheme.primary : null,
+              iconColor: extended
+                  ? context.colorScheme.primary
+                  : context.colorScheme.secondary,
               onPressed: () {
                 if (extended) {
                   ref.read(navigationRailSizeProvider.notifier).state =
@@ -56,33 +50,22 @@ class NavGrid extends StatelessWidget {
               },
             );
           }),
-          if (extended) ...[
-            Visibility(
-              visible: extended,
-              child: _NavButton(
-                iconData: fluent.FluentIcons.settings,
-                iconSize: 20,
-                onPressed: () =>
-                    onDestinationSelected(QuickNavDestination.settingsPage),
-              ),
-            ),
-            Visibility(
-              visible: extended,
-              child: _NavButton(
-                iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
-                onPressed: () => onDestinationSelected(
-                    QuickNavDestination.listeningHistoryPage),
-              ),
-            ),
-            Visibility(
-              visible: extended,
-              child: _NavButton(
-                iconData: CupertinoIcons.compass,
-                onPressed: () =>
-                    onDestinationSelected(QuickNavDestination.explorePage),
-              ),
-            ),
-          ],
+          _NavButton(
+            iconData: fluent.FluentIcons.settings,
+            iconSize: 20,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.settingsPage),
+          ),
+          _NavButton(
+            iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.listeningHistoryPage),
+          ),
+          _NavButton(
+            iconData: CupertinoIcons.compass,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.explorePage),
+          ),
         ],
       ),
     );
@@ -109,6 +92,7 @@ class _NavButton extends StatelessWidget {
         shape: MaterialStateProperty.all(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         )),
+        fixedSize: MaterialStateProperty.all(const Size.square(_kButtonWidth)),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.hovered)) {
             return context.colorScheme.surfaceVariant.withOpacity(.21);
