@@ -1,8 +1,10 @@
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../navigation_buttons.dart';
 import 'navigation_grid.dart';
 import 'side_panel_now_playing_section.dart';
 
@@ -24,6 +26,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final tabsMode = ref.read(appPreferencesController).tabsMode;
 
     if (railWidth != ref.watch(navigationRailSizeProvider)) {
       if (context.isMobile) {
@@ -49,6 +52,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (!tabsMode.isHorizontal) const NavigationButtons(),
             Expanded(
               flex: 0,
               child: NavGrid(
