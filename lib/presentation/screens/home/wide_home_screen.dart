@@ -26,7 +26,7 @@ class WideHomeScreen extends ConsumerWidget {
     // effect on the next time the app is opened
     final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsMode.isHorizontal ? 85.5 : 48.5;
+    final topSpacing = tabsMode.isHorizontal ? 85.5 : 36.5;
     final screen = Theme(
       data: appTheme.materialThemeData,
       child: Material(
@@ -44,9 +44,9 @@ class WideHomeScreen extends ConsumerWidget {
                   Positioned(
                     right: 0,
                     left: 0,
-                    top: 30,
+                    top: 36,
                     child: SizedBox(
-                      height: 70,
+                      height: 42,
                       child: TabsBar(
                         onTabChanged: (i) => _onTabChanged(i, ref),
                         onAddNewTab: () {
@@ -62,8 +62,8 @@ class WideHomeScreen extends ConsumerWidget {
                     ),
                   ),
                 Positioned.fill(
-                  // top margins for the [AppTitleBar]
                   top: topSpacing,
+                  right: 6,
                   bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
