@@ -67,7 +67,7 @@ class SettingComponentCard extends ConsumerWidget {
                 title,
                 style: context.textTheme.bodyMedium?.copyWith(
                   fontFamily: 'baloo2',
-                  color: context.colorScheme.onPrimaryContainer,
+                  color: context.colorScheme.onBackground,
                 ),
               ),
             ),
