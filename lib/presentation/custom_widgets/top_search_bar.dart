@@ -25,7 +25,7 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
       barLeading: Icon(fluent.FluentIcons.search,
           size: 16,
           color: context.colorScheme.onPrimaryContainer.withOpacity(.5)),
-      constraints: BoxConstraints.loose(Size(barWidth, 38)),
+      constraints: BoxConstraints.loose(Size(barWidth, 36)),
       searchController: searchController,
       viewShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
@@ -47,7 +47,7 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
       viewHintText: "Search",
       barElevation: MaterialStateProperty.all(0),
       barBackgroundColor: MaterialStateProperty.resolveWith((states) {
-        return context.colorScheme.surfaceVariant.withOpacity(.3);
+        return Colors.transparent;
       }),
       viewBackgroundColor: context.colorScheme.background,
       suggestionsBuilder: (context, controller) {
