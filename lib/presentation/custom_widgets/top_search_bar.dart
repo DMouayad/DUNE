@@ -19,6 +19,7 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
     final searchController = ref.watch(materialSearchBarControllerProvider);
     final searchState = ref.watch(searchControllerProvider);
     return SearchAnchor.bar(
+      constraints: const BoxConstraints.tightFor(height: 52),
       barLeading: Icon(
         fluent.FluentIcons.search,
         size: 20,

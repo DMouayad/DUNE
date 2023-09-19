@@ -21,9 +21,8 @@ final materialSearchBarControllerProvider = Provider((_) => SearchController());
 
 late final StateProvider<TabsState> tabsStateProvider;
 
-final StateProvider<double?> navigationRailSizeProvider = StateProvider((ref) {
-  return ref.watch(appPreferencesController).lastSidePanelWidth;
-});
+final StateProvider<double?> navigationRailSizeProvider =
+    StateProvider((_) => null);
 
 final StateProvider<MusicSource> explorePageMusicSourceProvider =
     StateProvider((ref) {

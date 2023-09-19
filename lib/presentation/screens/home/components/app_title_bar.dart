@@ -18,7 +18,7 @@ class AppTitleBar extends StatelessWidget {
             flex: 0,
             child: Container(
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 6, left: 22, right: 10),
+              padding: const EdgeInsets.only(top: 6, left: 18, right: 10),
               child: Text(
                 'D',
                 textAlign: TextAlign.center,
