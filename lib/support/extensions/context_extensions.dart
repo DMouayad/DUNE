@@ -16,6 +16,10 @@ extension DeviceInfoExtension on BuildContext {
 
     return DeviceType.mobile;
   }
+
+  bool get isNotMobileDevice {
+    return !isMobile || isDesktopPlatform;
+  }
 }
 
 extension AdaptiveContextExtension on BuildContext {
