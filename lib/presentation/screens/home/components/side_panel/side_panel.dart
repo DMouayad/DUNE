@@ -42,7 +42,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
       curve: Curves.fastOutSlowIn,
       duration: const Duration(milliseconds: 300),
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.minWidth == context.maxNavRailWidth;
         return Column(
