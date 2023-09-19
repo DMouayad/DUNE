@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
@@ -739,172 +742,182 @@ class __TabState extends State<_Tab>
       }
     }();
 
-    return HoverButton(
-      key: widget.tab.key,
-      semanticLabel: widget.tab.semanticLabel ?? text,
-      onPressed: widget.onPressed,
-      builder: (context, states) {
-        /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TreeView/TreeView_themeresources.xaml#L19-L26
-        final foregroundColor = ButtonState.resolveWith<Color>((states) {
-          if (states.isPressing) {
-            return res.textFillColorSecondary;
-          } else if (states.isHovering) {
-            return res.textFillColorPrimary;
-          } else if (states.isDisabled) {
-            return res.textFillColorDisabled;
-          } else {
-            return widget.selected
-                ? res.textFillColorPrimary
-                : res.textFillColorSecondary;
-          }
-        }).resolve(states);
+    return Consumer(builder: (context, ref, _) {
+      return HoverButton(
+        key: widget.tab.key,
+        semanticLabel: widget.tab.semanticLabel ?? text,
+        onPressed: widget.onPressed,
+        builder: (context, states) {
+          /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TreeView/TreeView_themeresources.xaml#L19-L26
+          final foregroundColor = ButtonState.resolveWith<Color>((states) {
+            if (states.isPressing) {
+              return res.textFillColorSecondary;
+            } else if (states.isHovering) {
+              return res.textFillColorPrimary;
+            } else if (states.isDisabled) {
+              return res.textFillColorDisabled;
+            } else {
+              return widget.selected
+                  ? res.textFillColorPrimary
+                  : res.textFillColorSecondary;
+            }
+          }).resolve(states);
 
-        /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TreeView/TreeView_themeresources.xaml#L10-L17
-        final backgroundColor = ButtonState.resolveWith<Color>((states) {
-          if (states.isPressing) {
-            return widget.selected
-                ? res.subtleFillColorSecondary
-                : res.subtleFillColorTertiary;
-          } else if (states.isHovering) {
-            return widget.selected
-                ? res.subtleFillColorTertiary
-                : res.subtleFillColorSecondary;
-          } else if (states.isDisabled) {
-            return res.subtleFillColorDisabled;
-          } else {
-            return widget.selected
-                ? res.subtleFillColorSecondary
-                : res.subtleFillColorTransparent;
-          }
-        }).resolve(states);
+          final backgroundColor = ButtonState.resolveWith<Color>((states) {
+            final selectedBaseColor =
+                ref.watch(appThemeControllerProvider).cardColor;
+            final unselectedBaseColor = context.colorScheme.surfaceVariant;
+            if (states.isPressing) {
+              return widget.selected
+                  ? res.subtleFillColorSecondary
+                  : res.subtleFillColorTertiary;
+            } else if (states.isHovering) {
+              return widget.selected
+                  ? selectedBaseColor.withOpacity(.4)
+                  : unselectedBaseColor.withOpacity(.3);
+            } else if (states.isDisabled) {
+              return res.subtleFillColorDisabled;
+            } else {
+              return widget.selected
+                  ? selectedBaseColor
+                  : unselectedBaseColor.withOpacity(.1);
+            }
+          }).resolve(states);
 
-        const borderRadius = BorderRadius.vertical(top: Radius.circular(10));
-        Widget child = FocusBorder(
-          focused: states.isFocused,
-          renderOutside: false,
-          style: const FocusThemeData(borderRadius: borderRadius),
-          child: Container(
-            key: widget.tab._tabKey,
-            height: _kTileHeight,
-            constraints:
-                widget.tabWidthBehavior == TabWidthBehavior.sizeToContent
-                    ? const BoxConstraints(minHeight: 28.0)
-                    : const BoxConstraints(
-                        maxWidth: _kMaxTileWidth,
-                        minHeight: 28.0,
-                      ),
-            padding: const EdgeInsetsDirectional.only(
-              start: 8,
-              top: 3,
-              end: 4,
-              bottom: 3,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-
-              // if selected, the background is painted by _TabPainter
-              color: widget.selected ? null : backgroundColor,
-            ),
-            child: () {
-              final result = ClipRect(
-                child: DefaultTextStyle.merge(
-                  style: (theme.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 12.0,
-                    fontWeight: widget.selected ? FontWeight.w600 : null,
-                    color: foregroundColor,
-                  ),
-                  child: IconTheme.merge(
-                    data: IconThemeData(
-                      color: foregroundColor,
-                      size: 16.0,
-                    ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      if (widget.tab.icon != null)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 10.0),
-                          child: widget.tab.icon!,
+          const borderRadius = BorderRadius.vertical(top: Radius.circular(10));
+          Widget child = FocusBorder(
+            focused: states.isFocused,
+            renderOutside: false,
+            style: const FocusThemeData(borderRadius: borderRadius),
+            child: Container(
+              key: widget.tab._tabKey,
+              height: _kTileHeight,
+              constraints:
+                  widget.tabWidthBehavior == TabWidthBehavior.sizeToContent
+                      ? const BoxConstraints(minHeight: 28.0)
+                      : const BoxConstraints(
+                          maxWidth: _kMaxTileWidth,
+                          minHeight: 28.0,
                         ),
-                      if (widget.tabWidthBehavior != TabWidthBehavior.compact ||
-                          (widget.tabWidthBehavior ==
-                                  TabWidthBehavior.compact &&
-                              widget.selected))
-                        Flexible(
-                          fit: widget.tabWidthBehavior == TabWidthBehavior.equal
-                              ? FlexFit.tight
-                              : FlexFit.loose,
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 4.0),
-                            child: DefaultTextStyle.merge(
-                              softWrap: false,
-                              maxLines: 1,
-                              overflow: TextOverflow.clip,
-                              style: const TextStyle(fontSize: 12.0),
-                              child: widget.tab.text,
+              padding: const EdgeInsetsDirectional.only(
+                start: 8,
+                top: 3,
+                end: 4,
+                bottom: 3,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: borderRadius,
+
+                // if selected, the background is painted by _TabPainter
+                color: widget.selected ? null : backgroundColor,
+              ),
+              child: () {
+                final result = ClipRect(
+                  child: DefaultTextStyle.merge(
+                    style:
+                        (theme.typography.body ?? const TextStyle()).copyWith(
+                      fontSize: 12.0,
+                      fontWeight: widget.selected ? FontWeight.w600 : null,
+                      color: foregroundColor,
+                    ),
+                    child: IconTheme.merge(
+                      data: IconThemeData(
+                        color: foregroundColor,
+                        size: 16.0,
+                      ),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        if (widget.tab.icon != null)
+                          Padding(
+                            padding:
+                                const EdgeInsetsDirectional.only(end: 10.0),
+                            child: widget.tab.icon!,
+                          ),
+                        if (widget.tabWidthBehavior !=
+                                TabWidthBehavior.compact ||
+                            (widget.tabWidthBehavior ==
+                                    TabWidthBehavior.compact &&
+                                widget.selected))
+                          Flexible(
+                            fit: widget.tabWidthBehavior ==
+                                    TabWidthBehavior.equal
+                                ? FlexFit.tight
+                                : FlexFit.loose,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsetsDirectional.only(end: 4.0),
+                              child: DefaultTextStyle.merge(
+                                softWrap: false,
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(fontSize: 12.0),
+                                child: widget.tab.text,
+                              ),
                             ),
                           ),
-                        ),
-                      if (widget.tab.closeIcon != null &&
-                          (widget.visibilityMode ==
-                                  CloseButtonVisibilityMode.always ||
-                              (widget.visibilityMode ==
-                                      CloseButtonVisibilityMode.onHover &&
-                                  states.isHovering)))
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(start: 4.0),
-                          child: FocusTheme(
-                            data: const FocusThemeData(
-                              primaryBorder: BorderSide.none,
-                              secondaryBorder: BorderSide.none,
-                            ),
-                            child: Tooltip(
-                              message: localizations.closeTabLabel,
-                              child: SizedBox(
-                                height: 24.0,
-                                width: 32.0,
-                                child: IconButton(
-                                  icon: Icon(widget.tab.closeIcon),
-                                  onPressed: widget.onClose,
-                                  focusable: false,
+                        if (widget.tab.closeIcon != null &&
+                            (widget.visibilityMode ==
+                                    CloseButtonVisibilityMode.always ||
+                                (widget.visibilityMode ==
+                                        CloseButtonVisibilityMode.onHover &&
+                                    states.isHovering)))
+                          Padding(
+                            padding:
+                                const EdgeInsetsDirectional.only(start: 4.0),
+                            child: FocusTheme(
+                              data: const FocusThemeData(
+                                primaryBorder: BorderSide.none,
+                                secondaryBorder: BorderSide.none,
+                              ),
+                              child: Tooltip(
+                                message: localizations.closeTabLabel,
+                                child: SizedBox(
+                                  height: 24.0,
+                                  width: 32.0,
+                                  child: IconButton(
+                                    icon: Icon(widget.tab.closeIcon),
+                                    onPressed: widget.onClose,
+                                    focusable: false,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ]),
+                      ]),
+                    ),
                   ),
-                ),
-              );
-              if (widget.reorderIndex != null) {
-                return ReorderableDragStartListener(
-                  index: widget.reorderIndex!,
-                  child: result,
                 );
-              }
-              return result;
-            }(),
-          ),
-        );
-        if (text != null) {
-          child = Tooltip(
-            message: text,
-            style: const TooltipThemeData(preferBelow: true),
-            child: child,
+                if (widget.reorderIndex != null) {
+                  return ReorderableDragStartListener(
+                    index: widget.reorderIndex!,
+                    child: result,
+                  );
+                }
+                return result;
+              }(),
+            ),
           );
-        }
-        if (widget.selected) {
-          child = CustomPaint(
-            painter: _TabPainter(backgroundColor),
-            child: child,
+          if (text != null) {
+            child = Tooltip(
+              message: text,
+              style: const TooltipThemeData(preferBelow: true),
+              child: child,
+            );
+          }
+          if (widget.selected) {
+            child = CustomPaint(
+              painter: _TabPainter(backgroundColor),
+              child: child,
+            );
+          }
+          return Semantics(
+            selected: widget.selected,
+            focusable: true,
+            focused: states.isFocused,
+            child: SmallIconButton(child: child),
           );
-        }
-        return Semantics(
-          selected: widget.selected,
-          focusable: true,
-          focused: states.isFocused,
-          child: SmallIconButton(child: child),
-        );
-      },
-    );
+        },
+      );
+    });
   }
 
   @override
