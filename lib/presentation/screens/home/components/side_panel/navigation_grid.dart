@@ -44,9 +44,7 @@ class NavGrid extends StatelessWidget {
           Consumer(builder: (context, ref, _) {
             return _NavButton(
               iconData: CupertinoIcons.sidebar_left,
-              iconColor: context.colorScheme.onBackground,
-              backgroundColor:
-                  extended ? context.colorScheme.secondaryContainer : null,
+              iconColor: extended ? context.colorScheme.primary : null,
               onPressed: () {
                 if (extended) {
                   ref.read(navigationRailSizeProvider.notifier).state =
@@ -97,32 +95,35 @@ class _NavButton extends StatelessWidget {
     required this.iconData,
     this.iconSize,
     this.iconColor,
-    this.backgroundColor,
   });
 
   final void Function() onPressed;
   final IconData iconData;
   final double? iconSize;
-  final Color? backgroundColor;
   final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(14),
-      onTap: onPressed,
-      child: Container(
-        width: _kButtonWidth,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
+    return FilledButton.tonal(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          color: backgroundColor ?? context.colorScheme.background,
-        ),
-        child: Icon(
-          iconData,
-          size: iconSize ?? 23,
-          color: iconColor ?? context.colorScheme.secondary,
-        ),
+        )),
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return context.colorScheme.surfaceVariant.withOpacity(.21);
+          }
+          if (states.contains(MaterialState.selected)) {
+            return Colors.red;
+          }
+          return context.colorScheme.background;
+        }),
+      ),
+      onPressed: onPressed,
+      child: Icon(
+        iconData,
+        size: iconSize ?? 23,
+        color: iconColor ?? context.colorScheme.secondary,
       ),
     );
   }
