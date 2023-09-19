@@ -9,6 +9,8 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'optional_parent_widget.dart';
+
 class TracksListView extends ConsumerWidget {
   final AsyncValue<List<BaseTrack>> tracksState;
   final EdgeInsets? listPadding;
@@ -108,9 +110,13 @@ class TracksListView extends ConsumerWidget {
               },
             );
     } else if (tracksState.hasError) {
-      return DuneErrorWidget(
-        tracksState.error,
-        onRetry: onRetryWhenErrorLoadingTracks,
+      return OptionalParentWidget(
+        condition: isSliverList,
+        parentWidgetBuilder: (child) => SliverFillRemaining(child: child),
+        childWidget: DuneErrorWidget(
+          tracksState.error,
+          onRetry: onRetryWhenErrorLoadingTracks,
+        ),
       );
     } else {
       return Center(
