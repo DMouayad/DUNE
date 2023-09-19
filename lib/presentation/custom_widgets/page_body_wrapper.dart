@@ -23,8 +23,7 @@ class PageBodyWrapper extends ConsumerWidget {
               color: appTheme.acrylicWindowEffectEnabled
                   ? Colors.transparent
                   : context.colorScheme.background,
-              borderRadius:
-                  const BorderRadius.only(topLeft: Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             child: child,
           );
