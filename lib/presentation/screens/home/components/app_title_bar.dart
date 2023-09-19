@@ -17,13 +17,12 @@ class AppTitleBar extends StatelessWidget {
           Flexible(
             flex: 0,
             child: Container(
-              width: context.maxNavRailWidth + 16,
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 10, left: 12, right: 10),
+              padding: const EdgeInsets.only(top: 6, left: 22, right: 10),
               child: Text(
                 'D',
                 textAlign: TextAlign.center,
-                style: context.textTheme.titleLarge?.copyWith(
+                style: context.textTheme.headlineSmall?.copyWith(
                   color: context.colorScheme.secondary,
                   fontFamily: 'bruno_ace',
                 ),

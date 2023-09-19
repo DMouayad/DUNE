@@ -21,8 +21,8 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
     return SearchAnchor.bar(
       barLeading: Icon(
         fluent.FluentIcons.search,
-        size: 18,
-        color: context.colorScheme.secondary,
+        size: 20,
+        color: context.colorScheme.onBackground,
       ),
       searchController: searchController,
       viewShape: RoundedRectangleBorder(
