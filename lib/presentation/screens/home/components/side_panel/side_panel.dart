@@ -69,10 +69,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
                         height: 40,
                         child: SidePanelNavButtons(extended),
                       ),
-                    const AnimatedSize(
-                      duration: Duration(milliseconds: 200),
-                      child: TopSearchBar(),
-                    ),
+                    const TopSearchBar(),
                   ],
                 ),
               ),
