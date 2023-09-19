@@ -25,7 +25,6 @@ class NavGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: _kButtonWidth,
       margin: const EdgeInsets.symmetric(vertical: 12),
       alignment: Alignment.center,
       width: extended ? width : _kButtonWidth,
@@ -38,7 +37,7 @@ class NavGrid extends StatelessWidget {
               iconData: CupertinoIcons.sidebar_left,
               iconColor: extended
                   ? context.colorScheme.primary
-                  : context.colorScheme.secondary,
+                  : context.colorScheme.onPrimaryContainer,
               onPressed: () {
                 if (extended) {
                   ref.read(navigationRailSizeProvider.notifier).state =
