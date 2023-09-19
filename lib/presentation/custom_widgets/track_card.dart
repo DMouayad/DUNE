@@ -77,7 +77,6 @@ class TrackCardMainContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
       children: [
-        const SizedBox(width: 12),
         Expanded(
           flex: 0,
           child: ThumbnailWidget(
@@ -157,7 +156,9 @@ class TrackCardMainContent extends StatelessWidget {
             child: Text(
               track.duration?.formatInHhMmSs ?? 'N/A',
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.bodySmall,
+              style: context.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         wideSpacer,

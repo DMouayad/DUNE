@@ -76,7 +76,7 @@ class TrackCardWrapper extends StatelessWidget {
             customBorder:
                 const RoundedRectangleBorder(borderRadius: kBorderRadius),
             onTap: onTap,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: kBorderRadius,
             child: child,
           ),
         ),
