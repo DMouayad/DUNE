@@ -170,7 +170,7 @@ class PlaylistPageHeader extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned(
-                  top: 0,
+                  top: 10,
                   left: 0,
                   bottom: 0,
                   child: Text(
@@ -183,7 +183,7 @@ class PlaylistPageHeader extends StatelessWidget {
                 ),
                 if (description != null)
                   AnimatedPositioned(
-                    duration: const Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 300),
                     bottom: isMinimized ? 6 : height * .3,
                     left: 0,
                     child: SizedBox(
@@ -201,7 +201,7 @@ class PlaylistPageHeader extends StatelessWidget {
                     ),
                   ),
                 AnimatedPositioned(
-                  duration: const Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 300),
                   bottom: height * .1,
                   top: isMinimized ? 0 : null,
                   right: isMinimized ? 0 : null,
@@ -210,7 +210,7 @@ class PlaylistPageHeader extends StatelessWidget {
                     onPressed: onShuffle,
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
-                          context.colorScheme.onPrimaryContainer),
+                          context.colorScheme.secondary),
                     ),
                     icon: const Icon(Icons.shuffle, size: 20),
                     label: Text("shuffle (${tracksCount ?? 0} tracks)"),
