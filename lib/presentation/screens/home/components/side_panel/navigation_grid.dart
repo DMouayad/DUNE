@@ -44,6 +44,7 @@ class NavGrid extends StatelessWidget {
           Consumer(builder: (context, ref, _) {
             return _NavButton(
               iconData: CupertinoIcons.sidebar_left,
+              iconColor: context.colorScheme.onBackground,
               backgroundColor:
                   extended ? context.colorScheme.secondaryContainer : null,
               onPressed: () {
@@ -95,6 +96,7 @@ class _NavButton extends StatelessWidget {
     required this.onPressed,
     required this.iconData,
     this.iconSize,
+    this.iconColor,
     this.backgroundColor,
   });
 
@@ -102,6 +104,7 @@ class _NavButton extends StatelessWidget {
   final IconData iconData;
   final double? iconSize;
   final Color? backgroundColor;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -113,13 +116,12 @@ class _NavButton extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          color: backgroundColor ??
-              context.colorScheme.surfaceVariant.withOpacity(.3),
+          color: backgroundColor ?? context.colorScheme.background,
         ),
         child: Icon(
           iconData,
           size: iconSize ?? 23,
-          color: context.colorScheme.primary.withOpacity(.9),
+          color: iconColor ?? context.colorScheme.secondary,
         ),
       ),
     );
