@@ -10,7 +10,7 @@ class DesktopAppBarButtons extends StatelessWidget {
 
     return SizedBox(
       width: 138,
-      height: 40,
+      height: 32,
       child: WindowCaption(
         backgroundColor: Colors.transparent,
         brightness: theme.brightness,
