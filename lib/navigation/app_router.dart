@@ -181,8 +181,6 @@ class AppRouter {
 
   static String get currentLocation => router.currentLocation;
 
-  static bool canPop() => router.customCanPop();
-
   static void updateTabs(TabsState tabsState, String? initialLocation) {
     _instance = _instance._copyWith(
       router: _getRouterInstanceForTabsLayout(tabsState, initialLocation),
@@ -201,10 +199,5 @@ extension GoRouterExtension on GoRouter {
         ? lastMatch.matches
         : routerDelegate.currentConfiguration;
     return matchList.uri.toString();
-  }
-
-  bool customCanPop() {
-    RegExp exp = RegExp(r'/\w[^/]');
-    return exp.allMatches(AppRouter.currentLocation).length > 2;
   }
 }
