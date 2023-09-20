@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'side_panel.dart';
 
-const _kButtonWidth = 50.0;
+const _kButtonWidth = 44.0;
 
 class NavGrid extends ConsumerWidget {
   const NavGrid({
@@ -33,7 +33,7 @@ class NavGrid extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(vertical: 12),
       alignment: Alignment.center,
       child: Wrap(
-        spacing: 6,
+        spacing: 8,
         runSpacing: 10,
         children: [
           _NavButton(
@@ -113,7 +113,7 @@ class _NavButton extends StatelessWidget {
       onPressed: onPressed,
       child: Icon(
         iconData,
-        size: 22,
+        size: 20,
         color: iconColor ?? context.colorScheme.onBackground,
       ),
     );

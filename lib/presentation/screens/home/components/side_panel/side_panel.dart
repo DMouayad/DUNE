@@ -1,20 +1,32 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+
+//
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/custom_widgets/top_search_bar.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+//
 import '../side_panel_nav_buttons.dart';
 import 'navigation_grid.dart';
 import 'side_panel_now_playing_section.dart';
+import 'vertical_tabs_list.dart';
 
-const kSidePanelMinWidth = 54.0;
+const kSidePanelMinWidth = 50.0;
 
 class SidePanel extends ConsumerStatefulWidget {
-  const SidePanel({required this.onDestinationSelected, super.key});
+  const SidePanel({
+    required this.onDestinationSelected,
+    super.key,
+    required this.onAddNewTab,
+    required this.onTabChanged,
+  });
 
+  final void Function() onAddNewTab;
   final void Function(QuickNavDestination dest) onDestinationSelected;
+  final void Function(int index) onTabChanged;
 
   @override
   ConsumerState<SidePanel> createState() => _SidePanelState();
@@ -55,9 +67,9 @@ class _SidePanelState extends ConsumerState<SidePanel>
           children: [
             Expanded(
               flex: 0,
-              // a [Clip] is used to clip-out [SidePanelNavButtons]'s
-              // offset is not zero.
               child: Wrap(
+                // a Clip is used to clip-out [SidePanelNavButtons] when
+                // its offset is not zero.
                 clipBehavior: Clip.hardEdge,
                 alignment: WrapAlignment.end,
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -65,7 +77,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
                 children: [
                   if (!tabsMode.isHorizontal)
                     SizedBox(
-                      width: railWidth * .99,
+                      width: double.infinity,
                       height: 40,
                       child: SidePanelNavButtons(extended),
                     ),
@@ -81,13 +93,29 @@ class _SidePanelState extends ConsumerState<SidePanel>
                 onDestinationSelected: widget.onDestinationSelected,
               ),
             ),
-            const Spacer(flex: 1),
-            // UserPlaylistsSection(),
+            Expanded(
+              child: ListView(
+                children: [
+                  if (tabsMode.isVertical) ...[
+                    const Divider(height: 20),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 200),
+                      child: VerticalTabsList(
+                        extended: extended,
+                        onTabChanged: widget.onTabChanged,
+                        onAddNewTab: widget.onAddNewTab,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
             Visibility(
               visible: extended,
               child: Container(
+                margin: const EdgeInsets.only(top: 16),
                 constraints: BoxConstraints.loose(
-                  const Size.fromHeight(160),
+                  const Size.fromHeight(120),
                 ),
                 child: const SidePanelNowPlayingSection(),
               ),

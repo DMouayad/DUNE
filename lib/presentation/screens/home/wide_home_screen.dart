@@ -49,15 +49,7 @@ class WideHomeScreen extends ConsumerWidget {
                       height: 42,
                       child: TabsBar(
                         onTabChanged: (i) => _onTabChanged(i, ref),
-                        onAddNewTab: () {
-                          ref.read(tabsStateProvider.notifier).update(
-                                (state) => state.withTabAdded(
-                                  TabData(
-                                      tabIndex:
-                                          navigationShell.currentIndex + 1),
-                                ),
-                              );
-                        },
+                        onAddNewTab: () => _onAddNewTab(ref),
                       ),
                     ),
                   ),
@@ -71,6 +63,8 @@ class WideHomeScreen extends ConsumerWidget {
                       Expanded(
                         flex: 0,
                         child: SidePanel(
+                          onTabChanged: (i) => _onTabChanged(i, ref),
+                          onAddNewTab: () => _onAddNewTab(ref),
                           onDestinationSelected: (dest) {
                             AppRouter.onQuickNavDestinationSelected(
                               dest,
@@ -103,5 +97,13 @@ class WideHomeScreen extends ConsumerWidget {
           .update((state) => state.withNewSelectedTab(index));
       navigationShell.goBranch(index);
     }
+  }
+
+  void _onAddNewTab(WidgetRef ref) {
+    ref.read(tabsStateProvider.notifier).update(
+          (state) => state.withTabAdded(
+            TabData(tabIndex: navigationShell.currentIndex + 1),
+          ),
+        );
   }
 }
