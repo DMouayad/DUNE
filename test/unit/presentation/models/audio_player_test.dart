@@ -1,11 +1,12 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/factories/playlist_factory.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
-import 'package:dune/domain/audio/fake_models/fake_audio_player.dart';
 import 'package:dune/presentation/models/audio_player.dart';
 import 'package:dune/presentation/utils/listening_history_helper.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../utils/fake_models/fake_audio_player.dart';
 
 late AudioPlayer player;
 late FakeAudioPlayerStreams _streams;
