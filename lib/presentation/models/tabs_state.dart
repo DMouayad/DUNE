@@ -6,7 +6,7 @@ final class TabsState extends Equatable {
   final List<TabData> tabs;
   final List<int> pinnedTabs;
 
-  TabsState({
+  const TabsState({
     this.selectedTabIndex = 0,
     this.pinnedTabs = const [],
     required this.tabs,
@@ -33,6 +33,11 @@ final class TabsState extends Equatable {
       selectedTabIndex: shouldSelectTab ? tabIndex : null,
       tabs: tabs,
     );
+  }
+
+  @override
+  String toString() {
+    return 'TabsState{selectedTabIndex: $selectedTabIndex, tabs: $tabs, pinnedTabs: $pinnedTabs}';
   }
 
   TabsState withTabRemoved(int index) {
@@ -121,6 +126,11 @@ final class TabData extends Equatable {
           (path: '/tabs/$tabIndex', title: 'New tab'),
           ...pages
         }.toList();
+
+  @override
+  String toString() {
+    return 'TabData{tabIndex: $tabIndex, pages: $pages, selectedPageIndex: $selectedPageIndex}';
+  }
 
   TabData copyWithPageAdded({
     required String path,
