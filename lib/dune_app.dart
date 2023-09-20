@@ -58,7 +58,12 @@ class _DuneAppState extends ConsumerState<DuneApp>
       router = AppRouter.router;
       if (context.isNotMobileDevice) {
         router?.routerDelegate.addListener(() {
-          ref.read(showBackButtonProvider.notifier).state = AppRouter.canPop();
+          try {
+            ref.read(showBackButtonProvider.notifier).state =
+                AppRouter.router.canPop();
+          } catch (_) {
+            ref.read(showBackButtonProvider.notifier).state = false;
+          }
         });
       }
       updateKeepAlive();
