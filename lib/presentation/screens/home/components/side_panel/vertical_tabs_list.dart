@@ -164,14 +164,17 @@ class _VerticalTab extends ConsumerWidget {
             ),
             Visibility(
               visible: extended,
-              child: IconButton(
+              child: fluent.IconButton(
                 onPressed: () {
                   ref
                       .read(tabsStateProvider.notifier)
                       .update((state) => state.withTabRemoved(data.tabIndex));
                 },
-                color: context.colorScheme.onBackground.withOpacity(.5),
-                icon: const Icon(Icons.close, size: 18),
+                icon: Icon(
+                  Icons.close,
+                  size: context.isDesktopPlatform ? 16 : 18,
+                  color: context.colorScheme.onBackground.withOpacity(.4),
+                ),
               ),
             ),
           ],
