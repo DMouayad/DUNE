@@ -99,6 +99,12 @@ class _NavButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.tonal(
       style: ButtonStyle(
+        elevation: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return 0;
+          }
+          return null;
+        }),
         shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(borderRadius: kBorderRadius)),
         fixedSize: MaterialStateProperty.all(const Size.square(_kButtonWidth)),
