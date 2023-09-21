@@ -24,6 +24,13 @@ class LayoutModeSettingComponent extends ConsumerWidget {
       title: 'Tabs',
       iconData: Icons.tab_outlined,
       children: [
+        Text(
+          "Note: if you enable/disable tabs, restarting the app is required for changes to take effect.",
+          textAlign: TextAlign.start,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colorScheme.onBackground.withOpacity(.8),
+          ),
+        ),
         SwitchListTile(
           title: Text(
             'Tabs are ${isEnabled ? "enabled" : 'disabled'}',
@@ -44,25 +51,14 @@ class LayoutModeSettingComponent extends ConsumerWidget {
         if (isEnabled)
           Container(
             alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(top: 22, left: 26),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.only(left: 20),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Text(
-                  "Note: changes will take effect after restarting the app.",
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.onBackground.withOpacity(.8),
-                  ),
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const Text('tabs alignment:'),
-                    ...[TabsMode.vertical, TabsMode.horizontal]
-                        .map((e) => _OptionWidget(e))
-                        .toList(),
-                  ],
-                )
+                const Text('Tabs alignment:'),
+                ...[TabsMode.vertical, TabsMode.horizontal]
+                    .map((e) => _OptionWidget(e))
+                    .toList(),
               ],
             ),
           ),
@@ -82,13 +78,15 @@ class _OptionWidget extends ConsumerWidget {
 
     return SizedBox(
       width: min(200, context.screenWidth * .3),
-      child: RadioListTile(
-        groupValue: currentMode,
-        value: mode,
-        onChanged: (value) {
-          if (value == null) return;
-          ref.read(_tabsModeProvider.notifier).state = value;
-          ref.read(appPreferencesController.notifier).setTabMode(value);
+      child: CheckboxListTile(
+        value: currentMode == mode,
+        dense: true,
+        controlAffinity: ListTileControlAffinity.leading,
+        onChanged: (selected) {
+          if (selected ?? false) {
+            ref.read(_tabsModeProvider.notifier).state = mode;
+            ref.read(appPreferencesController.notifier).setTabMode(mode);
+          }
         },
         title: Text(mode.name),
       ),

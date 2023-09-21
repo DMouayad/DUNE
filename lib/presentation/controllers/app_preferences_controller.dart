@@ -16,7 +16,7 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   @override
   bool updateShouldNotify(BaseAppPreferences old, BaseAppPreferences current) {
-    if (old.tabsMode != current.tabsMode) return false;
+    if (old.tabsMode.isEnabled != current.tabsMode.isEnabled) return false;
     return super.updateShouldNotify(old, current);
   }
 
