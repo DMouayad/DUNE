@@ -1,5 +1,6 @@
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,11 +27,6 @@ class SettingComponentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final radius = switch (context.platform) {
-      TargetPlatform.windows => 4.0,
-      TargetPlatform.android => 16.0,
-      _ => 10.0,
-    };
     return fluent_ui.Padding(
       padding: const EdgeInsets.all(4.0),
       child: fluent_ui.Expander(
@@ -46,9 +42,10 @@ class SettingComponentCard extends ConsumerWidget {
           });
         },
         headerShape: (expanded) {
-          return RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-          );
+          return const RoundedRectangleBorder(borderRadius: kBorderRadius);
+        },
+        contentShape: (expanded) {
+          return const RoundedRectangleBorder(borderRadius: kBorderRadius);
         },
         trailing: trailing ??
             (trailingText != null ? _getTrailingTextWidget(context) : null),

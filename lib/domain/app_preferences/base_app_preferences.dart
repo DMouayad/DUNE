@@ -6,9 +6,10 @@ import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
+part 'music_folder.dart';
 
 /// Groups a collection of app settings & configurations set by the user.
-abstract class BaseAppPreferences extends Equatable {
+class BaseAppPreferences extends Equatable {
   /// If set to [true], the [AppTheme.cardColor] will be a variant of
   /// [ColorScheme.primary] and otherwise it's the default.
   final bool usePrimaryColorInCardColor;
@@ -49,6 +50,9 @@ abstract class BaseAppPreferences extends Equatable {
   /// Specifies the streaming quality for online-streamed tracks.
   final AudioStreamingQuality audioStreamingQuality;
 
+  /// The paths to local folders which contains audio files.
+  final Set<MusicFolder> localMusicFolders;
+
   const BaseAppPreferences({
     this.usePrimaryColorInCardColor = true,
     this.initialPageOnStartup = InitialPageOnStartup.exploreMusic,
@@ -59,6 +63,7 @@ abstract class BaseAppPreferences extends Equatable {
     this.rememberLastWindowSize = true,
     this.lastWindowSize,
     this.rememberLastSidePanelSize = true,
+    this.localMusicFolders = const {},
     this.lastSidePanelWidth,
     this.audioStreamingQuality = AudioStreamingQuality.balanced,
     this.thumbnailQualitiesOrder = ThumbnailQualitiesOrderOption.balanced,
@@ -77,28 +82,14 @@ abstract class BaseAppPreferences extends Equatable {
       'lastSidePanelWidth': lastSidePanelWidth,
       'tabsMode': tabsMode.name,
       'audioStreamingQuality': audioStreamingQuality,
+      'localMusicFolders': localMusicFolders,
       'thumbnailQualitiesOrder': thumbnailQualitiesOrder,
     };
   }
 
-  BaseAppPreferences copyWith({
-    bool? usePrimaryColorInCardColor,
-    InitialPageOnStartup? initialPageOnStartup,
-    MusicSource? exploreMusicSource,
-    MusicSource? searchEngine,
-    double? volumeStep,
-    TabsMode? tabsMode,
-    Size? lastWindowSize,
-    bool? rememberLastWindowSize,
-    bool? rememberLastSidePanelSize,
-    double? lastSidePanelWidth,
-    ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
-    AudioStreamingQuality? audioStreamingQuality,
-  });
-
   @override
   String toString() {
-    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, rememberLastSidePanelSize: $rememberLastSidePanelSize, lastSidePanelWidth: $lastSidePanelWidth, thumbnailQualitiesOrder: $thumbnailQualitiesOrder}';
+    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, rememberLastSidePanelSize: $rememberLastSidePanelSize, lastSidePanelWidth: $lastSidePanelWidth, thumbnailQualitiesOrder: $thumbnailQualitiesOrder, audioStreamingQuality: $audioStreamingQuality, localMusicFolders: ${localMusicFolders.toList()}}';
   }
 
   @override
@@ -114,8 +105,46 @@ abstract class BaseAppPreferences extends Equatable {
         lastSidePanelWidth,
         tabsMode,
         audioStreamingQuality,
+        localMusicFolders,
         thumbnailQualitiesOrder,
       ];
+
+  BaseAppPreferences copyWith({
+    bool? usePrimaryColorInCardColor,
+    InitialPageOnStartup? initialPageOnStartup,
+    MusicSource? exploreMusicSource,
+    MusicSource? searchEngine,
+    double? volumeStep,
+    TabsMode? tabsMode,
+    bool? rememberLastWindowSize,
+    Size? lastWindowSize,
+    bool? rememberLastSidePanelSize,
+    double? lastSidePanelWidth,
+    ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
+    AudioStreamingQuality? audioStreamingQuality,
+    Set<MusicFolder>? localMusicFolders,
+  }) {
+    return BaseAppPreferences(
+      usePrimaryColorInCardColor:
+          usePrimaryColorInCardColor ?? this.usePrimaryColorInCardColor,
+      initialPageOnStartup: initialPageOnStartup ?? this.initialPageOnStartup,
+      exploreMusicSource: exploreMusicSource ?? this.exploreMusicSource,
+      searchEngine: searchEngine ?? this.searchEngine,
+      volumeStep: volumeStep ?? this.volumeStep,
+      tabsMode: tabsMode ?? this.tabsMode,
+      rememberLastWindowSize:
+          rememberLastWindowSize ?? this.rememberLastWindowSize,
+      lastWindowSize: lastWindowSize ?? this.lastWindowSize,
+      rememberLastSidePanelSize:
+          rememberLastSidePanelSize ?? this.rememberLastSidePanelSize,
+      lastSidePanelWidth: lastSidePanelWidth ?? this.lastSidePanelWidth,
+      thumbnailQualitiesOrder:
+          thumbnailQualitiesOrder ?? this.thumbnailQualitiesOrder,
+      audioStreamingQuality:
+          audioStreamingQuality ?? this.audioStreamingQuality,
+      localMusicFolders: localMusicFolders ?? this.localMusicFolders,
+    );
+  }
 }
 
 enum ThumbnailQualitiesOrderOption {

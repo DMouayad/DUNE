@@ -15,6 +15,7 @@ import 'common/setting_section.dart';
 import 'behaviour/shortcuts_setting_component.dart';
 import 'appearance/app_theme_settings_component.dart';
 import 'appearance/window_effect_settings_component.dart';
+import 'library/music_folders_setting_component.dart';
 import 'media_and_network_usage/audio_streaming_quality_option_setting_component.dart';
 import 'media_and_network_usage/explore_music_source_setting_component.dart';
 import 'media_and_network_usage/music_search_source_setting_component.dart';
@@ -34,6 +35,12 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         physics: const BouncingScrollPhysics(),
         children: [
+          const SettingSection(
+            title: 'Library',
+            contents: [
+              MusicFoldersSettingComponent(),
+            ],
+          ),
           SettingSection(
             title: 'Appearance & Layout',
             contents: [
@@ -47,7 +54,6 @@ class SettingsPage extends StatelessWidget {
               ]
             ],
           ),
-          // biggerSpacer,
           const SettingSection(
             title: 'Media & Network Usage',
             contents: [
@@ -57,7 +63,6 @@ class SettingsPage extends StatelessWidget {
               AudioStreamingQualityOptionSettingComponent(),
             ],
           ),
-          // Divider(),
           SettingSection(
             title: 'Behaviour',
             contents: [

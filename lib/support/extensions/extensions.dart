@@ -2,19 +2,13 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 
-extension ListExtensions<T> on List<T> {
+extension ListExtensions<T> on Iterable<T> {
   List<String> toStringList() {
     final l = <String>[];
     for (var i in this) {
       l.add(i.toString());
     }
     return l;
-  }
-
-  void addIfNotPresent(value) {
-    if (!contains(value)) {
-      add(value);
-    }
   }
 
   bool hasType(Type type) {
@@ -41,7 +35,7 @@ extension ListExtensions<T> on List<T> {
 
   T? firstWhereOrNull(bool Function(T element) condition) {
     try {
-      return (this).where((e) => condition(e)).first;
+      return (this).firstWhere((e) => condition(e));
     } on StateError {
       return null;
     }

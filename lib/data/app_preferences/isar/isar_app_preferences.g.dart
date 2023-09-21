@@ -51,41 +51,47 @@ const IsarAppPreferencesSchema = CollectionSchema(
       name: r'lastWindowWidth',
       type: IsarType.double,
     ),
-    r'rememberLastSidePanelSize': PropertySchema(
+    r'localMusicFoldersList': PropertySchema(
       id: 6,
+      name: r'localMusicFoldersList',
+      type: IsarType.objectList,
+      target: r'IsarMusicFolder',
+    ),
+    r'rememberLastSidePanelSize': PropertySchema(
+      id: 7,
       name: r'rememberLastSidePanelSize',
       type: IsarType.bool,
     ),
     r'rememberLastWindowSize': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'rememberLastWindowSize',
       type: IsarType.bool,
     ),
     r'searchEngine': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'searchEngine',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencessearchEngineEnumValueMap,
     ),
     r'tabsMode': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'tabsMode',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencestabsModeEnumValueMap,
     ),
     r'thumbnailQualitiesOrder': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'thumbnailQualitiesOrder',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesthumbnailQualitiesOrderEnumValueMap,
     ),
     r'usePrimaryColorInCardColor': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'usePrimaryColorInCardColor',
       type: IsarType.bool,
     ),
     r'volumeStep': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'volumeStep',
       type: IsarType.double,
     )
@@ -97,7 +103,7 @@ const IsarAppPreferencesSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'IsarMusicFolder': IsarMusicFolderSchema},
   getId: _isarAppPreferencesGetId,
   getLinks: _isarAppPreferencesGetLinks,
   attach: _isarAppPreferencesAttach,
@@ -110,6 +116,15 @@ int _isarAppPreferencesEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.localMusicFoldersList.length * 3;
+  {
+    final offsets = allOffsets[IsarMusicFolder]!;
+    for (var i = 0; i < object.localMusicFoldersList.length; i++) {
+      final value = object.localMusicFoldersList[i];
+      bytesCount +=
+          IsarMusicFolderSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
@@ -125,13 +140,19 @@ void _isarAppPreferencesSerialize(
   writer.writeDouble(offsets[3], object.lastSidePanelWidth);
   writer.writeDouble(offsets[4], object.lastWindowHeight);
   writer.writeDouble(offsets[5], object.lastWindowWidth);
-  writer.writeBool(offsets[6], object.rememberLastSidePanelSize);
-  writer.writeBool(offsets[7], object.rememberLastWindowSize);
-  writer.writeByte(offsets[8], object.searchEngine.index);
-  writer.writeByte(offsets[9], object.tabsMode.index);
-  writer.writeByte(offsets[10], object.thumbnailQualitiesOrder.index);
-  writer.writeBool(offsets[11], object.usePrimaryColorInCardColor);
-  writer.writeDouble(offsets[12], object.volumeStep);
+  writer.writeObjectList<IsarMusicFolder>(
+    offsets[6],
+    allOffsets,
+    IsarMusicFolderSchema.serialize,
+    object.localMusicFoldersList,
+  );
+  writer.writeBool(offsets[7], object.rememberLastSidePanelSize);
+  writer.writeBool(offsets[8], object.rememberLastWindowSize);
+  writer.writeByte(offsets[9], object.searchEngine.index);
+  writer.writeByte(offsets[10], object.tabsMode.index);
+  writer.writeByte(offsets[11], object.thumbnailQualitiesOrder.index);
+  writer.writeBool(offsets[12], object.usePrimaryColorInCardColor);
+  writer.writeDouble(offsets[13], object.volumeStep);
 }
 
 IsarAppPreferences _isarAppPreferencesDeserialize(
@@ -154,20 +175,27 @@ IsarAppPreferences _isarAppPreferencesDeserialize(
     lastSidePanelWidth: reader.readDoubleOrNull(offsets[3]),
     lastWindowHeight: reader.readDoubleOrNull(offsets[4]),
     lastWindowWidth: reader.readDoubleOrNull(offsets[5]),
-    rememberLastSidePanelSize: reader.readBoolOrNull(offsets[6]) ?? true,
-    rememberLastWindowSize: reader.readBoolOrNull(offsets[7]) ?? true,
+    localMusicFoldersList: reader.readObjectList<IsarMusicFolder>(
+          offsets[6],
+          IsarMusicFolderSchema.deserialize,
+          allOffsets,
+          IsarMusicFolder(),
+        ) ??
+        const [],
+    rememberLastSidePanelSize: reader.readBoolOrNull(offsets[7]) ?? true,
+    rememberLastWindowSize: reader.readBoolOrNull(offsets[8]) ?? true,
     searchEngine: _IsarAppPreferencessearchEngineValueEnumMap[
-            reader.readByteOrNull(offsets[8])] ??
+            reader.readByteOrNull(offsets[9])] ??
         MusicSource.youtube,
     tabsMode: _IsarAppPreferencestabsModeValueEnumMap[
-            reader.readByteOrNull(offsets[9])] ??
+            reader.readByteOrNull(offsets[10])] ??
         TabsMode.vertical,
     thumbnailQualitiesOrder:
         _IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
-                reader.readByteOrNull(offsets[10])] ??
+                reader.readByteOrNull(offsets[11])] ??
             ThumbnailQualitiesOrderOption.balanced,
-    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[11]) ?? true,
-    volumeStep: reader.readDoubleOrNull(offsets[12]) ?? 5.0,
+    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[12]) ?? true,
+    volumeStep: reader.readDoubleOrNull(offsets[13]) ?? 5.0,
   );
   return object;
 }
@@ -198,24 +226,32 @@ P _isarAppPreferencesDeserializeProp<P>(
     case 5:
       return (reader.readDoubleOrNull(offset)) as P;
     case 6:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (reader.readObjectList<IsarMusicFolder>(
+            offset,
+            IsarMusicFolderSchema.deserialize,
+            allOffsets,
+            IsarMusicFolder(),
+          ) ??
+          const []) as P;
     case 7:
       return (reader.readBoolOrNull(offset) ?? true) as P;
     case 8:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 9:
       return (_IsarAppPreferencessearchEngineValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 9:
+    case 10:
       return (_IsarAppPreferencestabsModeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           TabsMode.vertical) as P;
-    case 10:
+    case 11:
       return (_IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ThumbnailQualitiesOrderOption.balanced) as P;
-    case 11:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 12:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 13:
       return (reader.readDoubleOrNull(offset) ?? 5.0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -882,6 +918,95 @@ extension IsarAppPreferencesQueryFilter
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'localMusicFoldersList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
       rememberLastSidePanelSizeEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1147,7 +1272,14 @@ extension IsarAppPreferencesQueryFilter
 }
 
 extension IsarAppPreferencesQueryObject
-    on QueryBuilder<IsarAppPreferences, IsarAppPreferences, QFilterCondition> {}
+    on QueryBuilder<IsarAppPreferences, IsarAppPreferences, QFilterCondition> {
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      localMusicFoldersListElement(FilterQuery<IsarMusicFolder> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'localMusicFoldersList');
+    });
+  }
+}
 
 extension IsarAppPreferencesQueryLinks
     on QueryBuilder<IsarAppPreferences, IsarAppPreferences, QFilterCondition> {}
@@ -1677,6 +1809,13 @@ extension IsarAppPreferencesQueryProperty
       lastWindowWidthProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastWindowWidth');
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, List<IsarMusicFolder>, QQueryOperations>
+      localMusicFoldersListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'localMusicFoldersList');
     });
   }
 

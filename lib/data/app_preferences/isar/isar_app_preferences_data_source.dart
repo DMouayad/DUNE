@@ -4,6 +4,7 @@ import 'package:dune/support/utils/result/result.dart';
 import 'package:isar/isar.dart';
 
 import 'isar_app_preferences.dart';
+import 'isar_music_folder.dart';
 
 class IsarAppPreferencesDataSource extends BaseAppPreferencesDataSource {
   final Isar _isar;
@@ -50,6 +51,10 @@ class IsarAppPreferencesDataSource extends BaseAppPreferencesDataSource {
       lastWindowHeight: base.lastWindowSize?.height,
       lastWindowWidth: base.lastWindowSize?.width,
       audioStreamingQuality: base.audioStreamingQuality,
+      searchEngine: base.searchEngine,
+      localMusicFoldersList: base.localMusicFolders
+          .map((e) => IsarMusicFolder.fromBase(e))
+          .toList(),
     );
   }
 }
