@@ -42,10 +42,16 @@ class SettingComponentCard extends ConsumerWidget {
           });
         },
         headerShape: (expanded) {
-          return const RoundedRectangleBorder(borderRadius: kBorderRadius);
+          return RoundedRectangleBorder(
+            borderRadius: expanded
+                ? const BorderRadius.vertical(top: Radius.circular(14))
+                : kBorderRadius,
+          );
         },
         contentShape: (expanded) {
-          return const RoundedRectangleBorder(borderRadius: kBorderRadius);
+          return const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(14)),
+          );
         },
         trailing: trailing ??
             (trailingText != null ? _getTrailingTextWidget(context) : null),
