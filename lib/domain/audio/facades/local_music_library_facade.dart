@@ -19,7 +19,7 @@ class LocalMusicLibraryFacade {
   /// in the local storage.
   ///
   /// returns a [MusicLibrary] with the newly added tracks, albums and artists.
-  FutureOrResult<MusicLibrary> addMusicDirectory(String path) async {
+  FutureOrResult<MusicLibrary> addMusicFolder(String path) async {
     return (await _libraryScanner.scanDirectory(path))
         .flatMapSuccessAsync((value) async => await addTracksToLibrary(value));
   }
@@ -28,7 +28,7 @@ class LocalMusicLibraryFacade {
   /// at given [path].
   ///
   /// returns a [MusicLibrary] **without** the removed tracks, albums and artists.
-  FutureOrResult<MusicLibrary> removeMusicDirectory(String path) async {
+  FutureOrResult<MusicLibrary> removeMusicFolder(String path) async {
     return await Result.fromAnother(() async {
       // 1. remove all tracks in the directory at path.
       final removeTracksResult = await _trackRepository.removeByDirectory(path);
