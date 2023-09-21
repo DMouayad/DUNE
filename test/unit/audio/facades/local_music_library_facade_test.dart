@@ -26,6 +26,10 @@ void main() {
   final imagesDir = Directory('${Directory.current.path}\\test\\images');
 
   setUpAll(() async {
+    // Required a the taggy binary file to be in the project root directory
+    // ex: `taggy.dll`
+    // TODO:: write a helper function that download the file from Github and
+    // copy it to required location
     Taggy.initialize();
     await IsarTestingUtils.initIsarForTesting();
     facade = LocalMusicLibraryFacade(
