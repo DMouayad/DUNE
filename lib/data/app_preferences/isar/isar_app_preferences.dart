@@ -7,10 +7,18 @@ import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/now_playing_section_display_mode.dart';
 import 'package:isar/isar.dart';
 
+import 'isar_music_folder.dart';
+
 part 'isar_app_preferences.g.dart';
 
-@Collection(
-    ignore: {'lastWindowSize', 'props', 'hashCode', 'stringify', 'derived'})
+@Collection(ignore: {
+  'lastWindowSize',
+  'props',
+  'hashCode',
+  'stringify',
+  'derived',
+  'localMusicFolders'
+})
 class IsarAppPreferences extends BaseAppPreferences {
   Id? id;
 
@@ -42,6 +50,8 @@ class IsarAppPreferences extends BaseAppPreferences {
   final double? lastWindowWidth;
   final double? lastWindowHeight;
 
+  final List<IsarMusicFolder> localMusicFoldersList;
+
   @override
   @enumerated
   TabsMode get tabsMode => super.tabsMode;
@@ -56,6 +66,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     this.id,
     this.lastWindowWidth,
     this.lastWindowHeight,
+    this.localMusicFoldersList = const [],
     super.exploreMusicSource,
     super.rememberLastWindowSize,
     super.initialPageOnStartup,
@@ -67,10 +78,11 @@ class IsarAppPreferences extends BaseAppPreferences {
     super.rememberLastSidePanelSize,
     super.lastSidePanelWidth,
     super.audioStreamingQuality,
-  });
+  }) : super(localMusicFolders: localMusicFoldersList.toSet());
 
   @override
   IsarAppPreferences copyWith({
+    Set<MusicFolder>? localMusicFolders,
     NowPlayingSectionDisplayMode? defaultNowPlayingSectionDisplayMode,
     bool? usePrimaryColorInCardColor,
     TabsMode? tabsMode,
@@ -103,6 +115,9 @@ class IsarAppPreferences extends BaseAppPreferences {
       rememberLastSidePanelSize:
           rememberLastSidePanelSize ?? this.rememberLastSidePanelSize,
       lastSidePanelWidth: lastSidePanelWidth ?? this.lastSidePanelWidth,
+      localMusicFoldersList:
+          localMusicFolders?.map((e) => IsarMusicFolder.fromBase(e)).toList() ??
+              localMusicFoldersList,
       audioStreamingQuality:
           audioStreamingQuality ?? this.audioStreamingQuality,
     );
