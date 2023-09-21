@@ -1,4 +1,6 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
+import 'package:dune/presentation/controllers/local_library_controller.dart';
+import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
 import 'package:dune/presentation/pages/settings_page/common/setting_component_card.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/utils/music_folder_helper.dart';
@@ -7,15 +9,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MusicFoldersSettingComponent extends StatelessWidget {
+class MusicFoldersSettingComponent extends ConsumerWidget {
   const MusicFoldersSettingComponent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final currentFolders =
+        ref.watch(appPreferencesController.select((s) => s.localMusicFolders));
     return SettingComponentCard(
       title: 'Music folders',
       iconData: Icons.folder_open_outlined,
       children: [
+        const _LibraryStateInfo(),
         ListTile(
           title: Text(
             'Specify where to look for music on your device',
@@ -30,17 +35,11 @@ class MusicFoldersSettingComponent extends StatelessWidget {
           }),
         ),
         const Divider(),
-        Consumer(
-          builder: (context, ref, child) {
-            final currentFolders = ref.watch(
-                appPreferencesController.select((s) => s.localMusicFolders));
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: currentFolders.length,
-              itemBuilder: (context, index) {
-                return _MusicFolderTile(currentFolders.elementAt(index));
-              },
-            );
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: currentFolders.length,
+          itemBuilder: (context, index) {
+            return _MusicFolderTile(currentFolders.elementAt(index));
           },
         ),
       ],
@@ -67,7 +66,8 @@ class MusicFoldersSettingComponent extends StatelessWidget {
 }
 
 class _MusicFolderTile extends ConsumerWidget {
-  _MusicFolderTile(this.folder) : super(key: Key(folder.path));
+  _MusicFolderTile(this.folder)
+      : super(key: Key(folder.path.hashCode.toString()));
   final MusicFolder folder;
 
   @override
@@ -84,6 +84,7 @@ class _MusicFolderTile extends ConsumerWidget {
             ref
                 .read(appPreferencesController.notifier)
                 .removeMusicFolder(folder);
+            removeFolderFromLibrary(ref, folder.path);
           },
         ),
         backgroundColor: context.colorScheme.background,
@@ -119,6 +120,67 @@ class _MusicFolderTile extends ConsumerWidget {
               )
               .toList(),
         ]);
+  }
+
+  void removeFolderFromLibrary(WidgetRef ref, String folderPath) {
+    ref
+        .read(localLibraryControllerProvider.notifier)
+        .removeMusicFolder(folderPath);
+  }
+}
+
+class _LibraryStateInfo extends ConsumerWidget {
+  const _LibraryStateInfo();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final libraryState = ref.watch(localLibraryControllerProvider);
+    return AnimatedSwitcher(
+      reverseDuration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 700),
+      child: () {
+        if (libraryState.runtimeType == LocalLibraryState) {
+          return const SizedBox.shrink();
+        }
+
+        final ({String title, Widget trailing}) tileContents =
+            switch (libraryState.runtimeType) {
+          AddingMusicFolderState => (
+              title: 'Adding new tracks...',
+              trailing: const DuneLoadingWidget(size: 18),
+            ),
+          RemovingMusicFolderState => (
+              title: 'Cleaning up...',
+              trailing: const DuneLoadingWidget(size: 18),
+            ),
+          FolderWasRemovedLocalLibraryState => (
+              title:
+                  '"${(libraryState as FolderWasRemovedLocalLibraryState).removedTracksCount}" '
+                  'tracks were removed from your library',
+              trailing: const Icon(Icons.check_circle_outline),
+            ),
+          FolderWasAddedLocalLibraryState => (
+              title:
+                  '"${(libraryState as FolderWasAddedLocalLibraryState).addedTracksCount}" '
+                  'tracks were added to your library',
+              trailing: const Icon(Icons.check_circle_outline),
+            ),
+          _ => (title: '', trailing: const SizedBox.shrink()),
+        };
+
+        return Card(
+          margin: const EdgeInsets.all(10),
+          color: context.colorScheme.primaryContainer,
+          child: ListTile(
+            dense: true,
+            textColor: context.colorScheme.onPrimaryContainer,
+            leading: const Icon(Icons.info_outline),
+            title: Text(tileContents.title),
+            trailing: tileContents.trailing,
+          ),
+        );
+      }(),
+    );
   }
 }
 
