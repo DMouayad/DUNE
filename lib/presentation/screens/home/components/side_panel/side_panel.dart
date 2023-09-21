@@ -106,7 +106,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
                       child: const LibraryDropdownButton(),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 6),
                   AnimatedSlide(
                     offset: extended ? Offset.zero : const Offset(0, -.1),
                     duration: const Duration(milliseconds: 400),
