@@ -7,7 +7,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const _kTabHeight = 42.0;
+const _kTabHeight = 40.0;
 
 class VerticalTabsList extends ConsumerStatefulWidget {
   const VerticalTabsList({
@@ -37,14 +37,14 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       // 8 = item's vertical margin * 2
-      itemExtent: _kTabHeight + 8,
+      itemExtent: _kTabHeight + 4,
       itemBuilder: (BuildContext context, int index) {
         final tabData = tabs[index];
         return ReorderableDragStartListener(
           index: index,
           key: Key(index.toString()),
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 4.0),
+            margin: const EdgeInsets.symmetric(vertical: 2.0),
             child: _VerticalTab(
               extended: widget.extended,
               onPressed: () => widget.onTabChanged(index),
