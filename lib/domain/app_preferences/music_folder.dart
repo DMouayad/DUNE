@@ -20,5 +20,5 @@ class MusicFolder extends Equatable {
   }) : addedOn = DateTime.now();
 
   @override
-  List<Object?> get props => [path, subFolders, addedOn];
+  List<Object?> get props => [path, subFolders, addedOn.onlyDate];
 }
