@@ -5,6 +5,7 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
 part 'music_folder.dart';
 
