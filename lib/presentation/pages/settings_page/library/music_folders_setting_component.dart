@@ -1,6 +1,7 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/presentation/pages/settings_page/common/setting_component_card.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/presentation/utils/music_folder_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -47,15 +48,20 @@ class MusicFoldersSettingComponent extends StatelessWidget {
   }
 
   void onAddMusicFolder(WidgetRef ref) async {
-    final selectedFolder = await FilePicker.platform.getDirectoryPath(
+    final selectedPath = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
       dialogTitle: 'Add folder to your library',
     );
 
-    final prefsController = ref.read(appPreferencesController.notifier);
-    if (selectedFolder != null &&
-        !prefsController.musicFolderAlreadyExists(selectedFolder)) {
-      prefsController.addMusicFolder(selectedFolder);
+    final musicFolder = MusicFolderHelper.createInstance(
+      selectedPath,
+      ref.watch(appPreferencesController).localMusicFolders,
+    );
+    if (musicFolder != null) {
+      ref.read(appPreferencesController.notifier).addMusicFolder(musicFolder);
+      ref
+          .read(localLibraryControllerProvider.notifier)
+          .addNewMusicFolder(musicFolder.path);
     }
   }
 }
@@ -105,6 +111,8 @@ class _MusicFolderTile extends ConsumerWidget {
                           .read(appPreferencesController.notifier)
                           .removeSubMusicFolder(
                               parentMusicFolder: folder, subFolderPath: e);
+                      // also remove the tracks in this sub folder
+                      removeFolderFromLibrary(ref, e);
                     },
                   ),
                 ),

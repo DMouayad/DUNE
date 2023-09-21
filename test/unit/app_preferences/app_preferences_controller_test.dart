@@ -2,6 +2,7 @@ import 'package:dune/data/app_preferences/isar/isar_app_preferences_data_source.
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/app_preferences/base_app_preferences_data_source.dart';
 import 'package:dune/presentation/controllers/app_preferences_controller.dart';
+import 'package:dune/presentation/utils/music_folder_helper.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,14 +51,15 @@ void main() {
       test(
           "it adds a new [MusicFolder] instance to the state's [localMusicFolders]",
           () async {
-        final newFolder =
-            MusicFolder(path: kPathToMusicFolderWithoutSubFolders);
-        await controller.addMusicFolder(newFolder.path);
+        final newFolder = MusicFolderHelper.createInstance(
+            kPathToMusicFolderWithoutSubFolders, {});
+        await controller.addMusicFolder(newFolder!);
         expect(controller.state.localMusicFolders.single, newFolder);
       });
       test('it adds sub-folders of specified music folder', () async {
-        final newFolder = MusicFolder(path: kPathToMusicFolderWithSubFolders);
-        await controller.addMusicFolder(newFolder.path);
+        final newFolder = MusicFolderHelper.createInstance(
+            kPathToMusicFolderWithSubFolders, {});
+        await controller.addMusicFolder(newFolder!);
 
         expect(
             controller.state.localMusicFolders.single.subFolders, isNotEmpty);
