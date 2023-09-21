@@ -26,7 +26,7 @@ class WideHomeScreen extends ConsumerWidget {
     // effect on the next time the app is opened
     final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsMode.isHorizontal ? 85.5 : 34.0;
+    final topSpacing = tabsMode.isHorizontal ? 80.0 : 34.0;
     final screen = Theme(
       data: appTheme.materialThemeData,
       child: Material(

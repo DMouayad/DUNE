@@ -874,7 +874,7 @@ class __TabState extends State<_Tab>
                                   height: 24.0,
                                   width: 32.0,
                                   child: IconButton(
-                                    icon: Icon(widget.tab.closeIcon),
+                                    icon: Icon(widget.tab.closeIcon, size: 10),
                                     onPressed: widget.onClose,
                                     focusable: false,
                                   ),
