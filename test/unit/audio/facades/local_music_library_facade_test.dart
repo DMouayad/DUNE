@@ -348,7 +348,7 @@ void main() {
       // we have to re-add the directory since the [setup] function of this [main]
       // function refreshes the whole database for each test.
       // first add some directory as a music directory to be scanned.
-      await facade.addMusicDirectory(kPathToAnAlbumFolder);
+      await facade.addMusicFolder(kPathToAnAlbumFolder);
       createdLibrary = (await facade.getLibrary(qOptions)).requireValue;
     });
     test('it saves all found tracks', () async {
