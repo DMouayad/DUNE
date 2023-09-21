@@ -1,5 +1,14 @@
 part of 'music_facade.dart';
 
+typedef AddMusicFolderResultType = ({
+  MusicLibrary library,
+  int addedTracksCount
+});
+typedef RemoveMusicFolderResultType = ({
+  MusicLibrary library,
+  int removedTracksCount
+});
+
 class LocalMusicLibraryFacade {
   final SavableTrackRepository _trackRepository;
   final SavableAlbumRepository _albumRepository;
@@ -19,16 +28,21 @@ class LocalMusicLibraryFacade {
   /// in the local storage.
   ///
   /// returns a [MusicLibrary] with the newly added tracks, albums and artists.
-  FutureOrResult<MusicLibrary> addMusicFolder(String path) async {
+  FutureOrResult<AddMusicFolderResultType> addMusicFolder(String path) async {
     return (await _libraryScanner.scanDirectory(path))
-        .flatMapSuccessAsync((value) async => await addTracksToLibrary(value));
+        .flatMapSuccessAsync((value) async {
+      return (await addTracksToLibrary(value)).mapSuccess(
+        (library) => (library: library, addedTracksCount: value.length),
+      );
+    });
   }
 
   /// Deletes all [BaseTrack] from local storage which exists in the directory
   /// at given [path].
   ///
   /// returns a [MusicLibrary] **without** the removed tracks, albums and artists.
-  FutureOrResult<MusicLibrary> removeMusicFolder(String path) async {
+  FutureOrResult<RemoveMusicFolderResultType> removeMusicFolder(
+      String path) async {
     return await Result.fromAnother(() async {
       // 1. remove all tracks in the directory at path.
       final removeTracksResult = await _trackRepository.removeByDirectory(path);
@@ -45,8 +59,12 @@ class LocalMusicLibraryFacade {
       final removeArtistsResult =
           await _artistRepository.removeAllById(artistsIds);
       if (removeArtistsResult.isFailure) return removeArtistsResult;
-      // 4. re-load the library from storage and return it
-      return await getLibrary();
+      // 4. re-load the library from storage and return it with the number
+      // of removed tracks
+      return (await getLibrary()).mapSuccess((library) => (
+            library: library,
+            removedTracksCount: removeTracksResult.requireValue.length,
+          ));
     });
   }
 
