@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_acrylic
   isar_flutter_libs
+  media_kit_libs_linux
   screen_retriever
   system_theme
   url_launcher_linux
