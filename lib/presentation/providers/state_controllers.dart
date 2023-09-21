@@ -4,6 +4,7 @@ import 'package:dune/domain/audio/base_models/listening_history_collection.dart'
 import 'package:dune/domain/theme/app_theme.dart';
 import 'package:dune/presentation/controllers/app_preferences_controller.dart';
 import 'package:dune/presentation/controllers/app_theme_controller.dart';
+import 'package:dune/presentation/controllers/local_library_controller.dart';
 import 'package:dune/presentation/controllers/playback_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_categories_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_controller.dart';
@@ -37,3 +38,5 @@ late final StateNotifierProvider<SearchController, AsyncValue<SearchState>>
     searchControllerProvider;
 late final StateNotifierProvider<AppPreferencesController, BaseAppPreferences>
     appPreferencesController;
+late final StateNotifierProvider<LocalLibraryController, LocalLibraryState>
+    localLibraryControllerProvider;

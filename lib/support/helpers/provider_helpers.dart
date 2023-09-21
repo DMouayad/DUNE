@@ -1,3 +1,4 @@
+import 'package:dune/presentation/controllers/local_library_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
@@ -57,6 +58,9 @@ AudioPlayer registerAudioPlayer(Ref ref) {
 }
 
 void registerControllersProviders() {
+  final libraryController = LocalLibraryController()..loadLibraryFromStorage();
+  localLibraryControllerProvider =
+      StateNotifierProvider((ref) => libraryController);
   playbackControllerProvider = StateNotifierProvider((ref) {
     return PlaybackController(registerAudioPlayer(ref));
   });
