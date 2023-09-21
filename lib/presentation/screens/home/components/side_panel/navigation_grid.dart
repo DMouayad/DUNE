@@ -30,7 +30,7 @@ class NavGrid extends ConsumerWidget {
         ref.watch(appPreferencesController).tabsMode.isVertical;
     final showAllButtons = (isVerticalTabsMode && extended) || extended;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       alignment: Alignment.center,
       child: Wrap(
         spacing: 8,
