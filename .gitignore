@@ -51,3 +51,4 @@ app.*.map.json
 /isar.dll
 /test/unit/presentation/models/libmpv-2.dll
 /test/utils/constants.dart
+/taggy.dll
