@@ -6,6 +6,7 @@ import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 
 class PersistentPlaylistPageHeaderDelegate
@@ -145,7 +146,12 @@ class PlaylistPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.colorScheme.background,
+      decoration: BoxDecoration(
+        color: isMinimized
+            ? context.colorScheme.surfaceVariant
+            : context.colorScheme.background,
+        borderRadius: kBorderRadius,
+      ),
       constraints: BoxConstraints.expand(
         height: height,
         width: double.infinity,
