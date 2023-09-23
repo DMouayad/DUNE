@@ -2,6 +2,7 @@ library app_router;
 
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
+import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
 import 'package:dune/presentation/models/tabs_state.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
@@ -16,7 +17,6 @@ import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../env.dart';
@@ -98,11 +98,7 @@ class AppRouter {
                 GoRoute(
                   path: '/$tabPath',
                   name: tabName,
-                  builder: (context, state) {
-                    return const Center(
-                      child: Text('A new page for your shenanigans'),
-                    );
-                  },
+                  builder: (context, state) => const NewTabPage(),
                   routes: [
                     ExplorePageRoute(isSubRoute: true),
                     ListeningHistoryPageRoute(isSubRoute: true),
