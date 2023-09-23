@@ -62,7 +62,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
       margin: const EdgeInsets.only(left: 12, right: 10, top: 10),
       child: LayoutBuilder(builder: (context, constraints) {
-        final extended = constraints.minWidth == context.maxNavRailWidth;
+        final extended = constraints.maxWidth == context.maxNavRailWidth;
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
