@@ -23,7 +23,7 @@ class AppTitleBar extends StatelessWidget {
                 'D',
                 textAlign: TextAlign.center,
                 style: context.textTheme.headlineSmall?.copyWith(
-                  color: context.colorScheme.secondary,
+                  color: context.colorScheme.primary,
                   fontFamily: 'bruno_ace',
                 ),
               ),

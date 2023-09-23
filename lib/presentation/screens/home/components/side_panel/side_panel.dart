@@ -56,9 +56,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
       updateKeepAlive();
     }
 
-    return AnimatedContainer(
-      curve: Curves.fastOutSlowIn,
-      duration: const Duration(milliseconds: 200),
+    return Container(
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
       margin: const EdgeInsets.only(left: 12, right: 10, top: 10),
       child: LayoutBuilder(builder: (context, constraints) {
