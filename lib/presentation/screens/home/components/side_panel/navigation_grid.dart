@@ -8,80 +8,83 @@ import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'library_dropdown_button.dart';
+import 'playlists_dropdown_button.dart';
 import 'side_panel.dart';
 
 const _kButtonWidth = 44.0;
 
 class NavGrid extends ConsumerWidget {
-  const NavGrid({
-    super.key,
+  NavGrid({
     required this.extended,
-    required this.width,
     required this.onDestinationSelected,
-  });
+  }) : super(key: UniqueKey());
 
   final void Function(QuickNavDestination dest) onDestinationSelected;
   final bool extended;
-  final double width;
 
   @override
   Widget build(BuildContext context, ref) {
     final isVerticalTabsMode =
         ref.watch(appPreferencesController).tabsMode.isVertical;
     final showAllWhenMinimized = (isVerticalTabsMode && extended);
-    return Container(
-      height: showAllWhenMinimized ? null : _kButtonWidth,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      alignment: Alignment.center,
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 10,
-        clipBehavior: Clip.hardEdge,
-        children: [
-          _NavButton(
-            iconData: CupertinoIcons.sidebar_left,
-            backgroundColor: Colors.transparent,
-            iconColor: extended
-                ? context.colorScheme.primary
-                : context.colorScheme.onPrimaryContainer,
-            onPressed: () {
-              if (extended) {
-                ref.read(navigationRailSizeProvider.notifier).state =
-                    kSidePanelMinWidth;
-              } else {
-                ref.read(navigationRailSizeProvider.notifier).state =
-                    context.maxNavRailWidth;
-              }
-            },
-          ),
-          _NavButton(
-            iconData: fluent.FluentIcons.settings,
-            onPressed: () =>
-                onDestinationSelected(QuickNavDestination.settingsPage),
-          ),
-          _NavButton(
-            iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
-            onPressed: () =>
-                onDestinationSelected(QuickNavDestination.listeningHistoryPage),
-          ),
-          _NavButton(
-            iconData: CupertinoIcons.compass,
-            onPressed: () =>
-                onDestinationSelected(QuickNavDestination.explorePage),
-          ),
-        ],
+    return ClipRRect(
+      child: Container(
+        height: showAllWhenMinimized ? null : _kButtonWidth,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.topCenter,
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 10,
+          clipBehavior: Clip.hardEdge,
+          children: [
+            _NavButton(
+              iconData: CupertinoIcons.sidebar_left,
+              backgroundColor: Colors.transparent,
+              iconColor: extended
+                  ? context.colorScheme.primary
+                  : context.colorScheme.onPrimaryContainer,
+              onPressed: () {
+                if (extended) {
+                  ref.read(navigationRailSizeProvider.notifier).state =
+                      kSidePanelMinWidth;
+                } else {
+                  ref.read(navigationRailSizeProvider.notifier).state =
+                      context.maxNavRailWidth;
+                }
+              },
+            ),
+            _NavButton(
+              iconData: fluent.FluentIcons.settings,
+              onPressed: () =>
+                  onDestinationSelected(QuickNavDestination.settingsPage),
+            ),
+            _NavButton(
+              iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
+              onPressed: () => onDestinationSelected(
+                  QuickNavDestination.listeningHistoryPage),
+            ),
+            _NavButton(
+              iconData: CupertinoIcons.compass,
+              onPressed: () =>
+                  onDestinationSelected(QuickNavDestination.explorePage),
+            ),
+            const LibraryDropdownButton(),
+            const PlaylistsDropdownButton(),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _NavButton extends StatelessWidget {
-  const _NavButton({
+  _NavButton({
     required this.onPressed,
     required this.iconData,
     this.iconColor,
     this.backgroundColor,
-  });
+  }) : super(key: UniqueKey());
 
   final void Function() onPressed;
   final IconData iconData;

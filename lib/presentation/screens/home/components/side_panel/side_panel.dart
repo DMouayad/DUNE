@@ -10,9 +10,7 @@ import 'package:dune/support/extensions/context_extensions.dart';
 
 //
 import '../side_panel_nav_buttons.dart';
-import 'library_dropdown_button.dart';
 import 'navigation_grid.dart';
-import 'playlists_dropdown_button.dart';
 import 'side_panel_now_playing_section.dart';
 import 'vertical_tabs_list.dart';
 
@@ -89,41 +87,19 @@ class _SidePanelState extends ConsumerState<SidePanel>
               flex: 0,
               child: NavGrid(
                 extended: extended,
-                width: constraints.maxWidth,
                 onDestinationSelected: widget.onDestinationSelected,
               ),
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  AnimatedSlide(
-                    offset: extended ? Offset.zero : const Offset(0, -.1),
-                    duration: const Duration(milliseconds: 400),
-                    child: Visibility(
-                      visible: extended,
-                      child: const LibraryDropdownButton(),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  AnimatedSlide(
-                    offset: extended ? Offset.zero : const Offset(0, -.1),
-                    duration: const Duration(milliseconds: 400),
-                    child: Visibility(
-                      visible: extended,
-                      child: const PlaylistsDropdownButton(),
-                    ),
-                  ),
-                  if (tabsMode.isVertical) ...[
-                    const Divider(height: 20),
-                    VerticalTabsList(
-                      extended: extended,
-                      onTabChanged: widget.onTabChanged,
-                      onAddNewTab: widget.onAddNewTab,
-                    ),
-                  ],
-                ],
+            if (tabsMode.isVertical) ...[
+              const Divider(height: 20),
+              Expanded(
+                child: VerticalTabsList(
+                  extended: extended,
+                  onTabChanged: widget.onTabChanged,
+                  onAddNewTab: widget.onAddNewTab,
+                ),
               ),
-            ),
+            ],
             Visibility(
               visible: extended,
               child: Container(

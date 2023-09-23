@@ -34,7 +34,6 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
       proxyDecorator: (child, index, anim) =>
           ClipRRect(borderRadius: kBorderRadius, child: child),
       buildDefaultDragHandles: false,
-      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       // 8 = item's vertical margin * 2
       itemExtent: _kTabHeight + 4,
