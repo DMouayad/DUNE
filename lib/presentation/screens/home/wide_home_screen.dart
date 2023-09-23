@@ -102,7 +102,7 @@ class WideHomeScreen extends ConsumerWidget {
   void _onAddNewTab(WidgetRef ref) {
     ref.read(tabsStateProvider.notifier).update(
           (state) => state.withTabAdded(
-            TabData(tabIndex: navigationShell.currentIndex + 1),
+            TabData.withEmptyPage(tabIndex: navigationShell.currentIndex + 1),
           ),
         );
   }

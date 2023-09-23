@@ -1,6 +1,7 @@
 import 'package:dune/support/logger_service.dart';
 import 'package:equatable/equatable.dart';
 
+///
 final class TabsState extends Equatable {
   final int selectedTabIndex;
   final List<TabData> tabs;
@@ -42,13 +43,31 @@ final class TabsState extends Equatable {
 
   TabsState withTabRemoved(int index) {
     if (tabsCount == 1) return this;
-
-    tabs.removeAt(index);
-    final newSelectedTabIndex = _getNewIndex();
     return _copyWith(
-      selectedTabIndex: newSelectedTabIndex,
-      tabs: List<TabData>.from(tabs),
+      selectedTabIndex: _getNewSelectedIndex(),
+      tabs: _tabsWithRemovedAt(index),
     );
+  }
+
+  List<TabData> _tabsWithRemovedAt(int index) {
+    final newTabs = List<TabData>.from(tabs);
+    newTabs.removeAt(index);
+    return _decreaseTabsIndices(newTabs);
+  }
+
+  List<TabData> _decreaseTabsIndices(List<TabData> tabs) {
+    return tabs
+        .map((e) => e.withNewIndex(e.tabIndex < 1 ? 0 : e.tabIndex - 1))
+        .toList();
+  }
+
+  int _getNewSelectedIndex() {
+    // if it's the case where we only got one tab left (newTabs.length == 1)
+    // then the new tab index is 0 since theres only one tab.
+    // OR if it's the case where the currently selectedIndex
+    // is either (0 or 1) then the new tab index is also zero
+    // (the first tab still the selected one).
+    return tabsCount == 1 || selectedTabIndex < 1 ? 0 : selectedTabIndex - 1;
   }
 
   TabsState withTabAdded(TabData tabData) {
@@ -56,15 +75,6 @@ final class TabsState extends Equatable {
     final updatedTabs = List<TabData>.from(tabs);
     updatedTabs.add(tabData);
     return _copyWith(selectedTabIndex: newTabIndex, tabs: updatedTabs);
-  }
-
-  int _getNewIndex() {
-    // if it's the case where we only got one tab left (newTabs.length == 1)
-    // then the new tab index is 0 since theres only one tab.
-    // OR if it's the case where the last selectedIndex
-    // is either (0 or 1) then the new tab index is also zero
-    // (the first tab still the selected one).
-    return tabsCount == 1 || selectedTabIndex < 1 ? 0 : selectedTabIndex - 1;
   }
 
   TabsState withNewSelectedTab(int index) {
@@ -108,7 +118,7 @@ final class TabsState extends Equatable {
   List<Object?> get props => [tabs, selectedTabIndex, pinnedTabs];
 }
 
-typedef TabPageData = ({String path, String title});
+typedef TabPageData = ({int index, String path, String title});
 
 final class TabData extends Equatable {
   final int tabIndex;
@@ -118,14 +128,20 @@ final class TabData extends Equatable {
   TabPageData? get selectedPage =>
       pages.isEmpty ? null : pages.elementAt(selectedPageIndex);
 
-  TabData({
-    List<TabPageData> pages = const [],
+  const TabData({
+    this.pages = const [],
     required this.tabIndex,
     this.selectedPageIndex = 0,
-  }) : pages = <TabPageData>{
-          (path: '/tabs/$tabIndex', title: 'New tab'),
-          ...pages
-        }.toList();
+  });
+
+  factory TabData.withEmptyPage({required int tabIndex}) {
+    return TabData(
+      tabIndex: tabIndex,
+      pages: <TabPageData>[
+        (index: 0, path: '/tabs/$tabIndex', title: 'New tab'),
+      ],
+    );
+  }
 
   @override
   String toString() {
@@ -136,9 +152,13 @@ final class TabData extends Equatable {
     required String path,
     required String title,
   }) {
+    final newPageIndex = pages.length;
     return _copyWith(
-      selectedPageIndex: selectedPageIndex + 1,
-      pages: <TabPageData>{(path: path, title: title), ...pages}.toList(),
+      selectedPageIndex: newPageIndex,
+      pages: <TabPageData>{
+        (index: newPageIndex, path: path, title: title),
+        ...pages
+      }.toList(),
     );
   }
 
@@ -162,4 +182,19 @@ final class TabData extends Equatable {
 
   @override
   List<Object?> get props => [selectedPageIndex, pages, tabIndex];
+
+  /// Returns a new [TabData] instance with the its index updated.
+  /// **NOTE:** This also updates the index in every page path.
+  TabData withNewIndex(int index) {
+    return _copyWith(
+      tabIndex: index,
+      pages: pages
+          .map((e) => (
+                index: e.index,
+                path: e.path.replaceAll('$tabIndex', '$index'),
+                title: e.title,
+              ))
+          .toList(),
+    );
+  }
 }
