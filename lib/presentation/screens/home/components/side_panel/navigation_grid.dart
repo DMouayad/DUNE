@@ -28,13 +28,15 @@ class NavGrid extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final isVerticalTabsMode =
         ref.watch(appPreferencesController).tabsMode.isVertical;
-    final showAllButtons = (isVerticalTabsMode && extended) || extended;
+    final showAllWhenMinimized = (isVerticalTabsMode && extended);
     return Container(
+      height: showAllWhenMinimized ? null : _kButtonWidth,
       margin: const EdgeInsets.symmetric(vertical: 10),
       alignment: Alignment.center,
       child: Wrap(
         spacing: 8,
         runSpacing: 10,
+        clipBehavior: Clip.hardEdge,
         children: [
           _NavButton(
             iconData: CupertinoIcons.sidebar_left,
@@ -52,29 +54,20 @@ class NavGrid extends ConsumerWidget {
               }
             },
           ),
-          Visibility(
-            visible: showAllButtons,
-            child: _NavButton(
-              iconData: fluent.FluentIcons.settings,
-              onPressed: () =>
-                  onDestinationSelected(QuickNavDestination.settingsPage),
-            ),
+          _NavButton(
+            iconData: fluent.FluentIcons.settings,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.settingsPage),
           ),
-          Visibility(
-            visible: showAllButtons,
-            child: _NavButton(
-              iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
-              onPressed: () => onDestinationSelected(
-                  QuickNavDestination.listeningHistoryPage),
-            ),
+          _NavButton(
+            iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.listeningHistoryPage),
           ),
-          Visibility(
-            visible: showAllButtons,
-            child: _NavButton(
-              iconData: CupertinoIcons.compass,
-              onPressed: () =>
-                  onDestinationSelected(QuickNavDestination.explorePage),
-            ),
+          _NavButton(
+            iconData: CupertinoIcons.compass,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.explorePage),
           ),
         ],
       ),

@@ -75,6 +75,7 @@ class _NewTabButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     return FilledButton(
+      clipBehavior: Clip.hardEdge,
       onPressed: onPressed,
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(0),
@@ -97,17 +98,22 @@ class _NewTabButton extends ConsumerWidget {
           fontWeight: FontWeight.w500,
         )),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.add, size: 20),
-          if (extended) ...[
-            const SizedBox(width: 10),
-            const Text('New Tab'),
-            const Spacer(),
-            const Text('Ctrl + T'),
+      child: const fluent.SizedBox(
+        height: _kTabHeight,
+        width: double.infinity,
+        child: Wrap(
+          clipBehavior: Clip.hardEdge,
+          runAlignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            SizedBox(
+              height: _kTabHeight,
+              width: _kTabHeight,
+              child: Icon(Icons.add, size: 20),
+            ),
+            Text('New Tab'),
           ],
-        ],
+        ),
       ),
     );
   }

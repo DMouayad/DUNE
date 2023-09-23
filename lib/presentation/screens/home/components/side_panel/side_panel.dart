@@ -91,7 +91,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
               flex: 0,
               child: NavGrid(
                 extended: extended,
-                width: railWidth,
+                width: constraints.maxWidth,
                 onDestinationSelected: widget.onDestinationSelected,
               ),
             ),
