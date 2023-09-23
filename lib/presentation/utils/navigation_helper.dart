@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/navigation/app_router.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,12 +48,14 @@ class NavigationHelper {
         .read(exploreMusicCategoriesControllerProvider.notifier)
         .get(exploreItem.sourceId, exploreItem.source);
 
+    final basePath = 'explore-music-category/${exploreItem.sourceId}';
+    final path = ref.read(appPreferencesController).tabsMode.isEnabled
+        ? '/tabs/${ref.read(tabsStateProvider).selectedTabIndex}/$basePath'
+        : basePath;
+
     context.push(
-      '${AppRouter.currentLocation}/explore-music-category/${exploreItem.sourceId}',
-      extra: (
-        categoryId: exploreItem.sourceId,
-        title: exploreItem.title,
-      ),
+      path,
+      extra: (categoryId: exploreItem.sourceId, title: exploreItem.title),
     );
   }
 }
