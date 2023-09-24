@@ -41,19 +41,19 @@ class MusicLibrary extends Equatable {
   List<BaseTrack> getTracks([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _tracksCollection.whereKey(queryOptions) ?? [];
+    return _tracksCollection.whereQueryOptions(queryOptions);
   }
 
   List<BaseAlbum> getAlbums([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _albumsCollection.whereKey(queryOptions) ?? [];
+    return _albumsCollection.whereQueryOptions(queryOptions);
   }
 
   List<BaseArtist> getArtists([
     QueryOptions queryOptions = QueryOptions.defaultOptions,
   ]) {
-    return _artistsCollection.whereKey(queryOptions) ?? [];
+    return _artistsCollection.whereQueryOptions(queryOptions);
   }
 
   bool get isEmpty =>
@@ -67,4 +67,23 @@ class MusicLibrary extends Equatable {
         _albumsCollection,
         _artistsCollection,
       ];
+}
+
+extension HashMapExtension<V> on HashMap<QueryOptions, List<V>> {
+  List<V> whereQueryOptions(QueryOptions options) {
+    final key = keys.firstWhereOrNull((e) =>
+        e.sortBy == options.sortBy &&
+        e.page == options.page &&
+        e.limit >= options.limit);
+
+    List<V> values = whereKey(key) ?? [];
+    if (values.isEmpty || key == null) return values;
+
+    final requiredItemsIsLessThanExisting = options.limit < key.limit;
+    if (requiredItemsIsLessThanExisting) {
+      values = values.take(options.limit).toList();
+    }
+
+    return options.sortDescending ? values.reversed.toList() : values;
+  }
 }
