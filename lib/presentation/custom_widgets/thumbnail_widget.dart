@@ -37,7 +37,11 @@ class ThumbnailWidget extends ConsumerWidget {
       if (localThumbUrl != null) {
         final imageFile = File(localThumbUrl);
         if (imageFile.existsSync()) {
-          imageProvider = ExtendedFileImageProvider(imageFile);
+          imageProvider = ExtendedFileImageProvider(
+            imageFile,
+            cacheRawData: true,
+            imageCacheName: imageFile.path,
+          );
         }
       } else {
         final networkImageUrl = thumbnailsSet
@@ -63,16 +67,15 @@ class ThumbnailWidget extends ConsumerWidget {
       Log.e(e);
     }
     if (imageProvider != null) {
-      return ClipRRect(
+      return ExtendedImage(
         borderRadius: kBorderRadius,
-        child: ExtendedImage(
-          image: imageProvider,
-          fit: BoxFit.cover,
-          shape: shape,
-          clearMemoryCacheWhenDispose: true,
-          width: dimension,
-          height: dimension,
-        ),
+        image: imageProvider,
+        fit: BoxFit.cover,
+        shape: shape,
+        filterQuality: FilterQuality.medium,
+        clearMemoryCacheWhenDispose: true,
+        width: dimension,
+        height: dimension,
       );
     }
     return placeholder ?? const ImagePlaceHolder();
