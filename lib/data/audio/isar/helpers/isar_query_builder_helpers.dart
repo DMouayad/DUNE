@@ -26,6 +26,8 @@ QueryBuilder<Obj, R, QAfterLimit> applyQueryOptionsOnIsarQueryBuilder<Obj, R>(
         ? sortByDateReleasedDescQuery
         : sortByDateReleasedQuery),
   };
-  return queryWithSorting?.limit(queryOptions.limit) ??
-      baseQuery.limit(queryOptions.limit);
+  return queryWithSorting
+          ?.offset(queryOptions.offset)
+          .limit(queryOptions.limit) ??
+      baseQuery.offset(queryOptions.offset).limit(queryOptions.limit);
 }
