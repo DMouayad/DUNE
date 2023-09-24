@@ -77,18 +77,6 @@ class ListeningHistoryPageRoute extends BaseHomeScreenBodyRoute {
         );
 }
 
-// class LibraryPageRoute extends BaseHomeScreenBodyRoute {
-//   LibraryPageRoute({
-//     super.name,
-//     super.isSubRoute,
-//     super.routes,
-//   }) : super(
-//           index: QuickNavDestination.libraryPage,
-//           path: RoutePath.libraryPage,
-//           page: (context, state) => const LibraryPage(),
-//         );
-// }
-
 class SettingsPageRoute extends BaseHomeScreenBodyRoute {
   SettingsPageRoute({
     super.name,

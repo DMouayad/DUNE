@@ -1,3 +1,4 @@
+import 'package:dune/navigation/app_router.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,14 +7,32 @@ import 'package:flutter/material.dart';
 import 'custom_expansion_tile.dart';
 
 const _libraryPages = [
-  (title: 'Tracks', icon: fluent.FluentIcons.music_in_collection),
-  (title: 'Albums', icon: CupertinoIcons.music_albums),
-  (title: 'Artists', icon: CupertinoIcons.rectangle_stack_person_crop),
-  (title: 'Folders', icon: fluent.FluentIcons.folder),
+  (
+    dest: QuickNavDestination.libraryTracksPage,
+    title: 'Tracks',
+    icon: fluent.FluentIcons.music_in_collection
+  ),
+  (
+    dest: QuickNavDestination.libraryAlbumsPage,
+    title: 'Albums',
+    icon: CupertinoIcons.music_albums
+  ),
+  (
+    dest: QuickNavDestination.libraryArtistsPage,
+    title: 'Artists',
+    icon: CupertinoIcons.rectangle_stack_person_crop
+  ),
+  (
+    dest: QuickNavDestination.libraryFoldersPage,
+    title: 'Folders',
+    icon: fluent.FluentIcons.folder
+  ),
 ];
+final _key = UniqueKey();
 
 class LibraryDropdownButton extends StatelessWidget {
-  const LibraryDropdownButton({super.key});
+  LibraryDropdownButton({required this.onDestSelected}) : super(key: _key);
+  final void Function(QuickNavDestination dest) onDestSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +41,7 @@ class LibraryDropdownButton extends StatelessWidget {
       iconData: CupertinoIcons.music_house,
       children: _libraryPages
           .map((e) => ListTile(
-                onTap: () {},
+                onTap: () => onDestSelected(e.dest),
                 shape:
                     const RoundedRectangleBorder(borderRadius: kBorderRadius),
                 selectedColor:

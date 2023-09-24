@@ -4,7 +4,10 @@ class RoutePath {
   static const String explorePage = '/explore',
       settingsPage = '/settings',
       listeningHistoryPage = '/listening-history',
-      libraryPage = '/library',
+      libraryTracksPage = '/library/tracks',
+      libraryAlbumsPage = '/library/albums',
+      libraryArtistsPage = '/library/artists',
+      libraryFoldersPage = '/library/folders',
       playlistPage = 'playlist/:playlistId',
       exploreMusicCategoryPage = 'explore-music-category/:categoryId',
       desktopSplashScreenPage = '/desktop-splash-screen';
@@ -14,6 +17,10 @@ class RouteName {
   static const String explorePage = 'Explore',
       settingsPage = 'Settings',
       listeningHistoryPage = 'Listening History',
+      libraryTracksPage = 'My library tracks',
+      libraryAlbumsPage = 'My library albums',
+      libraryArtistsPage = 'My library artists',
+      libraryFoldersPage = 'My library folders',
       libraryPage = 'My Library',
       playlistPage = 'Playlist';
 }
@@ -21,8 +28,11 @@ class RouteName {
 enum QuickNavDestination {
   explorePage(0, RoutePath.explorePage),
   listeningHistoryPage(1, RoutePath.listeningHistoryPage),
-  libraryPage(2, RoutePath.libraryPage),
-  settingsPage(3, RoutePath.settingsPage);
+  settingsPage(2, RoutePath.settingsPage),
+  libraryTracksPage(3, RoutePath.libraryTracksPage),
+  libraryAlbumsPage(3, RoutePath.libraryAlbumsPage),
+  libraryArtistsPage(3, RoutePath.libraryArtistsPage),
+  libraryFoldersPage(3, RoutePath.libraryFoldersPage);
 
   const QuickNavDestination(this.destinationIndex, this.path);
 

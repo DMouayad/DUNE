@@ -29,6 +29,7 @@ class NavGrid extends ConsumerWidget {
         ref.watch(appPreferencesController).tabsMode.isVertical;
     final showAllWhenMinimized = (isVerticalTabsMode && extended);
     return ClipRRect(
+      clipBehavior: Clip.hardEdge,
       child: Container(
         height: showAllWhenMinimized ? null : _kButtonWidth,
         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -69,7 +70,7 @@ class NavGrid extends ConsumerWidget {
               onPressed: () =>
                   onDestinationSelected(QuickNavDestination.explorePage),
             ),
-            const LibraryDropdownButton(),
+            LibraryDropdownButton(onDestSelected: onDestinationSelected),
             const PlaylistsDropdownButton(),
           ],
         ),
@@ -117,10 +118,7 @@ class _NavButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Icon(
-        iconData,
-        size: 22,
-      ),
+      child: Icon(iconData, size: 22),
     );
   }
 }

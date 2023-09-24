@@ -6,6 +6,10 @@ import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
 import 'package:dune/presentation/models/tabs_state.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
+import 'package:dune/presentation/pages/library_page/library_albums_page.dart';
+import 'package:dune/presentation/pages/library_page/library_artists_page.dart';
+import 'package:dune/presentation/pages/library_page/library_folders_page.dart';
+import 'package:dune/presentation/pages/library_page/library_tracks_page.dart';
 import 'package:dune/presentation/pages/listening_history_page/listening_history_page.dart';
 import 'package:dune/presentation/pages/playlist_page/playlist_page.dart';
 import 'package:dune/presentation/pages/settings_page/settings_page.dart';
@@ -28,6 +32,8 @@ part 'routes/desktop_splash_screen_route.dart';
 part 'routes/playlist_page_route.dart';
 
 part 'routes/category_playlists_page_route.dart';
+
+part 'routes/library_pages_routes.dart';
 
 part 'constants.dart';
 
@@ -80,7 +86,6 @@ class AppRouter {
     TabsState tabsState,
     String? initialLocation,
   ) {
-    // tabsState.selectedTab?.selectedPage?.path
     return GoRouter(
       debugLogDiagnostics: kIsDebug,
       navigatorKey: AppRouter.rootNavigatorKey,
@@ -102,8 +107,11 @@ class AppRouter {
                   routes: [
                     ExplorePageRoute(isSubRoute: true),
                     ListeningHistoryPageRoute(isSubRoute: true),
-                    LibraryPageRoute(isSubRoute: true),
                     SettingsPageRoute(isSubRoute: true),
+                    LibraryAlbumsPageRoute(isSubRoute: true),
+                    LibraryTracksPageRoute(isSubRoute: true),
+                    LibraryArtistsPageRoute(isSubRoute: true),
+                    LibraryFoldersPageRoute(isSubRoute: true),
                     ExploreMusicCategoryPageRoute(),
                   ],
                 ),
@@ -149,7 +157,6 @@ class AppRouter {
                   branches: [
                     StatefulShellBranch(routes: [ExplorePageRoute()]),
                     StatefulShellBranch(routes: [ListeningHistoryPageRoute()]),
-                    StatefulShellBranch(routes: [LibraryPageRoute()]),
                     StatefulShellBranch(routes: [SettingsPageRoute()]),
                   ],
                 ),
@@ -165,12 +172,12 @@ class AppRouter {
   ) {
     return switch (initialPageOnStartup) {
       InitialPageOnStartup.exploreMusic => (
-          path: RoutePath.explorePage,
-          name: RouteName.explorePage
+          path: RoutePath.settingsPage,
+          name: RouteName.settingsPage
         ),
       InitialPageOnStartup.myLibrary => (
-          path: RoutePath.libraryPage,
-          name: RouteName.libraryPage
+          path: RoutePath.libraryTracksPage,
+          name: RouteName.libraryTracksPage
         ),
     };
   }
