@@ -150,9 +150,13 @@ class _VerticalTab extends ConsumerWidget {
         padding: const EdgeInsets.only(left: 10.0, right: 4),
         child: Row(
           children: [
-            const fluent.Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(fluent.FluentIcons.tab, size: 18),
+            fluent.Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Icon(
+                fluent.FluentIcons.tab,
+                size: 16,
+                color: context.colorScheme.onBackground.withOpacity(.66),
+              ),
             ),
             Expanded(
               child: Visibility(
@@ -160,7 +164,7 @@ class _VerticalTab extends ConsumerWidget {
                 child: Text(
                   data.selectedPage?.title ?? 'new tab',
                   style: context.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w400,
+                    color: context.colorScheme.onBackground,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.clip,
