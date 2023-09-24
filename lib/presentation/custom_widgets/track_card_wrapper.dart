@@ -14,7 +14,6 @@ class TrackCardWrapper extends StatelessWidget {
     super.key,
     required this.track,
     required this.child,
-    required this.cardColor,
     required this.selectionState,
     required this.onSelected,
     required this.onPlayTrack,
@@ -29,7 +28,6 @@ class TrackCardWrapper extends StatelessWidget {
   final void Function() onPlayTrack;
   final void Function()? onDelete;
   final void Function()? onDownload;
-  final Color cardColor;
   final SelectionState<BaseTrack> selectionState;
   final void Function() onSelected;
   final bool playOnTap;
@@ -47,7 +45,7 @@ class TrackCardWrapper extends StatelessWidget {
       },
       condition: context.isDesktopPlatform,
       childWidget: Material(
-        color: cardColor,
+        color: context.colorScheme.background,
         shape: RoundedRectangleBorder(
           borderRadius: kBorderRadius,
           side: isSelected

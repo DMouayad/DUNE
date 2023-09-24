@@ -64,7 +64,6 @@ class TracksListView extends ConsumerWidget {
               }
             },
             track: tracks.elementAt(index),
-            color: _getCardColor(index, context.colorScheme),
           ),
         );
       }
@@ -132,12 +131,5 @@ class TracksListView extends ConsumerWidget {
     return (context.isPortraitTablet
         ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
         : const EdgeInsets.fromLTRB(20, 6, 20, 0));
-  }
-
-  Color _getCardColor(int index, ColorScheme colorScheme) {
-    return colorScheme.background;
-    // index % 2 != 0
-    //   ? colorScheme.surfaceVariant.withOpacity(.5)
-    //   : colorScheme.background;
   }
 }

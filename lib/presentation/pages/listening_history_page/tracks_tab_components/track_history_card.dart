@@ -43,7 +43,6 @@ class TrackHistoryCard extends ConsumerWidget {
         track: track,
         selectionState: selectionState,
         onSelected: () => _onSelected(ref, track),
-        cardColor: color,
         popupMenu: popupMenu,
         child: Flex(
           direction: Axis.horizontal,

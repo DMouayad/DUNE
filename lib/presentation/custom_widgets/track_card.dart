@@ -3,38 +3,42 @@ import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/presentation/models/selection_state.dart';
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'placeholders.dart';
 import 'track_card_pop_up_menu.dart';
 import 'track_card_wrapper.dart';
 
-class TrackCard extends StatelessWidget {
+class TrackCard extends ConsumerWidget {
   const TrackCard({
     super.key,
     required this.track,
-    required this.color,
-    required this.onPlayTrack,
+    this.onPlayTrack,
     required this.selectionState,
     required this.onSelected,
   });
 
   final BaseTrack track;
-  final Color color;
-  final void Function() onPlayTrack;
-
+  final void Function()? onPlayTrack;
   final SelectionState<BaseTrack> selectionState;
   final void Function(BaseTrack) onSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return TrackCardWrapper(
       playOnTap: true,
       track: track,
-      onPlayTrack: onPlayTrack,
-      cardColor: color,
+      onPlayTrack: onPlayTrack ??
+          () {
+            ref
+                .read(playbackControllerProvider.notifier)
+                .player
+                .playSingleTrack(track);
+          },
       selectionState: selectionState,
       onSelected: () => onSelected(track),
       popupMenu: TrackCardPopupMenu(
