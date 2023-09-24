@@ -17,7 +17,7 @@ class QueryOptions extends Equatable {
   final int limit;
   final int page;
 
-  int get offset => page * limit;
+  int get offset => (page - 1) * limit;
 
   QueryOptions copyWith({
     SortType? sortBy,
