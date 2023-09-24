@@ -22,8 +22,9 @@ class CustomExpansionTile extends StatelessWidget {
       contentShape: (_) =>
           const RoundedRectangleBorder(borderRadius: kBorderRadius),
       headerBackgroundColor: (_) => fluent.ButtonState.resolveWith((states) {
-        return context.colorScheme.background;
+        return Colors.transparent;
       }),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       headerShape: (_) =>
           const RoundedRectangleBorder(borderRadius: kBorderRadius),
       header: Text(

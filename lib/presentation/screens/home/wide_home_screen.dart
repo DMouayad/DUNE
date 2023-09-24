@@ -10,7 +10,7 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/navigation/app_router.dart';
 
 //
-import 'components/app_title_bar.dart';
+import 'components/wide_home_screen_app_bar.dart';
 import 'components/player_bottom_bar/player_bottom_bar.dart';
 import 'components/side_panel/side_panel.dart';
 import 'components/tabs_bar.dart';
@@ -26,7 +26,11 @@ class WideHomeScreen extends ConsumerWidget {
     // effect on the next time the app is opened
     final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsMode.isHorizontal ? 80.0 : 34.0;
+    final topSpacing = tabsMode.isEnabled
+        ? tabsMode.isHorizontal
+            ? 80.0
+            : 37.0
+        : 34.0;
     final screen = Theme(
       data: appTheme.materialThemeData,
       child: Material(
@@ -39,7 +43,7 @@ class WideHomeScreen extends ConsumerWidget {
                   const Positioned(
                       bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
                 const Positioned(
-                    top: 0, right: 0, left: 0, child: AppTitleBar()),
+                    top: 2, right: 0, left: 18, child: WideHomeScreenAppBar()),
                 if (tabsMode.isHorizontal)
                   Positioned(
                     right: 0,
