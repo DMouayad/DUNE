@@ -9,7 +9,6 @@ import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 
 //
-import '../side_panel_nav_buttons.dart';
 import 'navigation_grid.dart';
 import 'side_panel_now_playing_section.dart';
 import 'vertical_tabs_list.dart';
@@ -56,50 +55,34 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
     return Container(
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin: const EdgeInsets.only(left: 12, right: 10, top: 10),
+      margin: EdgeInsets.only(
+          left: 12, right: 10, top: tabsMode.isEnabled ? 12 : 0),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.maxWidth == context.maxNavRailWidth;
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Expanded(flex: 0, child: TopSearchBar()),
             Expanded(
-              flex: 0,
-              child: Wrap(
-                // a Clip is used to clip-out [SidePanelNavButtons] when
-                // its offset is not zero.
-                clipBehavior: Clip.hardEdge,
-                alignment: WrapAlignment.end,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runSpacing: 10,
+              child: ListView(
+                shrinkWrap: true,
                 children: [
-                  if (!tabsMode.isHorizontal)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: SidePanelNavButtons(extended),
+                  NavGrid(
+                    extended: extended,
+                    onDestinationSelected: widget.onDestinationSelected,
+                  ),
+                  if (tabsMode.isVertical) ...[
+                    const Divider(height: 10),
+                    VerticalTabsList(
+                      extended: extended,
+                      onTabChanged: widget.onTabChanged,
+                      onAddNewTab: widget.onAddNewTab,
                     ),
-                  const TopSearchBar(),
+                  ],
                 ],
               ),
             ),
-            Expanded(
-              flex: 0,
-              child: NavGrid(
-                extended: extended,
-                onDestinationSelected: widget.onDestinationSelected,
-              ),
-            ),
-            if (tabsMode.isVertical) ...[
-              const Divider(height: 20),
-              Expanded(
-                child: VerticalTabsList(
-                  extended: extended,
-                  onTabChanged: widget.onTabChanged,
-                  onAddNewTab: widget.onAddNewTab,
-                ),
-              ),
-            ],
             Visibility(
               visible: extended,
               child: Container(
