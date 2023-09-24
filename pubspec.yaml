@@ -47,6 +47,7 @@ dependencies:
   device_preview: ^1.1.0
   path: ^1.8.3
   flutter_taggy: ^0.1.2+3
+  infinite_scroll_pagination: ^3.2.0
 
 dev_dependencies:
   flutter_test:
