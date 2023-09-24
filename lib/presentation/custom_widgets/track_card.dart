@@ -16,14 +16,18 @@ import 'track_card_wrapper.dart';
 class TrackCard extends ConsumerWidget {
   const TrackCard({
     super.key,
-    required this.track,
     this.onPlayTrack,
+    required this.track,
     required this.selectionState,
     required this.onSelected,
   });
 
-  final BaseTrack track;
+  /// Called when the user requests to play this track.
+  ///
+  /// By default(null), this track will be played by [PlaybackController.playSingleTrack()].
+  /// You can override this in case of a custom behaviour.
   final void Function()? onPlayTrack;
+  final BaseTrack track;
   final SelectionState<BaseTrack> selectionState;
   final void Function(BaseTrack) onSelected;
 
