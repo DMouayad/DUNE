@@ -103,7 +103,7 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
       views: null,
       category: _tag?.genre,
       duration: _taggyFile.audio.durationSec != null
-          ? Duration(milliseconds: _taggyFile.audio.durationSec!)
+          ? Duration(seconds: _taggyFile.audio.durationSec!)
           : null,
       isExplicit: false,
       audioInfoSet: const AudioInfoSet(),
