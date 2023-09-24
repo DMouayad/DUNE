@@ -111,12 +111,15 @@ class _NavButton extends StatelessWidget {
           }
           return backgroundColor ?? context.colorScheme.background;
         }),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        foregroundColor: MaterialStateProperty.all(
+          iconColor ?? context.colorScheme.onBackground,
+        ),
       ),
       onPressed: onPressed,
       child: Icon(
         iconData,
-        size: 20,
-        color: iconColor ?? context.colorScheme.onBackground,
+        size: 22,
       ),
     );
   }
