@@ -2,6 +2,7 @@ import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
+import 'package:dune/presentation/custom_widgets/persistent_page_header.dart';
 import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
@@ -10,8 +11,6 @@ import 'package:dune/support/extensions/context_extensions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'playlist_page_header.dart';
 
 class PlaylistPage extends ConsumerStatefulWidget {
   final String playlistId;
@@ -76,49 +75,44 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
     final maxHeight = context.screenWidth > 500
         ? context.screenHeight * 0.27
         : context.screenHeight * 0.23;
-    return Padding(
-      padding: const EdgeInsets.only(top: 24),
-      child: CustomScrollView(
-        primary: true,
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: PersistentPlaylistPageHeaderDelegate(
-              minHeaderExtent: 70,
-              maxHeaderExtent: maxHeight,
-              isFetchingPlaylistInfo:
-                  playlistState.hasValue && playlistState.isLoading,
-              title: widget.title ?? playlist?.title ?? '',
-              description: widget.description ?? playlist?.description ?? '',
-              cardColor: context.colorScheme.background,
-              thumbnailsSet: widget.thumbnails ?? playlist?.thumbnails,
-              tracksCount: (widget.tracksCount != null
-                      ? int.tryParse(widget.tracksCount!)
-                      : null) ??
-                  playlist?.tracks.length,
-              onShuffle: playlistState.valueOrNull != null ? () {} : null,
-              controller: ref.read(selectionController.notifier),
-              selectionState: ref.watch(selectionController),
-              onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
-            ),
+    return CustomScrollView(
+      primary: true,
+      slivers: [
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: PersistentPageHeaderDelegate<BaseTrack>(
+            minHeaderExtent: 70,
+            maxHeaderExtent: maxHeight,
+            isFetchingItems: playlistState.hasValue && playlistState.isLoading,
+            title: widget.title ?? playlist?.title ?? '',
+            description: widget.description ?? playlist?.description ?? '',
+            thumbnailsSet: widget.thumbnails ?? playlist?.thumbnails,
+            itemsCount: (widget.tracksCount != null
+                    ? int.tryParse(widget.tracksCount!)
+                    : null) ??
+                playlist?.tracks.length,
+            onShuffle: playlistState.valueOrNull != null ? () {} : null,
+            selectionController: ref.read(selectionController.notifier),
+            selectionState: ref.watch(selectionController),
+            onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
           ),
-          TracksListView(
-            isSliverList: true,
-            physics: const NeverScrollableScrollPhysics(),
-            selectionControllerProvider: selectionController,
-            playlistState.whenData((data) => data?.tracks ?? []),
-            playlist: playlistState.whenData((value) => value).valueOrNull,
-            onRetryWhenErrorLoadingTracks: () {
-              if (widget.musicSource != null) {
-                ref.read(playlistControllerProvider.notifier).get(
-                      widget.playlistId,
-                      widget.musicSource!,
-                    );
-              }
-            },
-          ),
-        ],
-      ),
+        ),
+        TracksListView(
+          isSliverList: true,
+          physics: const NeverScrollableScrollPhysics(),
+          selectionControllerProvider: selectionController,
+          playlistState.whenData((data) => data?.tracks ?? []),
+          playlist: playlistState.whenData((value) => value).valueOrNull,
+          onRetryWhenErrorLoadingTracks: () {
+            if (widget.musicSource != null) {
+              ref.read(playlistControllerProvider.notifier).get(
+                    widget.playlistId,
+                    widget.musicSource!,
+                  );
+            }
+          },
+        ),
+      ],
     );
   }
 

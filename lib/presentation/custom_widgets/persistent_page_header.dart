@@ -1,4 +1,6 @@
-import 'package:dune/domain/audio/base_models/base_track.dart';
+import 'package:flutter/material.dart';
+
+//
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/dune_loading_widget.dart';
@@ -6,39 +8,35 @@ import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/support/themes/theme_constants.dart';
-import 'package:flutter/material.dart';
 
-class PersistentPlaylistPageHeaderDelegate
+class PersistentPageHeaderDelegate<T extends Object>
     extends SliverPersistentHeaderDelegate {
   final double minHeaderExtent;
   final double maxHeaderExtent;
-  final Color cardColor;
   final String? description;
   final String title;
   final ThumbnailsSet? thumbnailsSet;
-  final int? tracksCount;
+  final int? itemsCount;
   final void Function()? onShuffle;
-  final bool isFetchingPlaylistInfo;
-  final SelectionController<BaseTrack> controller;
-  final SelectionState<BaseTrack> selectionState;
+  final bool isFetchingItems;
+  final SelectionController<T> selectionController;
+  final SelectionState<T> selectionState;
   final void Function() onSelectAll;
   final void Function()? onDownload;
   final void Function()? onRemove;
 
-  PersistentPlaylistPageHeaderDelegate({
+  PersistentPageHeaderDelegate({
     required this.minHeaderExtent,
     required this.maxHeaderExtent,
-    required this.cardColor,
-    required this.description,
     required this.title,
-    required this.onShuffle,
-    required this.thumbnailsSet,
-    required this.tracksCount,
-    required this.isFetchingPlaylistInfo,
-    required this.controller,
+    required this.selectionController,
     required this.selectionState,
     required this.onSelectAll,
+    this.description,
+    this.onShuffle,
+    this.thumbnailsSet,
+    this.itemsCount,
+    this.isFetchingItems = false,
     this.onDownload,
     this.onRemove,
   });
@@ -52,12 +50,12 @@ class PersistentPlaylistPageHeaderDelegate
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    /// the height of [PlaylistPageHeader] without including the [SelectionToolBar]
+    /// the height of [_Header] without including the [SelectionToolBar]
     /// height
     final pageHeaderHeight = maxExtent -
         shrinkOffset -
         (selectionState.selectionEnabled ? selectionToolbarMaxExtent : 0);
-    final isMinimized = pageHeaderHeight < 70;
+    final isMinimized = pageHeaderHeight < minHeaderExtent;
 
     /// whether this persistent header is fully expanded
     final isExpanded = shrinkOffset == 0;
@@ -67,7 +65,7 @@ class PersistentPlaylistPageHeaderDelegate
       children: [
         Expanded(
           flex: 0,
-          child: PlaylistPageHeader(
+          child: _Header(
             height: isMinimized
                 ? minExtent -
                     (selectionState.selectionEnabled
@@ -75,13 +73,12 @@ class PersistentPlaylistPageHeaderDelegate
                         : 0)
                 : pageHeaderHeight,
             isMinimized: isMinimized,
-            cardColor: cardColor,
             description: description,
             title: title,
             onShuffle: onShuffle,
             thumbnailsSet: thumbnailsSet,
-            tracksCount: tracksCount,
-            isFetchingPlaylistInfo: isFetchingPlaylistInfo,
+            itemsCount: itemsCount,
+            isFetchingItems: isFetchingItems,
           ),
         ),
         if (selectionState.selectionEnabled)
@@ -90,7 +87,7 @@ class PersistentPlaylistPageHeaderDelegate
             child: SizedBox(
               height: selectionToolbarExtent,
               child: SelectionToolBar(
-                controller: controller,
+                controller: selectionController,
                 selectionState: selectionState,
                 onSelectAll: onSelectAll,
                 isExpanded: isExpanded,
@@ -119,38 +116,38 @@ class PersistentPlaylistPageHeaderDelegate
   }
 }
 
-class PlaylistPageHeader extends StatelessWidget {
-  final Color cardColor;
+class _Header extends StatelessWidget {
   final String? description;
   final String title;
   final ThumbnailsSet? thumbnailsSet;
-  final int? tracksCount;
+  final int? itemsCount;
   final void Function()? onShuffle;
-  final bool isFetchingPlaylistInfo;
+  final bool isFetchingItems;
   final double height;
   final bool isMinimized;
 
-  const PlaylistPageHeader({
-    super.key,
+  const _Header({
     required this.height,
     required this.isMinimized,
-    required this.cardColor,
     required this.description,
     required this.title,
     required this.onShuffle,
     required this.thumbnailsSet,
-    required this.tracksCount,
-    required this.isFetchingPlaylistInfo,
+    required this.itemsCount,
+    required this.isFetchingItems,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isMinimized
-            ? context.colorScheme.surfaceVariant
-            : context.colorScheme.background,
-        borderRadius: kBorderRadius,
+        color: context.colorScheme.background,
+        border: Border(
+          bottom: BorderSide(
+            width: 3,
+            color: context.colorScheme.secondary.withOpacity(.15),
+          ),
+        ),
       ),
       constraints: BoxConstraints.expand(
         height: height,
@@ -160,24 +157,25 @@ class PlaylistPageHeader extends StatelessWidget {
         direction: Axis.horizontal,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Hero(
-            tag: title,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 18),
-              child: ThumbnailWithGesturesWidget(
-                cacheImage: true,
-                constraints: BoxConstraints.loose(Size.square(height * .9)),
-                thumbnailsSet: thumbnailsSet!,
-                placeholder: const PlaylistCoverPlaceholder(),
+          if (thumbnailsSet != null)
+            Hero(
+              tag: title,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8, right: 18),
+                child: ThumbnailWithGesturesWidget(
+                  cacheImage: true,
+                  constraints: BoxConstraints.loose(Size.square(height * .9)),
+                  thumbnailsSet: thumbnailsSet,
+                  placeholder: const PlaylistCoverPlaceholder(),
+                ),
               ),
             ),
-          ),
           Expanded(
             child: Stack(
               children: [
                 Positioned(
-                  top: 10,
-                  left: 0,
+                  top: 16,
+                  left: 10,
                   bottom: 0,
                   child: Text(
                     title,
@@ -189,14 +187,14 @@ class PlaylistPageHeader extends StatelessWidget {
                 ),
                 if (description != null)
                   AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 150),
                     bottom: isMinimized ? 6 : height * .3,
                     left: 0,
+                    right: 0,
                     child: SizedBox(
                       width: 330,
                       child: Text(
                         description!,
-                        // softWrap: true,
                         maxLines: 3,
                         style: context.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
@@ -207,10 +205,10 @@ class PlaylistPageHeader extends StatelessWidget {
                     ),
                   ),
                 AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 150),
                   bottom: height * .1,
                   top: isMinimized ? 0 : null,
-                  right: isMinimized ? 0 : null,
+                  right: isMinimized ? 10 : null,
                   left: isMinimized ? null : 0,
                   child: TextButton.icon(
                     onPressed: onShuffle,
@@ -219,10 +217,10 @@ class PlaylistPageHeader extends StatelessWidget {
                           context.colorScheme.secondary),
                     ),
                     icon: const Icon(Icons.shuffle, size: 20),
-                    label: Text("shuffle (${tracksCount ?? 0} tracks)"),
+                    label: Text("shuffle (${itemsCount ?? 0} items)"),
                   ),
                 ),
-                if (isFetchingPlaylistInfo)
+                if (isFetchingItems)
                   Positioned(
                     top: 0,
                     right: 6,
