@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/theme/app_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -25,11 +27,11 @@ class AppWindowHelper {
       windowButtonVisibility: false,
       titleBarStyle: TitleBarStyle.hidden,
     );
-    await windowManager.waitUntilReadyToShow(windowOptions, () async {
+    unawaited(windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.setAsFrameless();
       await windowManager.show();
       await windowManager.focus();
-    });
+    }));
   }
 
   /// Changes the window background effect to the provided one.
