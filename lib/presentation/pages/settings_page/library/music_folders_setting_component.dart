@@ -28,7 +28,7 @@ class MusicFoldersSettingComponent extends ConsumerWidget {
           ),
           trailing: Consumer(builder: (context, ref, _) {
             return TextButton.icon(
-              label: const Text('choose folder'),
+              label: const Text('Add folder'),
               icon: const Icon(Icons.file_open_outlined),
               onPressed: () => onAddMusicFolder(ref),
             );
