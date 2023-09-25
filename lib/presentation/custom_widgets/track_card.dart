@@ -9,9 +9,10 @@ import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'draggable_track_card.dart';
 import 'placeholders.dart';
 import 'track_card_pop_up_menu.dart';
-import 'track_card_wrapper.dart';
+import 'selectable_card.dart';
 
 class TrackCard extends ConsumerWidget {
   const TrackCard({
@@ -35,31 +36,33 @@ class TrackCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return Container(
-      margin: margin ??
-          (context.isPortraitTablet
-              ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
-              : const EdgeInsets.fromLTRB(12, 3, 12, 3)),
-      child: TrackCardWrapper(
-        playOnTap: true,
-        track: track,
-        onPlayTrack: onPlayTrack ??
-            () {
-              ref
-                  .read(playbackControllerProvider.notifier)
-                  .player
-                  .playSingleTrack(track);
-            },
-        selectionState: selectionState,
-        onSelected: () => onSelected(track),
-        popupMenu: TrackCardPopupMenu(
-          track,
-          onDelete: null,
-          onDownload: () {},
-          onPlayTrack: onPlayTrack,
-          onSelectTrack: () => onSelected(track),
+    return DraggableTrackCard(
+      selectionState: selectionState,
+      child: Container(
+        margin: margin ??
+            (context.isPortraitTablet
+                ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
+                : const EdgeInsets.fromLTRB(12, 3, 12, 3)),
+        child: SelectableCard<BaseTrack>(
+          selectionKey: track.id,
+          onTap: onPlayTrack ??
+              () {
+                ref
+                    .read(playbackControllerProvider.notifier)
+                    .player
+                    .playSingleTrack(track);
+              },
+          selectionState: selectionState,
+          onSelected: () => onSelected(track),
+          popupMenu: TrackCardPopupMenu(
+            track,
+            onDelete: null,
+            onDownload: () {},
+            onPlayTrack: onPlayTrack,
+            onSelectTrack: () => onSelected(track),
+          ),
+          child: TrackCardMainContent(track: track),
         ),
-        child: TrackCardMainContent(track: track),
       ),
     );
   }
@@ -85,7 +88,8 @@ class TrackCardMainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleTextStyle = context.textTheme.bodyMedium;
+    final titleTextStyle =
+        context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
 
     final wideSpacer = SizedBox(width: context.screenWidth > 900 ? 18 : 10);
 

@@ -7,7 +7,7 @@ import 'package:dune/domain/audio/base_models/base_track_listening_history.dart'
 import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/presentation/custom_widgets/track_card_pop_up_menu.dart';
-import 'package:dune/presentation/custom_widgets/track_card_wrapper.dart';
+import 'package:dune/presentation/custom_widgets/selectable_card.dart';
 import 'package:dune/presentation/pages/listening_history_page/tracks_listening_histories_list_view.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -30,6 +30,7 @@ class TrackHistoryCard extends ConsumerWidget {
 
     final popupMenu = TrackCardPopupMenu(
       track,
+      onPlayTrack: () => _playTrack(track, ref),
       onSelectTrack: () => _onSelected(ref, track),
     );
     final selectionState =
@@ -37,10 +38,8 @@ class TrackHistoryCard extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: TrackCardWrapper(
-        playOnTap: false,
-        onPlayTrack: () => _playTrack(track, ref),
-        track: track,
+      child: SelectableCard(
+        selectionKey: track.id,
         selectionState: selectionState,
         onSelected: () => _onSelected(ref, track),
         popupMenu: popupMenu,

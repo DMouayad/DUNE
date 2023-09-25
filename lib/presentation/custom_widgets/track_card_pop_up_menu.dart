@@ -1,29 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
-
-final flyoutController = fluent.FlyoutController();
-
-void showTrackCardPopupMenu(
-  BuildContext context,
-  bool isSelected,
-  Offset localPosition,
-  TrackCardPopupMenu menu,
-) {
-  if (!context.isDesktopPlatform || isSelected) return;
-  // This calculates the position of the flyout according to the parent navigator
-  final box = context.findRenderObject() as RenderBox;
-  final position = box.localToGlobal(
-    localPosition,
-    ancestor: Navigator.of(context).context.findRenderObject(),
-  );
-  flyoutController.showFlyout(
-    barrierColor: Colors.transparent,
-    position: position,
-    builder: (context) => menu,
-  );
-}
 
 class TrackCardPopupMenu extends StatelessWidget {
   const TrackCardPopupMenu(
