@@ -1,3 +1,4 @@
+import 'package:dune/support/enums/sort_type.dart';
 import 'package:dune/support/models/query_options.dart';
 import 'package:dune/support/utils/result/result.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,26 @@ class PagedItemsController<T> extends StateNotifier<QueryOptionsPagedState<T>>
       onFailure: (e) => [],
     );
     return null;
+  }
+
+  void setSortType(SortType? sortType) {
+    if (sortType == null) return;
+    state = state.copyWith(
+      previousPageKeys: [],
+      records: [],
+      queryOptions: state.queryOptions.copyWith(sortBy: sortType, page: 1),
+    );
+    load(state.queryOptions.page, state.queryOptions.limit);
+  }
+
+  void setIsDescendingOrder(bool? sortDescending) {
+    state = state.copyWith(
+      previousPageKeys: [],
+      records: [],
+      queryOptions:
+          state.queryOptions.copyWith(sortDescending: sortDescending, page: 1),
+    );
+    load(state.queryOptions.page, state.queryOptions.limit);
   }
 }
 
