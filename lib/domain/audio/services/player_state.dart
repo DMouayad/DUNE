@@ -1,8 +1,4 @@
-import 'package:dune/domain/audio/base_models/base_playlist.dart';
-import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/domain/audio/base_models/track_audio_info.dart';
-import 'package:dune/support/enums/audio_streaming_quality.dart';
-import 'package:equatable/equatable.dart';
+part of 'audio_player.dart';
 
 class PlayerState extends Equatable {
   final double volume;

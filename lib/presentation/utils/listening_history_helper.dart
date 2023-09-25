@@ -1,7 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
-
-import '../models/player_state.dart';
+import 'package:dune/domain/audio/services/audio_player.dart';
 
 base class ListeningHistoryHelper {
   String? _lastPlayedTrackId;
