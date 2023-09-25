@@ -1,3 +1,4 @@
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:equatable/equatable.dart';
 
@@ -125,8 +126,9 @@ final class TabData extends Equatable {
   final List<TabPageData> pages;
   final int selectedPageIndex;
 
-  TabPageData? get selectedPage =>
-      pages.isEmpty ? null : pages.elementAt(selectedPageIndex);
+  TabPageData? get selectedPage => pages.isEmpty
+      ? null
+      : pages.firstWhereOrNull((p) => p.index == selectedPageIndex);
 
   const TabData({
     this.pages = const [],
