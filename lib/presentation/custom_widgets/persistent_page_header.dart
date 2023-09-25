@@ -9,6 +9,9 @@ import 'package:dune/presentation/custom_widgets/selection_tool_bar.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_with_gestures_widget.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 
+typedef HeaderTrailingPositionBuilder = Widget Function(
+    bool headerMinimized, Widget child);
+
 class PersistentPageHeaderDelegate<T extends Object>
     extends SliverPersistentHeaderDelegate {
   final double minHeaderExtent;
@@ -24,6 +27,10 @@ class PersistentPageHeaderDelegate<T extends Object>
   final void Function() onSelectAll;
   final void Function()? onDownload;
   final void Function()? onRemove;
+  final HeaderTrailingPositionBuilder trailingPositionBuilder;
+
+  /// Widgets that will be placed in a row under the [title].
+  final List<Widget> actions;
 
   PersistentPageHeaderDelegate({
     required this.minHeaderExtent,
@@ -32,6 +39,7 @@ class PersistentPageHeaderDelegate<T extends Object>
     required this.selectionController,
     required this.selectionState,
     required this.onSelectAll,
+    required this.trailingPositionBuilder,
     this.description,
     this.onShuffle,
     this.thumbnailsSet,
@@ -39,6 +47,7 @@ class PersistentPageHeaderDelegate<T extends Object>
     this.isFetchingItems = false,
     this.onDownload,
     this.onRemove,
+    this.actions = const [],
   });
 
   static const selectionToolbarMinExtent = 60.0;
@@ -66,6 +75,7 @@ class PersistentPageHeaderDelegate<T extends Object>
         Expanded(
           flex: 0,
           child: _Header(
+            trailingPositionBuilder: trailingPositionBuilder,
             height: isMinimized
                 ? minExtent -
                     (selectionState.selectionEnabled
@@ -79,6 +89,7 @@ class PersistentPageHeaderDelegate<T extends Object>
             thumbnailsSet: thumbnailsSet,
             itemsCount: itemsCount,
             isFetchingItems: isFetchingItems,
+            actions: actions,
           ),
         ),
         if (selectionState.selectionEnabled)
@@ -126,6 +137,10 @@ class _Header extends StatelessWidget {
   final double height;
   final bool isMinimized;
 
+  /// Widgets that will be placed in a row under the [title].
+  final List<Widget> actions;
+  final HeaderTrailingPositionBuilder trailingPositionBuilder;
+
   const _Header({
     required this.height,
     required this.isMinimized,
@@ -135,6 +150,8 @@ class _Header extends StatelessWidget {
     required this.thumbnailsSet,
     required this.itemsCount,
     required this.isFetchingItems,
+    this.actions = const [],
+    required this.trailingPositionBuilder,
   });
 
   @override
@@ -185,39 +202,39 @@ class _Header extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (description != null)
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 150),
-                    bottom: isMinimized ? 6 : height * .3,
-                    left: 0,
-                    right: 0,
-                    child: SizedBox(
-                      width: 330,
-                      child: Text(
-                        description!,
-                        maxLines: 3,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
+                trailingPositionBuilder(
+                  isMinimized,
+                  Wrap(
+                    spacing: 10,
+                    runAlignment: WrapAlignment.center,
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (description != null)
+                        SizedBox(
+                          width: 330,
+                          height: isMinimized ? null : height * .3,
+                          child: Text(
+                            description!,
+                            maxLines: isMinimized ? 1 : 3,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
+                      TextButton.icon(
+                        onPressed: onShuffle,
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(
+                              context.colorScheme.secondary),
+                        ),
+                        icon: const Icon(Icons.shuffle, size: 20),
+                        label: Text("shuffle (${itemsCount ?? 0} items)"),
                       ),
-                    ),
-                  ),
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 150),
-                  bottom: height * .1,
-                  top: isMinimized ? 0 : null,
-                  right: isMinimized ? 10 : null,
-                  left: isMinimized ? null : 0,
-                  child: TextButton.icon(
-                    onPressed: onShuffle,
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(
-                          context.colorScheme.secondary),
-                    ),
-                    icon: const Icon(Icons.shuffle, size: 20),
-                    label: Text("shuffle (${itemsCount ?? 0} items)"),
+                      ...actions,
+                    ],
                   ),
                 ),
                 if (isFetchingItems)
