@@ -74,7 +74,7 @@ void main() {
   });
   group('it saves fetched items from a remote repository into the local one',
       () {
-    late final PlaylistFacade facade;
+    late PlaylistFacade facade;
     final youtubePlaylist =
         fakeYoutubePlaylistFactory.setTracksCount(20).create();
     final youtubePlaylists =
@@ -84,7 +84,7 @@ void main() {
     final spotifyPlaylists =
         fakeSpotifyPlaylistFactory.setTracksCount(10).createCount(20);
 
-    setUpAll(() async {
+    setUp(() async {
       facade = await _setupFacadeWith(
         youtubeRepository: FakePlaylistRepository(
           findPlaylistResult: youtubePlaylist.asResult,
