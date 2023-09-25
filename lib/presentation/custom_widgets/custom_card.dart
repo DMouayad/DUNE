@@ -87,18 +87,21 @@ class _CustomCardState extends State<CustomCard> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  widget.title ?? '',
-                  textAlign: TextAlign.center,
-                  softWrap: false,
-                  style: context.textTheme.titleSmall,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.title ?? '',
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                    style: context.textTheme.titleSmall,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-              if (widget.subtitle != null)
+              if (widget.subtitle?.isNotEmpty ?? false)
                 Container(
                   margin: const EdgeInsets.only(bottom: 15, left: 5, right: 5),
                   child: Text(
