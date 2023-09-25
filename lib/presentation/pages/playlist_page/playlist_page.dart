@@ -94,7 +94,8 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
             onShuffle: playlistState.valueOrNull != null ? () {} : null,
             selectionController: ref.read(selectionController.notifier),
             selectionState: ref.watch(selectionController),
-            onSelectAll: () => _onSelectAllTracks(ref, playlist?.tracks),
+            onSelectAll: () =>
+                selectionController.onSelectAllTracks(ref, playlist?.tracks),
           ),
         ),
         TracksListView(
@@ -118,10 +119,4 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
 
   @override
   bool get wantKeepAlive => true;
-
-  void _onSelectAllTracks(WidgetRef ref, List<BaseTrack>? tracks) {
-    ref.read(selectionController.notifier).selectAll(
-          Map.fromEntries(tracks?.map((e) => MapEntry(e.id, e)) ?? []),
-        );
-  }
 }
