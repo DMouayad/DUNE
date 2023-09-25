@@ -208,7 +208,7 @@ class _Header extends StatelessWidget {
                     spacing: 10,
                     runAlignment: WrapAlignment.center,
                     alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
                       if (description != null)
                         SizedBox(
