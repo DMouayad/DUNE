@@ -28,9 +28,7 @@ final class PlaylistFactory extends BaseModelFactory<BasePlaylist> {
   @override
   BasePlaylist create() {
     return BasePlaylist(
-      id: _id ??
-          '${faker.address.countryCode()}'
-              '-${faker.randomGenerator.string(10)}',
+      id: _id ?? faker.randomGenerator.string(10),
       author: _author ?? PlaylistAuthor(name: faker.person.name()),
       description: _description ?? faker.lorem.sentence(),
       duration: _duration,
