@@ -96,6 +96,15 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
             selectionState: ref.watch(selectionController),
             onSelectAll: () =>
                 selectionController.onSelectAllTracks(ref, playlist?.tracks),
+            trailingPositionBuilder: (headerMinimized, child) {
+              return AnimatedPositioned(
+                duration: const Duration(milliseconds: 150),
+                bottom: headerMinimized ? 0 : 20,
+                right: 0,
+                left: 0,
+                child: child,
+              );
+            },
           ),
         ),
         TracksListView(
