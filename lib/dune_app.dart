@@ -92,7 +92,7 @@ class _DuneAppState extends ConsumerState<DuneApp>
 
   TabsState _getInitialTabsState(InitialAppPage initialAppPage) {
     return TabsState(tabs: [
-      TabData(tabIndex: 0).copyWithPageAdded(
+      TabData.withEmptyPage(tabIndex: 0).copyWithPageAdded(
         path: '/tabs/0${initialAppPage.path}',
         title: initialAppPage.name,
       )
