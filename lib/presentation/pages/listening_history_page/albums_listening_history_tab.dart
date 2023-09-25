@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'listening_history_date_section.dart';
 
+const _kCardHeight = 260.0;
+
 class AlbumsListeningHistoryTab extends ConsumerWidget {
   const AlbumsListeningHistoryTab({super.key});
 
@@ -29,7 +31,7 @@ class AlbumsListeningHistoryTab extends ConsumerWidget {
             ),
           )
         : ListView.builder(
-            itemExtent: 360.0,
+            itemExtent: _kCardHeight,
             scrollDirection: Axis.vertical,
             itemCount: listeningHistoryState.isLoading
                 ? 1
@@ -75,6 +77,7 @@ class _AlbumsGridViewState extends State<_AlbumsGridView> {
   @override
   Widget build(BuildContext context) {
     return ScrollableCardsView(
+      itemWidth: 180,
       scrollController: scrollController,
       titleWidget: widget.albumsInfo.hasValue
           ? ListeningHistoryDateSectionHeader(
