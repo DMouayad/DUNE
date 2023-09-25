@@ -8,21 +8,21 @@ class CustomCard extends StatefulWidget {
     super.key,
     required this.tag,
     required this.title,
-    this.subtitle,
     required this.shape,
-    required this.onTap,
     required this.thumbnails,
+    this.onTap,
     this.cacheImage = false,
-    this.width = 250.0,
+    this.subtitle,
+    double? width,
     this.thumbImagePlaceholder,
-  });
+  }) : width = width ?? 240;
 
   final String tag;
   final String? title;
   final String? subtitle;
   final BoxShape shape;
   final ThumbnailsSet thumbnails;
-  final void Function() onTap;
+  final void Function()? onTap;
   final double width;
   final Widget? thumbImagePlaceholder;
   final bool cacheImage;
@@ -54,6 +54,7 @@ class _CustomCardState extends State<CustomCard> {
         }),
         borderRadius: rectangleBorderRadius,
         onTap: widget.onTap,
+        mouseCursor: MouseCursor.defer,
         child: Container(
           decoration: BoxDecoration(
             borderRadius:
@@ -89,12 +90,12 @@ class _CustomCardState extends State<CustomCard> {
               ),
               Expanded(
                 flex: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
                     widget.title ?? '',
                     textAlign: TextAlign.center,
-                    softWrap: false,
                     style: context.textTheme.titleSmall,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
