@@ -13,6 +13,7 @@ typedef ArtistsFromFile = ({
   List<BaseArtist> trackArtists,
   List<BaseArtist> albumArtists
 });
+typedef ThumbnailInfo = ({List<int> data, BaseThumbnail thumb});
 
 /// Extracts a [BaseTrack] from a given [File].
 ///
@@ -78,7 +79,7 @@ abstract class BaseTrackFromFileExtractor {
 
   AudioInfoSet? extractAudioInfoSet();
 
-  List<({BaseThumbnail thumb, List<int> data})> extractThumbnails();
+  List<ThumbnailInfo> extractThumbnails();
 
   String? get getTrackArtistString;
 
