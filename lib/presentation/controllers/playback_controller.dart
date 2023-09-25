@@ -1,5 +1,4 @@
-import 'package:dune/presentation/models/audio_player.dart';
-import 'package:dune/presentation/models/player_state.dart';
+import 'package:dune/domain/audio/services/audio_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlaybackController extends StateNotifier<PlayerState> {

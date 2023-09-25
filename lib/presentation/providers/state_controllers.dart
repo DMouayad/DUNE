@@ -11,7 +11,7 @@ import 'package:dune/presentation/controllers/explore_music_controller.dart';
 import 'package:dune/presentation/controllers/search_controller.dart';
 import 'package:dune/presentation/controllers/listening_history_controller.dart';
 import 'package:dune/presentation/controllers/playlist_controller.dart';
-import 'package:dune/presentation/models/player_state.dart';
+import 'package:dune/domain/audio/services/audio_player.dart';
 import 'package:dune/presentation/models/search_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

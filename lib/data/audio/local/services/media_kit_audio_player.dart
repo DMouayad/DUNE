@@ -1,12 +1,11 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/track_audio_info.dart';
-import 'package:dune/presentation/models/player_state.dart';
 import 'package:dune/presentation/utils/listening_history_helper.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:media_kit/media_kit.dart' as mediakit;
 
-import 'audio_player.dart';
+import '../../../../domain/audio/services/audio_player.dart';
 
 final class MediaKitAudioPlayer extends AudioPlayer {
   final mediakit.Player _player;

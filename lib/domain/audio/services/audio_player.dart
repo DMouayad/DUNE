@@ -10,9 +10,10 @@ import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/logger_service.dart';
 import 'package:dune/support/extensions/extensions.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import 'player_state.dart';
+part 'player_state.dart';
 
 abstract class AudioPlayer {
   late PlayerState _currentState;
