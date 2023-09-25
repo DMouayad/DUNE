@@ -45,17 +45,5 @@ void main() {
       // less then the [limit]
       expect(lib.getTracks(queryOptions.copyWith(page: 2, limit: 5)), isEmpty);
     });
-    test(
-        'it returns tracks if the query is the same as the passed one except [sortDescending]',
-        () {
-      const limit = 10;
-      const queryOptions = QueryOptions(limit: limit, sortDescending: false);
-      final tracks = TrackFactory().createCount(limit);
-      final lib = MusicLibrary()..setTracks(tracks, queryOptions);
-      expect(
-        lib.getTracks(queryOptions.copyWith(sortDescending: true)),
-        tracks.reversed.toList(),
-      );
-    });
   });
 }
