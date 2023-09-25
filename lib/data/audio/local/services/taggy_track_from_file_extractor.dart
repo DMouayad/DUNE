@@ -99,7 +99,7 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
       artists: const [],
       thumbnails: const ThumbnailsSet(),
       title: _tag?.trackTitle ?? '',
-      year: _tag?.year?.toString(),
+      year: _tag?.year != null ? _tag!.year.toString() : null,
       views: null,
       category: _tag?.genre,
       duration: _taggyFile.audio.durationSec != null
