@@ -34,3 +34,11 @@ final searchBarMusicSourceFilterProvider =
 
 typedef TracksSelectionControllerProvider = StateNotifierProvider<
     SelectionController<BaseTrack>, SelectionState<BaseTrack>>;
+
+extension TsExtension on TracksSelectionControllerProvider {
+  void onSelectAllTracks(WidgetRef ref, List<BaseTrack>? tracks) {
+    ref.read(notifier).selectAll(
+          Map.fromEntries(tracks?.map((e) => MapEntry(e.id, e)) ?? []),
+        );
+  }
+}
