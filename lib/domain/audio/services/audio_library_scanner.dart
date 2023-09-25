@@ -8,6 +8,7 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/utils/result/result.dart';
 
+import 'audio_files_scanner.dart';
 import 'base_file_track_extractor.dart';
 
 /// Responsible for scanning a given folder(directory) for audio tracks.
@@ -49,29 +50,37 @@ class AudioLibraryScanner with AudioFilesScanner {
     if (extractor == null) return null;
 
     final track = extractor.getTrackWithPropsAttached();
-    final coverThumbnails = extractor.extractThumbnails();
+    if (track == null) return track;
+    return await _assignThumbnailsToTrack(track, extractor.extractThumbnails());
+  }
 
-    // for now, we'll be saving only one image
-    final extractedThumbnail = coverThumbnails.firstOrNull;
-
-    if (track == null || extractedThumbnail == null) {
+  Future<BaseTrack> _assignThumbnailsToTrack(
+    BaseTrack track,
+    List<ThumbnailInfo> extractedThumbnails,
+  ) async {
+    final ThumbnailInfo? thumbData = extractedThumbnails.firstOrNull;
+    if (thumbData == null) {
       return track;
     } else {
       return (await _savePictureToFile(
-        extractedThumbnail.data,
+        thumbData.data,
         // it's better to use the album name to minimize the chance of
         // saving an image multiple times.
         track.album?.title ?? track.title,
       ))
           .mapTo(
         onSuccess: (imagePath) {
-          final thumb = extractedThumbnail.thumb.copyWith(url: imagePath);
-          return track.copyWith(thumbnails: ThumbnailsSet(thumbnails: [thumb]));
+          final thumb = thumbData.thumb.copyWith(url: imagePath);
+          final thumbnailsSet = ThumbnailsSet(thumbnails: [thumb]);
+          final albumWithThumb =
+              track.album?.copyWith(thumbnails: thumbnailsSet);
+          return track.copyWith(
+              thumbnails: thumbnailsSet, album: albumWithThumb);
         },
         onFailure: (e) {
           Log.e(
             "Failed to save image. for track: ${track.title}\n"
-            "Thumb:${extractedThumbnail.thumb}",
+            "Thumb:${thumbData.thumb}",
           );
           return track;
         },
@@ -90,35 +99,11 @@ class AudioLibraryScanner with AudioFilesScanner {
       // [writeAsBytes] will automatically closes the writer sink when done
       final imageFile = File(imageFilePath);
       if (imageFile.existsSync()) {
-        // if it already exists, don't save again
+        // if it already exists, do nothing
       } else {
         await imageFile.writeAsBytes(pictureData);
       }
       return imageFilePath;
     });
-  }
-}
-
-const _audioFilesExtensions = ['.mp3', '.mp4', '.m4a', '.wav', '.aac', '.flac'];
-mixin AudioFilesScanner {
-  /// Scans the provided [Directory] recursively for audio files only.
-  /// Returns the files in a [Stream]
-  Stream<File> getAudioFiles(Directory dir) {
-    return dir.list(recursive: true).where((fileEntity) {
-      return fileEntity is File && _isAudioFile(fileEntity);
-    }).cast();
-  }
-
-  /// Returns whether the provided [file] is an audio file based on its type
-  bool _isAudioFile(File file) {
-    final extension = p.extension(file.path.toLowerCase());
-    return _audioFilesExtensions.contains(extension);
-  }
-
-  int getDirectoryAudioFilesNumber(String path) {
-    return Directory(path)
-        .listSync(recursive: true)
-        .where((e) => e is File && _isAudioFile(e))
-        .length;
   }
 }

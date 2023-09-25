@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dune/domain/audio/services/audio_library_scanner.dart';
+import 'package:dune/domain/audio/services/audio_files_scanner.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/constants.dart';

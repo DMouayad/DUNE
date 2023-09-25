@@ -13,7 +13,6 @@ void main() {
 
   setUpAll(() async {
     Taggy.initialize();
-    // create the temporary folder to hold any extracted images
 
     scanner = AudioLibraryScanner(
       trackExtractor: TaggyTrackFromFileExtractor(),
@@ -34,7 +33,7 @@ void main() {
       expectLater(tracks.isSuccess, true);
       expectLater(
         tracks.requireValue.length,
-        scanner.getDirectoryAudioFilesNumber(kPathToAnAlbumFolder),
+        scanner.getDirectoryAudioFilesCount(kPathToAnAlbumFolder),
       );
     });
     test('it saves extracted images to the specified folder', () async {
