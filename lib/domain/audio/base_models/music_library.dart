@@ -74,6 +74,7 @@ extension HashMapExtension<V> on HashMap<QueryOptions, List<V>> {
     final key = keys.firstWhereOrNull((e) =>
         e.sortBy == options.sortBy &&
         e.page == options.page &&
+        e.sortDescending == options.sortDescending &&
         e.limit >= options.limit);
 
     List<V> values = whereKey(key) ?? [];
@@ -82,8 +83,8 @@ extension HashMapExtension<V> on HashMap<QueryOptions, List<V>> {
     final requiredItemsIsLessThanExisting = options.limit < key.limit;
     if (requiredItemsIsLessThanExisting) {
       values = values.take(options.limit).toList();
+      values = options.sortDescending ? values.reversed.toList() : values;
     }
-
-    return options.sortDescending ? values.reversed.toList() : values;
+    return values;
   }
 }
