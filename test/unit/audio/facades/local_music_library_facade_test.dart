@@ -189,6 +189,7 @@ void main() {
             limit: 2, sortBy: SortType.alphabetically, sortDescending: true),
       ],
       testBody: (queryOptions) async {
+        await IsarTestingUtils.refreshDatabase();
         final seededTracks =
             await IsarTestingUtils.seedTracks(5, MusicSource.local);
 
