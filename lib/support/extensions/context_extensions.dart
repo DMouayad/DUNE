@@ -23,7 +23,7 @@ extension DeviceInfoExtension on BuildContext {
 }
 
 extension AdaptiveContextExtension on BuildContext {
-  double get trackThumbnailDimension => isDesktop ? 54 : 46;
+  double get trackThumbnailDimension => isDesktop ? 44 : 46;
 }
 
 extension ResponsiveContextExtension on BuildContext {
