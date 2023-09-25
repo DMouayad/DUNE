@@ -34,10 +34,14 @@ class TrackCoverPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
+    final size = context.trackThumbnailDimension - 14;
+    return Container(
+      width: context.trackThumbnailDimension,
+      height: context.trackThumbnailDimension,
+      alignment: Alignment.center,
       child: Icon(
         Icons.music_note_outlined,
-        size: context.trackThumbnailDimension,
+        size: size,
         color: context.colorScheme.secondary,
       ),
     );

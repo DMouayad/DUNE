@@ -13,8 +13,6 @@ import 'optional_parent_widget.dart';
 
 class TracksListView extends ConsumerWidget {
   final AsyncValue<List<BaseTrack>> tracksState;
-  final EdgeInsets? listPadding;
-  final EdgeInsets? itemPadding;
   final BasePlaylist? playlist;
   final void Function()? onRetryWhenErrorLoadingTracks;
   final TracksSelectionControllerProvider selectionControllerProvider;
@@ -25,8 +23,6 @@ class TracksListView extends ConsumerWidget {
     this.tracksState, {
     this.isSliverList = false,
     required this.selectionControllerProvider,
-    this.listPadding,
-    this.itemPadding,
     this.playlist,
     this.onRetryWhenErrorLoadingTracks,
     this.physics,
@@ -38,46 +34,38 @@ class TracksListView extends ConsumerWidget {
     if (tracksState.hasValue && !tracksState.isLoading) {
       final tracks = tracksState.requireValue.toList();
       Widget builder(BuildContext context, int index) {
-        return Padding(
-          padding: itemPadding ?? _getCardPadding(context),
-          child: TrackCard(
-            selectionState: ref.watch(selectionControllerProvider),
-            onSelected: (track) {
+        return TrackCard(
+          selectionState: ref.watch(selectionControllerProvider),
+          onSelected: (track) {
+            ref
+                .read(selectionControllerProvider.notifier)
+                .toggleSelectionForItem(track.id, track);
+          },
+          onPlayTrack: () {
+            if (playlist != null) {
+              ref.read(playbackControllerProvider.notifier).player.playPlaylist(
+                    playlist!,
+                    track: tracks.elementAt(index),
+                  );
+            } else {
               ref
-                  .read(selectionControllerProvider.notifier)
-                  .toggleSelectionForItem(track.id, track);
-            },
-            onPlayTrack: () {
-              if (playlist != null) {
-                ref
-                    .read(playbackControllerProvider.notifier)
-                    .player
-                    .playPlaylist(
-                      playlist!,
-                      track: tracks.elementAt(index),
-                    );
-              } else {
-                ref
-                    .read(playbackControllerProvider.notifier)
-                    .player
-                    .playSingleTrack(tracks.elementAt(index));
-              }
-            },
-            track: tracks.elementAt(index),
-          ),
+                  .read(playbackControllerProvider.notifier)
+                  .player
+                  .playSingleTrack(tracks.elementAt(index));
+            }
+          },
+          track: tracks.elementAt(index),
         );
       }
 
       return isSliverList
-          ? SliverFixedExtentList.builder(
-              itemExtent: 70,
+          ? SliverList.builder(
               itemCount: tracks.length,
               itemBuilder: builder,
             )
           : ListView.builder(
               shrinkWrap: true,
               physics: physics,
-              itemExtent: 70,
               itemCount: tracks.length,
               itemBuilder: builder,
             );
@@ -125,11 +113,5 @@ class TracksListView extends ConsumerWidget {
         ),
       );
     }
-  }
-
-  EdgeInsets _getCardPadding(BuildContext context) {
-    return (context.isPortraitTablet
-        ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
-        : const EdgeInsets.fromLTRB(20, 6, 20, 0));
   }
 }

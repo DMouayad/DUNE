@@ -50,8 +50,8 @@ class TrackCardWrapper extends StatelessWidget {
           borderRadius: kBorderRadius,
           side: isSelected
               ? BorderSide(
-                  color: context.colorScheme.onPrimaryContainer.withOpacity(.9),
-                  width: 1.3,
+                  color: context.colorScheme.onBackground.withOpacity(.3),
+                  width: 2,
                 )
               : BorderSide.none,
         ),
@@ -68,7 +68,9 @@ class TrackCardWrapper extends StatelessWidget {
                 popupMenu,
               );
             },
-            hoverColor: playOnTap ? context.colorScheme.primaryContainer : null,
+            hoverColor: playOnTap
+                ? context.colorScheme.surfaceVariant.withOpacity(.3)
+                : null,
             mouseCursor: playOnTap ? null : MouseCursor.defer,
             focusColor: context.colorScheme.primaryContainer,
             customBorder:

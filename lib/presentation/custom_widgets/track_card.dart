@@ -20,6 +20,7 @@ class TrackCard extends ConsumerWidget {
     required this.track,
     required this.selectionState,
     required this.onSelected,
+    this.margin,
   });
 
   /// Called when the user requests to play this track.
@@ -30,29 +31,36 @@ class TrackCard extends ConsumerWidget {
   final BaseTrack track;
   final SelectionState<BaseTrack> selectionState;
   final void Function(BaseTrack) onSelected;
+  final EdgeInsets? margin;
 
   @override
   Widget build(BuildContext context, ref) {
-    return TrackCardWrapper(
-      playOnTap: true,
-      track: track,
-      onPlayTrack: onPlayTrack ??
-          () {
-            ref
-                .read(playbackControllerProvider.notifier)
-                .player
-                .playSingleTrack(track);
-          },
-      selectionState: selectionState,
-      onSelected: () => onSelected(track),
-      popupMenu: TrackCardPopupMenu(
-        track,
-        onDelete: null,
-        onDownload: () {},
-        onPlayTrack: onPlayTrack,
-        onSelectTrack: () => onSelected(track),
+    return Container(
+      margin: margin ??
+          (context.isPortraitTablet
+              ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
+              : const EdgeInsets.fromLTRB(12, 3, 12, 3)),
+      child: TrackCardWrapper(
+        playOnTap: true,
+        track: track,
+        onPlayTrack: onPlayTrack ??
+            () {
+              ref
+                  .read(playbackControllerProvider.notifier)
+                  .player
+                  .playSingleTrack(track);
+            },
+        selectionState: selectionState,
+        onSelected: () => onSelected(track),
+        popupMenu: TrackCardPopupMenu(
+          track,
+          onDelete: null,
+          onDownload: () {},
+          onPlayTrack: onPlayTrack,
+          onSelectTrack: () => onSelected(track),
+        ),
+        child: TrackCardMainContent(track: track),
       ),
-      child: TrackCardMainContent(track: track),
     );
   }
 }
@@ -77,100 +85,147 @@ class TrackCardMainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleTextStyle = context.textTheme.titleSmall;
-    final secondaryTextStyle = context.textTheme.bodyMedium;
-    final wideSpacer = SizedBox(width: context.screenWidth > 900 ? 36 : 24);
+    final titleTextStyle = context.textTheme.bodyMedium;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 0,
-          child: ThumbnailWidget(
-            thumbnailsSet: track.thumbnails,
-            dimension: context.trackThumbnailDimension,
-            placeholder: const TrackCoverPlaceholder(),
-            cacheNetworkImage: true,
-          ),
-        ),
-        wideSpacer,
-        Expanded(
-          flex: context.screenWidth > 900 ? 2 : 1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: alwaysCenterTitle
-                ? MainAxisAlignment.center
-                : MainAxisAlignment.start,
-            children: [
-              Text(
-                track.title,
-                overflow: TextOverflow.ellipsis,
-                style: titleTextStyle,
-              ),
-              if (showArtistsNames &&
-                  (track.artistsNames.isNotEmpty || !alwaysCenterTitle)) ...[
-                const SizedBox(height: 3),
-                Text(
-                  track.artistsNames,
-                  style: secondaryTextStyle,
-                ),
-              ],
-            ],
-          ),
-        ),
-        wideSpacer,
-        if (track.album != null && !context.isMobile)
-          ...() {
-            final text = track.album!.title +
-                (track.album?.releaseDate != null
-                    ? '(${track.album?.releaseDate?.year})'
-                    : '');
-            return [
-              Expanded(
-                flex: context.screenWidth > 900 ? 2 : 1,
-                child: Tooltip(
-                  message: 'Album: $text',
-                  waitDuration: const Duration(milliseconds: 600),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.album,
-                        size: 16,
-                        color: context.colorScheme.onSurfaceVariant
-                            .withOpacity(.7),
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          text,
-                          style: secondaryTextStyle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              wideSpacer,
-            ];
-          }(),
-        if (showDuration)
+    final wideSpacer = SizedBox(width: context.screenWidth > 900 ? 18 : 10);
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 52, maxHeight: 70),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+        children: [
           Expanded(
             flex: 0,
-            child: Text(
-              track.duration?.formatInHhMmSs ?? 'N/A',
-              overflow: TextOverflow.ellipsis,
-              style: context.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
+            child: ThumbnailWidget(
+              thumbnailsSet: track.thumbnails,
+              dimension: context.trackThumbnailDimension,
+              placeholder: const TrackCoverPlaceholder(),
+              cacheNetworkImage: true,
+            ),
+          ),
+          wideSpacer,
+          Expanded(
+            flex: context.screenWidth > 900 ? 2 : 1,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: alwaysCenterTitle
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    track.title,
+                    // overflow: TextOverflow.ellipsis,
+                    style: titleTextStyle,
+                    maxLines: 1,
+                  ),
+                  if (showArtistsNames &&
+                      (track.artistsNames.isNotEmpty ||
+                          !alwaysCenterTitle)) ...[
+                    const SizedBox(height: 6),
+                    Wrap(
+                      spacing: 4,
+                      children: track.artists
+                          .map(
+                            (e) => e.name != null
+                                ? _ClickableText(
+                                    text: e.name!,
+                                    onClicked: () {},
+                                  )
+                                : const SizedBox.shrink(),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
-        wideSpacer,
-      ],
+          wideSpacer,
+          if (track.album != null && !context.isMobile)
+            ...() {
+              final text = track.album!.title +
+                  (track.album?.releaseDate != null
+                      ? '(${track.album?.releaseDate?.year})'
+                      : '');
+              return [
+                Expanded(
+                  flex: context.screenWidth > 900 ? 2 : 1,
+                  child: Tooltip(
+                    message: 'Album: $text',
+                    waitDuration: const Duration(milliseconds: 600),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.album,
+                          size: 16,
+                          color: context.colorScheme.onSurfaceVariant
+                              .withOpacity(.7),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: _ClickableText(text: text, onClicked: () {}),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                wideSpacer,
+              ];
+            }(),
+          if (showDuration)
+            Expanded(
+              flex: 0,
+              child: Text(
+                track.duration?.formatInHhMmSs ?? 'N/A',
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          wideSpacer,
+        ],
+      ),
+    );
+  }
+}
+
+class _ClickableText extends StatefulWidget {
+  const _ClickableText({required this.text, required this.onClicked});
+
+  final String text;
+  final void Function() onClicked;
+
+  @override
+  State<_ClickableText> createState() => _ClickableTextState();
+}
+
+class _ClickableTextState extends State<_ClickableText> {
+  bool hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: GestureDetector(
+        onTap: widget.onClicked,
+        child: Text(
+          widget.text,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.secondary,
+            fontWeight: hovered ? FontWeight.w500 : null,
+            decoration: hovered ? TextDecoration.underline : null,
+          ),
+          maxLines: 1,
+        ),
+      ),
     );
   }
 }
