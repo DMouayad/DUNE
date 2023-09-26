@@ -103,9 +103,10 @@ class LibraryItemsPage<T extends Object> extends ConsumerWidget {
             noItemsFoundIndicatorBuilder: (context, controller) =>
                 const _NoItemsFoundWidget(),
             noMoreItemsIndicatorBuilder: (context, controller) {
+              final itemsCount = controller.itemList?.length ?? 0;
               return Center(
                 child: Text(
-                  "You've reached the end",
+                  "You've reached the end - $itemsCount of total $itemsCount",
                   style: context.textTheme.bodySmall,
                 ),
               );
