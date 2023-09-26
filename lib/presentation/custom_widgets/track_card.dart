@@ -149,11 +149,11 @@ class TrackCardMainContent extends StatelessWidget {
             ),
           ),
           wideSpacer,
-          if (track.album != null && !context.isMobile)
+          if (track.album != null)
             ...() {
               final text = track.album!.title +
                   (track.album?.releaseDate != null
-                      ? '(${track.album?.releaseDate?.year})'
+                      ? ' ${track.album?.releaseDate?.year}'
                       : '');
               return [
                 Expanded(
