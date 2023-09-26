@@ -10,10 +10,11 @@ import 'package:dune/support/utils/result/result.dart';
 
 import 'audio_files_scanner.dart';
 import 'base_file_track_extractor.dart';
+import 'image_files_scanner.dart';
 
 /// Responsible for scanning a given folder(directory) for audio tracks.
-class AudioLibraryScanner with AudioFilesScanner {
-  const AudioLibraryScanner({
+class AudioLibraryScanner with AudioFilesScanner, ImagesScanner {
+  AudioLibraryScanner({
     required BaseTrackFromFileExtractor trackExtractor,
     required this.directoryToSaveExtractedImages,
   }) : _trackExtractor = trackExtractor;
@@ -29,6 +30,7 @@ class AudioLibraryScanner with AudioFilesScanner {
   /// If directory doesn't exists, a `FailureResult` is returned with
   /// `AppException.directoryNotFound`
   FutureOrResult<List<BaseTrack>> scanDirectory(String path) async {
+    clearCachedImagePaths();
     final dir = Directory(path);
 
     if (dir.existsSync()) {
@@ -58,7 +60,8 @@ class AudioLibraryScanner with AudioFilesScanner {
     BaseTrack track,
     List<ThumbnailInfo> extractedThumbnails,
   ) async {
-    final ThumbnailInfo? thumbData = extractedThumbnails.firstOrNull;
+    final ThumbnailInfo? thumbData =
+        extractedThumbnails.firstOrNull ?? await scanDirForImages(track);
     if (thumbData == null) {
       return track;
     } else {
