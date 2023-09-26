@@ -104,6 +104,9 @@ extension ContextThemeExtension on BuildContext {
     );
   }
 
+  /// The background color of a surface on the [AppTheme.cardColor]
+  Color get backgroundOnCard => colorScheme.background.withOpacity(.71);
+
   BorderRadius get platformBorderRadius =>
       BorderRadius.circular(isWindowsPlatform
           ? 10

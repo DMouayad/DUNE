@@ -26,28 +26,21 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
         color: context.colorScheme.onBackground,
       ),
       searchController: searchController,
-      viewShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
+      viewShape: const RoundedRectangleBorder(borderRadius: kBorderRadius),
       isFullScreen: false,
       viewConstraints: BoxConstraints.expand(
-        width: context.screenWidth * .6,
+        width: context.screenWidth * .7,
         height: context.screenHeight * .8,
       ),
       viewTrailing: const [SearchMusicSourceOptionButton()],
-      viewElevation: 20,
-      barShape: MaterialStateProperty.resolveWith(
-        (states) {
-          return const RoundedRectangleBorder(
-            borderRadius: kBorderRadius,
-          );
-        },
+      viewElevation: 10,
+      barShape: MaterialStateProperty.all(
+        const RoundedRectangleBorder(borderRadius: kBorderRadius),
       ),
       viewHintText: "Search",
       barElevation: MaterialStateProperty.all(0),
-      barBackgroundColor: MaterialStateProperty.resolveWith((states) {
-        return context.colorScheme.background;
-      }),
+      barBackgroundColor: MaterialStateProperty.resolveWith(
+          (states) => context.backgroundOnCard),
       viewBackgroundColor: context.colorScheme.background,
       suggestionsBuilder: (context, controller) {
         if (controller.text != searchState.requireValue.query) {

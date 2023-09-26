@@ -110,7 +110,7 @@ class _NavButton extends StatelessWidget {
           if (states.contains(MaterialState.hovered)) {
             return context.colorScheme.onInverseSurface;
           }
-          return backgroundColor ?? context.colorScheme.background;
+          return backgroundColor ?? context.backgroundOnCard;
         }),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         foregroundColor: MaterialStateProperty.all(
