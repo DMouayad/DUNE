@@ -1,6 +1,22 @@
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
+class ArtistCoverPlaceholder extends StatelessWidget {
+  const ArtistCoverPlaceholder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: context.colorScheme.surfaceVariant.withOpacity(.66),
+      child: Icon(
+        Icons.person_outline_outlined,
+        color: context.colorScheme.secondary,
+        size: context.trackThumbnailDimension,
+      ),
+    );
+  }
+}
+
 class AlbumCoverPlaceholder extends StatelessWidget {
   const AlbumCoverPlaceholder({super.key});
 

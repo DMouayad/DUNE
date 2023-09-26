@@ -26,6 +26,7 @@ class ArtistCard extends StatelessWidget {
       tag: artist.id ?? artist.browseId ?? artist.hashCode.toString(),
       title: artist.name,
       thumbnails: artist.thumbnails,
+      thumbImagePlaceholder: const ArtistCoverPlaceholder(),
       shape: BoxShape.circle,
       onTap: () {},
     );
