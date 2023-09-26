@@ -2,7 +2,15 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 
-extension ListExtensions<T> on Iterable<T> {
+extension IterableExtensions<T> on Iterable<T> {
+  T? get firstOrNull {
+    try {
+      return first;
+    } on StateError {
+      return null;
+    }
+  }
+
   List<String> toStringList() {
     final l = <String>[];
     for (var i in this) {
@@ -68,16 +76,6 @@ extension MapKeys<K, V> on Map<K, V> {
         .toList()
         .firstWhereOrNull((e) => keys.contains(e.key))
         ?.value;
-  }
-}
-
-extension IterableExtension on Iterable {
-  get firstOrNull {
-    try {
-      return first;
-    } on StateError {
-      return null;
-    }
   }
 }
 
