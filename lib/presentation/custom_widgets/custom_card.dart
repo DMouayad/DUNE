@@ -32,13 +32,13 @@ class CustomCard extends StatefulWidget {
 }
 
 class _CustomCardState extends State<CustomCard> {
-  late final defaultImagePadding = const EdgeInsets.all(8);
-  final expandedImagePadding = const EdgeInsets.all(2);
-  late EdgeInsets imagePadding;
+  late final defaultImageMargin = const EdgeInsets.all(8);
+  final expandedImageMargin = const EdgeInsets.all(2);
+  late EdgeInsets imageMargin;
 
   @override
   void initState() {
-    imagePadding = defaultImagePadding;
+    imageMargin = defaultImageMargin;
     super.initState();
   }
 
@@ -50,7 +50,7 @@ class _CustomCardState extends State<CustomCard> {
       tag: widget.tag,
       child: InkWell(
         onHover: (hovered) => setState(() {
-          imagePadding = hovered ? expandedImagePadding : defaultImagePadding;
+          imageMargin = hovered ? expandedImageMargin : defaultImageMargin;
         }),
         borderRadius: rectangleBorderRadius,
         onTap: widget.onTap,
@@ -68,9 +68,8 @@ class _CustomCardState extends State<CustomCard> {
             children: [
               Expanded(
                 child: AnimatedContainer(
-                  padding: imagePadding,
                   duration: const Duration(milliseconds: 150),
-                  margin: EdgeInsets.zero,
+                  margin: imageMargin,
                   constraints: const BoxConstraints.expand(),
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
