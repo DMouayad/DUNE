@@ -21,9 +21,7 @@ class CustomExpansionTile extends StatelessWidget {
       contentBackgroundColor: Colors.transparent,
       contentShape: (_) =>
           const RoundedRectangleBorder(borderRadius: kBorderRadius),
-      headerBackgroundColor: (_) => fluent.ButtonState.resolveWith((states) {
-        return Colors.transparent;
-      }),
+      headerBackgroundColor: (_) => fluent.ButtonState.all(Colors.transparent),
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       headerShape: (_) =>
           const RoundedRectangleBorder(borderRadius: kBorderRadius),
@@ -31,7 +29,11 @@ class CustomExpansionTile extends StatelessWidget {
         title,
         style: context.textTheme.titleSmall,
       ),
-      leading: Icon(iconData, size: 20),
+      leading: Icon(
+        iconData,
+        size: 18,
+        color: context.colorScheme.onBackground.withOpacity(.9),
+      ),
       content: Column(children: children),
     );
   }
