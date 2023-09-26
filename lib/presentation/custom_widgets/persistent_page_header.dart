@@ -192,7 +192,7 @@ class _Header extends StatelessWidget {
               children: [
                 Positioned(
                   top: 16,
-                  left: 10,
+                  left: 16,
                   bottom: 0,
                   child: Text(
                     title,
