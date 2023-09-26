@@ -106,7 +106,7 @@ class LibraryItemsPage<T extends Object> extends ConsumerWidget {
               return Center(
                 child: Text(
                   "You've reached the end",
-                  style: context.textTheme.bodyMedium,
+                  style: context.textTheme.bodySmall,
                 ),
               );
             },
