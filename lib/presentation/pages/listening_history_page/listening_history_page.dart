@@ -47,23 +47,26 @@ class _ListeningHistoryPageState extends ConsumerState<ListeningHistoryPage>
   Widget build(BuildContext context) {
     return fluent.ScaffoldPage(
       padding: kPagePadding,
-      header: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const PageTitle("Your listening history"),
-          IconButton(
-            onPressed: () {
-              ref
-                  .read(listeningHistoryControllerProvider.notifier)
-                  .loadListeningHistoryOverLastMonth();
-            },
-            icon: Icon(
-              Icons.refresh,
-              size: 20,
-              color: context.colorScheme.secondary,
+      header: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const PageTitle("Your listening history", padding: EdgeInsets.zero),
+            IconButton(
+              onPressed: () {
+                ref
+                    .read(listeningHistoryControllerProvider.notifier)
+                    .loadListeningHistoryOverLastMonth();
+              },
+              icon: Icon(
+                Icons.refresh,
+                size: 20,
+                color: context.colorScheme.secondary,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

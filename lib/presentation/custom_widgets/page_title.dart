@@ -2,14 +2,15 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 class PageTitle extends StatelessWidget {
-  const PageTitle(this.title, {super.key});
+  const PageTitle(this.title, {this.padding, super.key});
 
   final String title;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 18.0),
       child: Text(
         title,
         style: context.textTheme.titleLarge,
