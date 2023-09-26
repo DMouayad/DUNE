@@ -205,9 +205,11 @@ class _Header extends StatelessWidget {
                 trailingPositionBuilder(
                   isMinimized,
                   Wrap(
-                    spacing: 10,
+                    spacing: 30,
                     runAlignment: WrapAlignment.center,
-                    alignment: WrapAlignment.spaceBetween,
+                    alignment: onShuffle != null
+                        ? WrapAlignment.spaceBetween
+                        : WrapAlignment.end,
                     crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
                       if (description != null)
@@ -224,15 +226,16 @@ class _Header extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                      TextButton.icon(
-                        onPressed: onShuffle,
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                              context.colorScheme.secondary),
+                      if (onShuffle != null)
+                        TextButton.icon(
+                          onPressed: onShuffle,
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(
+                                context.colorScheme.secondary),
+                          ),
+                          icon: const Icon(Icons.shuffle, size: 20),
+                          label: Text("shuffle (${itemsCount ?? 0} items)"),
                         ),
-                        icon: const Icon(Icons.shuffle, size: 20),
-                        label: Text("shuffle (${itemsCount ?? 0} items)"),
-                      ),
                       ...actions,
                     ],
                   ),

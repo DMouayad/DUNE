@@ -39,10 +39,10 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage>
   AsyncValue<BasePlaylist?> playlistState = const AsyncValue.loading();
   BasePlaylist? playlist;
 
-  /// [Provider] for a [SelectionController] for this [playlist]'s tracks.
+  /// Handles selection actions for this [playlist] tracks.
   ///
-  /// Each [PlaylistPage] has its [selectionController]
-  /// in case of the tabs-mode is enabled.
+  /// Each [PlaylistPage] has its [selectionController] in case we got multiple
+  /// pages opened in different tabs.
   late final selectionController = TracksSelectionControllerProvider(
     (ref) => SelectionController<BaseTrack>(
       SelectionState.initial(itemToString: (track) => track.title),
