@@ -31,7 +31,6 @@ mixin ImagesScanner {
       imagePath = _foundImages
           .whereKey(dir.path)
           ?.firstWhereOrNull((p) => _pathHasTrackOrAlbumName(track, p));
-      print("already exists: ${imagePath ?? ''}");
     } else {
       final imagesInDir = await dir
           .list(recursive: true)
@@ -41,13 +40,23 @@ mixin ImagesScanner {
               _pathHasTrackOrAlbumName(track, fileEntity.path))
           .toList();
       imagePath = imagesInDir.cast<File>().firstOrNull?.path;
+      _addImagePathToFoundMap(imagePath, dir);
     }
     if (imagePath != null) {
-      print(imagePath);
       return _getThumbInfoFromFile(imagePath);
     }
 
     return null;
+  }
+
+  void _addImagePathToFoundMap(String? path, Directory dir) {
+    if (path != null) {
+      _foundImages.update(
+        dir.path,
+        (value) => {...value, path},
+        ifAbsent: () => {path},
+      );
+    }
   }
 
   ThumbnailInfo _getThumbInfoFromFile(String path) {
