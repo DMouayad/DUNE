@@ -46,7 +46,7 @@ class _SelectableArtistCard extends ArtistCard {
 
   @override
   Widget build(BuildContext context) {
-    final selectionKey = artist.name ?? artist.hashCode.toString();
+    final selectionKey = artist.name!;
 
     return SelectableCard<BaseArtist>(
       selectionKey: selectionKey,

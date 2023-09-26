@@ -12,7 +12,7 @@ import 'library_items_page.dart';
 final _selectionControllerProvider = StateNotifierProvider<
     SelectionController<BaseArtist>, SelectionState<BaseArtist>>(
   (ref) => SelectionController<BaseArtist>(
-    SelectionState.initial(itemToString: (artist) => artist.id ?? artist.name!),
+    SelectionState.initial(itemToString: (artist) => artist.name ?? ''),
   ),
 );
 final _artistsControllerProvider = StateNotifierProvider<
