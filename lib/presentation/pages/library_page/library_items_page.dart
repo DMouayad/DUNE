@@ -93,7 +93,7 @@ class LibraryItemsPage<T extends Object> extends ConsumerWidget {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           sliver: RiverPagedBuilder<int, T>(
             provider: itemsControllerProvider,
             pullToRefresh: false,

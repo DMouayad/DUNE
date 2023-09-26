@@ -29,9 +29,9 @@ class LibraryAlbumsPage extends ConsumerWidget {
         pagingController: c,
         builderDelegate: b,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 190,
+          maxCrossAxisExtent: 200,
           crossAxisSpacing: 10,
-          mainAxisExtent: 210,
+          mainAxisExtent: 230,
           mainAxisSpacing: 10,
         ),
       ),
