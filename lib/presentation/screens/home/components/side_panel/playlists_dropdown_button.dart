@@ -45,15 +45,19 @@ class _PlaylistsOptions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        IconButton(
-          tooltip: 'Add new',
-          icon: const Icon(Icons.add, size: 20),
-          onPressed: () {},
+        Expanded(
+          child: IconButton(
+            tooltip: 'Add new',
+            icon: const Icon(Icons.add, size: 20),
+            onPressed: () {},
+          ),
         ),
-        IconButton(
-          tooltip: 'View all',
-          icon: const Icon(Icons.read_more, size: 20),
-          onPressed: () {},
+        Expanded(
+          child: IconButton(
+            tooltip: 'View all',
+            icon: const Icon(Icons.read_more, size: 20),
+            onPressed: () {},
+          ),
         ),
       ],
     );
