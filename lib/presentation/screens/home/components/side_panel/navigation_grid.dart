@@ -32,11 +32,12 @@ class NavGrid extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       child: Container(
         height: showAllWhenMinimized ? null : _kButtonWidth,
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.only(top: 10, bottom: 6),
         alignment: Alignment.topCenter,
         child: Wrap(
           spacing: 8,
-          runSpacing: 10,
+          runSpacing: 6,
+          alignment: WrapAlignment.spaceBetween,
           clipBehavior: Clip.hardEdge,
           children: [
             _NavButton(
@@ -56,17 +57,23 @@ class NavGrid extends ConsumerWidget {
               },
             ),
             _NavButton(
-              iconData: fluent.FluentIcons.settings,
+              iconData: context.isDesktopPlatform
+                  ? fluent.FluentIcons.settings
+                  : Icons.settings_outlined,
               onPressed: () =>
                   onDestinationSelected(QuickNavDestination.settingsPage),
             ),
             _NavButton(
-              iconData: CupertinoIcons.rectangle_stack_badge_person_crop,
+              iconData: context.isDesktopPlatform
+                  ? fluent.FluentIcons.analytics_view
+                  : Icons.analytics_outlined,
               onPressed: () => onDestinationSelected(
                   QuickNavDestination.listeningHistoryPage),
             ),
             _NavButton(
-              iconData: CupertinoIcons.compass,
+              iconData: context.isDesktopPlatform
+                  ? fluent.FluentIcons.compass_n_w
+                  : CupertinoIcons.compass,
               onPressed: () =>
                   onDestinationSelected(QuickNavDestination.explorePage),
             ),
@@ -118,7 +125,7 @@ class _NavButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Icon(iconData, size: 22),
+      child: Icon(iconData, size: context.isDesktopPlatform ? 20 : 22),
     );
   }
 }
