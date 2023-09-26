@@ -60,9 +60,10 @@ class LibraryArtistsPage extends ConsumerWidget {
                   ?.asMap()
                   .entries
                   .map((entry) => MapEntry(
-                        entry.value.id ?? entry.key.toString(),
-                        entry.value,
-                      )) ??
+                      ref
+                          .read(_selectionControllerProvider)
+                          .itemToString(entry.value),
+                      entry.value)) ??
               []),
         );
   }
