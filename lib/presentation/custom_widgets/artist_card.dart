@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
+import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_card.dart';
@@ -14,7 +15,7 @@ class ArtistCard extends StatelessWidget {
   const factory ArtistCard.selectable({
     required BaseArtist artist,
     required SelectionState<BaseArtist> selectionState,
-    required void Function() onSelected,
+    required void Function(String key) onSelected,
     double? width,
   }) = _SelectableArtistCard;
 
@@ -33,7 +34,7 @@ class ArtistCard extends StatelessWidget {
 
 class _SelectableArtistCard extends ArtistCard {
   final SelectionState<BaseArtist> selectionState;
-  final void Function() onSelected;
+  final void Function(String key) onSelected;
 
   const _SelectableArtistCard({
     required super.artist,
@@ -44,14 +45,14 @@ class _SelectableArtistCard extends ArtistCard {
 
   @override
   Widget build(BuildContext context) {
-    final selectionKey = artist.id ?? artist.hashCode.toString();
+    final selectionKey = artist.name ?? artist.hashCode.toString();
 
     return SelectableCard<BaseArtist>(
       selectionKey: selectionKey,
       popupMenu: const SizedBox(),
       onTap: () {},
       selectionState: selectionState,
-      onSelected: onSelected,
+      onSelected: () => onSelected(selectionKey),
       child: ArtistCard(artist: artist, width: width),
     );
   }

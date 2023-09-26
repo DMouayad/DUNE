@@ -41,12 +41,10 @@ class LibraryArtistsPage extends ConsumerWidget {
       itemsControllerProvider: _artistsControllerProvider,
       onSelectAll: () => _onSelectAll(ref),
       itemBuilder: (context, item, index) {
-        final selectionKey = item.id ?? item.name ?? 'artist#$index';
         return ArtistCard.selectable(
           artist: item,
-          width: 190,
           selectionState: ref.watch(_selectionControllerProvider),
-          onSelected: () => ref
+          onSelected: (selectionKey) => ref
               .read(_selectionControllerProvider.notifier)
               .toggleSelectionForItem(selectionKey, item),
         );
