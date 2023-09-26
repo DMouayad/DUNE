@@ -28,7 +28,6 @@ class ArtistCard extends StatelessWidget {
       thumbnails: artist.thumbnails,
       thumbImagePlaceholder: const ArtistCoverPlaceholder(),
       shape: BoxShape.circle,
-      onTap: () {},
     );
   }
 }
