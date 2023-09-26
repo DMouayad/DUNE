@@ -55,8 +55,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
     return Container(
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin: EdgeInsets.only(
-          left: 12, right: 10, top: tabsMode.isEnabled ? 12 : 0),
+      margin:
+          EdgeInsets.only(left: 12, right: 10, top: tabsMode.isEnabled ? 6 : 0),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.maxWidth == context.maxNavRailWidth;
         return Column(

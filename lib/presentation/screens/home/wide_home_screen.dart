@@ -1,4 +1,5 @@
 import 'package:dune/presentation/models/tabs_state.dart';
+import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +30,7 @@ class WideHomeScreen extends ConsumerWidget {
     final topSpacing = tabsMode.isEnabled
         ? tabsMode.isHorizontal
             ? 80.0
-            : 37.0
+            : kWideScreenAppBarHeight
         : 34.0;
     final screen = Theme(
       data: appTheme.materialThemeData,
@@ -43,7 +44,7 @@ class WideHomeScreen extends ConsumerWidget {
                   const Positioned(
                       bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
                 const Positioned(
-                    top: 2, right: 0, left: 18, child: WideHomeScreenAppBar()),
+                    top: 0, right: 0, left: 19, child: WideHomeScreenAppBar()),
                 if (tabsMode.isHorizontal)
                   Positioned(
                     right: 0,
