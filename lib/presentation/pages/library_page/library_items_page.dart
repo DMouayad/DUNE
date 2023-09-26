@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:riverpod_infinite_scroll/riverpod_infinite_scroll.dart';
 
-class LibraryItemsPage<T extends Object> extends ConsumerWidget {
+class LibraryItemsPage<T extends Object, Selectable extends Object>
+    extends ConsumerWidget {
   const LibraryItemsPage({
     super.key,
     required this.title,
@@ -23,8 +24,8 @@ class LibraryItemsPage<T extends Object> extends ConsumerWidget {
   final Widget Function(PagingController<int, T> controller,
       PagedChildBuilderDelegate<T> builder) pagedBuilder;
   final String title;
-  final StateNotifierProvider<SelectionController<T>, SelectionState<T>>
-      selectionControllerProvider;
+  final StateNotifierProvider<SelectionController<Selectable>,
+      SelectionState<Selectable>> selectionControllerProvider;
   final StateNotifierProvider<PagedItemsController<T>,
       QueryOptionsPagedState<T>> itemsControllerProvider;
   final void Function() onSelectAll;
@@ -39,7 +40,7 @@ class LibraryItemsPage<T extends Object> extends ConsumerWidget {
       slivers: [
         SliverPersistentHeader(
           pinned: true,
-          delegate: PersistentPageHeaderDelegate<T>(
+          delegate: PersistentPageHeaderDelegate<Selectable>(
             trailingPositionBuilder: (headerMinimized, child) {
               return Positioned(
                 bottom: headerMinimized ? 0 : 4,

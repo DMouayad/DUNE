@@ -28,7 +28,7 @@ class LibraryTracksPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return LibraryItemsPage<BaseTrack>(
+    return LibraryItemsPage<BaseTrack, BaseTrack>(
       pagedBuilder: (c, b) =>
           PagedSliverList(pagingController: c, builderDelegate: b),
       title: 'Library tracks',

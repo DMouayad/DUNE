@@ -16,15 +16,16 @@ final _selectionControllerProvider = StateNotifierProvider<
   ),
 );
 final _albumsControllerProvider = StateNotifierProvider<
-    LocalLibraryAlbumsController,
-    QueryOptionsPagedState<BaseAlbum>>((ref) => LocalLibraryAlbumsController());
+        LocalLibraryAlbumsController,
+        QueryOptionsPagedState<LocalAlbumsResult>>(
+    (ref) => LocalLibraryAlbumsController());
 
 class LibraryAlbumsPage extends ConsumerWidget {
   const LibraryAlbumsPage({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
-    return LibraryItemsPage<BaseAlbum>(
+    return LibraryItemsPage<BaseAlbum, BaseAlbum>(
       pagedBuilder: (c, b) => PagedSliverGrid(
         pagingController: c,
         builderDelegate: b,

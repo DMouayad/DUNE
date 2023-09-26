@@ -24,7 +24,7 @@ class LibraryArtistsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return LibraryItemsPage<BaseArtist>(
+    return LibraryItemsPage<BaseArtist, BaseArtist>(
       pagedBuilder: (c, b) => PagedSliverGrid(
         pagingController: c,
         builderDelegate: b,
