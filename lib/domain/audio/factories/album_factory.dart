@@ -38,6 +38,7 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
       musicSource: _musicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
       artists: _artists ?? [],
+      albumArtist: _artists?.firstOrNull,
       browseId:
           _browseId ?? faker.randomGenerator.string(20) + faker.lorem.word(),
       category: _category,

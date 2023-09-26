@@ -52,6 +52,7 @@ final class TaggyTrackFromFileExtractor extends BaseTrackFromFileExtractor {
             thumbnails: const ThumbnailsSet(),
             type: null,
             tracks: const [],
+            albumArtist: null,
             releaseDate: _tag!.year != null ? DateTime(_tag!.year!) : null,
             musicSource: MusicSource.local,
           ).setIdIfNull();

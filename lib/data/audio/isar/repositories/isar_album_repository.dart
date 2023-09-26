@@ -73,8 +73,7 @@ final class IsarAlbumRepository
         ...oldInstance.tracksIds,
         ...newInstance.tracksIds,
       }.toList(),
-      albumArtistId:
-          newInstance.albumArtistId == null ? oldInstance.albumArtistId : null,
+      albumArtist: newInstance.albumArtist ?? oldInstance.albumArtist,
       featuredArtistsIds: {
         ...oldInstance.featuredArtistsIds,
         ...newInstance.featuredArtistsIds,

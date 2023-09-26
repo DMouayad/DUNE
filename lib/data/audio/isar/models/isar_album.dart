@@ -20,10 +20,12 @@ part 'isar_album.g.dart';
   'props',
   'derived',
   'hashCode',
+  'albumArtist',
   'stringify'
 })
 class IsarAlbum extends BaseAlbum {
   Id? isarId;
+  @Index()
   final String? albumArtistId;
   final List<String> featuredArtistsIds;
   final List<String> tracksIds;
@@ -46,7 +48,7 @@ class IsarAlbum extends BaseAlbum {
   IsarAlbum({
     super.id = '',
     this.isarId,
-    this.albumArtistId,
+    String? albumArtistId,
     this.featuredArtistsIds = const [],
     this.tracksIds = const [],
     super.artists = const [],
@@ -60,7 +62,9 @@ class IsarAlbum extends BaseAlbum {
     super.tracks = const [],
     super.releaseDate,
     super.musicSource = MusicSource.unknown,
-  }) : super(thumbnails: isarThumbnails);
+    super.albumArtist,
+  })  : albumArtistId = albumArtist?.id ?? albumArtistId,
+        super(thumbnails: isarThumbnails);
 
   factory IsarAlbum.fromMap(Map<String, dynamic> map) {
     final thumbnailsMap = map.whereKey('thumbnails');
@@ -72,6 +76,7 @@ class IsarAlbum extends BaseAlbum {
       artists: artistsListMap is List
           ? artistsListMap.map((e) => IsarArtist.fromMap(e)).toList()
           : [],
+      albumArtist: IsarArtist.tryFromMap(map.whereKey('albumArtist')),
       browseId: map.whereKey('browseId'),
       category: map.whereKey('category'),
       duration: map.whereKey('duration'),
@@ -112,6 +117,7 @@ class IsarAlbum extends BaseAlbum {
     String? type,
     DateTime? releaseDate,
     ThumbnailsSet? thumbnails,
+    BaseArtist? albumArtist,
     List<BaseArtist>? artists,
     List<BaseTrack<BaseAlbum, BaseArtist>>? tracks,
     MusicSource? musicSource,
@@ -123,6 +129,7 @@ class IsarAlbum extends BaseAlbum {
       isarId: isarId ?? this.isarId,
       id: id ?? this.id,
       browseId: browseId ?? this.browseId,
+      albumArtist: albumArtist ?? this.albumArtist,
       albumArtistId: albumArtistId ?? this.albumArtistId,
       featuredArtistsIds: featuredArtistsIds ?? this.featuredArtistsIds,
       tracksIds:

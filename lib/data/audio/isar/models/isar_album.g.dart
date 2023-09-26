@@ -91,6 +91,19 @@ const IsarAlbumSchema = CollectionSchema(
   deserializeProp: _isarAlbumDeserializeProp,
   idName: r'isarId',
   indexes: {
+    r'albumArtistId': IndexSchema(
+      id: 5385493155002095013,
+      name: r'albumArtistId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'albumArtistId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'musicSource': IndexSchema(
       id: -7444336687380187352,
       name: r'musicSource',
@@ -497,6 +510,72 @@ extension IsarAlbumQueryWhere
         upper: upperIsarId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<IsarAlbum, IsarAlbum, QAfterWhereClause> albumArtistIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'albumArtistId',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAlbum, IsarAlbum, QAfterWhereClause>
+      albumArtistIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'albumArtistId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAlbum, IsarAlbum, QAfterWhereClause> albumArtistIdEqualTo(
+      String? albumArtistId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'albumArtistId',
+        value: [albumArtistId],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAlbum, IsarAlbum, QAfterWhereClause> albumArtistIdNotEqualTo(
+      String? albumArtistId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'albumArtistId',
+              lower: [],
+              upper: [albumArtistId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'albumArtistId',
+              lower: [albumArtistId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'albumArtistId',
+              lower: [albumArtistId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'albumArtistId',
+              lower: [],
+              upper: [albumArtistId],
+              includeUpper: false,
+            ));
+      }
     });
   }
 

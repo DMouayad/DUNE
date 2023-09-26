@@ -60,6 +60,11 @@ class IsarArtist extends BaseArtist {
     this.isarId,
   }) : super(thumbnails: isarThumbnails);
 
+  static IsarArtist? tryFromMap(Map<String, dynamic>? map) {
+    if (map == null) return null;
+    return IsarArtist.fromMap(map);
+  }
+
   factory IsarArtist.fromMap(Map<String, dynamic> map) {
     final thumbnailsMap = map.whereKey('thumbnails');
     final tracksListMap = map.whereKey('tracks');

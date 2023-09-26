@@ -1,6 +1,4 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
-import 'package:dune/domain/audio/base_models/base_artist.dart';
-import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/extensions.dart';
@@ -23,6 +21,7 @@ class YoutubeAlbum extends BaseAlbum {
     super.type,
     super.tracks = const [],
     super.releaseDate,
+    super.albumArtist,
   }) : super(musicSource: MusicSource.youtube);
 
   factory YoutubeAlbum.fromMap(Map<String, dynamic> map) {
@@ -49,36 +48,6 @@ class YoutubeAlbum extends BaseAlbum {
               (int.tryParse(map.whereKey("year")!) != null)
           ? DateTime(int.tryParse(map.whereKey("year"))!)
           : null,
-    );
-  }
-
-  @override
-  BaseAlbum copyWith({
-    String? id,
-    String? browseId,
-    String? category,
-    String? duration,
-    bool? isExplicit,
-    String? title,
-    String? type,
-    DateTime? releaseDate,
-    ThumbnailsSet? thumbnails,
-    List<BaseArtist>? artists,
-    List<BaseTrack<BaseAlbum, BaseArtist>>? tracks,
-    MusicSource? musicSource,
-  }) {
-    return YoutubeAlbum(
-      id: id ?? this.id,
-      browseId: browseId ?? this.browseId,
-      category: category ?? this.category,
-      duration: duration ?? this.duration,
-      isExplicit: isExplicit ?? this.isExplicit,
-      title: title ?? this.title,
-      type: type ?? this.type,
-      releaseDate: releaseDate ?? this.releaseDate,
-      thumbnails: thumbnails ?? this.thumbnails,
-      artists: artists ?? this.artists,
-      tracks: tracks ?? this.tracks,
     );
   }
 }

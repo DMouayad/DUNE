@@ -16,6 +16,9 @@ class BaseAlbum extends Equatable {
   final String? type;
   final DateTime? releaseDate;
   final ThumbnailsSet thumbnails;
+
+  /// The artist this album belongs to.
+  final BaseArtist? albumArtist;
   final List<BaseArtist> artists;
   final List<BaseTrack> tracks;
   final MusicSource musicSource;
@@ -33,6 +36,7 @@ class BaseAlbum extends Equatable {
     required this.tracks,
     required this.releaseDate,
     required this.musicSource,
+    required this.albumArtist,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,6 +47,7 @@ class BaseAlbum extends Equatable {
       'duration': duration,
       'isExplicit': isExplicit,
       'thumbnails': thumbnails.toMap(),
+      'albumArtist': albumArtist?.toMap(),
       'title': title,
       'type': type,
       'id': id,
@@ -64,6 +69,7 @@ class BaseAlbum extends Equatable {
         type,
         tracks,
         releaseDate,
+        albumArtist,
         musicSource
       ];
 
@@ -83,6 +89,7 @@ class BaseAlbum extends Equatable {
     String? type,
     DateTime? releaseDate,
     ThumbnailsSet? thumbnails,
+    BaseArtist? albumArtist,
     List<BaseArtist>? artists,
     List<BaseTrack>? tracks,
     MusicSource? musicSource,
@@ -92,6 +99,7 @@ class BaseAlbum extends Equatable {
       browseId: browseId ?? this.browseId,
       category: category ?? this.category,
       duration: duration ?? this.duration,
+      albumArtist: albumArtist ?? this.albumArtist,
       isExplicit: isExplicit ?? this.isExplicit,
       title: title ?? this.title,
       type: type ?? this.type,
