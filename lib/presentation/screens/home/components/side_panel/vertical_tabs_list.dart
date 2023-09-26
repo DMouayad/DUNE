@@ -35,7 +35,6 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
           ClipRRect(borderRadius: kBorderRadius, child: child),
       buildDefaultDragHandles: false,
       shrinkWrap: true,
-      // 8 = item's vertical margin * 2
       itemExtent: _kTabHeight + 4,
       itemBuilder: (BuildContext context, int index) {
         final tabData = tabs[index];
@@ -43,6 +42,8 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
           index: index,
           key: Key(index.toString()),
           child: Container(
+            decoration: const BoxDecoration(),
+            clipBehavior: Clip.antiAlias,
             margin: const EdgeInsets.symmetric(vertical: 2.0),
             child: _VerticalTab(
               extended: widget.extended,
@@ -149,8 +150,9 @@ class _VerticalTab extends ConsumerWidget {
         }),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 4),
+        padding: const EdgeInsets.only(left: 12.0, right: 4),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             fluent.Padding(
               padding: const EdgeInsets.only(right: 10.0),
@@ -163,20 +165,17 @@ class _VerticalTab extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: Visibility(
-                visible: extended,
-                child: Text(
-                  data.selectedPage?.title ?? 'new tab',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.onBackground,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
+              child: Text(
+                data.selectedPage?.title ?? 'new tab',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colorScheme.onBackground,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.clip,
               ),
             ),
-            Visibility(
-              visible: extended,
+            Expanded(
+              flex: extended ? 0 : 1,
               child: fluent.IconButton(
                 onPressed: () {
                   ref
