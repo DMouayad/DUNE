@@ -40,11 +40,10 @@ class LibraryAlbumsPage extends ConsumerWidget {
       itemsControllerProvider: _albumsControllerProvider,
       onSelectAll: () => _onSelectAll(ref),
       itemBuilder: (context, item, index) {
-        final selectionKey = item.id ?? 'album#$index';
         return AlbumCard.selectable(
           album: item,
           selectionState: ref.watch(_selectionControllerProvider),
-          onSelected: () => ref
+          onSelected: (selectionKey) => ref
               .read(_selectionControllerProvider.notifier)
               .toggleSelectionForItem(selectionKey, item),
         );

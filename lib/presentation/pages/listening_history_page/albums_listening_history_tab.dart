@@ -102,9 +102,9 @@ class _AlbumsGridViewState extends State<_AlbumsGridView> {
           return AlbumCard.selectable(
             album: album,
             selectionState: ref.watch(selectionController),
-            onSelected: () => ref
+            onSelected: (selectionKey) => ref
                 .read(selectionController.notifier)
-                .toggleSelectionForItem(album.title, album),
+                .toggleSelectionForItem(selectionKey, album),
           );
         });
       },

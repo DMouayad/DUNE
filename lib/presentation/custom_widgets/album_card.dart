@@ -16,7 +16,7 @@ class AlbumCard extends StatelessWidget {
   const factory AlbumCard.selectable({
     required BaseAlbum album,
     required SelectionState<BaseAlbum> selectionState,
-    required void Function() onSelected,
+    required void Function(String key) onSelected,
     double? cardWidth,
   }) = _SelectableAlbumCard;
 
@@ -45,7 +45,7 @@ class AlbumCard extends StatelessWidget {
 
 class _SelectableAlbumCard extends AlbumCard {
   final SelectionState<BaseAlbum> selectionState;
-  final void Function() onSelected;
+  final void Function(String key) onSelected;
 
   const _SelectableAlbumCard({
     required super.album,
@@ -56,14 +56,14 @@ class _SelectableAlbumCard extends AlbumCard {
 
   @override
   Widget build(BuildContext context) {
-    final selectionKey = album.id ?? album.hashCode.toString();
+    final selectionKey = album.title;
 
     return SelectableCard<BaseAlbum>(
       selectionKey: selectionKey,
       popupMenu: const SizedBox(),
       onTap: () {},
       selectionState: selectionState,
-      onSelected: onSelected,
+      onSelected: () => onSelected(selectionKey),
       child: AlbumCard(album: album, cardWidth: cardWidth),
     );
   }
