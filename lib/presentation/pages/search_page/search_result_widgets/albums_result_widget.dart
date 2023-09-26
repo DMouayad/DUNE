@@ -1,9 +1,9 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/presentation/custom_widgets/album_card.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../custom_widgets/custom_card.dart';
 import 'search_result_items_grid.dart';
 
 const _maxAlbumCardHeight = 250.0;
@@ -24,17 +24,7 @@ class AlbumsResultWidget extends StatelessWidget {
           loading: () => const _AlbumsShimmer(),
           data: (albums) {
             final album = albums.elementAt(index);
-            return CustomCard(
-              tag: album.id ?? album.title,
-              width: _maxAlbumCardHeight,
-              thumbnails: album.thumbnails,
-              title: album.title +
-                  (album.releaseDate != null
-                      ? '\n(${album.releaseDate!.year})'
-                      : ''),
-              shape: BoxShape.rectangle,
-              onTap: () {},
-            );
+            return AlbumCard(album: album, cardWidth: _maxAlbumCardHeight);
           },
         );
       },

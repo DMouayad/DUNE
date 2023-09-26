@@ -99,7 +99,7 @@ class _AlbumsGridViewState extends State<_AlbumsGridView> {
       childBuilder: (double cardWidth, int index) {
         final album = widget.albumsInfo.value!.items.elementAt(index);
         return Consumer(builder: (context, ref, _) {
-          return AlbumCard(
+          return AlbumCard.selectable(
             album: album,
             selectionState: ref.watch(selectionController),
             onSelected: () => ref

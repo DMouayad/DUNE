@@ -41,7 +41,7 @@ class LibraryAlbumsPage extends ConsumerWidget {
       onSelectAll: () => _onSelectAll(ref),
       itemBuilder: (context, item, index) {
         final selectionKey = item.id ?? 'album#$index';
-        return AlbumCard(
+        return AlbumCard.selectable(
           album: item,
           selectionState: ref.watch(_selectionControllerProvider),
           onSelected: () => ref
