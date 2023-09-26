@@ -1,11 +1,16 @@
+import 'package:dune/support/themes/theme_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+//
+import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/presentation/pages/settings_page/settings_page.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class NavigationHelper {
   /// either [playlist] or [exploreItem] should be not null
@@ -56,6 +61,22 @@ class NavigationHelper {
     context.push(
       path,
       extra: (categoryId: exploreItem.sourceId, title: exploreItem.title),
+    );
+  }
+
+  static void showSettingsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: const RoundedRectangleBorder(borderRadius: kBorderRadius),
+        backgroundColor: context.colorScheme.background,
+        child: const Stack(
+          children: [
+            SettingsPage(),
+            Positioned(top: 10, right: 10, child: CloseButton()),
+          ],
+        ),
+      ),
     );
   }
 }

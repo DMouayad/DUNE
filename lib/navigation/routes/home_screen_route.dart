@@ -76,15 +76,3 @@ class ListeningHistoryPageRoute extends BaseHomeScreenBodyRoute {
           page: (context, state) => const ListeningHistoryPage(),
         );
 }
-
-class SettingsPageRoute extends BaseHomeScreenBodyRoute {
-  SettingsPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
-          index: QuickNavDestination.settingsPage,
-          path: RoutePath.settingsPage,
-          page: (context, state) => const SettingsPage(),
-        );
-}

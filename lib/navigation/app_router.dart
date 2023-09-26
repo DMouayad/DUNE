@@ -12,7 +12,6 @@ import 'package:dune/presentation/pages/library_page/library_folders_page.dart';
 import 'package:dune/presentation/pages/library_page/library_tracks_page.dart';
 import 'package:dune/presentation/pages/listening_history_page/listening_history_page.dart';
 import 'package:dune/presentation/pages/playlist_page/playlist_page.dart';
-import 'package:dune/presentation/pages/settings_page/settings_page.dart';
 import 'package:dune/presentation/screens/desktop_splash_screen.dart';
 import 'package:dune/presentation/screens/home/home_screen.dart';
 import 'package:dune/presentation/screens/home/wide_home_screen.dart';
@@ -107,7 +106,6 @@ class AppRouter {
                   routes: [
                     ExplorePageRoute(isSubRoute: true),
                     ListeningHistoryPageRoute(isSubRoute: true),
-                    SettingsPageRoute(isSubRoute: true),
                     LibraryAlbumsPageRoute(isSubRoute: true),
                     LibraryTracksPageRoute(isSubRoute: true),
                     LibraryArtistsPageRoute(isSubRoute: true),
@@ -157,7 +155,6 @@ class AppRouter {
                   branches: [
                     StatefulShellBranch(routes: [ExplorePageRoute()]),
                     StatefulShellBranch(routes: [ListeningHistoryPageRoute()]),
-                    StatefulShellBranch(routes: [SettingsPageRoute()]),
                   ],
                 ),
                 DesktopSplashScreenRoute(),
@@ -172,8 +169,8 @@ class AppRouter {
   ) {
     return switch (initialPageOnStartup) {
       InitialPageOnStartup.exploreMusic => (
-          path: RoutePath.settingsPage,
-          name: RouteName.settingsPage
+          path: RoutePath.explorePage,
+          name: RouteName.explorePage
         ),
       InitialPageOnStartup.myLibrary => (
           path: RoutePath.libraryTracksPage,

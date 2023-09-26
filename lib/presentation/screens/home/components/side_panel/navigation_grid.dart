@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+//
+import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/themes/theme_constants.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'library_dropdown_button.dart';
 import 'playlists_dropdown_button.dart';
@@ -43,9 +46,7 @@ class NavGrid extends ConsumerWidget {
             _NavButton(
               iconData: CupertinoIcons.sidebar_left,
               backgroundColor: Colors.transparent,
-              iconColor: extended
-                  ? context.colorScheme.primary
-                  : context.colorScheme.onPrimaryContainer,
+              iconColor: context.colorScheme.secondary,
               onPressed: () {
                 if (extended) {
                   ref.read(navigationRailSizeProvider.notifier).state =
@@ -60,8 +61,9 @@ class NavGrid extends ConsumerWidget {
               iconData: context.isDesktopPlatform
                   ? fluent.FluentIcons.settings
                   : Icons.settings_outlined,
-              onPressed: () =>
-                  onDestinationSelected(QuickNavDestination.settingsPage),
+              iconColor: context.colorScheme.secondary,
+              backgroundColor: Colors.transparent,
+              onPressed: () => NavigationHelper.showSettingsDialog(context),
             ),
             _NavButton(
               iconData: context.isDesktopPlatform

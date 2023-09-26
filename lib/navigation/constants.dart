@@ -2,7 +2,6 @@ part of app_router;
 
 class RoutePath {
   static const String explorePage = '/explore',
-      settingsPage = '/settings',
       listeningHistoryPage = '/listening-history',
       libraryTracksPage = '/library/tracks',
       libraryAlbumsPage = '/library/albums',
@@ -28,11 +27,10 @@ class RouteName {
 enum QuickNavDestination {
   explorePage(0, RoutePath.explorePage),
   listeningHistoryPage(1, RoutePath.listeningHistoryPage),
-  settingsPage(2, RoutePath.settingsPage),
-  libraryTracksPage(3, RoutePath.libraryTracksPage),
+  libraryTracksPage(2, RoutePath.libraryTracksPage),
   libraryAlbumsPage(3, RoutePath.libraryAlbumsPage),
-  libraryArtistsPage(3, RoutePath.libraryArtistsPage),
-  libraryFoldersPage(3, RoutePath.libraryFoldersPage);
+  libraryArtistsPage(4, RoutePath.libraryArtistsPage),
+  libraryFoldersPage(5, RoutePath.libraryFoldersPage);
 
   const QuickNavDestination(this.destinationIndex, this.path);
 

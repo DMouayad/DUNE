@@ -1,12 +1,13 @@
-import 'package:dune/presentation/custom_widgets/page_title.dart';
 import 'package:dune/presentation/utils/constants.dart';
-import 'package:dune/support/themes/theme_constants.dart';
-import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+//
+import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'about_section.dart';
+import 'package:dune/presentation/custom_widgets/page_title.dart';
 import 'appearance/primary_color_settings_component.dart';
 import 'appearance/layout_settings_component.dart';
 import 'appearance/app_window_size_setting_component.dart';
@@ -32,14 +33,12 @@ class SettingsPage extends StatelessWidget {
       header: const PageTitle('Settings'),
       padding: kPagePadding,
       content: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
         physics: const BouncingScrollPhysics(),
         children: [
           const SettingSection(
             title: 'Library',
-            contents: [
-              MusicFoldersSettingComponent(),
-            ],
+            contents: [MusicFoldersSettingComponent()],
           ),
           SettingSection(
             title: 'Appearance & Layout',
@@ -68,7 +67,6 @@ class SettingsPage extends StatelessWidget {
             contents: [
               const InitialPageSettingComponent(),
               if (context.isDesktopPlatform) ...[
-                // const VolumeStepSettingComponent(),
                 const ShortcutsSettingComponent(),
               ],
             ],
