@@ -142,8 +142,10 @@ class _VerticalTab extends ConsumerWidget {
         fixedSize:
             MaterialStateProperty.all(const Size.fromHeight(_kTabHeight)),
         padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
-        backgroundColor: MaterialStateProperty.resolveWith((s) {
-          return selected ? context.colorScheme.background : Colors.transparent;
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          return selected
+              ? context.colorScheme.background.withOpacity(.9)
+              : Colors.transparent;
         }),
       ),
       child: Padding(
@@ -155,7 +157,9 @@ class _VerticalTab extends ConsumerWidget {
               child: Icon(
                 fluent.FluentIcons.tab,
                 size: 16,
-                color: context.colorScheme.onBackground.withOpacity(.66),
+                color: selected
+                    ? context.colorScheme.secondary
+                    : context.colorScheme.onBackground.withOpacity(.66),
               ),
             ),
             Expanded(
