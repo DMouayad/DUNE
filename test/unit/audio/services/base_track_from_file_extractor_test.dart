@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/audio_info_set.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
@@ -12,19 +13,25 @@ import 'package:dune/domain/audio/factories/artist_factory.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/domain/audio/services/base_file_track_extractor.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/constants.dart';
-import '../../../utils/equality_helper.dart';
 
 const kArtistsCount = 2;
 
 /// The artists we expect to be extracted.
-final artists =
-    ArtistFactory().setMusicSource(MusicSource.local).createCount(2);
+final artists = ArtistFactory()
+    .setMusicSource(MusicSource.local)
+    .createCount(2)
+    .map((e) => e.copyWith(id: shortHash(e.name)))
+    .toList();
 
 /// The album we expect to be extracted.
-final album = AlbumFactory().setMusicSource(MusicSource.local).create();
+final album = AlbumFactory()
+    .setMusicSource(MusicSource.local)
+    .setAlbumArtist(artists.first)
+    .create();
 final trackToBeExtracted = TrackFactory()
     .withAudioInfo(itemsCount: 1)
     .setMusicSource(MusicSource.local)
@@ -60,7 +67,7 @@ final class FakeTrackFromFileExtractor extends BaseTrackFromFileExtractor {
   }
 
   @override
-  String? get getAlbumArtistString => _track!.artistsNames;
+  String? get getAlbumArtistString => _track!.artists.first.name;
 
   @override
   String? get getTrackArtistString => _track!.artistsNames;
@@ -77,7 +84,22 @@ void main() {
       track = extractorInstance!.getTrackWithPropsAttached()!;
     });
     test('The track album is attached', () async {
-      final isEqual = EqualityHelper.albumsHasSameProps(track.album, album);
+      List<Object?> getRequiredPropsForExtractedAlbum(BaseAlbum album) {
+        final props = List<Object?>.from(album.props);
+        props.remove(album.artists);
+        props.remove(album.tracks);
+        props.remove(album.thumbnails);
+        props.remove(album.albumArtist);
+        if (album.albumArtist?.id != null) {
+          props.add(album.albumArtist!.id!);
+        }
+        return props;
+      }
+
+      final extractedProps = getRequiredPropsForExtractedAlbum(track.album!);
+      final originalProps = getRequiredPropsForExtractedAlbum(album);
+      final isEqual = const UnorderedIterableEquality()
+          .equals(extractedProps, originalProps);
       expect(isEqual, isTrue);
     });
 

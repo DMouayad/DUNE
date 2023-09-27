@@ -59,11 +59,19 @@ class EqualityHelper {
     final firstProps = List.from(first?.props ?? []);
     firstProps.remove(first?.artists);
     firstProps.remove(first?.tracks);
+    firstProps.remove(first?.albumArtist);
     final secondProps = List.from(second?.props ?? []);
     secondProps.remove(second?.artists);
     secondProps.remove(second?.tracks);
-
-    return const ListEquality().equals(firstProps, secondProps);
+    secondProps.remove(second?.albumArtist);
+    final hasSameAlbumArtist =
+        (first?.albumArtist != null && second?.albumArtist != null) &&
+            EqualityHelper.artistsHasSameProps(
+              first!.albumArtist!,
+              second!.albumArtist!,
+            );
+    return const ListEquality().equals(firstProps, secondProps) &&
+        hasSameAlbumArtist;
   }
 
   static bool artistsHasSameProps(BaseArtist first, BaseArtist second) {
