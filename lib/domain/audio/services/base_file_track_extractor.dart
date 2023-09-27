@@ -11,7 +11,7 @@ import 'package:dune/support/extensions/file_extension.dart';
 
 typedef ArtistsFromFile = ({
   List<BaseArtist> trackArtists,
-  List<BaseArtist> albumArtists
+  BaseArtist? albumArtist
 });
 typedef ThumbnailInfo = ({List<int> data, BaseThumbnail thumb});
 
@@ -50,14 +50,21 @@ abstract class BaseTrackFromFileExtractor {
     final album = extractAlbum()?.copyWith(tracks: [track]);
 
     /// The extracted album artists
-    final albumArtists = _attachToArtists(artists.albumArtists, track, album);
-    final albumWithArtists = album?.copyWith(artists: albumArtists);
+    final albumArtist = artists.albumArtist != null
+        ? _attachToArtists([artists.albumArtist!], track, album).first
+        : null;
 
-    final trackArtists = _attachToArtists(artists.trackArtists, track, album);
+    final albumWithArtistAttached = album?.copyWith(
+      albumArtist: albumArtist,
+      artists: artists.trackArtists,
+    );
+
+    final trackArtists =
+        _attachToArtists(artists.trackArtists, track, albumWithArtistAttached);
 
     return track.copyWith(
-      album: albumWithArtists,
-      artists: {...trackArtists, ...albumArtists}.toList(),
+      album: albumWithArtistAttached,
+      artists: trackArtists,
       audioInfoSet: extractAudioInfoSet(),
     );
   }
@@ -88,7 +95,7 @@ abstract class BaseTrackFromFileExtractor {
   ArtistsFromFile extractArtists() {
     return (
       trackArtists: _getArtistsFromString(getTrackArtistString),
-      albumArtists: _getArtistsFromString(getAlbumArtistString),
+      albumArtist: _getArtistsFromString(getAlbumArtistString).firstOrNull,
     );
   }
 
