@@ -36,62 +36,57 @@ const IsarAppPreferencesSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesinitialPageOnStartupEnumValueMap,
     ),
-    r'lastSidePanelWidth': PropertySchema(
-      id: 3,
-      name: r'lastSidePanelWidth',
-      type: IsarType.double,
-    ),
     r'lastWindowHeight': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'lastWindowHeight',
       type: IsarType.double,
     ),
     r'lastWindowWidth': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'lastWindowWidth',
       type: IsarType.double,
     ),
     r'localMusicFoldersList': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'localMusicFoldersList',
       type: IsarType.objectList,
       target: r'IsarMusicFolder',
     ),
-    r'rememberLastSidePanelSize': PropertySchema(
-      id: 7,
-      name: r'rememberLastSidePanelSize',
-      type: IsarType.bool,
-    ),
     r'rememberLastWindowSize': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'rememberLastWindowSize',
       type: IsarType.bool,
     ),
     r'searchEngine': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'searchEngine',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencessearchEngineEnumValueMap,
     ),
+    r'sidePanelPinned': PropertySchema(
+      id: 8,
+      name: r'sidePanelPinned',
+      type: IsarType.bool,
+    ),
     r'tabsMode': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'tabsMode',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencestabsModeEnumValueMap,
     ),
     r'thumbnailQualitiesOrder': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'thumbnailQualitiesOrder',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesthumbnailQualitiesOrderEnumValueMap,
     ),
     r'usePrimaryColorInCardColor': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'usePrimaryColorInCardColor',
       type: IsarType.bool,
     ),
     r'volumeStep': PropertySchema(
-      id: 13,
+      id: 12,
       name: r'volumeStep',
       type: IsarType.double,
     )
@@ -137,22 +132,21 @@ void _isarAppPreferencesSerialize(
   writer.writeByte(offsets[0], object.audioStreamingQuality.index);
   writer.writeByte(offsets[1], object.exploreMusicSource.index);
   writer.writeByte(offsets[2], object.initialPageOnStartup.index);
-  writer.writeDouble(offsets[3], object.lastSidePanelWidth);
-  writer.writeDouble(offsets[4], object.lastWindowHeight);
-  writer.writeDouble(offsets[5], object.lastWindowWidth);
+  writer.writeDouble(offsets[3], object.lastWindowHeight);
+  writer.writeDouble(offsets[4], object.lastWindowWidth);
   writer.writeObjectList<IsarMusicFolder>(
-    offsets[6],
+    offsets[5],
     allOffsets,
     IsarMusicFolderSchema.serialize,
     object.localMusicFoldersList,
   );
-  writer.writeBool(offsets[7], object.rememberLastSidePanelSize);
-  writer.writeBool(offsets[8], object.rememberLastWindowSize);
-  writer.writeByte(offsets[9], object.searchEngine.index);
-  writer.writeByte(offsets[10], object.tabsMode.index);
-  writer.writeByte(offsets[11], object.thumbnailQualitiesOrder.index);
-  writer.writeBool(offsets[12], object.usePrimaryColorInCardColor);
-  writer.writeDouble(offsets[13], object.volumeStep);
+  writer.writeBool(offsets[6], object.rememberLastWindowSize);
+  writer.writeByte(offsets[7], object.searchEngine.index);
+  writer.writeBool(offsets[8], object.sidePanelPinned);
+  writer.writeByte(offsets[9], object.tabsMode.index);
+  writer.writeByte(offsets[10], object.thumbnailQualitiesOrder.index);
+  writer.writeBool(offsets[11], object.usePrimaryColorInCardColor);
+  writer.writeDouble(offsets[12], object.volumeStep);
 }
 
 IsarAppPreferences _isarAppPreferencesDeserialize(
@@ -172,30 +166,29 @@ IsarAppPreferences _isarAppPreferencesDeserialize(
     initialPageOnStartup: _IsarAppPreferencesinitialPageOnStartupValueEnumMap[
             reader.readByteOrNull(offsets[2])] ??
         InitialPageOnStartup.exploreMusic,
-    lastSidePanelWidth: reader.readDoubleOrNull(offsets[3]),
-    lastWindowHeight: reader.readDoubleOrNull(offsets[4]),
-    lastWindowWidth: reader.readDoubleOrNull(offsets[5]),
+    lastWindowHeight: reader.readDoubleOrNull(offsets[3]),
+    lastWindowWidth: reader.readDoubleOrNull(offsets[4]),
     localMusicFoldersList: reader.readObjectList<IsarMusicFolder>(
-          offsets[6],
+          offsets[5],
           IsarMusicFolderSchema.deserialize,
           allOffsets,
           IsarMusicFolder(),
         ) ??
         const [],
-    rememberLastSidePanelSize: reader.readBoolOrNull(offsets[7]) ?? true,
-    rememberLastWindowSize: reader.readBoolOrNull(offsets[8]) ?? true,
+    rememberLastWindowSize: reader.readBoolOrNull(offsets[6]) ?? true,
     searchEngine: _IsarAppPreferencessearchEngineValueEnumMap[
-            reader.readByteOrNull(offsets[9])] ??
+            reader.readByteOrNull(offsets[7])] ??
         MusicSource.youtube,
+    sidePanelPinned: reader.readBoolOrNull(offsets[8]) ?? true,
     tabsMode: _IsarAppPreferencestabsModeValueEnumMap[
-            reader.readByteOrNull(offsets[10])] ??
+            reader.readByteOrNull(offsets[9])] ??
         TabsMode.vertical,
     thumbnailQualitiesOrder:
         _IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
-                reader.readByteOrNull(offsets[11])] ??
+                reader.readByteOrNull(offsets[10])] ??
             ThumbnailQualitiesOrderOption.balanced,
-    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[12]) ?? true,
-    volumeStep: reader.readDoubleOrNull(offsets[13]) ?? 5.0,
+    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[11]) ?? true,
+    volumeStep: reader.readDoubleOrNull(offsets[12]) ?? 5.0,
   );
   return object;
 }
@@ -224,8 +217,6 @@ P _isarAppPreferencesDeserializeProp<P>(
     case 4:
       return (reader.readDoubleOrNull(offset)) as P;
     case 5:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 6:
       return (reader.readObjectList<IsarMusicFolder>(
             offset,
             IsarMusicFolderSchema.deserialize,
@@ -233,25 +224,25 @@ P _isarAppPreferencesDeserializeProp<P>(
             IsarMusicFolder(),
           ) ??
           const []) as P;
+    case 6:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 7:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
-    case 8:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
-    case 9:
       return (_IsarAppPreferencessearchEngineValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 10:
+    case 8:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 9:
       return (_IsarAppPreferencestabsModeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           TabsMode.vertical) as P;
-    case 11:
+    case 10:
       return (_IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ThumbnailQualitiesOrderOption.balanced) as P;
-    case 12:
+    case 11:
       return (reader.readBoolOrNull(offset) ?? true) as P;
-    case 13:
+    case 12:
       return (reader.readDoubleOrNull(offset) ?? 5.0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -666,90 +657,6 @@ extension IsarAppPreferencesQueryFilter
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'lastSidePanelWidth',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'lastSidePanelWidth',
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthEqualTo(
-    double? value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'lastSidePanelWidth',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthGreaterThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'lastSidePanelWidth',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthLessThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'lastSidePanelWidth',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      lastSidePanelWidthBetween(
-    double? lower,
-    double? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'lastSidePanelWidth',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
       lastWindowHeightIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1007,16 +914,6 @@ extension IsarAppPreferencesQueryFilter
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      rememberLastSidePanelSizeEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'rememberLastSidePanelSize',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
       rememberLastWindowSizeEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1078,6 +975,16 @@ extension IsarAppPreferencesQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      sidePanelPinnedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sidePanelPinned',
+        value: value,
       ));
     });
   }
@@ -1329,20 +1236,6 @@ extension IsarAppPreferencesQuerySortBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByLastSidePanelWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastSidePanelWidth', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByLastSidePanelWidthDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastSidePanelWidth', Sort.desc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
       sortByLastWindowHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastWindowHeight', Sort.asc);
@@ -1371,20 +1264,6 @@ extension IsarAppPreferencesQuerySortBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByRememberLastSidePanelSize() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rememberLastSidePanelSize', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByRememberLastSidePanelSizeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rememberLastSidePanelSize', Sort.desc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
       sortByRememberLastWindowSize() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'rememberLastWindowSize', Sort.asc);
@@ -1409,6 +1288,20 @@ extension IsarAppPreferencesQuerySortBy
       sortBySearchEngineDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'searchEngine', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      sortBySidePanelPinned() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sidePanelPinned', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      sortBySidePanelPinnedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sidePanelPinned', Sort.desc);
     });
   }
 
@@ -1528,20 +1421,6 @@ extension IsarAppPreferencesQuerySortThenBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByLastSidePanelWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastSidePanelWidth', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByLastSidePanelWidthDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastSidePanelWidth', Sort.desc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
       thenByLastWindowHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastWindowHeight', Sort.asc);
@@ -1570,20 +1449,6 @@ extension IsarAppPreferencesQuerySortThenBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByRememberLastSidePanelSize() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rememberLastSidePanelSize', Sort.asc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByRememberLastSidePanelSizeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rememberLastSidePanelSize', Sort.desc);
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
       thenByRememberLastWindowSize() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'rememberLastWindowSize', Sort.asc);
@@ -1608,6 +1473,20 @@ extension IsarAppPreferencesQuerySortThenBy
       thenBySearchEngineDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'searchEngine', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      thenBySidePanelPinned() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sidePanelPinned', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      thenBySidePanelPinnedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sidePanelPinned', Sort.desc);
     });
   }
 
@@ -1692,13 +1571,6 @@ extension IsarAppPreferencesQueryWhereDistinct
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
-      distinctByLastSidePanelWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'lastSidePanelWidth');
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
       distinctByLastWindowHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastWindowHeight');
@@ -1713,13 +1585,6 @@ extension IsarAppPreferencesQueryWhereDistinct
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
-      distinctByRememberLastSidePanelSize() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'rememberLastSidePanelSize');
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
       distinctByRememberLastWindowSize() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'rememberLastWindowSize');
@@ -1730,6 +1595,13 @@ extension IsarAppPreferencesQueryWhereDistinct
       distinctBySearchEngine() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'searchEngine');
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
+      distinctBySidePanelPinned() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'sidePanelPinned');
     });
   }
 
@@ -1792,13 +1664,6 @@ extension IsarAppPreferencesQueryProperty
   }
 
   QueryBuilder<IsarAppPreferences, double?, QQueryOperations>
-      lastSidePanelWidthProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'lastSidePanelWidth');
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, double?, QQueryOperations>
       lastWindowHeightProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastWindowHeight');
@@ -1820,13 +1685,6 @@ extension IsarAppPreferencesQueryProperty
   }
 
   QueryBuilder<IsarAppPreferences, bool, QQueryOperations>
-      rememberLastSidePanelSizeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'rememberLastSidePanelSize');
-    });
-  }
-
-  QueryBuilder<IsarAppPreferences, bool, QQueryOperations>
       rememberLastWindowSizeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'rememberLastWindowSize');
@@ -1837,6 +1695,13 @@ extension IsarAppPreferencesQueryProperty
       searchEngineProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'searchEngine');
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, bool, QQueryOperations>
+      sidePanelPinnedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'sidePanelPinned');
     });
   }
 

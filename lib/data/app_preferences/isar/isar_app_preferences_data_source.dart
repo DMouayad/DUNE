@@ -40,14 +40,13 @@ class IsarAppPreferencesDataSource extends BaseAppPreferencesDataSource {
   IsarAppPreferences _isarFromBase(BaseAppPreferences base) {
     return IsarAppPreferences(
       exploreMusicSource: base.exploreMusicSource,
-      lastSidePanelWidth: base.lastSidePanelWidth,
+      sidePanelPinned: base.sidePanelPinned,
       rememberLastWindowSize: base.rememberLastWindowSize,
       usePrimaryColorInCardColor: base.usePrimaryColorInCardColor,
       initialPageOnStartup: base.initialPageOnStartup,
       volumeStep: base.volumeStep,
       tabsMode: base.tabsMode,
       thumbnailQualitiesOrder: base.thumbnailQualitiesOrder,
-      rememberLastSidePanelSize: base.rememberLastSidePanelSize,
       lastWindowHeight: base.lastWindowSize?.height,
       lastWindowWidth: base.lastWindowSize?.width,
       audioStreamingQuality: base.audioStreamingQuality,

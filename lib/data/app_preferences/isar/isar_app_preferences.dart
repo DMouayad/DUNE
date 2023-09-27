@@ -75,8 +75,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     super.volumeStep,
     super.tabsMode,
     super.thumbnailQualitiesOrder,
-    super.rememberLastSidePanelSize,
-    super.lastSidePanelWidth,
+    super.sidePanelPinned,
     super.audioStreamingQuality,
   }) : super(localMusicFolders: localMusicFoldersList.toSet());
 
@@ -93,8 +92,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     bool? rememberLastWindowSize,
     Size? lastWindowSize,
     ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
-    bool? rememberLastSidePanelSize,
-    double? lastSidePanelWidth,
+    bool? sidePanelPinned,
     AudioStreamingQuality? audioStreamingQuality,
   }) {
     return IsarAppPreferences(
@@ -112,9 +110,7 @@ class IsarAppPreferences extends BaseAppPreferences {
       searchEngine: searchEngine ?? this.searchEngine,
       thumbnailQualitiesOrder:
           thumbnailQualitiesOrder ?? this.thumbnailQualitiesOrder,
-      rememberLastSidePanelSize:
-          rememberLastSidePanelSize ?? this.rememberLastSidePanelSize,
-      lastSidePanelWidth: lastSidePanelWidth ?? this.lastSidePanelWidth,
+      sidePanelPinned: sidePanelPinned ?? this.sidePanelPinned,
       localMusicFoldersList:
           localMusicFolders?.map((e) => IsarMusicFolder.fromBase(e)).toList() ??
               localMusicFoldersList,
