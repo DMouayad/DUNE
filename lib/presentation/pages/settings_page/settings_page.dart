@@ -19,6 +19,7 @@ import 'appearance/window_effect_settings_component.dart';
 import 'library/music_folders_setting_component.dart';
 import 'media_and_network_usage/audio_streaming_quality_option_setting_component.dart';
 import 'media_and_network_usage/explore_music_source_setting_component.dart';
+import 'media_and_network_usage/images_cache_setting_component.dart';
 import 'media_and_network_usage/music_search_source_setting_component.dart';
 import 'media_and_network_usage/thumbnail_quality_option_setting_component.dart';
 
@@ -60,6 +61,7 @@ class SettingsPage extends StatelessWidget {
               MusicSearchSourceSettingComponent(),
               ThumbnailQualityOptionSettingComponent(),
               AudioStreamingQualityOptionSettingComponent(),
+              CacheSettingComponent(),
             ],
           ),
           SettingSection(
