@@ -40,12 +40,11 @@ class WideAppBarButtons extends ConsumerWidget {
                 : Icons.settings_outlined,
             onPressed: () => NavigationHelper.showSettingsDialog(context),
           ),
-          if (tabsMode.isEnabled)
+          if (tabsMode.isEnabled) ...[
             _CustomIconButton(
               onPressed: () {},
               iconData: fluent.FluentIcons.history,
             ),
-          if (tabsMode.isVertical) ...[
             Consumer(
               builder: (context, ref, child) {
                 return _CustomIconButton(
