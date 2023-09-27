@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //
 import 'package:dune/navigation/app_router.dart';
-import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 
@@ -25,38 +24,31 @@ class QuickNavSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final isVerticalTabsMode =
-        ref.watch(appPreferencesController).tabsMode.isVertical;
-    final showAllWhenMinimized = (isVerticalTabsMode && extended);
-    return ClipRRect(
-      clipBehavior: Clip.hardEdge,
-      child: Container(
-        height: showAllWhenMinimized ? null : _kButtonHeight,
-        margin: const EdgeInsets.only(top: 10),
-        alignment: Alignment.topCenter,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _NavButton(
-              title: 'Explore',
-              iconData: context.isDesktopPlatform
-                  ? fluent.FluentIcons.compass_n_w
-                  : CupertinoIcons.compass,
-              onPressed: () =>
-                  onDestinationSelected(QuickNavDestination.explorePage),
-            ),
-            _NavButton(
-              title: 'Listening history',
-              iconData: context.isDesktopPlatform
-                  ? fluent.FluentIcons.analytics_view
-                  : Icons.analytics_outlined,
-              onPressed: () => onDestinationSelected(
-                  QuickNavDestination.listeningHistoryPage),
-            ),
-            LibraryDropdownButton(onDestSelected: onDestinationSelected),
-            const PlaylistsDropdownButton(),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      alignment: Alignment.topCenter,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _NavButton(
+            title: 'Explore',
+            iconData: context.isDesktopPlatform
+                ? fluent.FluentIcons.compass_n_w
+                : CupertinoIcons.compass,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.explorePage),
+          ),
+          _NavButton(
+            title: 'Listening history',
+            iconData: context.isDesktopPlatform
+                ? fluent.FluentIcons.analytics_view
+                : Icons.analytics_outlined,
+            onPressed: () =>
+                onDestinationSelected(QuickNavDestination.listeningHistoryPage),
+          ),
+          LibraryDropdownButton(onDestSelected: onDestinationSelected),
+          const PlaylistsDropdownButton(),
+        ],
       ),
     );
   }
