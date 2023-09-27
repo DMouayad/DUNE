@@ -34,15 +34,14 @@ class WideHomeScreenAppBar extends StatelessWidget {
                       fontFamily: 'baloo2',
                     ),
                   ),
-                  if (tabsEnabled)
-                    OptionalParentWidget(
-                      condition: context.isDesktopPlatform,
-                      parentWidgetBuilder: (child) => VisibilityOnHover(
-                        size: Size(context.screenWidth, 40),
-                        child: child,
-                      ),
-                      childWidget: const WideAppBarButtons(),
+                  OptionalParentWidget(
+                    condition: context.isDesktopPlatform,
+                    parentWidgetBuilder: (child) => VisibilityOnHover(
+                      size: Size(context.screenWidth, 40),
+                      child: child,
                     ),
+                    childWidget: const WideAppBarButtons(),
+                  ),
                 ],
               ),
             ),
