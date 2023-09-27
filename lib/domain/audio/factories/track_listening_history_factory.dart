@@ -1,6 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_track_listening_history.dart';
-import 'package:dune/domain/audio/factories/base_model_factory.dart';
+import 'package:dune/domain/base_model_factory.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:faker/faker.dart';
 

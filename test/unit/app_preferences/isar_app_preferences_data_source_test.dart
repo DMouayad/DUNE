@@ -1,5 +1,5 @@
 import 'package:dune/data/app_preferences/isar/isar_app_preferences_data_source.dart';
-import 'package:dune/domain/audio/factories/app_preferences_factory.dart';
+import 'package:dune/domain/app_preferences/app_preferences_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../utils/isar_testing_utils.dart';

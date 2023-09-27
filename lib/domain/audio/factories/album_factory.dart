@@ -8,7 +8,7 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 import 'thumbnail_set_factory.dart';
 
 final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
