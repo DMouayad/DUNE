@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 //
-import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/presentation/pages/settings_page/settings_page.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
@@ -65,11 +64,23 @@ class NavigationHelper {
   }
 
   static void showSettingsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: const RoundedRectangleBorder(borderRadius: kBorderRadius),
-        backgroundColor: context.colorScheme.background,
+    showDialog(context: context, builder: (context) => const SettingsDialog());
+  }
+}
+
+class SettingsDialog extends ConsumerWidget {
+  const SettingsDialog({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    // we're listening to theme changes here because the theme of dialog and its children
+    // doesn't get updated by default when the user toggles the theme mode.
+    final theme = ref.watch(appThemeControllerProvider).materialThemeData;
+    return Dialog(
+      backgroundColor: theme.colorScheme.background,
+      shape: const RoundedRectangleBorder(borderRadius: kBorderRadius),
+      child: Theme(
+        data: theme,
         child: const Stack(
           children: [
             SettingsPage(),
