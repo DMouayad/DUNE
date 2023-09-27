@@ -37,9 +37,11 @@ class AlbumCard extends StatelessWidget {
   }
 
   String _getSubtitle(BaseAlbum album) {
-    var text = album.artists.firstOrNull?.name ?? '';
-    if (album.releaseDate != null) text = '$text - ${album.releaseDate!.year}';
-    return text;
+    var text = album.albumArtist?.name;
+    if (album.releaseDate != null) {
+      text = '${text != null ? '$text - ' : ''}${album.releaseDate!.year}';
+    }
+    return text ?? '';
   }
 }
 
