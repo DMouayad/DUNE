@@ -276,52 +276,42 @@ final class IsarModelsRelationHelper {
     return await Result.fromAnother(() async {
       if (!withArtists && !withArtists) return album.asResult;
 
-      List<IsarArtist>? artistsOfAlbum;
-      List<IsarTrack>? tracksOfAlbum;
+      IsarAlbum newAlbum = album.copyWith();
       if (withArtists) {
         // check if artists relation has already been loaded
         if (album.artists.isNotEmpty && album.artists is List<IsarArtist>) {
-          artistsOfAlbum = album.artists as List<IsarArtist>;
+          // Do nothing - already in the [newAlbum]
         } else {
-          final artistsIds = List<String>.from(album.featuredArtistsIds);
           if (album.albumArtistId != null) {
-            artistsIds.add(album.albumArtistId!);
+            (await _artistDataSource.find(album.albumArtistId!)).fold(
+                onSuccess: (artist) {
+              newAlbum = newAlbum.copyWith(albumArtist: artist);
+            });
           }
+          final artistsIds = List<String>.from(album.featuredArtistsIds);
           artistsIds.remove(artistIdToIgnore);
-          if (artistsIds.isEmpty) {
-            // no artists to load so the artists list is empty
-            artistsOfAlbum = const [];
-          } else {
-            final fetchingArtistsResult =
-                await _artistDataSource.getWhereIds(artistsIds);
-            if (fetchingArtistsResult.isFailure) {
-              return fetchingArtistsResult.mapFailure((error) => error);
-            }
-            artistsOfAlbum = fetchingArtistsResult.asSuccess.value;
+          if (artistsIds.isNotEmpty) {
+            (await _artistDataSource.getWhereIds(artistsIds)).fold(
+              onSuccess: (artists) =>
+                  newAlbum = newAlbum.copyWith(artists: artists),
+            );
           }
         }
       }
-      if (withTracks) {
-        if (album.tracksIds.isEmpty) {
-          return album.copyWith(artists: artistsOfAlbum).asResult;
-        }
-        return (await _trackDataSource.getWhereIds(album.tracksIds))
-            .flatMapSuccessAsync((tracks) async {
-          if (tracks.isEmpty) {
-            return album.copyWith(artists: artistsOfAlbum).asResult;
+      if (withTracks && album.tracksIds.isNotEmpty) {
+        // load tracks with their relations
+        await (await _trackDataSource.getWhereIds(album.tracksIds)).foldAsync(
+            onSuccess: (tracks) async {
+          if (tracks.isNotEmpty) {
+            (await loadRelationsForTracks(tracks, albumIdToIgnore: album.id))
+                .fold(onSuccess: (tracksWithRelations) {
+              newAlbum = newAlbum.copyWith(tracks: tracksWithRelations);
+            });
           }
-          return (await loadRelationsForTracks(tracks,
-                  albumIdToIgnore: album.id))
-              .mapSuccess((tracksWithRelations) {
-            return album.copyWith(
-                tracks: tracksWithRelations, artists: artistsOfAlbum);
-          });
         });
       }
 
-      return album
-          .copyWith(artists: artistsOfAlbum, tracks: tracksOfAlbum)
-          .asResult;
+      return newAlbum.asResult;
     });
   }
 
