@@ -55,7 +55,7 @@ class _CustomCardState extends State<CustomCard> {
         borderRadius: rectangleBorderRadius,
         onTap: widget.onTap,
         mouseCursor: MouseCursor.defer,
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius:
                 widget.shape == BoxShape.circle ? null : rectangleBorderRadius,
@@ -90,13 +90,16 @@ class _CustomCardState extends State<CustomCard> {
               Expanded(
                 flex: 0,
                 child: Container(
-                  height: 40,
+                  height: 30,
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
                     widget.title ?? '',
                     textAlign: TextAlign.center,
-                    style: context.textTheme.titleSmall,
-                    maxLines: 2,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colorScheme.onPrimaryContainer,
+                    ),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

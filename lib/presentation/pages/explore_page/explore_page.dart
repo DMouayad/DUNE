@@ -134,13 +134,13 @@ class ExplorePageState extends ConsumerState<ExplorePage>
         body: ListView.builder(
           padding: EdgeInsets.only(
               left: context.isMobile ? 8 : 0, top: 30, bottom: 20),
-          itemExtent: 340.0,
+          itemExtent: 300.0,
           scrollDirection: Axis.vertical,
           itemCount:
               isLoading ? collectionsCountWhenLoading : collections.length,
           itemBuilder: (context, index) {
             return ExploreMusicCollectionWidget(
-              height: 340,
+              height: 300,
               collection: isLoading
                   ? const AsyncValue.loading()
                   : AsyncValue.data(collections[index]),

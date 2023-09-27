@@ -97,7 +97,7 @@ class ScrollableCardsView extends StatelessWidget {
         ),
         if (!isLoading && (!context.isMobile || context.isDesktopPlatform))
           Positioned.fill(
-            top: 5,
+            top: 0,
             right: 14,
             child: Align(
               alignment: Alignment.topRight,
@@ -170,13 +170,13 @@ class _Title extends StatelessWidget {
           Expanded(
             flex: 0,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(7, 7, 0, 5),
+              padding: const EdgeInsets.fromLTRB(12, 7, 0, 5),
               child: title ??
                   Text(
                     titleText ?? '',
                     style: (context.isMobile
-                            ? context.textTheme.titleMedium
-                            : context.textTheme.titleLarge)
+                            ? context.textTheme.titleSmall
+                            : context.textTheme.titleMedium)
                         ?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: context.colorScheme.onBackground,

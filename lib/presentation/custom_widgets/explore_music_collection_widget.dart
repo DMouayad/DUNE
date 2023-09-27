@@ -37,8 +37,7 @@ class ExploreMusicCollectionWidget extends ConsumerWidget {
       itemCardWidth = itemWidth!;
     } else {
       itemCardWidth = min(
-          250.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
-      itemCardWidth = max(itemCardWidth, 240.0);
+          220.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
       if (collection.hasValue) {
         itemCardWidth = collection.requireValue.items.first.type.isPlaylist
             ? itemCardWidth - 30
