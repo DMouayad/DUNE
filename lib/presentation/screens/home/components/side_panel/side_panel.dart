@@ -76,7 +76,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
                     ),
                   ),
                   if (tabsMode.isVertical) ...[
-                    const Divider(height: 10),
+                    const Divider(),
+                    const SizedBox(height: 4),
                     VerticalTabsList(
                       extended: extended,
                       onTabChanged: widget.onTabChanged,

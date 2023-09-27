@@ -32,7 +32,7 @@ class QuickNavSection extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       child: Container(
         height: showAllWhenMinimized ? null : _kButtonHeight,
-        margin: const EdgeInsets.only(top: 10, bottom: 6),
+        margin: const EdgeInsets.only(top: 10),
         alignment: Alignment.topCenter,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
