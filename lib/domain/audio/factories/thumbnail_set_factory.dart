@@ -1,6 +1,6 @@
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 import 'thumbnail_factory.dart';
 
 final class ThumbnailsSetFactory extends BaseModelFactory<ThumbnailsSet> {

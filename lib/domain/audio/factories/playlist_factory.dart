@@ -5,7 +5,7 @@ import 'package:dune/domain/audio/factories/thumbnail_set_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 import 'track_factory.dart';
 
 final class PlaylistFactory extends BaseModelFactory<BasePlaylist> {

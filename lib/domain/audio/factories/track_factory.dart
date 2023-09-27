@@ -10,7 +10,7 @@ import 'package:faker/faker.dart';
 import 'audio_info_set_factory.dart';
 import 'album_factory.dart';
 import 'artist_factory.dart';
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 import 'thumbnail_set_factory.dart';
 
 final class TrackFactory extends BaseModelFactory<BaseTrack> {

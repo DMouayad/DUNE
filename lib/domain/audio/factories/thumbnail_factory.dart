@@ -1,7 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_thumbnail.dart';
 import 'package:faker/faker.dart';
 
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 
 final class ThumbnailFactory extends BaseModelFactory<BaseThumbnail> {
   late final String? _url;

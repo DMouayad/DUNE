@@ -3,7 +3,7 @@ import 'package:dune/support/enums/audio_streaming_quality.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
-import 'base_model_factory.dart';
+import '../../base_model_factory.dart';
 
 final class TrackAudioInfoFactory extends BaseModelFactory<TrackAudioInfo> {
   late final String? _url;
