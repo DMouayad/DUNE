@@ -16,9 +16,8 @@ final _selectionControllerProvider = StateNotifierProvider<
   ),
 );
 final _albumsControllerProvider = StateNotifierProvider<
-        LocalLibraryAlbumsController,
-        QueryOptionsPagedState<LocalAlbumsResult>>(
-    (ref) => LocalLibraryAlbumsController());
+    LocalLibraryAlbumsController,
+    QueryOptionsPagedState<BaseAlbum>>((ref) => LocalLibraryAlbumsController());
 
 class LibraryAlbumsPage extends ConsumerWidget {
   const LibraryAlbumsPage({super.key});
