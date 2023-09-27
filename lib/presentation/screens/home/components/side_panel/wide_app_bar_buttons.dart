@@ -67,9 +67,11 @@ class WideAppBarButtons extends ConsumerWidget {
     return () {
       if (AppRouter.router.canPop()) {
         AppRouter.router.pop();
-        ref
-            .read(tabsStateProvider.notifier)
-            .update((state) => state.withPreviousPageSelected());
+        if (AppRouter.tabsModeEnabled) {
+          ref
+              .read(tabsStateProvider.notifier)
+              .update((state) => state.withPreviousPageSelected());
+        }
       }
     };
   }
