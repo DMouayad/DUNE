@@ -117,6 +117,17 @@ final class TabsState extends Equatable {
 
   @override
   List<Object?> get props => [tabs, selectedTabIndex, pinnedTabs];
+
+  TabsState withTabsSwitched(int firstIndex, int secondIndex) {
+    final newTabAtFirstIndex =
+        tabs.elementAt(secondIndex).withNewIndex(firstIndex);
+    final newTabAtSecondIndex =
+        tabs.elementAt(firstIndex).withNewIndex(secondIndex);
+    final newTabs = List<TabData>.from(tabs);
+    newTabs[firstIndex] = newTabAtFirstIndex;
+    newTabs[secondIndex] = newTabAtSecondIndex;
+    return _copyWith(tabs: newTabs);
+  }
 }
 
 typedef TabPageData = ({int index, String path, String title});

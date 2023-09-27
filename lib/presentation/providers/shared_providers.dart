@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
-import 'package:dune/presentation/models/tabs_state.dart';
+import 'package:dune/navigation/tabs_state.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/now_playing_section_display_mode.dart';
 

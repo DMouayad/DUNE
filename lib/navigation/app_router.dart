@@ -3,7 +3,7 @@ library app_router;
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
-import 'package:dune/presentation/models/tabs_state.dart';
+import 'package:dune/navigation/tabs_state.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
 import 'package:dune/presentation/pages/library_page/library_albums_page.dart';

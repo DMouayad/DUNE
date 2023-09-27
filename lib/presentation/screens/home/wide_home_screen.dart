@@ -1,4 +1,4 @@
-import 'package:dune/presentation/models/tabs_state.dart';
+import 'package:dune/navigation/tabs_state.dart';
 import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

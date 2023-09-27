@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 //
-import 'presentation/models/tabs_state.dart';
+import 'navigation/tabs_state.dart';
 import 'presentation/providers/state_controllers.dart';
 import 'support/themes/fluent_app_themes.dart';
 
