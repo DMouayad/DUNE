@@ -31,7 +31,6 @@ class DesktopAppBarSettingComponent extends ConsumerWidget {
               .watch(appPreferencesController)
               .autoHideWideScreenAppBarButtons,
           onChanged: (enabled) {
-            print('new value $enabled');
             ref
                 .read(appPreferencesController.notifier)
                 .setAutoHideAppBarButtons(enabled);

@@ -22,10 +22,8 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
     BaseAppPreferences newPreferences,
   ) async {
     if (newPreferences != state) {
-      (await _dataSource.save(newPreferences)).fold(onSuccess: (prefs) {
-        print(prefs.autoHideWideScreenAppBarButtons);
-        state = prefs;
-      });
+      (await _dataSource.save(newPreferences))
+          .fold(onSuccess: (prefs) => state = prefs);
     }
   }
 
