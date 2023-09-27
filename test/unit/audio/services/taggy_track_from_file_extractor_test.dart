@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:flutter_taggy/flutter_taggy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -52,8 +53,7 @@ void main() {
         expect(fileExtractor.extractAlbum().runtimeType, BaseAlbum);
       });
       test('it extracts track-artists list and album-artists list', () {
-        expect(fileExtractor.extractArtists().runtimeType, ArtistsFromFile);
-        expect(fileExtractor.extractArtists().albumArtists, hasLength(1));
+        expect(fileExtractor.extractArtists().albumArtist, isA<BaseArtist>());
         expect(fileExtractor.extractArtists().trackArtists, hasLength(1));
       });
       test('it extracts an [AudioInfoSet]', () {
