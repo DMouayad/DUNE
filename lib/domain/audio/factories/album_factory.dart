@@ -9,7 +9,6 @@ import 'package:dune/domain/audio/factories/track_factory.dart';
 import 'package:dune/support/enums/music_source.dart';
 
 import '../../base_model_factory.dart';
-import 'thumbnail_set_factory.dart';
 
 final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
   late final String? _id;
@@ -22,12 +21,14 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
   late final DateTime? _releaseDate;
   late final ThumbnailsSet? _thumbnails;
   late final List<BaseArtist>? _artists;
+  late final BaseArtist? _albumArtist;
   late final List<BaseTrack>? _tracks;
   late final MusicSource? _musicSource;
 
   AlbumFactory() {
     _id = _browseId = _category = _duration = _isExplicit = _musicSource =
-        _title = _type = _releaseDate = _thumbnails = _artists = _tracks = null;
+        _title = _type = _releaseDate =
+            _thumbnails = _artists = _albumArtist = _tracks = null;
   }
 
   @override
@@ -38,13 +39,13 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
       musicSource: _musicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
       artists: _artists ?? [],
-      albumArtist: _artists?.firstOrNull,
+      albumArtist: _albumArtist,
       browseId:
           _browseId ?? faker.randomGenerator.string(20) + faker.lorem.word(),
       category: _category,
       duration: _duration ?? faker.lorem.sentence(),
       isExplicit: _isExplicit ?? faker.randomGenerator.boolean(),
-      thumbnails: _thumbnails ?? ThumbnailsSetFactory().create(),
+      thumbnails: _thumbnails ?? const ThumbnailsSet(),
       title: _title ?? faker.lorem.sentence(),
       type: _type ?? faker.lorem.word(),
       tracks: _tracks ?? [],
@@ -65,6 +66,7 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
     List<BaseArtist>? artists,
     List<BaseTrack>? tracks,
     MusicSource? musicSource,
+    BaseArtist? albumArtist,
   }) {
     return AlbumFactory._(
       id: id ?? _id,
@@ -79,6 +81,7 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
       artists: artists ?? _artists,
       tracks: tracks ?? _tracks,
       musicSource: musicSource ?? _musicSource,
+      albumArtist: albumArtist ?? _albumArtist,
     );
   }
 
@@ -111,6 +114,7 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
     required DateTime? releaseDate,
     required ThumbnailsSet? thumbnails,
     required List<BaseArtist>? artists,
+    required BaseArtist? albumArtist,
     required List<BaseTrack>? tracks,
     required MusicSource? musicSource,
   })  : _id = id,
@@ -120,9 +124,14 @@ final class AlbumFactory extends BaseModelFactory<BaseAlbum> {
         _isExplicit = isExplicit,
         _title = title,
         _type = type,
+        _albumArtist = albumArtist,
         _releaseDate = releaseDate,
         _thumbnails = thumbnails,
         _artists = artists,
         _musicSource = musicSource,
         _tracks = tracks;
+
+  AlbumFactory setAlbumArtist(BaseArtist artist) {
+    return _copyWith(albumArtist: artist);
+  }
 }
