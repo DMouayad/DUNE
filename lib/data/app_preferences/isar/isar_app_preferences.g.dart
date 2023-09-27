@@ -24,69 +24,74 @@ const IsarAppPreferencesSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesaudioStreamingQualityEnumValueMap,
     ),
-    r'exploreMusicSource': PropertySchema(
+    r'autoHideWideScreenAppBarButtons': PropertySchema(
       id: 1,
+      name: r'autoHideWideScreenAppBarButtons',
+      type: IsarType.bool,
+    ),
+    r'exploreMusicSource': PropertySchema(
+      id: 2,
       name: r'exploreMusicSource',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesexploreMusicSourceEnumValueMap,
     ),
     r'initialPageOnStartup': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'initialPageOnStartup',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesinitialPageOnStartupEnumValueMap,
     ),
     r'lastWindowHeight': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'lastWindowHeight',
       type: IsarType.double,
     ),
     r'lastWindowWidth': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'lastWindowWidth',
       type: IsarType.double,
     ),
     r'localMusicFoldersList': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'localMusicFoldersList',
       type: IsarType.objectList,
       target: r'IsarMusicFolder',
     ),
     r'rememberLastWindowSize': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'rememberLastWindowSize',
       type: IsarType.bool,
     ),
     r'searchEngine': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'searchEngine',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencessearchEngineEnumValueMap,
     ),
     r'sidePanelPinned': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'sidePanelPinned',
       type: IsarType.bool,
     ),
     r'tabsMode': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'tabsMode',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencestabsModeEnumValueMap,
     ),
     r'thumbnailQualitiesOrder': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'thumbnailQualitiesOrder',
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesthumbnailQualitiesOrderEnumValueMap,
     ),
     r'usePrimaryColorInCardColor': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'usePrimaryColorInCardColor',
       type: IsarType.bool,
     ),
     r'volumeStep': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'volumeStep',
       type: IsarType.double,
     )
@@ -130,23 +135,24 @@ void _isarAppPreferencesSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeByte(offsets[0], object.audioStreamingQuality.index);
-  writer.writeByte(offsets[1], object.exploreMusicSource.index);
-  writer.writeByte(offsets[2], object.initialPageOnStartup.index);
-  writer.writeDouble(offsets[3], object.lastWindowHeight);
-  writer.writeDouble(offsets[4], object.lastWindowWidth);
+  writer.writeBool(offsets[1], object.autoHideWideScreenAppBarButtons);
+  writer.writeByte(offsets[2], object.exploreMusicSource.index);
+  writer.writeByte(offsets[3], object.initialPageOnStartup.index);
+  writer.writeDouble(offsets[4], object.lastWindowHeight);
+  writer.writeDouble(offsets[5], object.lastWindowWidth);
   writer.writeObjectList<IsarMusicFolder>(
-    offsets[5],
+    offsets[6],
     allOffsets,
     IsarMusicFolderSchema.serialize,
     object.localMusicFoldersList,
   );
-  writer.writeBool(offsets[6], object.rememberLastWindowSize);
-  writer.writeByte(offsets[7], object.searchEngine.index);
-  writer.writeBool(offsets[8], object.sidePanelPinned);
-  writer.writeByte(offsets[9], object.tabsMode.index);
-  writer.writeByte(offsets[10], object.thumbnailQualitiesOrder.index);
-  writer.writeBool(offsets[11], object.usePrimaryColorInCardColor);
-  writer.writeDouble(offsets[12], object.volumeStep);
+  writer.writeBool(offsets[7], object.rememberLastWindowSize);
+  writer.writeByte(offsets[8], object.searchEngine.index);
+  writer.writeBool(offsets[9], object.sidePanelPinned);
+  writer.writeByte(offsets[10], object.tabsMode.index);
+  writer.writeByte(offsets[11], object.thumbnailQualitiesOrder.index);
+  writer.writeBool(offsets[12], object.usePrimaryColorInCardColor);
+  writer.writeDouble(offsets[13], object.volumeStep);
 }
 
 IsarAppPreferences _isarAppPreferencesDeserialize(
@@ -159,36 +165,37 @@ IsarAppPreferences _isarAppPreferencesDeserialize(
     audioStreamingQuality: _IsarAppPreferencesaudioStreamingQualityValueEnumMap[
             reader.readByteOrNull(offsets[0])] ??
         AudioStreamingQuality.balanced,
+    autoHideWideScreenAppBarButtons: reader.readBoolOrNull(offsets[1]) ?? true,
     exploreMusicSource: _IsarAppPreferencesexploreMusicSourceValueEnumMap[
-            reader.readByteOrNull(offsets[1])] ??
+            reader.readByteOrNull(offsets[2])] ??
         MusicSource.youtube,
     id: id,
     initialPageOnStartup: _IsarAppPreferencesinitialPageOnStartupValueEnumMap[
-            reader.readByteOrNull(offsets[2])] ??
+            reader.readByteOrNull(offsets[3])] ??
         InitialPageOnStartup.exploreMusic,
-    lastWindowHeight: reader.readDoubleOrNull(offsets[3]),
-    lastWindowWidth: reader.readDoubleOrNull(offsets[4]),
+    lastWindowHeight: reader.readDoubleOrNull(offsets[4]),
+    lastWindowWidth: reader.readDoubleOrNull(offsets[5]),
     localMusicFoldersList: reader.readObjectList<IsarMusicFolder>(
-          offsets[5],
+          offsets[6],
           IsarMusicFolderSchema.deserialize,
           allOffsets,
           IsarMusicFolder(),
         ) ??
         const [],
-    rememberLastWindowSize: reader.readBoolOrNull(offsets[6]) ?? true,
+    rememberLastWindowSize: reader.readBoolOrNull(offsets[7]) ?? true,
     searchEngine: _IsarAppPreferencessearchEngineValueEnumMap[
-            reader.readByteOrNull(offsets[7])] ??
+            reader.readByteOrNull(offsets[8])] ??
         MusicSource.youtube,
-    sidePanelPinned: reader.readBoolOrNull(offsets[8]) ?? true,
+    sidePanelPinned: reader.readBoolOrNull(offsets[9]) ?? true,
     tabsMode: _IsarAppPreferencestabsModeValueEnumMap[
-            reader.readByteOrNull(offsets[9])] ??
+            reader.readByteOrNull(offsets[10])] ??
         TabsMode.vertical,
     thumbnailQualitiesOrder:
         _IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
-                reader.readByteOrNull(offsets[10])] ??
+                reader.readByteOrNull(offsets[11])] ??
             ThumbnailQualitiesOrderOption.balanced,
-    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[11]) ?? true,
-    volumeStep: reader.readDoubleOrNull(offsets[12]) ?? 5.0,
+    usePrimaryColorInCardColor: reader.readBoolOrNull(offsets[12]) ?? true,
+    volumeStep: reader.readDoubleOrNull(offsets[13]) ?? 5.0,
   );
   return object;
 }
@@ -205,18 +212,20 @@ P _isarAppPreferencesDeserializeProp<P>(
               reader.readByteOrNull(offset)] ??
           AudioStreamingQuality.balanced) as P;
     case 1:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 2:
       return (_IsarAppPreferencesexploreMusicSourceValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 2:
+    case 3:
       return (_IsarAppPreferencesinitialPageOnStartupValueEnumMap[
               reader.readByteOrNull(offset)] ??
           InitialPageOnStartup.exploreMusic) as P;
-    case 3:
-      return (reader.readDoubleOrNull(offset)) as P;
     case 4:
       return (reader.readDoubleOrNull(offset)) as P;
     case 5:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 6:
       return (reader.readObjectList<IsarMusicFolder>(
             offset,
             IsarMusicFolderSchema.deserialize,
@@ -224,25 +233,25 @@ P _isarAppPreferencesDeserializeProp<P>(
             IsarMusicFolder(),
           ) ??
           const []) as P;
-    case 6:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 7:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 8:
       return (_IsarAppPreferencessearchEngineValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
-    case 8:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 9:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 10:
       return (_IsarAppPreferencestabsModeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           TabsMode.vertical) as P;
-    case 10:
+    case 11:
       return (_IsarAppPreferencesthumbnailQualitiesOrderValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ThumbnailQualitiesOrderOption.balanced) as P;
-    case 11:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 12:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 13:
       return (reader.readDoubleOrNull(offset) ?? 5.0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -466,6 +475,16 @@ extension IsarAppPreferencesQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
+      autoHideWideScreenAppBarButtonsEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'autoHideWideScreenAppBarButtons',
+        value: value,
       ));
     });
   }
@@ -1208,6 +1227,20 @@ extension IsarAppPreferencesQuerySortBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      sortByAutoHideWideScreenAppBarButtons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'autoHideWideScreenAppBarButtons', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      sortByAutoHideWideScreenAppBarButtonsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'autoHideWideScreenAppBarButtons', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
       sortByExploreMusicSource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exploreMusicSource', Sort.asc);
@@ -1375,6 +1408,20 @@ extension IsarAppPreferencesQuerySortThenBy
       thenByAudioStreamingQualityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'audioStreamingQuality', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      thenByAutoHideWideScreenAppBarButtons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'autoHideWideScreenAppBarButtons', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
+      thenByAutoHideWideScreenAppBarButtonsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'autoHideWideScreenAppBarButtons', Sort.desc);
     });
   }
 
@@ -1557,6 +1604,13 @@ extension IsarAppPreferencesQueryWhereDistinct
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
+      distinctByAutoHideWideScreenAppBarButtons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'autoHideWideScreenAppBarButtons');
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
       distinctByExploreMusicSource() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'exploreMusicSource');
@@ -1646,6 +1700,13 @@ extension IsarAppPreferencesQueryProperty
       audioStreamingQualityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'audioStreamingQuality');
+    });
+  }
+
+  QueryBuilder<IsarAppPreferences, bool, QQueryOperations>
+      autoHideWideScreenAppBarButtonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'autoHideWideScreenAppBarButtons');
     });
   }
 

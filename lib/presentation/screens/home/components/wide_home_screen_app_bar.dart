@@ -1,11 +1,13 @@
 import 'package:dune/presentation/custom_widgets/desktop_app_bar_buttons.dart';
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/screens/home/components/side_panel/wide_app_bar_buttons.dart';
 import 'package:dune/presentation/utils/constants.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WideHomeScreenAppBar extends StatelessWidget {
@@ -34,13 +36,20 @@ class WideHomeScreenAppBar extends StatelessWidget {
                       fontFamily: 'baloo2',
                     ),
                   ),
-                  OptionalParentWidget(
-                    condition: context.isDesktopPlatform,
-                    parentWidgetBuilder: (child) => VisibilityOnHover(
-                      size: Size(context.screenWidth, 40),
-                      child: child,
-                    ),
-                    childWidget: const WideAppBarButtons(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final shouldAutoHide = ref
+                          .watch(appPreferencesController)
+                          .autoHideWideScreenAppBarButtons;
+                      return OptionalParentWidget(
+                        condition: context.isDesktopPlatform && shouldAutoHide,
+                        parentWidgetBuilder: (child) => VisibilityOnHover(
+                          size: Size(context.screenWidth, 40),
+                          child: child,
+                        ),
+                        childWidget: const WideAppBarButtons(),
+                      );
+                    },
                   ),
                 ],
               ),

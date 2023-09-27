@@ -1,3 +1,4 @@
+import 'package:dune/presentation/pages/settings_page/behaviour/desktop_app_bar_setting_component.dart';
 import 'package:dune/presentation/utils/constants.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/foundation.dart';
@@ -69,6 +70,7 @@ class SettingsPage extends StatelessWidget {
             contents: [
               const InitialPageSettingComponent(),
               if (context.isDesktopPlatform) ...[
+                const DesktopAppBarSettingComponent(),
                 const ShortcutsSettingComponent(),
               ],
             ],

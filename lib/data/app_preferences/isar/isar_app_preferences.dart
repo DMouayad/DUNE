@@ -77,6 +77,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     super.thumbnailQualitiesOrder,
     super.sidePanelPinned,
     super.audioStreamingQuality,
+    super.autoHideWideScreenAppBarButtons,
   }) : super(localMusicFolders: localMusicFoldersList.toSet());
 
   @override
@@ -90,6 +91,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     MusicSource? searchEngine,
     double? volumeStep,
     bool? rememberLastWindowSize,
+    bool? autoHideWideScreenAppBarButtons,
     Size? lastWindowSize,
     ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
     bool? sidePanelPinned,
@@ -111,6 +113,8 @@ class IsarAppPreferences extends BaseAppPreferences {
       thumbnailQualitiesOrder:
           thumbnailQualitiesOrder ?? this.thumbnailQualitiesOrder,
       sidePanelPinned: sidePanelPinned ?? this.sidePanelPinned,
+      autoHideWideScreenAppBarButtons: autoHideWideScreenAppBarButtons ??
+          this.autoHideWideScreenAppBarButtons,
       localMusicFoldersList:
           localMusicFolders?.map((e) => IsarMusicFolder.fromBase(e)).toList() ??
               localMusicFoldersList,

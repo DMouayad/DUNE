@@ -22,8 +22,10 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
     BaseAppPreferences newPreferences,
   ) async {
     if (newPreferences != state) {
-      (await _dataSource.save(newPreferences))
-          .fold(onSuccess: (prefs) => state = prefs);
+      (await _dataSource.save(newPreferences)).fold(onSuccess: (prefs) {
+        print(prefs.autoHideWideScreenAppBarButtons);
+        state = prefs;
+      });
     }
   }
 
@@ -110,5 +112,11 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
     final newSubFolders = Set<String>.from(parentFolder.subFolders);
     newSubFolders.remove(path);
     return MusicFolder(path: parentFolder.path, subFolders: newSubFolders);
+  }
+
+  Future<void> setAutoHideAppBarButtons(bool autoHide) async {
+    await _handleUpdatingAppPreferences(
+      state.copyWith(autoHideWideScreenAppBarButtons: autoHide),
+    );
   }
 }

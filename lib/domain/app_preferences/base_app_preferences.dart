@@ -42,6 +42,10 @@ class BaseAppPreferences extends Equatable {
   /// Indicates if the [SidePanel] should be always visible or not.
   final bool sidePanelPinned;
 
+  /// Indicates buttons in the app bar on wide screens should be automatically
+  /// hidden after mouse cursor moves away from them.
+  final bool autoHideWideScreenAppBarButtons;
+
   /// The order in which it's determined which quality to choose for online
   /// media (Tracks, Albums, Playlists, etc) thumbnail image.
   final ThumbnailQualitiesOrderOption thumbnailQualitiesOrder;
@@ -54,6 +58,7 @@ class BaseAppPreferences extends Equatable {
 
   const BaseAppPreferences({
     this.usePrimaryColorInCardColor = true,
+    this.autoHideWideScreenAppBarButtons = true,
     this.initialPageOnStartup = InitialPageOnStartup.exploreMusic,
     this.exploreMusicSource = MusicSource.youtube,
     this.searchEngine = MusicSource.youtube,
@@ -81,6 +86,7 @@ class BaseAppPreferences extends Equatable {
       'audioStreamingQuality': audioStreamingQuality,
       'localMusicFolders': localMusicFolders,
       'thumbnailQualitiesOrder': thumbnailQualitiesOrder,
+      'autoHideWideScreenAppBarButtons': autoHideWideScreenAppBarButtons,
     };
   }
 
@@ -103,6 +109,7 @@ class BaseAppPreferences extends Equatable {
         audioStreamingQuality,
         localMusicFolders,
         thumbnailQualitiesOrder,
+        autoHideWideScreenAppBarButtons,
       ];
 
   BaseAppPreferences copyWith({
@@ -115,6 +122,7 @@ class BaseAppPreferences extends Equatable {
     bool? rememberLastWindowSize,
     Size? lastWindowSize,
     bool? sidePanelPinned,
+    bool? autoHideWideScreenAppBarButtons,
     ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
     AudioStreamingQuality? audioStreamingQuality,
     Set<MusicFolder>? localMusicFolders,
@@ -136,6 +144,8 @@ class BaseAppPreferences extends Equatable {
       audioStreamingQuality:
           audioStreamingQuality ?? this.audioStreamingQuality,
       localMusicFolders: localMusicFolders ?? this.localMusicFolders,
+      autoHideWideScreenAppBarButtons: autoHideWideScreenAppBarButtons ??
+          this.autoHideWideScreenAppBarButtons,
     );
   }
 }
