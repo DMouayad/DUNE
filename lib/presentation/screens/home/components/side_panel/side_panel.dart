@@ -73,8 +73,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
         );
       },
       childWidget: AnimatedSize(
-        curve: Curves.easeOutSine,
-        duration: const Duration(milliseconds: 130),
+        curve: Curves.fastEaseInToSlowEaseOut,
+        duration: const Duration(milliseconds: 450),
         child: Container(
           constraints: BoxConstraints.tight(Size.fromWidth(railWidth!)),
           margin: const EdgeInsets.only(left: 10, right: 12, top: 10),
