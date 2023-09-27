@@ -1,3 +1,4 @@
+import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -33,11 +34,16 @@ class SidePanel extends ConsumerStatefulWidget {
 
 class _SidePanelState extends ConsumerState<SidePanel>
     with AutomaticKeepAliveClientMixin {
-  double railWidth = kSidePanelMinWidth;
+  double? railWidth;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    ref.listen(appPreferencesController.select((s) => s.sidePanelPinned),
+        (wasPinned, shouldPin) {
+      ref.read(navigationRailSizeProvider.notifier).state =
+          shouldPin ? context.maxNavRailWidth : kSidePanelMinWidth;
+    });
     final tabsMode = ref.read(appPreferencesController).tabsMode;
     if (railWidth != ref.watch(navigationRailSizeProvider)) {
       if (context.isMobile) {
@@ -47,58 +53,76 @@ class _SidePanelState extends ConsumerState<SidePanel>
           railWidth = kSidePanelMinWidth;
         }
       } else {
-        railWidth =
-            ref.watch(navigationRailSizeProvider) ?? context.maxNavRailWidth;
+        railWidth = ref.watch(navigationRailSizeProvider);
       }
       updateKeepAlive();
     }
+    railWidth ??= (ref.watch(appPreferencesController).sidePanelPinned
+        ? context.maxNavRailWidth
+        : kSidePanelMinWidth);
 
-    return Container(
-      constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin: const EdgeInsets.only(left: 10, right: 12, top: 10),
-      child: LayoutBuilder(builder: (context, constraints) {
-        final extended = constraints.maxWidth == context.maxNavRailWidth;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Expanded(flex: 0, child: TopSearchBar()),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  Visibility(
-                    visible: extended,
-                    child: QuickNavSection(
-                      extended: extended,
-                      onDestinationSelected: widget.onDestinationSelected,
-                    ),
-                  ),
-                  if (tabsMode.isVertical) ...[
-                    const Divider(),
-                    const SizedBox(height: 4),
-                    VerticalTabsList(
-                      extended: extended,
-                      onTabChanged: widget.onTabChanged,
-                      onAddNewTab: widget.onAddNewTab,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Visibility(
-              visible: extended,
-              child: Container(
-                margin: const EdgeInsets.only(top: 16),
-                constraints: BoxConstraints.loose(
-                  const Size.fromHeight(120),
-                ),
-                child: const SidePanelNowPlayingSection(),
-              ),
-            ),
-          ],
+    return OptionalParentWidget(
+      condition: !ref.watch(appPreferencesController).sidePanelPinned,
+      parentWidgetBuilder: (child) {
+        return MouseRegion(
+          onEnter: (_) => ref.read(navigationRailSizeProvider.notifier).state =
+              context.maxNavRailWidth,
+          onExit: (_) => ref.read(navigationRailSizeProvider.notifier).state =
+              kSidePanelMinWidth,
+          child: child,
         );
-      }),
+      },
+      childWidget: AnimatedSize(
+        curve: Curves.easeOutSine,
+        duration: const Duration(milliseconds: 130),
+        child: Container(
+          constraints: BoxConstraints.tight(Size.fromWidth(railWidth!)),
+          margin: const EdgeInsets.only(left: 10, right: 12, top: 10),
+          child: LayoutBuilder(builder: (context, constraints) {
+            final extended = constraints.maxWidth == context.maxNavRailWidth;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Expanded(flex: 0, child: TopSearchBar()),
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Visibility(
+                        visible: extended,
+                        child: QuickNavSection(
+                          extended: extended,
+                          onDestinationSelected: widget.onDestinationSelected,
+                        ),
+                      ),
+                      if (tabsMode.isVertical) ...[
+                        const Divider(),
+                        const SizedBox(height: 4),
+                        VerticalTabsList(
+                          extended: extended,
+                          onTabChanged: widget.onTabChanged,
+                          onAddNewTab: widget.onAddNewTab,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: extended,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    constraints: BoxConstraints.loose(
+                      const Size.fromHeight(120),
+                    ),
+                    child: const SidePanelNowPlayingSection(),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
     );
   }
 

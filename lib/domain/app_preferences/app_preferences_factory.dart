@@ -6,7 +6,7 @@ import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:faker/faker.dart';
 
-import 'base_model_factory.dart';
+import '../base_model_factory.dart';
 
 final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
   late final bool? usePrimaryColorInCardColor;
@@ -23,7 +23,7 @@ final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
   late final bool? rememberLastWindowSize;
   late final Size? lastWindowSize;
 
-  late final bool? rememberLastSidePanelSize;
+  late final bool? sidePanelPinned;
   late final double? lastSidePanelWidth;
 
   late final ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder;
@@ -35,7 +35,7 @@ final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
   AppPreferencesFactory() {
     usePrimaryColorInCardColor = initialPageOnStartup = exploreMusicSource =
         searchEngine = volumeStep = tabsMode = rememberLastWindowSize =
-            lastWindowSize = rememberLastSidePanelSize = lastSidePanelWidth =
+            lastWindowSize = sidePanelPinned = lastSidePanelWidth =
                 thumbnailQualitiesOrder =
                     audioStreamingQuality = localMusicFolders = null;
   }
@@ -47,10 +47,7 @@ final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
       audioStreamingQuality: audioStreamingQuality ??
           faker.randomGenerator.element(AudioStreamingQuality.values),
       lastWindowSize: lastWindowSize ?? _getRandomSize(),
-      lastSidePanelWidth:
-          lastSidePanelWidth ?? faker.randomGenerator.integer(1000).toDouble(),
-      rememberLastSidePanelSize:
-          rememberLastSidePanelSize ?? faker.randomGenerator.boolean(),
+      sidePanelPinned: sidePanelPinned ?? faker.randomGenerator.boolean(),
       rememberLastWindowSize:
           rememberLastWindowSize ?? faker.randomGenerator.boolean(),
       exploreMusicSource: exploreMusicSource ??

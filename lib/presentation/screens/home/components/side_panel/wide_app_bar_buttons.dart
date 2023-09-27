@@ -1,7 +1,6 @@
 import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/screens/home/components/side_panel/side_panel.dart';
 import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -21,20 +20,18 @@ class WideAppBarButtons extends ConsumerWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           _CustomIconButton(
+            tooltip: ref.watch(appPreferencesController).sidePanelPinned
+                ? 'Minimize panel'
+                : 'Expand panel',
             iconData: fluent.FluentIcons.side_panel,
             onPressed: () {
-              final extended = ref.watch(navigationRailSizeProvider) ==
-                  context.maxNavRailWidth;
-              if (extended) {
-                ref.read(navigationRailSizeProvider.notifier).state =
-                    kSidePanelMinWidth;
-              } else {
-                ref.read(navigationRailSizeProvider.notifier).state =
-                    context.maxNavRailWidth;
-              }
+              ref
+                  .read(appPreferencesController.notifier)
+                  .toggleSidePanelPinMode();
             },
           ),
           _CustomIconButton(
+            tooltip: 'Show Settings',
             iconData: context.isDesktopPlatform
                 ? fluent.FluentIcons.settings
                 : Icons.settings_outlined,
@@ -42,12 +39,14 @@ class WideAppBarButtons extends ConsumerWidget {
           ),
           if (tabsMode.isEnabled)
             _CustomIconButton(
+              tooltip: 'Browsing history',
               onPressed: () {},
               iconData: fluent.FluentIcons.history,
             ),
           Consumer(
             builder: (context, ref, child) {
               return _CustomIconButton(
+                tooltip: 'Go back',
                 iconData: fluent.FluentIcons.back,
                 onPressed: _onBackButtonPressed(ref),
               );
@@ -55,6 +54,7 @@ class WideAppBarButtons extends ConsumerWidget {
           ),
           if (tabsMode.isEnabled)
             _CustomIconButton(
+              tooltip: 'Go forward',
               iconData: fluent.FluentIcons.forward,
               onPressed: () {},
             ),
@@ -78,27 +78,35 @@ class WideAppBarButtons extends ConsumerWidget {
 }
 
 class _CustomIconButton extends StatelessWidget {
-  const _CustomIconButton({required this.onPressed, required this.iconData});
+  const _CustomIconButton({
+    required this.onPressed,
+    required this.iconData,
+    required this.tooltip,
+  });
 
   final void Function()? onPressed;
   final IconData iconData;
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return fluent.IconButton(
-      iconButtonMode: fluent.IconButtonMode.small,
-      style: fluent.ButtonStyle(
-        padding: fluent.ButtonState.all(
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
-        foregroundColor: fluent.ButtonState.resolveWith((states) {
-          return states.isDisabled ? null : context.colorScheme.secondary;
-        }),
-        shape: fluent.ButtonState.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+    return fluent.Tooltip(
+      message: tooltip,
+      child: fluent.IconButton(
+        iconButtonMode: fluent.IconButtonMode.small,
+        style: fluent.ButtonStyle(
+          padding: fluent.ButtonState.all(
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
+          foregroundColor: fluent.ButtonState.resolveWith((states) {
+            return states.isDisabled ? null : context.colorScheme.secondary;
+          }),
+          shape: fluent.ButtonState.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
         ),
+        icon: fluent.Icon(iconData),
+        onPressed: onPressed,
       ),
-      icon: fluent.Icon(iconData),
-      onPressed: onPressed,
     );
   }
 }

@@ -39,10 +39,8 @@ class BaseAppPreferences extends Equatable {
   final bool rememberLastWindowSize;
   final Size? lastWindowSize;
 
-  /// Indicates if last side panel size will be saved
-  /// for the next time.
-  final bool rememberLastSidePanelSize;
-  final double? lastSidePanelWidth;
+  /// Indicates if the [SidePanel] should be always visible or not.
+  final bool sidePanelPinned;
 
   /// The order in which it's determined which quality to choose for online
   /// media (Tracks, Albums, Playlists, etc) thumbnail image.
@@ -63,9 +61,8 @@ class BaseAppPreferences extends Equatable {
     this.tabsMode = TabsMode.vertical,
     this.rememberLastWindowSize = true,
     this.lastWindowSize,
-    this.rememberLastSidePanelSize = true,
+    this.sidePanelPinned = true,
     this.localMusicFolders = const {},
-    this.lastSidePanelWidth,
     this.audioStreamingQuality = AudioStreamingQuality.balanced,
     this.thumbnailQualitiesOrder = ThumbnailQualitiesOrderOption.balanced,
   });
@@ -79,8 +76,7 @@ class BaseAppPreferences extends Equatable {
       'volumeStep': volumeStep,
       'rememberLastWindowSize': rememberLastWindowSize,
       'lastWindowSize': lastWindowSize,
-      'rememberLastSidePanelSize': rememberLastSidePanelSize,
-      'lastSidePanelWidth': lastSidePanelWidth,
+      'sidePanelPinned': sidePanelPinned,
       'tabsMode': tabsMode.name,
       'audioStreamingQuality': audioStreamingQuality,
       'localMusicFolders': localMusicFolders,
@@ -90,7 +86,7 @@ class BaseAppPreferences extends Equatable {
 
   @override
   String toString() {
-    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, rememberLastSidePanelSize: $rememberLastSidePanelSize, lastSidePanelWidth: $lastSidePanelWidth, thumbnailQualitiesOrder: $thumbnailQualitiesOrder, audioStreamingQuality: $audioStreamingQuality, localMusicFolders: ${localMusicFolders.toList()}}';
+    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, sidePanelPinned: $sidePanelPinned, thumbnailQualitiesOrder: $thumbnailQualitiesOrder, audioStreamingQuality: $audioStreamingQuality, localMusicFolders: $localMusicFolders}';
   }
 
   @override
@@ -102,8 +98,7 @@ class BaseAppPreferences extends Equatable {
         volumeStep,
         rememberLastWindowSize,
         lastWindowSize,
-        rememberLastSidePanelSize,
-        lastSidePanelWidth,
+        sidePanelPinned,
         tabsMode,
         audioStreamingQuality,
         localMusicFolders,
@@ -119,8 +114,7 @@ class BaseAppPreferences extends Equatable {
     TabsMode? tabsMode,
     bool? rememberLastWindowSize,
     Size? lastWindowSize,
-    bool? rememberLastSidePanelSize,
-    double? lastSidePanelWidth,
+    bool? sidePanelPinned,
     ThumbnailQualitiesOrderOption? thumbnailQualitiesOrder,
     AudioStreamingQuality? audioStreamingQuality,
     Set<MusicFolder>? localMusicFolders,
@@ -136,9 +130,7 @@ class BaseAppPreferences extends Equatable {
       rememberLastWindowSize:
           rememberLastWindowSize ?? this.rememberLastWindowSize,
       lastWindowSize: lastWindowSize ?? this.lastWindowSize,
-      rememberLastSidePanelSize:
-          rememberLastSidePanelSize ?? this.rememberLastSidePanelSize,
-      lastSidePanelWidth: lastSidePanelWidth ?? this.lastSidePanelWidth,
+      sidePanelPinned: sidePanelPinned ?? this.sidePanelPinned,
       thumbnailQualitiesOrder:
           thumbnailQualitiesOrder ?? this.thumbnailQualitiesOrder,
       audioStreamingQuality:

@@ -36,9 +36,9 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
         state.copyWith(rememberLastWindowSize: value));
   }
 
-  Future<void> setShouldRememberLastSidePanelSize(bool value) async {
+  Future<void> toggleSidePanelPinMode() async {
     _handleUpdatingAppPreferences(
-        state.copyWith(rememberLastSidePanelSize: value));
+        state.copyWith(sidePanelPinned: !state.sidePanelPinned));
   }
 
   Future<void> setThumbnailQualitiesOrderOption(
@@ -50,11 +50,6 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
 
   Future<void> setLastWindowSize(Size size) async {
     await _handleUpdatingAppPreferences(state.copyWith(lastWindowSize: size));
-  }
-
-  Future<void> setLastSidePanelWidth(double? width) async {
-    await _handleUpdatingAppPreferences(
-        state.copyWith(lastSidePanelWidth: width));
   }
 
   Future<void> setSearchEngine(MusicSource source) async {
