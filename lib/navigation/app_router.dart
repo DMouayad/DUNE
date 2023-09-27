@@ -43,6 +43,7 @@ class AppRouter {
       GlobalKey<NavigatorState>();
   static late AppRouter _instance;
   static late final bool _tabsModeEnabled;
+  static bool get tabsModeEnabled => _tabsModeEnabled;
 
   static bool get showAppBarBackButton => !_tabsModeEnabled && router.canPop();
 
