@@ -27,12 +27,14 @@ class CustomExpansionTile extends StatelessWidget {
           const RoundedRectangleBorder(borderRadius: kBorderRadius),
       header: Text(
         title,
-        style: context.textTheme.titleSmall,
+        style: context.textTheme.bodyMedium?.copyWith(
+          color: context.colorScheme.secondary,
+        ),
       ),
       leading: Icon(
         iconData,
-        size: 18,
-        color: context.colorScheme.onBackground.withOpacity(.9),
+        size: 16,
+        color: context.colorScheme.secondary,
       ),
       content: Column(children: children),
     );

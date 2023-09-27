@@ -7,7 +7,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const _kTabHeight = 40.0;
+const _kTabHeight = 38.0;
 
 class VerticalTabsList extends ConsumerStatefulWidget {
   const VerticalTabsList({
@@ -35,22 +35,17 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
           ClipRRect(borderRadius: kBorderRadius, child: child),
       buildDefaultDragHandles: false,
       shrinkWrap: true,
-      itemExtent: _kTabHeight + 4,
+      itemExtent: _kTabHeight,
       itemBuilder: (BuildContext context, int index) {
         final tabData = tabs[index];
         return ReorderableDragStartListener(
           index: index,
           key: Key(index.toString()),
-          child: Container(
-            decoration: const BoxDecoration(),
-            clipBehavior: Clip.antiAlias,
-            margin: const EdgeInsets.symmetric(vertical: 2.0),
-            child: _VerticalTab(
-              extended: widget.extended,
-              onPressed: () => widget.onTabChanged(index),
-              selected: tabData.tabIndex == tabsState.selectedTabIndex,
-              data: tabData,
-            ),
+          child: _VerticalTab(
+            extended: widget.extended,
+            onPressed: () => widget.onTabChanged(index),
+            selected: tabData.tabIndex == tabsState.selectedTabIndex,
+            data: tabData,
           ),
         );
       },
@@ -84,7 +79,7 @@ class _NewTabButton extends ConsumerWidget {
         fixedSize:
             MaterialStateProperty.all(const Size.fromHeight(_kTabHeight)),
         padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 10)),
+            const EdgeInsets.symmetric(horizontal: 4)),
         foregroundColor: MaterialStateProperty.all(
             context.colorScheme.onPrimaryContainer.withOpacity(.5)),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -103,7 +98,7 @@ class _NewTabButton extends ConsumerWidget {
         width: double.infinity,
         child: Wrap(
           clipBehavior: Clip.hardEdge,
-          runAlignment: WrapAlignment.center,
+          runAlignment: WrapAlignment.start,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             SizedBox(
@@ -137,55 +132,59 @@ class _VerticalTab extends ConsumerWidget {
     return FilledButton.tonal(
       onPressed: onPressed,
       style: ButtonStyle(
-        elevation: selected ? null : MaterialStateProperty.all(0),
+        elevation: MaterialStateProperty.all(0),
         shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(borderRadius: kBorderRadius)),
         fixedSize:
             MaterialStateProperty.all(const Size.fromHeight(_kTabHeight)),
         padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
+          return selected ? context.backgroundOnCard : Colors.transparent;
+        }),
+        textStyle: MaterialStateProperty.all(context.textTheme.bodyMedium),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
           return selected
-              ? context.colorScheme.background.withOpacity(.9)
-              : Colors.transparent;
+              ? context.colorScheme.secondary
+              : context.colorScheme.onBackground.withOpacity(.7);
         }),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 12.0, right: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      child: Container(
+        constraints: const BoxConstraints.expand(height: _kTabHeight),
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
+          alignment: extended ? Alignment.centerLeft : Alignment.center,
           children: [
-            fluent.Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Icon(
-                fluent.FluentIcons.tab,
-                size: 16,
-                color: selected
-                    ? context.colorScheme.secondary
-                    : context.colorScheme.onBackground.withOpacity(.66),
-              ),
+            const SizedBox(
+              height: _kTabHeight,
+              width: _kTabHeight,
+              child: Icon(fluent.FluentIcons.tab, size: 14),
             ),
-            Expanded(
+            Positioned(
+              left: _kTabHeight + (extended ? 0 : 10),
               child: Text(
                 data.selectedPage?.title ?? 'new tab',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onBackground,
-                ),
                 maxLines: 1,
                 overflow: TextOverflow.clip,
               ),
             ),
-            Expanded(
-              flex: extended ? 0 : 1,
-              child: fluent.IconButton(
-                onPressed: () {
-                  ref
-                      .read(tabsStateProvider.notifier)
-                      .update((state) => state.withTabRemoved(data.tabIndex));
-                },
-                icon: Icon(
-                  Icons.close,
-                  size: context.isDesktopPlatform ? 16 : 18,
-                  color: context.colorScheme.onBackground.withOpacity(.4),
+            Positioned(
+              right: 0,
+              child: Visibility(
+                visible: extended,
+                child: SizedBox(
+                  height: _kTabHeight,
+                  width: _kTabHeight,
+                  child: fluent.IconButton(
+                    onPressed: () {
+                      ref.read(tabsStateProvider.notifier).update(
+                          (state) => state.withTabRemoved(data.tabIndex));
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      size: context.isDesktopPlatform ? 16 : 18,
+                      color: context.colorScheme.onBackground.withOpacity(.4),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -22,7 +22,7 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
       constraints: const BoxConstraints.tightFor(height: 42),
       barLeading: Icon(
         fluent.FluentIcons.search,
-        size: 18,
+        size: 16,
         color: context.colorScheme.onBackground,
       ),
       searchController: searchController,

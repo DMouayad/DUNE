@@ -9,7 +9,7 @@ import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 
 //
-import 'navigation_grid.dart';
+import 'quick_nav_section.dart';
 import 'side_panel_now_playing_section.dart';
 import 'vertical_tabs_list.dart';
 
@@ -55,8 +55,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
 
     return Container(
       constraints: BoxConstraints.tight(Size.fromWidth(railWidth)),
-      margin:
-          EdgeInsets.only(left: 12, right: 10, top: tabsMode.isEnabled ? 6 : 0),
+      margin: EdgeInsets.only(
+          left: 10, right: 12, top: tabsMode.isEnabled ? 10 : 0),
       child: LayoutBuilder(builder: (context, constraints) {
         final extended = constraints.maxWidth == context.maxNavRailWidth;
         return Column(
@@ -68,9 +68,12 @@ class _SidePanelState extends ConsumerState<SidePanel>
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  NavGrid(
-                    extended: extended,
-                    onDestinationSelected: widget.onDestinationSelected,
+                  Visibility(
+                    visible: extended,
+                    child: QuickNavSection(
+                      extended: extended,
+                      onDestinationSelected: widget.onDestinationSelected,
+                    ),
                   ),
                   if (tabsMode.isVertical) ...[
                     const Divider(height: 10),
