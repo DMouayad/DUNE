@@ -34,7 +34,7 @@ class LibraryItemsPage<T extends Object, Selectable extends Object>
 
   @override
   Widget build(BuildContext context, ref) {
-    final tracksState = ref.watch(itemsControllerProvider);
+    final itemsState = ref.watch(itemsControllerProvider);
     return CustomScrollView(
       primary: true,
       slivers: [
@@ -52,7 +52,7 @@ class LibraryItemsPage<T extends Object, Selectable extends Object>
             title: title,
             maxHeaderExtent: 100,
             minHeaderExtent: 80,
-            itemsCount: tracksState.records?.length,
+            itemsCount: itemsState.records?.length,
             onShuffle: onShuffleItems,
             selectionController: ref.read(selectionControllerProvider.notifier),
             selectionState: ref.watch(selectionControllerProvider),
@@ -65,7 +65,7 @@ class LibraryItemsPage<T extends Object, Selectable extends Object>
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
-                initialSelection: tracksState.queryOptions.sortBy,
+                initialSelection: itemsState.queryOptions.sortBy,
                 onSelected:
                     ref.read(itemsControllerProvider.notifier).setSortType,
                 dropdownMenuEntries: SortType.values
@@ -79,7 +79,7 @@ class LibraryItemsPage<T extends Object, Selectable extends Object>
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
-                initialSelection: tracksState.queryOptions.sortDescending,
+                initialSelection: itemsState.queryOptions.sortDescending,
                 onSelected: ref
                     .read(itemsControllerProvider.notifier)
                     .setIsDescendingOrder,
