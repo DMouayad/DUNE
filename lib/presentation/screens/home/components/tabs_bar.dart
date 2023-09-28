@@ -1,3 +1,4 @@
+import 'package:dune/presentation/utils/tabs_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //
@@ -28,6 +29,8 @@ class TabsBar extends ConsumerWidget {
       margin: const EdgeInsets.only(top: 4),
       child: CustomTabView(
         onChanged: onTabChanged,
+        onReorder: (oldIndex, newIndex) =>
+            TabsHelper.onTabsReorder(oldIndex, newIndex, ref),
         currentIndex: ref.watch(tabsStateProvider).selectedTabIndex,
         onNewPressed: onAddNewTab,
         showScrollButtons: false,

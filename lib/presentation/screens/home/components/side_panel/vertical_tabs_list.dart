@@ -1,15 +1,17 @@
-import 'package:collection/collection.dart';
-import 'package:dune/presentation/models/tabs_state.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
-import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/support/themes/theme_constants.dart';
+import 'package:dune/presentation/utils/tabs_helper.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+//
+import 'package:dune/navigation/tabs_state.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
+import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/themes/theme_constants.dart';
+
 const _kTabHeight = 38.0;
 
-class VerticalTabsList extends ConsumerStatefulWidget {
+class VerticalTabsList extends ConsumerWidget {
   const VerticalTabsList({
     required this.onTabChanged,
     required this.onAddNewTab,
@@ -22,12 +24,7 @@ class VerticalTabsList extends ConsumerStatefulWidget {
   final void Function() onAddNewTab;
 
   @override
-  ConsumerState<VerticalTabsList> createState() => _VerticalTabsListState();
-}
-
-class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
-  @override
-  Widget build(context) {
+  Widget build(context, ref) {
     final tabsState = ref.watch(tabsStateProvider);
     final tabs = tabsState.tabs;
     return ReorderableListView.builder(
@@ -42,29 +39,24 @@ class _VerticalTabsListState extends ConsumerState<VerticalTabsList> {
           index: index,
           key: Key(index.toString()),
           child: _VerticalTab(
-            extended: widget.extended,
-            onPressed: () => widget.onTabChanged(index),
+            extended: extended,
+            onPressed: () => onTabChanged(index),
             selected: tabData.tabIndex == tabsState.selectedTabIndex,
             data: tabData,
           ),
         );
       },
       itemCount: tabsState.tabsCount,
-      onReorder: (int oldIndex, int newIndex) {
-        if (newIndex < tabs.length - 1 && newIndex != oldIndex) {
-          setState(() => tabs.swap(oldIndex, newIndex));
-        }
-      },
-      footer: _NewTabButton(
-          onPressed: widget.onAddNewTab, extended: widget.extended),
+      onReorder: (oldIndex, newIndex) =>
+          TabsHelper.onTabsReorder(oldIndex, newIndex, ref),
+      footer: _NewTabButton(onPressed: onAddNewTab),
     );
   }
 }
 
 class _NewTabButton extends ConsumerWidget {
-  const _NewTabButton({required this.onPressed, required this.extended});
+  const _NewTabButton({required this.onPressed});
 
-  final bool extended;
   final void Function() onPressed;
 
   @override
