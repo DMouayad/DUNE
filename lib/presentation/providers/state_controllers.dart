@@ -10,7 +10,7 @@ import 'package:dune/presentation/controllers/explore_music_categories_controlle
 import 'package:dune/presentation/controllers/explore_music_controller.dart';
 import 'package:dune/presentation/controllers/search_controller.dart';
 import 'package:dune/presentation/controllers/listening_history_controller.dart';
-import 'package:dune/presentation/controllers/playlist_controller.dart';
+import 'package:dune/presentation/controllers/playlist_page_controller.dart';
 import 'package:dune/domain/audio/services/audio_player.dart';
 import 'package:dune/presentation/models/search_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +22,8 @@ late final StateNotifierProvider<AppThemeController, AppTheme>
 late final StateNotifierProvider<PlaybackController, PlayerState>
     playbackControllerProvider;
 
-late final StateNotifierProvider<PlaylistController, AsyncValue<BasePlaylist?>>
-    playlistControllerProvider;
+late final StateNotifierProvider<PlaylistPageController,
+    AsyncValue<BasePlaylist?>> playlistControllerProvider;
 late final StateNotifierProvider<ExploreMusicCategoriesController,
         ExploreMusicCategoriesControllerState>
     exploreMusicCategoriesControllerProvider;

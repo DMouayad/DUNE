@@ -22,7 +22,7 @@ import 'package:dune/data/audio/local/services/media_kit_audio_player.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/controllers/playback_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_controller.dart';
-import 'package:dune/presentation/controllers/playlist_controller.dart';
+import 'package:dune/presentation/controllers/playlist_page_controller.dart';
 import 'package:dune/presentation/utils/listening_history_helper.dart';
 
 AudioPlayer registerAudioPlayer(Ref ref) {
@@ -75,7 +75,7 @@ void registerControllersProviders() {
   );
 
   playlistControllerProvider =
-      StateNotifierProvider((ref) => PlaylistController());
+      StateNotifierProvider((ref) => PlaylistPageController());
   exploreMusicCategoriesControllerProvider =
       StateNotifierProvider((ref) => ExploreMusicCategoriesController());
 

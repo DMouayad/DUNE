@@ -12,7 +12,7 @@ import 'package:dune/presentation/pages/library_page/library_artists_page.dart';
 import 'package:dune/presentation/pages/library_page/library_folders_page.dart';
 import 'package:dune/presentation/pages/library_page/library_tracks_page.dart';
 import 'package:dune/presentation/pages/listening_history_page/listening_history_page.dart';
-import 'package:dune/presentation/pages/playlist_page/playlist_page.dart';
+import 'package:dune/presentation/pages/playlist_page.dart';
 import 'package:dune/presentation/screens/desktop_splash_screen.dart';
 import 'package:dune/presentation/screens/home/home_screen.dart';
 import 'package:dune/presentation/screens/home/wide_home_screen.dart';
