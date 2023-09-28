@@ -192,7 +192,7 @@ class _Header extends StatelessWidget {
               children: [
                 Positioned(
                   top: 16,
-                  left: 16,
+                  left: thumbnailsSet != null ? 0 : 16,
                   bottom: 0,
                   child: Text(
                     title,
@@ -214,8 +214,7 @@ class _Header extends StatelessWidget {
                     children: [
                       if (description != null)
                         SizedBox(
-                          width: 330,
-                          height: isMinimized ? null : height * .3,
+                          width: context.screenWidth * .3,
                           child: Text(
                             description!,
                             maxLines: isMinimized ? 1 : 3,
