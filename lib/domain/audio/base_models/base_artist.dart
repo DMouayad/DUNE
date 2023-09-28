@@ -32,22 +32,6 @@ class BaseArtist extends Equatable {
     required this.musicSource,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'browseId': browseId,
-      'radioId': radioId,
-      'shuffleId': shuffleId,
-      'category': category,
-      'musicSource': musicSource.name,
-      'thumbnails': thumbnails.toMap(),
-      'tracks': tracks.map((e) => e.toMap()).toList(),
-      'albums': albums.map((e) => e.toMap()).toList(),
-    };
-  }
-
   BaseArtist setIdIfNull() {
     return copyWith(id: id ?? shortHash(name));
   }
@@ -92,6 +76,38 @@ class BaseArtist extends Equatable {
       tracks: tracks ?? this.tracks,
       albums: albums ?? this.albums,
       musicSource: musicSource ?? this.musicSource,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'browseId': browseId,
+      'radioId': radioId,
+      'shuffleId': shuffleId,
+      'category': category,
+      'musicSource': musicSource.name,
+      'thumbnails': thumbnails.toMap(),
+      'tracks': tracks.map((e) => e.toMap()).toList(),
+      'albums': albums.map((e) => e.toMap()).toList(),
+    };
+  }
+
+  factory BaseArtist.fromMap(Map<String, dynamic> map) {
+    return BaseArtist(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      description: map['description'] as String,
+      browseId: map['browseId'] as String,
+      radioId: map['radioId'] as String,
+      shuffleId: map['shuffleId'] as String,
+      category: map['category'] as String,
+      thumbnails: map['thumbnails'] as ThumbnailsSet,
+      tracks: map['tracks'] as List<BaseTrack>,
+      albums: map['albums'] as List<BaseAlbum>,
+      musicSource: map['musicSource'] as MusicSource,
     );
   }
 }
