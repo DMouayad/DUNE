@@ -59,7 +59,7 @@ class AppRouter {
       final destinationPath = '/tabs/$currentTab${dest.path}';
       // the [router] will push [destinationPath] into the [currentTab]'s
       // [StatefulShellBranch]
-      router.push(destinationPath);
+      router.go(destinationPath);
     } else {
       if (navigationShell.currentIndex != destinationIndex) {
         // since we're not using a tabs-layout-router, we simply go
@@ -156,6 +156,11 @@ class AppRouter {
                   branches: [
                     StatefulShellBranch(routes: [ExplorePageRoute()]),
                     StatefulShellBranch(routes: [ListeningHistoryPageRoute()]),
+                    StatefulShellBranch(routes: [
+                      LibraryAlbumsPageRoute(),
+                      LibraryTracksPageRoute(),
+                      LibraryArtistsPageRoute(),
+                    ]),
                   ],
                 ),
                 DesktopSplashScreenRoute(),
