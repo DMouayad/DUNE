@@ -26,6 +26,10 @@ import 'package:flutter/material.dart';
 
 part 'playlist_facade.dart';
 
+part 'artist_facade.dart';
+
+part 'album_facade.dart';
+
 part 'track_facade.dart';
 
 part 'search_facade.dart';
@@ -57,6 +61,14 @@ final class MusicFacade {
     _exploreMusic = ExploreMusicFacade(
       youtubeRepository: youtubeMusicRepository.exploreMusic,
     );
+    _artists = ArtistFacade(
+      localArtistRepository: localMusicRepository.artists,
+      // youtubeArtistRepository: youtubeMusicRepository.artists,
+    );
+    _albums = AlbumFacade(
+      localAlbumRepository: localMusicRepository.albums,
+      // youtubeAlbumRepository: youtubeMusicRepository.albums,
+    );
     _userListeningHistory =
         UserListeningHistoryFacade(listeningHistoryRepository);
     _localMusicLibrary = LocalMusicLibraryFacade(
@@ -72,6 +84,14 @@ final class MusicFacade {
   late final PlaylistFacade _playlists;
 
   static PlaylistFacade get playlists => _instance._playlists;
+
+  late final AlbumFacade _albums;
+
+  static AlbumFacade get albums => _instance._albums;
+
+  late final ArtistFacade _artists;
+
+  static ArtistFacade get artists => _instance._artists;
 
   late final TrackFacade _tracks;
 
