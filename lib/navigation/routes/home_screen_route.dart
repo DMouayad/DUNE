@@ -19,7 +19,11 @@ abstract class BaseHomeScreenBodyRoute extends GoRoute {
               context.theme.scaffoldBackgroundColor,
             );
           },
-          routes: [PlaylistPageRoute(), ...routes],
+          routes: [
+            PlaylistPageRoute(),
+            ExploreMusicCategoryPageRoute(),
+            ...routes
+          ],
         );
 }
 

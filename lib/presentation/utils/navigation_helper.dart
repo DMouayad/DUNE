@@ -49,10 +49,8 @@ class NavigationHelper {
         .read(exploreMusicCategoriesControllerProvider.notifier)
         .get(exploreItem.sourceId, exploreItem.source);
 
-    final basePath = 'explore-music-category/${exploreItem.sourceId}';
-    final path = ref.read(appPreferencesController).tabsMode.isEnabled
-        ? '/tabs/${ref.read(tabsStateProvider).selectedTabIndex}/$basePath'
-        : basePath;
+    final path =
+        '${AppRouter.currentLocation}/explore-music-category/${exploreItem.sourceId}';
 
     context.push(
       path,
