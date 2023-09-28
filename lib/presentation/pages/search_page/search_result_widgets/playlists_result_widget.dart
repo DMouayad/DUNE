@@ -25,11 +25,7 @@ class _PlaylistCard extends ConsumerWidget {
         ref
             .read(materialSearchBarControllerProvider)
             .closeView(ref.watch(materialSearchBarControllerProvider).text);
-        NavigationHelper.onPlaylistItemCardPressed(
-          context,
-          ref,
-          playlist: playlist,
-        );
+        NavigationHelper.onPlaylistItemCardPressed(context, playlist: playlist);
       },
     );
   }

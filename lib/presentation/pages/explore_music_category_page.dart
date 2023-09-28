@@ -82,11 +82,7 @@ class _PlaylistCard extends ConsumerWidget {
       title: playlist.title!,
       shape: BoxShape.rectangle,
       onTap: () {
-        NavigationHelper.onPlaylistItemCardPressed(
-          context,
-          ref,
-          playlist: playlist,
-        );
+        NavigationHelper.onPlaylistItemCardPressed(context, playlist: playlist);
       },
     );
   }

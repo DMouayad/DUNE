@@ -18,12 +18,12 @@ class PlaylistPageRoute extends GoRoute {
       child: PageBodyWrapper(
         child: PlaylistPage(
           key: state.pageKey,
-          musicSource: params?.musicSource,
+          musicSource: params!.musicSource,
           playlistId: state.pathParameters['playlistId'] as String,
-          title: params?.title,
-          description: params?.description,
-          thumbnails: params?.thumbnails,
-          tracksCount: params?.tracksCount,
+          title: params.title,
+          description: params.description,
+          thumbnails: params.thumbnails,
+          tracksCount: params.tracksCount,
         ),
       ),
       transitionsBuilder: (

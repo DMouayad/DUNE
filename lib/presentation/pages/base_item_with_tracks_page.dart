@@ -19,7 +19,7 @@ class BaseItemWithTracksPage<ItemType extends Object>
   final String? description;
   final String? tracksCount;
   final ThumbnailsSet? thumbnails;
-  final MusicSource? musicSource;
+  final MusicSource musicSource;
   final StateNotifierProvider<BaseItemPageController<ItemType>,
       AsyncValue<ItemType?>> itemControllerProvider;
   final String? Function(ItemType? item) idFromItem;
@@ -52,7 +52,7 @@ class BaseItemWithTracksPage<ItemType extends Object>
 class _BaseItemWithTracksPageState<ItemType extends Object>
     extends ConsumerState<BaseItemWithTracksPage<ItemType>>
     with AutomaticKeepAliveClientMixin<BaseItemWithTracksPage<ItemType>> {
-  AsyncValue<ItemType?> itemState = const AsyncValue.loading();
+  AsyncValue<ItemType?> itemState = const AsyncData(null);
   ItemType? item;
 
   /// Handles selection actions for this [item] tracks.
@@ -68,7 +68,13 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
+    if (item == null && !ref.watch(widget.itemControllerProvider).isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref
+            .read(widget.itemControllerProvider.notifier)
+            .get(widget.itemId, widget.musicSource);
+      });
+    }
     if (ref.watch(widget.itemControllerProvider).hasError) {
       itemState = ref.watch(widget.itemControllerProvider);
       item = null;
@@ -130,11 +136,9 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
                   .valueOrNull
               : null,
           onRetryWhenErrorLoadingTracks: () {
-            if (widget.musicSource != null) {
-              ref
-                  .read(widget.itemControllerProvider.notifier)
-                  .get(widget.itemId, widget.musicSource!);
-            }
+            ref
+                .read(widget.itemControllerProvider.notifier)
+                .get(widget.itemId, widget.musicSource);
           },
         ),
       ],

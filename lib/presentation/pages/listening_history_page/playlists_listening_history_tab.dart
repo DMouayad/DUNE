@@ -91,11 +91,8 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
           shape: BoxShape.rectangle,
           thumbImagePlaceholder: const PlaylistCoverPlaceholder(),
           onTap: () {
-            NavigationHelper.onPlaylistItemCardPressed(
-              context,
-              ref,
-              playlist: playlist,
-            );
+            NavigationHelper.onPlaylistItemCardPressed(context,
+                playlist: playlist);
           },
         );
       },

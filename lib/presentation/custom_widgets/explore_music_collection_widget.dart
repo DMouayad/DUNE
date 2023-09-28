@@ -102,11 +102,8 @@ class ExploreMusicItemCard extends ConsumerWidget {
                 .playSingleTrack(item.track!);
           }
         } else {
-          NavigationHelper.onPlaylistItemCardPressed(
-            context,
-            ref,
-            exploreItem: item,
-          );
+          NavigationHelper.onPlaylistItemCardPressed(context,
+              exploreItem: item);
         }
       },
     );
