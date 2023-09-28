@@ -25,5 +25,10 @@ Please note that DUNE is an independent application developed by Mouayad Alhamwi
 by YouTube, YouTube Music, or Spotify. Any trademarks, logos, or brand names displayed within DUNE are the property of
 their respective owners.
 
-By using DUNE, you agree to the terms and conditions outlined in this disclaimer. If you do not agree with any part of
-this disclaimer, we kindly ask you to refrain from using the application.
+By using DUNE:
+
+- You consent to utilizing the songs and other content exclusively for personal, non-commercial purposes and in
+  accordance with all applicable laws and regulations.
+- You agree to the terms and conditions outlined in this disclaimer.
+
+If you do not agree with the aforementioned conditions, we kindly ask you to refrain from using the application.
