@@ -1,5 +1,6 @@
 library app_router;
 
+import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
@@ -153,21 +154,29 @@ class AppRouter {
                       ),
                     ).of(context);
                   },
-                  branches: [
-                    StatefulShellBranch(routes: [ExplorePageRoute()]),
-                    StatefulShellBranch(routes: [ListeningHistoryPageRoute()]),
-                    StatefulShellBranch(routes: [
-                      LibraryAlbumsPageRoute(),
-                      LibraryTracksPageRoute(),
-                      LibraryArtistsPageRoute(),
-                    ]),
-                  ],
+                  branches: _getBranches(),
                 ),
                 DesktopSplashScreenRoute(),
               ],
               debugLogDiagnostics: kIsDebug,
             ),
     );
+  }
+
+  /// Returns a list of shell branches sorted by their [QuickNavDestination].
+  /// It's IMPORTANT  to sort the branches because we go to a specific branch
+  /// by it's index in the branches list. so every branch must be in index of its
+  /// [QuickNavDestination].
+  static List<StatefulShellBranch> _getBranches() {
+    final routes = [
+      ExplorePageRoute(),
+      ListeningHistoryPageRoute(),
+      LibraryAlbumsPageRoute(),
+      LibraryTracksPageRoute(),
+      LibraryArtistsPageRoute(),
+    ].sortedByCompare(
+        (r) => r.index.destinationIndex, (a, b) => a.compareTo(b));
+    return routes.map((route) => StatefulShellBranch(routes: [route])).toList();
   }
 
   static ({String name, String path}) getInitialAppPage(
