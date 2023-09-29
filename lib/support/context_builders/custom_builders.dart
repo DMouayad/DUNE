@@ -131,7 +131,6 @@ class ResponsiveBuilder<T extends Object> extends _BaseBuilder<T> {
 
   @override
   T? of(BuildContext context) {
-    print(mobileChild != null);
     return switch (context.deviceTypeByScreen) {
           DeviceType.mobile => switch (context.platform) {
                 TargetPlatform.android => androidMobileChild,

@@ -10,10 +10,5 @@ class ArtistPage extends BaseItemWithTracksPage<BaseArtist> {
   }) : super(
           item: artist,
           itemControllerProvider: artistPageControllerProvider,
-        ) {
-    for (var track in artist.tracks) {
-      print(track.album);
-      print(track.artistsNames);
-    }
-  }
+        );
 }
