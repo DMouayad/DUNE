@@ -32,8 +32,10 @@ class BaseArtist extends Equatable {
     required this.musicSource,
   });
 
-  BaseArtist setIdIfNull() {
-    return copyWith(id: id ?? shortHash(name));
+  BaseArtist setIdIfNull({bool useBrowseId = false}) {
+    return copyWith(
+      id: id ?? (useBrowseId && browseId != null ? browseId : shortHash(name)),
+    );
   }
 
   @override

@@ -91,8 +91,10 @@ class IsarArtist extends BaseArtist {
   }
 
   @override
-  IsarArtist setIdIfNull() {
-    return copyWith(id: id ?? browseId ?? shortHash(name));
+  IsarArtist setIdIfNull({bool useBrowseId = false}) {
+    return copyWith(
+      id: id ?? (useBrowseId && browseId != null ? browseId : shortHash(name)),
+    );
   }
 
   @override
