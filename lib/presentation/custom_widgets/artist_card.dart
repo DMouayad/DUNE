@@ -8,10 +8,16 @@ import 'custom_card.dart';
 import 'selectable_card.dart';
 
 class ArtistCard extends StatelessWidget {
-  const ArtistCard({super.key, required this.artist, this.width});
+  const ArtistCard({
+    super.key,
+    required this.artist,
+    this.width,
+    this.navigateToDetailsPageOnPressed = true,
+  });
 
   final BaseArtist artist;
   final double? width;
+  final bool navigateToDetailsPageOnPressed;
 
   const factory ArtistCard.selectable({
     required BaseArtist artist,
@@ -24,6 +30,11 @@ class ArtistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       width: width,
+      onTap: navigateToDetailsPageOnPressed
+          ? () {
+              NavigationHelper.onGoToArtistPage(context, artist);
+            }
+          : null,
       tag: artist.id ?? artist.browseId ?? artist.hashCode.toString(),
       title: artist.name,
       thumbnails: artist.thumbnails,
@@ -56,7 +67,11 @@ class _SelectableArtistCard extends ArtistCard {
       },
       selectionState: selectionState,
       onSelected: () => onSelected(selectionKey),
-      child: ArtistCard(artist: artist, width: width),
+      child: ArtistCard(
+        artist: artist,
+        width: width,
+        navigateToDetailsPageOnPressed: false,
+      ),
     );
   }
 }
