@@ -29,32 +29,31 @@ abstract class BaseItemPageController<ItemType>
 
     (await _getItemFromLocalSource(itemId)).foldAsync(
       onSuccess: (item) async {
-        print('fetched local item: ${item.runtimeType}');
         if (item != null) {
-          print('item found in local storage');
+          state = AsyncValue.data(item);
+        }
+        if (musicSource.isRemote) {
           state =
               AsyncLoading<ItemType?>().copyWithPrevious(AsyncValue.data(item));
+
+          (await _getItemFromOriginSource(itemId, musicSource)).fold(
+            onSuccess: (remoteItem) {
+              if (_localItemEqualsOrigin(remoteItem, state.valueOrNull)) {
+                state = AsyncData(state.value);
+              } else {
+                state = AsyncData(remoteItem);
+              }
+            },
+            onFailure: (error) async {
+              if (state.hasValue) {
+                state = AsyncValue<ItemType?>.error(error, error.stackTrace)
+                    .copyWithPrevious(AsyncData(state.requireValue));
+              } else {
+                state = AsyncValue<ItemType>.error(error, error.stackTrace);
+              }
+            },
+          );
         }
-        (await _getItemFromOriginSource(itemId, musicSource)).fold(
-          onSuccess: (remoteItem) {
-            print('fetched item from remote datasource');
-            if (_localItemEqualsOrigin(remoteItem, state.valueOrNull)) {
-              state = AsyncData(state.value);
-              print("item has same value");
-            } else {
-              print("item has new value");
-              state = AsyncData(remoteItem);
-            }
-          },
-          onFailure: (error) async {
-            if (state.hasValue) {
-              state = AsyncValue<ItemType?>.error(error, error.stackTrace)
-                  .copyWithPrevious(AsyncData(state.requireValue));
-            } else {
-              state = AsyncValue<ItemType>.error(error, error.stackTrace);
-            }
-          },
-        );
       },
       onFailure: (error) async {
         state = AsyncValue.error(error, error.stackTrace);

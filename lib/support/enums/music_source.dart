@@ -12,7 +12,7 @@ enum MusicSource {
     return this == local;
   }
 
-  bool get isOnline {
+  bool get isRemote {
     return [youtube, spotify].contains(this);
   }
 
