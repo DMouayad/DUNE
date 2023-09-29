@@ -1,9 +1,11 @@
 part of app_router;
 
 class ExploreMusicCategoryPageRoute extends GoRoute {
-  ExploreMusicCategoryPageRoute()
+  ExploreMusicCategoryPageRoute({bool isSubRoute = false})
       : super(
-          path: RoutePath.exploreMusicCategoryPage,
+          path: isSubRoute
+              ? RoutePath.exploreMusicCategoryPage.replaceFirst('/', '')
+              : RoutePath.exploreMusicCategoryPage,
           pageBuilder: buildPage,
           routes: [
             PlaylistPageRoute(),

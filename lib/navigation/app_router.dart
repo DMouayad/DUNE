@@ -115,7 +115,7 @@ class AppRouter {
                     LibraryTracksPageRoute(isSubRoute: true),
                     LibraryArtistsPageRoute(isSubRoute: true),
                     LibraryFoldersPageRoute(isSubRoute: true),
-                    ExploreMusicCategoryPageRoute(),
+                    ExploreMusicCategoryPageRoute(isSubRoute: true),
                   ],
                 ),
               ],
@@ -179,7 +179,12 @@ class AppRouter {
       LibraryArtistsPageRoute(),
     ].sortedByCompare(
         (r) => r.index.destinationIndex, (a, b) => a.compareTo(b));
-    return routes.map((route) => StatefulShellBranch(routes: [route])).toList();
+    return routes
+        .map((route) => StatefulShellBranch(routes: [
+              route,
+              ExploreMusicCategoryPageRoute(),
+            ]))
+        .toList();
   }
 
   static ({String name, String path}) getInitialAppPage(

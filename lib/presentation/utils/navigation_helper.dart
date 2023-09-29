@@ -1,4 +1,5 @@
 import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,17 +26,21 @@ class NavigationHelper {
   }
 
   static void onGoToArtistPage(BuildContext context, BaseArtist artist) {
-    var path = '${AppRouter.currentLocation}/artist/${artist.id}';
-    final currentArtistPagePathIndex =
-        AppRouter.currentLocation.indexOf(RegExp(r'artist/'));
-    if (currentArtistPagePathIndex != -1) {
-      path = AppRouter.currentLocation
-          .replaceRange(currentArtistPagePathIndex, null, '');
-      path += 'artist/${artist.id}';
-    }
+    final path = _getPath('/artist/${artist.id}', 'artist');
     if (path != AppRouter.currentLocation) {
       context.push(path, extra: artist);
     }
+  }
+
+  static _getPath(String relativePath, String pathKeyword) {
+    final currentArtistPagePathIndex =
+        AppRouter.currentLocation.indexOf(RegExp('/$pathKeyword/'));
+    if (currentArtistPagePathIndex != -1) {
+      var path = AppRouter.currentLocation
+          .replaceRange(currentArtistPagePathIndex, null, '');
+      return path + relativePath;
+    }
+    return AppRouter.currentLocation + relativePath;
   }
 
   static void onExploreMusicCategoryCardPressed(
@@ -47,13 +52,21 @@ class NavigationHelper {
         .read(exploreMusicCategoriesControllerProvider.notifier)
         .get(exploreItem.sourceId, exploreItem.source);
 
-    final path =
-        '${AppRouter.currentLocation}/explore-music-category/${exploreItem.sourceId}';
-
-    context.push(
-      path,
-      extra: (categoryId: exploreItem.sourceId, title: exploreItem.title),
-    );
+    final String path;
+    final base = RoutePath.exploreMusicCategoryPage
+        .replaceAll(':categoryId', exploreItem.sourceId);
+    if (AppRouter.tabsModeEnabled) {
+      final currentTab = ref.watch(tabsStateProvider).selectedTabIndex;
+      path = '/tabs/$currentTab$base';
+    } else {
+      path = base;
+    }
+    if (path != AppRouter.currentLocation) {
+      context.push(
+        path,
+        extra: (categoryId: exploreItem.sourceId, title: exploreItem.title),
+      );
+    }
   }
 
   static void showSettingsDialog(BuildContext context) {
