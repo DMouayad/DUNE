@@ -9,6 +9,7 @@ class RoutePath {
       libraryFoldersPage = '/library/folders',
       playlistPage = 'playlist/:playlistId',
       artistPage = 'artist/:artistId',
+      albumPage = 'album/:albumId',
       exploreMusicCategoryPage = '/explore-music-category/:categoryId',
       desktopSplashScreenPage = '/desktop-splash-screen';
 }

@@ -9,6 +9,7 @@ class ExploreMusicCategoryPageRoute extends GoRoute {
           pageBuilder: buildPage,
           routes: [
             PlaylistPageRoute(),
+            AlbumPageRoute(),
             ArtistPageRoute(),
           ],
         );

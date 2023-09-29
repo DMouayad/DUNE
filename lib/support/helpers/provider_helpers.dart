@@ -1,3 +1,4 @@
+import 'package:dune/presentation/controllers/album_page_controller.dart';
 import 'package:dune/presentation/controllers/artist_page_controller.dart';
 import 'package:dune/presentation/controllers/local_library_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,6 +80,8 @@ void registerControllersProviders() {
       StateNotifierProvider((ref) => PlaylistPageController());
   artistPageControllerProvider =
       StateNotifierProvider((ref) => ArtistPageController());
+  albumPageControllerProvider =
+      StateNotifierProvider((ref) => AlbumPageController());
   exploreMusicCategoriesControllerProvider =
       StateNotifierProvider((ref) => ExploreMusicCategoriesController());
 

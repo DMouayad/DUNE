@@ -1,11 +1,13 @@
 library app_router;
 
 import 'package:collection/collection.dart';
+import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
 import 'package:dune/navigation/tabs_state.dart';
+import 'package:dune/presentation/pages/album_page.dart';
 import 'package:dune/presentation/pages/artist_page.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
@@ -37,6 +39,8 @@ part 'routes/category_playlists_page_route.dart';
 part 'routes/library_pages_routes.dart';
 
 part 'routes/artist_page_route.dart';
+
+part 'routes/album_page_route.dart';
 
 part 'constants.dart';
 
@@ -117,6 +121,7 @@ class AppRouter {
                     LibraryFoldersPageRoute(isSubRoute: true),
                     ExploreMusicCategoryPageRoute(isSubRoute: true),
                     ArtistPageRoute(),
+                    AlbumPageRoute(),
                     PlaylistPageRoute(),
                   ],
                 ),

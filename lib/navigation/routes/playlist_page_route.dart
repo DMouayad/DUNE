@@ -2,9 +2,11 @@ part of app_router;
 
 class PlaylistPageRoute extends GoRoute {
   PlaylistPageRoute()
-      : super(path: RoutePath.playlistPage, pageBuilder: buildPage, routes: [
-          ArtistPageRoute(),
-        ]);
+      : super(
+          path: RoutePath.playlistPage,
+          pageBuilder: buildPage,
+          routes: [AlbumPageRoute(), ArtistPageRoute()],
+        );
 
   static Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CustomTransitionPage(
