@@ -21,6 +21,7 @@ abstract class BaseHomeScreenBodyRoute extends GoRoute {
           },
           routes: [
             PlaylistPageRoute(),
+            ArtistPageRoute(),
             ExploreMusicCategoryPageRoute(),
             ...routes
           ],

@@ -1,9 +1,11 @@
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/listening_history_collection.dart';
 import 'package:dune/domain/theme/app_theme.dart';
 import 'package:dune/presentation/controllers/app_preferences_controller.dart';
 import 'package:dune/presentation/controllers/app_theme_controller.dart';
+import 'package:dune/presentation/controllers/artist_page_controller.dart';
 import 'package:dune/presentation/controllers/local_library_controller.dart';
 import 'package:dune/presentation/controllers/playback_controller.dart';
 import 'package:dune/presentation/controllers/explore_music_categories_controller.dart';
@@ -24,6 +26,8 @@ late final StateNotifierProvider<PlaybackController, PlayerState>
 
 late final StateNotifierProvider<PlaylistPageController,
     AsyncValue<BasePlaylist?>> playlistControllerProvider;
+late final StateNotifierProvider<ArtistPageController, AsyncValue<BaseArtist?>>
+    artistPageControllerProvider;
 late final StateNotifierProvider<ExploreMusicCategoriesController,
         ExploreMusicCategoriesControllerState>
     exploreMusicCategoriesControllerProvider;

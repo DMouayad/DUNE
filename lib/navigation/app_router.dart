@@ -3,10 +3,10 @@ library app_router;
 import 'package:collection/collection.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
-import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
 import 'package:dune/navigation/tabs_state.dart';
+import 'package:dune/presentation/pages/artist_page.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
 import 'package:dune/presentation/pages/explore_page/explore_page.dart';
 import 'package:dune/presentation/pages/library_page/library_albums_page.dart';
@@ -20,7 +20,6 @@ import 'package:dune/presentation/screens/home/home_screen.dart';
 import 'package:dune/presentation/screens/home/wide_home_screen.dart';
 import 'package:dune/support/context_builders/custom_builders.dart';
 import 'package:dune/support/enums/initial_page_on_startup.dart';
-import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +35,8 @@ part 'routes/playlist_page_route.dart';
 part 'routes/category_playlists_page_route.dart';
 
 part 'routes/library_pages_routes.dart';
+
+part 'routes/artist_page_route.dart';
 
 part 'constants.dart';
 

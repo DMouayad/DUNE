@@ -1,3 +1,4 @@
+import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,17 +12,30 @@ import 'package:dune/navigation/app_router.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 
 class NavigationHelper {
-  /// either [playlist] or [exploreItem] should be not null
+  /// one of [playlist] or [exploreItem] cannot be null.
   static void onPlaylistItemCardPressed(
     BuildContext context, {
     BaseExploreMusicItem? exploreItem,
     BasePlaylist? playlist,
-    String? currentLocation,
   }) {
     assert(playlist != null || exploreItem != null);
     final pagePlaylist = playlist ?? BasePlaylist.fromExploreItem(exploreItem!);
     final path = '${AppRouter.currentLocation}/playlist/${pagePlaylist.id}';
     context.push(path, extra: pagePlaylist);
+  }
+
+  static void onGoToArtistPage(BuildContext context, BaseArtist artist) {
+    var path = '${AppRouter.currentLocation}/artist/${artist.id}';
+    final currentArtistPagePathIndex =
+        AppRouter.currentLocation.indexOf(RegExp(r'artist/'));
+    if (currentArtistPagePathIndex != -1) {
+      path = AppRouter.currentLocation
+          .replaceRange(currentArtistPagePathIndex, null, '');
+      path += 'artist/${artist.id}';
+    }
+    if (path != AppRouter.currentLocation) {
+      context.push(path, extra: artist);
+    }
   }
 
   static void onExploreMusicCategoryCardPressed(
