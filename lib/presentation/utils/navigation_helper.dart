@@ -21,7 +21,7 @@ class NavigationHelper {
   }) {
     assert(playlist != null || exploreItem != null);
     final pagePlaylist = playlist ?? BasePlaylist.fromExploreItem(exploreItem!);
-    final path = '${AppRouter.currentLocation}/playlist/${pagePlaylist.id}';
+    final path = _getPath('/playlist/${pagePlaylist.id}', 'playlist');
     context.push(path, extra: pagePlaylist);
   }
 
