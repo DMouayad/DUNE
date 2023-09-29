@@ -4,6 +4,7 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
+import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +138,10 @@ class TrackCardMainContent extends StatelessWidget {
                             (e) => e.name != null
                                 ? _ClickableText(
                                     text: e.name!,
-                                    onClicked: () {},
+                                    onClicked: () {
+                                      NavigationHelper.onGoToArtistPage(
+                                          context, e);
+                                    },
                                   )
                                 : const SizedBox.shrink(),
                           )
