@@ -130,21 +130,24 @@ final class IsarModelsRelationHelper {
     String? trackIdToIgnore,
   }) async {
     return await Result.fromAnother(() async {
-      late List<IsarTrack> tracks;
+      List<IsarTrack> tracks = [];
       if (artist.tracks.isNotEmpty && artist.tracks is List<IsarTrack>) {
         tracks = artist.tracks.cast<IsarTrack>();
       } else {
         final artistTracksIds = List<String>.from(artist.tracksIds);
         artistTracksIds.remove(trackIdToIgnore);
-        if (artistTracksIds.isEmpty) {
-          return artist.asResult;
+
+        if (artistTracksIds.isNotEmpty) {
+          return (await _trackDataSource.getWhereIds(artistTracksIds))
+              .mapSuccessAsync((tracks) async {
+            return (await loadRelationsForTracks(tracks,
+                    artistToIgnore: artist))
+                .mapSuccessTo(
+              (tracksWithRelations) =>
+                  artist.copyWith(tracks: tracksWithRelations),
+            );
+          });
         }
-        final fetchingTracksResult =
-            await _trackDataSource.getWhereIds(artistTracksIds);
-        if (fetchingTracksResult.isFailure) {
-          return fetchingTracksResult.mapFailure((error) => error);
-        }
-        tracks = fetchingTracksResult.asSuccess.value;
       }
       return artist.copyWith(tracks: tracks).asResult;
     });
@@ -181,37 +184,37 @@ final class IsarModelsRelationHelper {
 
   FutureResult<IsarTrack> loadRelationsForTrack(
     IsarTrack track, {
-    String? artistIdToIgnore,
-    String? albumIdToIgnore,
+    IsarArtist? artistToIgnore,
+    IsarAlbum? albumToIgnore,
   }) async {
     return await Result.fromAnother(() async {
-      final List<IsarArtist> artistsOfTrack;
       // check if artists relation has already been loaded
       IsarTrack trackWithArtists;
       if (track.artists.isNotEmpty &&
           track.artists.length == track.artistsIds.length) {
-        artistsOfTrack = track.artists;
-        trackWithArtists = track.copyWith(artists: artistsOfTrack);
+        trackWithArtists = track.copyWith(artists: track.artists);
       } else {
         final artistsIds = List<String>.from(track.artistsIds);
-        artistsIds.remove(artistIdToIgnore);
+        artistsIds.remove(artistToIgnore?.id);
         if (artistsIds.isEmpty) {
-          // no artists to load so the artists list is empty
-          artistsOfTrack = const [];
-          trackWithArtists = track;
+          // no artists to load but add ignored artist, if present, since
+          // it's the only artist for this track.
+          trackWithArtists = track
+              .copyWith(artists: [if (artistToIgnore != null) artistToIgnore]);
         } else {
-          final fetchingArtistsResult =
+          final fetchingArtists =
               await _artistDataSource.getWhereIds(artistsIds);
-          if (fetchingArtistsResult.isFailure) {
-            return fetchingArtistsResult.mapFailure((error) => error);
-          }
-          artistsOfTrack = fetchingArtistsResult.requireValue;
 
-          trackWithArtists = track.copyWith(artists: artistsOfTrack);
+          if (fetchingArtists.isFailure) return fetchingArtists;
+
+          trackWithArtists = track.copyWith(artists: [
+            ...fetchingArtists.requireValue,
+            if (artistToIgnore != null) artistToIgnore
+          ]);
         }
       }
-      if (track.albumId == null || track.albumId == albumIdToIgnore) {
-        return trackWithArtists.asResult;
+      if (track.albumId == null || track.albumId == albumToIgnore?.id) {
+        return trackWithArtists.copyWith(album: albumToIgnore).asResult;
       }
       return (await _albumDataSource.find(track.albumId!))
           .flatMapSuccessAsync((album) async {
@@ -232,13 +235,13 @@ final class IsarModelsRelationHelper {
 
   FutureResult<List<IsarTrack>> loadRelationsForTracks(
     List<IsarTrack> tracks, {
-    String? artistIdToIgnore,
-    String? albumIdToIgnore,
+    IsarArtist? artistToIgnore,
+    IsarAlbum? albumToIgnore,
   }) async {
     return await _loadRelationsForMany(
       tracks,
       (t) => loadRelationsForTrack(t,
-          artistIdToIgnore: artistIdToIgnore, albumIdToIgnore: albumIdToIgnore),
+          artistToIgnore: artistToIgnore, albumToIgnore: albumToIgnore),
       itemRelationsAlreadyLoaded: (track) =>
           track.artists.isNotEmpty && track.album != null,
     );
@@ -303,8 +306,8 @@ final class IsarModelsRelationHelper {
         await (await _trackDataSource.getWhereIds(album.tracksIds)).foldAsync(
             onSuccess: (tracks) async {
           if (tracks.isNotEmpty) {
-            (await loadRelationsForTracks(tracks, albumIdToIgnore: album.id))
-                .fold(onSuccess: (tracksWithRelations) {
+            (await loadRelationsForTracks(tracks, albumToIgnore: album)).fold(
+                onSuccess: (tracksWithRelations) {
               newAlbum = newAlbum.copyWith(tracks: tracksWithRelations);
             });
           }
