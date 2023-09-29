@@ -24,11 +24,11 @@ class BaseItemWithTracksPage<ItemType extends Object>
   final ItemType item;
   final ItemWithTracksControllerProvider<ItemType> itemControllerProvider;
 
-  const BaseItemWithTracksPage({
+  BaseItemWithTracksPage({
     Key? key,
     required this.item,
     required this.itemControllerProvider,
-  }) : super(key: key);
+  }) : super(key: ObjectKey(item));
 
   @override
   ConsumerState<BaseItemWithTracksPage> createState() =>
@@ -36,9 +36,8 @@ class BaseItemWithTracksPage<ItemType extends Object>
 }
 
 class _BaseItemWithTracksPageState<ItemType extends Object>
-    extends ConsumerState<BaseItemWithTracksPage<ItemType>>
-    with AutomaticKeepAliveClientMixin<BaseItemWithTracksPage<ItemType>> {
-  AsyncValue<ItemType?> itemState = const AsyncData(null);
+    extends ConsumerState<BaseItemWithTracksPage<ItemType>> {
+  late AsyncValue<List<BaseTrack>> tracksState;
   late ItemWithTracks itemData;
 
   @override
@@ -59,29 +58,28 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    if (itemData.tracks.isEmpty &&
-        !ref.watch(widget.itemControllerProvider).isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        ref
-            .read(widget.itemControllerProvider.notifier)
-            .get(itemData.id, itemData.musicSource);
-      });
-    }
     if (ref.watch(widget.itemControllerProvider).hasError) {
-      itemState = ref.watch(widget.itemControllerProvider);
-      updateKeepAlive();
+      final errorState = ref.watch(widget.itemControllerProvider) as AsyncError;
+      tracksState = AsyncError(errorState.error, errorState.stackTrace);
     }
     if (ref.watch(widget.itemControllerProvider).hasValue) {
       final newItemData = ItemWithTracks.tryFrom(
           ref.watch(widget.itemControllerProvider).requireValue);
 
       if (newItemData != null && newItemData.id == itemData.id) {
-        itemState = ref.watch(widget.itemControllerProvider);
         itemData = newItemData;
-        updateKeepAlive();
       }
     }
+    if (itemData.tracks.isEmpty &&
+        !ref.watch(widget.itemControllerProvider).isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref
+            .read(widget.itemControllerProvider.notifier)
+            .get(itemData.id, itemData.musicSource);
+        tracksState = const AsyncLoading();
+      });
+    }
+    tracksState = AsyncValue.data(itemData.tracks);
 
     final maxHeight = context.screenWidth > 500
         ? context.screenHeight * 0.27
@@ -94,7 +92,7 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
           delegate: PersistentPageHeaderDelegate<BaseTrack>(
             minHeaderExtent: 70,
             maxHeaderExtent: maxHeight,
-            isFetchingItems: itemState.hasValue && itemState.isLoading,
+            isFetchingItems: ref.watch(widget.itemControllerProvider).isLoading,
             title: itemData.title ?? '',
             description: itemData.description,
             thumbnailsSet: itemData.thumbnails,
@@ -102,7 +100,7 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
                     ? int.tryParse(itemData.tracksCount!)
                     : null) ??
                 itemData.tracks.length,
-            onShuffle: itemState.valueOrNull != null ? () {} : null,
+            onShuffle: itemData.tracks.isNotEmpty ? () {} : null,
             selectionController: ref.read(selectionController.notifier),
             selectionState: ref.watch(selectionController),
             onSelectAll: () =>
@@ -119,15 +117,12 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
           ),
         ),
         TracksListView(
-          itemState.whenData((data) => itemData.tracks),
+          tracksState,
           isSliverList: true,
           physics: const NeverScrollableScrollPhysics(),
           selectionControllerProvider: selectionController,
-          playlist: ItemType == BasePlaylist
-              ? (itemState as AsyncValue<BasePlaylist?>)
-                  .whenData((value) => value)
-                  .valueOrNull
-              : null,
+          playlist:
+              widget.item is BasePlaylist ? widget.item as BasePlaylist : null,
           onRetryWhenErrorLoadingTracks: () {
             ref
                 .read(widget.itemControllerProvider.notifier)
@@ -137,9 +132,6 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
       ],
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class ItemWithTracks {
