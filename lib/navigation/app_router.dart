@@ -116,6 +116,8 @@ class AppRouter {
                     LibraryArtistsPageRoute(isSubRoute: true),
                     LibraryFoldersPageRoute(isSubRoute: true),
                     ExploreMusicCategoryPageRoute(isSubRoute: true),
+                    ArtistPageRoute(),
+                    PlaylistPageRoute(),
                   ],
                 ),
               ],
