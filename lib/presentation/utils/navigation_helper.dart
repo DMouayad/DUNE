@@ -1,4 +1,3 @@
-import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,24 +19,9 @@ class NavigationHelper {
     String? currentLocation,
   }) {
     assert(playlist != null || exploreItem != null);
-    final title = exploreItem?.title ?? playlist!.title;
-    final sourceId = exploreItem?.sourceId ?? playlist!.id!;
-    // fetch playlist tracks and data
-    final description = exploreItem?.description ?? playlist!.description;
-    final thumbnails = exploreItem?.thumbnails ?? playlist!.thumbnails;
-    final tracksCount = exploreItem?.count;
-    final musicSource = exploreItem?.source ?? playlist!.musicSource;
-
-    context.push(
-      '${AppRouter.currentLocation}/playlist/$sourceId',
-      extra: (
-        tracksCount: tracksCount,
-        title: title,
-        description: description,
-        thumbnails: thumbnails,
-        musicSource: musicSource,
-      ),
-    );
+    final pagePlaylist = playlist ?? BasePlaylist.fromExploreItem(exploreItem!);
+    final path = '${AppRouter.currentLocation}/playlist/${pagePlaylist.id}';
+    context.push(path, extra: pagePlaylist);
   }
 
   static void onExploreMusicCategoryCardPressed(

@@ -5,26 +5,10 @@ class PlaylistPageRoute extends GoRoute {
       : super(path: RoutePath.playlistPage, pageBuilder: buildPage);
 
   static Page<void> buildPage(BuildContext context, GoRouterState state) {
-    final params = state.extra is Record
-        ? state.extra as ({
-            String? title,
-            String? description,
-            String? tracksCount,
-            ThumbnailsSet? thumbnails,
-            MusicSource musicSource,
-          })
-        : null;
     return CustomTransitionPage(
       child: PageBodyWrapper(
         child: PlaylistPage(
-          key: state.pageKey,
-          musicSource: params!.musicSource,
-          playlistId: state.pathParameters['playlistId'] as String,
-          title: params.title,
-          description: params.description,
-          thumbnails: params.thumbnails,
-          tracksCount: params.tracksCount,
-        ),
+            key: state.pageKey, playlist: state.extra as BasePlaylist),
       ),
       transitionsBuilder: (
         BuildContext context,

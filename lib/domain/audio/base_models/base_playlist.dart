@@ -3,6 +3,7 @@ import 'package:dune/support/enums/music_source.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import 'base_explore_music_item.dart';
 import 'thumbnails_set.dart';
 import 'base_track.dart';
 
@@ -99,6 +100,21 @@ class BasePlaylist<T extends BaseTrack> extends Equatable {
       tracks: tracks ?? this.tracks,
       createdAt: createdAt ?? this.createdAt,
       musicSource: musicSource ?? this.musicSource,
+    );
+  }
+
+  factory BasePlaylist.fromExploreItem(BaseExploreMusicItem exploreItem) {
+    return BasePlaylist(
+      duration: null,
+      title: exploreItem.title,
+      musicSource: exploreItem.source,
+      id: exploreItem.sourceId,
+      thumbnails: exploreItem.thumbnails ?? const ThumbnailsSet(),
+      tracks: [],
+      description: exploreItem.description ?? '',
+      createdAt: null,
+      author: null,
+      durationSeconds: null,
     );
   }
 }

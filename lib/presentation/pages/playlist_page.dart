@@ -6,22 +6,9 @@ import 'base_item_with_tracks_page.dart';
 class PlaylistPage extends BaseItemWithTracksPage<BasePlaylist> {
   PlaylistPage({
     super.key,
-    BasePlaylist? playlist,
-    required String playlistId,
-    required super.musicSource,
-    super.description,
-    super.thumbnails,
-    super.title,
-    super.tracksCount,
+    required BasePlaylist playlist,
   }) : super(
-          itemId: playlistId,
-          descriptionFromItem: (playlist) => playlist?.description,
-          idFromItem: (playlist) => playlist?.id,
-          thumbnailsFromItem: (playlist) => playlist?.thumbnails,
+          item: playlist,
           itemControllerProvider: playlistControllerProvider,
-          titleFromItem: (playlist) => playlist?.title,
-          tracksFromItem: (playlist) => playlist?.tracks ?? [],
-        ) {
-    print(playlist);
-  }
+        );
 }

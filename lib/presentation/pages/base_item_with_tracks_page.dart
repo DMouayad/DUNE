@@ -1,3 +1,6 @@
+import 'package:dune/domain/audio/base_models/base_album.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
@@ -12,36 +15,19 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+typedef ItemWithTracksControllerProvider<ItemType extends Object>
+    = StateNotifierProvider<BaseItemPageController<ItemType>,
+        AsyncValue<ItemType?>>;
+
 class BaseItemWithTracksPage<ItemType extends Object>
     extends ConsumerStatefulWidget {
-  final String itemId;
-  final String? title;
-  final String? description;
-  final String? tracksCount;
-  final ThumbnailsSet? thumbnails;
-  final MusicSource musicSource;
-  final StateNotifierProvider<BaseItemPageController<ItemType>,
-      AsyncValue<ItemType?>> itemControllerProvider;
-  final String? Function(ItemType? item) idFromItem;
-  final String? Function(ItemType? item) titleFromItem;
-  final String? Function(ItemType? item) descriptionFromItem;
-  final List<BaseTrack> Function(ItemType? item) tracksFromItem;
-  final ThumbnailsSet? Function(ItemType? item) thumbnailsFromItem;
+  final ItemType item;
+  final ItemWithTracksControllerProvider<ItemType> itemControllerProvider;
 
   const BaseItemWithTracksPage({
     Key? key,
-    required this.itemId,
-    required this.musicSource,
+    required this.item,
     required this.itemControllerProvider,
-    required this.idFromItem,
-    required this.titleFromItem,
-    required this.descriptionFromItem,
-    required this.tracksFromItem,
-    required this.thumbnailsFromItem,
-    this.title,
-    this.description,
-    this.tracksCount,
-    this.thumbnails,
   }) : super(key: key);
 
   @override
@@ -53,7 +39,13 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
     extends ConsumerState<BaseItemWithTracksPage<ItemType>>
     with AutomaticKeepAliveClientMixin<BaseItemWithTracksPage<ItemType>> {
   AsyncValue<ItemType?> itemState = const AsyncData(null);
-  ItemType? item;
+  late ItemWithTracks itemData;
+
+  @override
+  void initState() {
+    itemData = ItemWithTracks.from(widget.item);
+    super.initState();
+  }
 
   /// Handles selection actions for this [item] tracks.
   ///
@@ -68,23 +60,25 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (item == null && !ref.watch(widget.itemControllerProvider).isLoading) {
+    if (itemData.tracks.isEmpty &&
+        !ref.watch(widget.itemControllerProvider).isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         ref
             .read(widget.itemControllerProvider.notifier)
-            .get(widget.itemId, widget.musicSource);
+            .get(itemData.id, itemData.musicSource);
       });
     }
     if (ref.watch(widget.itemControllerProvider).hasError) {
       itemState = ref.watch(widget.itemControllerProvider);
-      item = null;
       updateKeepAlive();
     }
     if (ref.watch(widget.itemControllerProvider).hasValue) {
-      final newItem = ref.watch(widget.itemControllerProvider).value;
-      if (newItem != null && widget.idFromItem(newItem) == widget.itemId) {
+      final newItemData = ItemWithTracks.tryFrom(
+          ref.watch(widget.itemControllerProvider).requireValue);
+
+      if (newItemData != null && newItemData.id == itemData.id) {
         itemState = ref.watch(widget.itemControllerProvider);
-        item = itemState.value;
+        itemData = newItemData;
         updateKeepAlive();
       }
     }
@@ -101,19 +95,18 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
             minHeaderExtent: 70,
             maxHeaderExtent: maxHeight,
             isFetchingItems: itemState.hasValue && itemState.isLoading,
-            title: widget.title ?? widget.titleFromItem(item) ?? '',
-            description:
-                widget.description ?? widget.descriptionFromItem(item) ?? '',
-            thumbnailsSet: widget.thumbnails ?? widget.thumbnailsFromItem(item),
-            itemsCount: (widget.tracksCount != null
-                    ? int.tryParse(widget.tracksCount!)
+            title: itemData.title ?? '',
+            description: itemData.description,
+            thumbnailsSet: itemData.thumbnails,
+            itemsCount: (itemData.tracksCount != null
+                    ? int.tryParse(itemData.tracksCount!)
                     : null) ??
-                widget.tracksFromItem(item).length,
+                itemData.tracks.length,
             onShuffle: itemState.valueOrNull != null ? () {} : null,
             selectionController: ref.read(selectionController.notifier),
             selectionState: ref.watch(selectionController),
-            onSelectAll: () => selectionController.onSelectAllTracks(
-                ref, widget.tracksFromItem(item)),
+            onSelectAll: () =>
+                selectionController.onSelectAllTracks(ref, itemData.tracks),
             trailingPositionBuilder: (headerMinimized, child) {
               return AnimatedPositioned(
                 duration: const Duration(milliseconds: 150),
@@ -126,7 +119,7 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
           ),
         ),
         TracksListView(
-          itemState.whenData((data) => widget.tracksFromItem(data)),
+          itemState.whenData((data) => itemData.tracks),
           isSliverList: true,
           physics: const NeverScrollableScrollPhysics(),
           selectionControllerProvider: selectionController,
@@ -138,7 +131,7 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
           onRetryWhenErrorLoadingTracks: () {
             ref
                 .read(widget.itemControllerProvider.notifier)
-                .get(widget.itemId, widget.musicSource);
+                .get(itemData.id, itemData.musicSource);
           },
         ),
       ],
@@ -147,4 +140,72 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class ItemWithTracks {
+  final String id;
+  final String? title;
+  final String? tracksCount;
+  final String? description;
+  final ThumbnailsSet? thumbnails;
+  final List<BaseTrack> tracks;
+  final MusicSource musicSource;
+
+  const ItemWithTracks({
+    required this.id,
+    required this.title,
+    required this.musicSource,
+    this.tracks = const [],
+    this.description,
+    this.tracksCount,
+    this.thumbnails = const ThumbnailsSet(),
+  });
+
+  static ItemWithTracks? tryFrom(Object? object) {
+    if (object == null) return null;
+    return from(object);
+  }
+
+  static ItemWithTracks from(Object object) {
+    if (object is BasePlaylist) {
+      return ItemWithTracks(
+        id: object.id!,
+        title: object.title ?? '',
+        description: object.description,
+        thumbnails: object.thumbnails,
+        tracks: object.tracks,
+        musicSource: object.musicSource,
+      );
+    }
+    if (object is BaseArtist) {
+      return ItemWithTracks(
+        id: object.id!,
+        title: object.name,
+        description: object.description,
+        thumbnails: object.thumbnails,
+        tracks: object.tracks,
+        musicSource: object.musicSource,
+      );
+    }
+    if (object is BaseAlbum) {
+      return ItemWithTracks(
+        id: object.id!,
+        title: object.title,
+        thumbnails: object.thumbnails,
+        tracks: object.tracks,
+        musicSource: object.musicSource,
+      );
+    }
+    if (object is BaseExploreMusicItem) {
+      return ItemWithTracks(
+        id: object.sourceId,
+        title: object.title,
+        thumbnails: object.thumbnails,
+        tracks: [],
+        musicSource: object.source,
+        tracksCount: object.count,
+      );
+    }
+    throw UnimplementedError();
+  }
 }

@@ -1,6 +1,8 @@
 library app_router;
 
 import 'package:collection/collection.dart';
+import 'package:dune/domain/audio/base_models/base_artist.dart';
+import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/custom_widgets/page_body_wrapper.dart';
 import 'package:dune/presentation/custom_widgets/tab_new_page.dart';
