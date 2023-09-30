@@ -18,7 +18,7 @@ class PlaylistsDropdownButton extends ConsumerWidget {
         const _PlaylistsOptions(),
         ListView.builder(
           shrinkWrap: true,
-          itemCount: 4,
+          itemCount: 0,
           itemBuilder: (context, index) {
             return ListTile(
               // todo: add [trailing] with number of tracks
