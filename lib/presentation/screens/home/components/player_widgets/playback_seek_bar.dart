@@ -15,8 +15,8 @@ class SeekBar extends ConsumerWidget {
       child: av.ProgressBar(
         barCapShape: av.BarCapShape.round,
         thumbGlowColor: context.colorScheme.primaryContainer,
-        thumbColor: context.colorScheme.secondary,
-        progressBarColor: context.colorScheme.onPrimaryContainer,
+        thumbColor: context.colorScheme.primary.withOpacity(.8),
+        progressBarColor: context.colorScheme.primary.withOpacity(.8),
         baseBarColor: context.isDarkMode
             ? Colors.white12
             : context.colorScheme.secondary.withOpacity(.12),

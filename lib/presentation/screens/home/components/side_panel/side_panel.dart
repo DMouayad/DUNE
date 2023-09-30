@@ -112,9 +112,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
                   visible: extended,
                   child: Container(
                     margin: const EdgeInsets.only(top: 16),
-                    constraints: BoxConstraints.loose(
-                      const Size.fromHeight(120),
-                    ),
+                    constraints:
+                        BoxConstraints.loose(const Size.fromHeight(128)),
                     child: const SidePanelNowPlayingSection(),
                   ),
                 ),

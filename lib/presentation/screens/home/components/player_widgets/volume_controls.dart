@@ -59,7 +59,7 @@ class _VolumeControlsState extends ConsumerState<VolumeControls> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: SizedBox(
-                    height: 90,
+                    height: 65,
                     width: 44,
                     child: fluent.Slider(
                       value: playerState.volume,

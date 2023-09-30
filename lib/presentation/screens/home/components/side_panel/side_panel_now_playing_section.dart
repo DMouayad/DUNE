@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:dune/domain/audio/base_models/base_track.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/screens/home/components/playback_control_buttons.dart';
 import 'package:dune/presentation/screens/home/components/player_widgets/playback_seek_bar.dart';
@@ -25,26 +22,13 @@ class _SidePanelNowPlayingSectionState
   @override
   bool get wantKeepAlive => true;
 
-  double? maxImageWidth;
-  double? railWidth;
   BaseTrack? currentTrack;
   bool isLoadingTrack = false;
 
   @override
   Widget build(BuildContext context) {
-    double getMaxImageWidth() {
-      return min(70.0, railWidth! * .4);
-    }
-
     super.build(context);
 
-    if (railWidth != ref.watch(navigationRailSizeProvider)) {
-      railWidth = ref.watch(navigationRailSizeProvider) ?? 56.0;
-      maxImageWidth = getMaxImageWidth();
-      updateKeepAlive();
-    }
-    railWidth ??= 56.0;
-    maxImageWidth ??= getMaxImageWidth();
     if (isLoadingTrack != ref.watch(playbackControllerProvider).isLoading) {
       isLoadingTrack = ref.watch(playbackControllerProvider).isLoading;
       updateKeepAlive();
@@ -57,53 +41,31 @@ class _SidePanelNowPlayingSectionState
     return !(isLoadingTrack || currentTrack != null)
         ? const SizedBox.shrink()
         : Stack(
+            clipBehavior: Clip.antiAlias,
             fit: StackFit.expand,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                width: min(200.0, railWidth!),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flex(
-                      direction: Axis.horizontal,
-                      children: [
-                        Expanded(
-                          flex: 0,
-                          child: TrackPlayerBarImage(
-                            imageDimension: context.trackThumbnailDimension,
-                            currentTrackThumbs: currentTrack?.thumbnails,
-                          ),
-                        ),
-                        Expanded(
-                          // flex: 0,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxHeight: 50,
-                              minHeight: 30,
-                            ),
-                            child: const PlayerBarTrackInfo(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const Expanded(child: SeekBar()),
-                    const Expanded(
-                      child: SizedBox(
-                        height: 50,
-                        child: PlaybackControlButtons(),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+              Positioned(
+                top: 0,
+                left: 10,
+                child: TrackPlayerBarImage(
+                  imageDimension: context.trackThumbnailDimension,
+                  currentTrackThumbs: currentTrack?.thumbnails,
                 ),
               ),
-              const Positioned(
-                right: 4,
-                bottom: 10,
-                child: VolumeControls(),
+              Positioned(
+                top: 0,
+                left: context.trackThumbnailDimension + 10,
+                right: 6,
+                child: const SizedBox(height: 50, child: PlayerBarTrackInfo()),
               ),
+              const Positioned(top: 60, left: 12, right: 12, child: SeekBar()),
+              const Positioned(
+                bottom: 4,
+                left: 0,
+                right: 0,
+                child: PlaybackControlButtons(),
+              ),
+              const Positioned(right: 2, bottom: 8, child: VolumeControls()),
             ],
           );
   }
