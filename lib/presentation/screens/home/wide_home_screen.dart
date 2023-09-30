@@ -58,28 +58,26 @@ class WideHomeScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                Positioned.fill(
+                Positioned(
                   top: topSpacing,
+                  left: _getBodyLeftMargin(ref),
                   right: 6,
                   bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 0,
-                        child: SidePanel(
-                          onTabChanged: (i) => _onTabChanged(i, ref),
-                          onAddNewTab: () => _onAddNewTab(ref),
-                          onDestinationSelected: (dest) {
-                            AppRouter.onQuickNavDestinationSelected(
-                              dest,
-                              navigationShell,
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(child: navigationShell),
-                    ],
+                  child: navigationShell,
+                ),
+                Positioned(
+                  top: topSpacing,
+                  left: 6,
+                  bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
+                  child: SidePanel(
+                    onTabChanged: (i) => _onTabChanged(i, ref),
+                    onAddNewTab: () => _onAddNewTab(ref),
+                    onDestinationSelected: (dest) {
+                      AppRouter.onQuickNavDestinationSelected(
+                        dest,
+                        navigationShell,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -93,6 +91,15 @@ class WideHomeScreen extends ConsumerWidget {
       parentWidgetBuilder: (child) => DesktopHomeScreenWrapper(child),
       childWidget: screen,
     );
+  }
+
+  double _getBodyLeftMargin(WidgetRef ref) {
+    final panelIsPinned = ref.read(appPreferencesController).sidePanelPinned;
+    final railWidth = ref.watch(navigationRailSizeProvider);
+    // return panelIsPinned ? (railWidth ?? kSidePanelMinWidth) + 6 : 6;
+    return panelIsPinned
+        ? (railWidth ?? kSidePanelMinWidth) + 12
+        : kSidePanelMinWidth + 12;
   }
 
   void _onTabChanged(int index, WidgetRef ref) {

@@ -1,4 +1,5 @@
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
+import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +61,8 @@ class _SidePanelState extends ConsumerState<SidePanel>
     railWidth ??= (ref.watch(appPreferencesController).sidePanelPinned
         ? context.maxNavRailWidth
         : kSidePanelMinWidth);
+    final pinned = ref.watch(appPreferencesController).sidePanelPinned;
+    final extended = railWidth == context.maxNavRailWidth;
 
     return OptionalParentWidget(
       condition: !ref.watch(appPreferencesController).sidePanelPinned,
@@ -72,54 +75,76 @@ class _SidePanelState extends ConsumerState<SidePanel>
           child: child,
         );
       },
-      childWidget: AnimatedSize(
-        curve: Curves.fastEaseInToSlowEaseOut,
-        duration: const Duration(milliseconds: 450),
-        child: Container(
-          constraints: BoxConstraints.tight(Size.fromWidth(railWidth!)),
-          margin: const EdgeInsets.only(left: 10, right: 12, top: 10),
-          child: LayoutBuilder(builder: (context, constraints) {
-            final extended = constraints.maxWidth == context.maxNavRailWidth;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Expanded(flex: 0, child: TopSearchBar()),
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Visibility(
-                        visible: extended,
-                        child: QuickNavSection(
-                          extended: extended,
-                          onDestinationSelected: widget.onDestinationSelected,
-                        ),
+      childWidget: ClipRRect(
+        borderRadius: kBorderRadius,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Material(
+                color: extended
+                    ? context.colorScheme.background
+                    : Colors.transparent,
+                elevation: 0,
+              ),
+            ),
+            AnimatedSize(
+              curve: Curves.fastEaseInToSlowEaseOut,
+              duration: const Duration(milliseconds: 450),
+              child: Container(
+                constraints: BoxConstraints.tight(Size.fromWidth(railWidth!)),
+                padding: EdgeInsets.only(
+                  right: extended && !pinned ? 6 : 0,
+                  top: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: extended
+                      ? ref.watch(appThemeControllerProvider).cardColor
+                      : Colors.transparent,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Expanded(flex: 0, child: TopSearchBar()),
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Visibility(
+                            visible: extended,
+                            child: QuickNavSection(
+                              extended: extended,
+                              onDestinationSelected:
+                                  widget.onDestinationSelected,
+                            ),
+                          ),
+                          if (tabsMode.isVertical) ...[
+                            const Divider(),
+                            const SizedBox(height: 4),
+                            VerticalTabsList(
+                              extended: extended,
+                              onTabChanged: widget.onTabChanged,
+                              onAddNewTab: widget.onAddNewTab,
+                            ),
+                          ],
+                        ],
                       ),
-                      if (tabsMode.isVertical) ...[
-                        const Divider(),
-                        const SizedBox(height: 4),
-                        VerticalTabsList(
-                          extended: extended,
-                          onTabChanged: widget.onTabChanged,
-                          onAddNewTab: widget.onAddNewTab,
-                        ),
-                      ],
-                    ],
-                  ),
+                    ),
+                    Visibility(
+                      visible: extended,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        constraints:
+                            BoxConstraints.loose(const Size.fromHeight(128)),
+                        child: const SidePanelNowPlayingSection(),
+                      ),
+                    ),
+                  ],
                 ),
-                Visibility(
-                  visible: extended,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    constraints:
-                        BoxConstraints.loose(const Size.fromHeight(128)),
-                    child: const SidePanelNowPlayingSection(),
-                  ),
-                ),
-              ],
-            );
-          }),
+                // }),
+              ),
+            ),
+          ],
         ),
       ),
     );
