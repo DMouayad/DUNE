@@ -1,3 +1,4 @@
+import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/themes/theme_constants.dart';
@@ -21,26 +22,33 @@ class NavigationHelper {
   }) {
     assert(playlist != null || exploreItem != null);
     final pagePlaylist = playlist ?? BasePlaylist.fromExploreItem(exploreItem!);
-    final path = _getPath('/playlist/${pagePlaylist.id}', 'playlist');
+    final path = _getPath('/playlist/${pagePlaylist.id}');
     context.push(path, extra: pagePlaylist);
   }
 
   static void onGoToArtistPage(BuildContext context, BaseArtist artist) {
-    final path = _getPath('/artist/${artist.id}', 'artist');
+    final path = _getPath('/artist/${artist.id}');
     if (path != AppRouter.currentLocation) {
       context.push(path, extra: artist);
     }
   }
 
-  static _getPath(String relativePath, String pathKeyword) {
-    final currentArtistPagePathIndex =
-        AppRouter.currentLocation.indexOf(RegExp('/$pathKeyword/'));
-    if (currentArtistPagePathIndex != -1) {
-      var path = AppRouter.currentLocation
-          .replaceRange(currentArtistPagePathIndex, null, '');
-      return path + relativePath;
+  static void onGoToAlbumPage(BuildContext context, BaseAlbum album) {
+    final path = _getPath('/album/${album.id}');
+    if (path != AppRouter.currentLocation) {
+      context.push(path, extra: album);
     }
-    return AppRouter.currentLocation + relativePath;
+  }
+
+  static _getPath(String base) {
+    if (AppRouter.tabsModeEnabled) {
+      final reg = RegExp(r'^/tabs/\d');
+      final tabsInfo = reg.firstMatch(AppRouter.currentLocation)?[0];
+      final currentTab = tabsInfo?.split('/').last ?? "0";
+      return '/tabs/$currentTab$base';
+    } else {
+      return base;
+    }
   }
 
   static void onExploreMusicCategoryCardPressed(

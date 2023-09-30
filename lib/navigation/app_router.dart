@@ -90,9 +90,9 @@ class AppRouter {
                     LibraryArtistsPageRoute(isSubRoute: true),
                     LibraryFoldersPageRoute(isSubRoute: true),
                     ExploreMusicCategoryPageRoute(isSubRoute: true),
-                    ArtistPageRoute(),
-                    AlbumPageRoute(),
-                    PlaylistPageRoute(),
+                    ArtistPageRoute(isSubRoute: true),
+                    AlbumPageRoute(isSubRoute: true),
+                    PlaylistPageRoute(isSubRoute: true),
                   ],
                 ),
               ],
@@ -160,6 +160,9 @@ class AppRouter {
         .map((route) => StatefulShellBranch(routes: [
               route,
               ExploreMusicCategoryPageRoute(),
+              PlaylistPageRoute(),
+              ArtistPageRoute(),
+              AlbumPageRoute(),
             ]))
         .toList();
   }
