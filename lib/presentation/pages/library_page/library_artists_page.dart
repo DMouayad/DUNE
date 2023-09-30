@@ -31,7 +31,7 @@ class LibraryArtistsPage extends ConsumerWidget {
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 190,
           crossAxisSpacing: 10,
-          mainAxisExtent: 210,
+          mainAxisExtent: 190,
           mainAxisSpacing: 10,
         ),
         showNoMoreItemsIndicatorAsGridChild: false,
