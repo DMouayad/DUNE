@@ -63,7 +63,7 @@ final class MusicFacade {
     );
     _artists = ArtistFacade(
       localArtistRepository: localMusicRepository.artists,
-      // youtubeArtistRepository: youtubeMusicRepository.artists,
+      youtubeArtistRepository: youtubeMusicRepository.artists,
     );
     _albums = AlbumFacade(
       localAlbumRepository: localMusicRepository.albums,
