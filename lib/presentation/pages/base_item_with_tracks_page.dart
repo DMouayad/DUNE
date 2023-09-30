@@ -11,6 +11,8 @@ import 'package:dune/presentation/custom_widgets/tracks_list_view.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
+import 'package:dune/support/utils/result/result.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,7 +45,28 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
   @override
   void initState() {
     itemData = ItemWithTracks.from(widget.item);
+    if (itemData.tracks.isNotEmpty) {
+      tracksState = AsyncValue.data(itemData.tracks);
+    } else {
+      tracksState = const AsyncValue.loading();
+    }
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // if items doesn't have any tracks, we call the controller to fetch this
+    // item, with its tracks.
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (itemData.tracks.isEmpty &&
+          !ref.watch(widget.itemControllerProvider).isLoading) {
+        ref
+            .read(widget.itemControllerProvider.notifier)
+            .get(itemData.id, itemData.musicSource);
+        tracksState = const AsyncLoading();
+      }
+    });
+    super.didChangeDependencies();
   }
 
   /// Handles selection actions for this [item] tracks.
@@ -62,28 +85,29 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
       final errorState = ref.watch(widget.itemControllerProvider) as AsyncError;
       tracksState = AsyncError(errorState.error, errorState.stackTrace);
     }
-    if (ref.watch(widget.itemControllerProvider).hasValue) {
-      final newItemData = ItemWithTracks.tryFrom(
-          ref.watch(widget.itemControllerProvider).requireValue);
+    final itemState = ref.watch(widget.itemControllerProvider);
+    if (itemState.hasValue) {
+      if (itemState.value == null &&
+          !itemState.isLoading &&
+          itemData.tracks.isEmpty) {
+        tracksState = AsyncValue.error(
+            AppError(message: 'Could not load tracks!'), StackTrace.current);
+      } else {
+        final newItemData = ItemWithTracks.tryFrom(itemState.requireValue);
 
-      if (newItemData != null && newItemData.id == itemData.id) {
-        itemData = newItemData;
+        if ((newItemData?.id == itemData.id ||
+                newItemData?.title == itemData.title) &&
+            itemData != newItemData) {
+          itemData = newItemData!;
+          tracksState = AsyncValue.data(itemData.tracks);
+        }
       }
     }
-    if (itemData.tracks.isEmpty &&
-        !ref.watch(widget.itemControllerProvider).isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        ref
-            .read(widget.itemControllerProvider.notifier)
-            .get(itemData.id, itemData.musicSource);
-        tracksState = const AsyncLoading();
-      });
-    }
-    tracksState = AsyncValue.data(itemData.tracks);
-
-    final maxHeight = context.screenWidth > 500
-        ? context.screenHeight * 0.27
-        : context.screenHeight * 0.23;
+    final maxHeight = itemData.thumbnails?.thumbnails.isNotEmpty ?? false
+        ? context.screenWidth > 500
+            ? context.screenHeight * 0.21
+            : context.screenHeight * 0.15
+        : 70.0;
     return CustomScrollView(
       primary: true,
       slivers: [
@@ -134,7 +158,7 @@ class _BaseItemWithTracksPageState<ItemType extends Object>
   }
 }
 
-class ItemWithTracks {
+class ItemWithTracks extends Equatable {
   final String id;
   final String? title;
   final String? tracksCount;
@@ -193,11 +217,15 @@ class ItemWithTracks {
         id: object.sourceId,
         title: object.title,
         thumbnails: object.thumbnails,
-        tracks: [],
+        tracks: const [],
         musicSource: object.source,
         tracksCount: object.count,
       );
     }
     throw UnimplementedError();
   }
+
+  @override
+  List<Object?> get props =>
+      [title, id, musicSource, description, thumbnails, tracks, tracksCount];
 }
