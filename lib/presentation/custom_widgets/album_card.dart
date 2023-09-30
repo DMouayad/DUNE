@@ -1,5 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
+import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_card.dart';
@@ -11,7 +12,12 @@ class AlbumCard extends StatelessWidget {
     super.key,
     required this.album,
     this.cardWidth,
+    this.navigateToDetailsPageOnPressed = true,
   });
+
+  final BaseAlbum album;
+  final double? cardWidth;
+  final bool navigateToDetailsPageOnPressed;
 
   const factory AlbumCard.selectable({
     required BaseAlbum album,
@@ -19,9 +25,6 @@ class AlbumCard extends StatelessWidget {
     required void Function(String key) onSelected,
     double? cardWidth,
   }) = _SelectableAlbumCard;
-
-  final BaseAlbum album;
-  final double? cardWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,11 @@ class AlbumCard extends StatelessWidget {
       title: album.title,
       subtitle: _getSubtitle(album),
       shape: BoxShape.rectangle,
+      onTap: navigateToDetailsPageOnPressed
+          ? () {
+              NavigationHelper.onGoToAlbumPage(context, album);
+            }
+          : null,
     );
   }
 
@@ -63,10 +71,14 @@ class _SelectableAlbumCard extends AlbumCard {
     return SelectableCard<BaseAlbum>(
       selectionKey: selectionKey,
       popupMenu: const SizedBox(),
-      onTap: () {},
+      onTap: () => NavigationHelper.onGoToAlbumPage(context, album),
       selectionState: selectionState,
       onSelected: () => onSelected(selectionKey),
-      child: AlbumCard(album: album, cardWidth: cardWidth),
+      child: AlbumCard(
+        album: album,
+        cardWidth: cardWidth,
+        navigateToDetailsPageOnPressed: false,
+      ),
     );
   }
 }

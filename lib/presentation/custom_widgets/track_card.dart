@@ -176,7 +176,14 @@ class TrackCardMainContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Expanded(
-                          child: _ClickableText(text: text, onClicked: () {}),
+                          child: _ClickableText(
+                              text: text,
+                              onClicked: () {
+                                if (track.album != null) {
+                                  NavigationHelper.onGoToAlbumPage(
+                                      context, track.album!);
+                                }
+                              }),
                         ),
                       ],
                     ),
