@@ -73,8 +73,10 @@ class BaseAlbum extends Equatable {
         musicSource
       ];
 
-  BaseAlbum setIdIfNull() {
-    return copyWith(id: id ?? _generateId);
+  BaseAlbum setIdIfNull({bool useBrowseId = false}) {
+    return copyWith(
+      id: id ?? (useBrowseId && browseId != null ? browseId : _generateId),
+    );
   }
 
   String get _generateId => shortHash(title);

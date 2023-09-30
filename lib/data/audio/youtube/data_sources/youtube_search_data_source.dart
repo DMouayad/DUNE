@@ -57,7 +57,10 @@ class YoutubeSearchDataSource extends BaseSearchDataSource {
         return FailureResult.withMessage(response.body);
       }
       final results = jsonDecode(response.body) as List;
-      return results.map((e) => YoutubeAlbum.fromMap(e)).toList().asResult;
+      return results
+          .map((e) => YoutubeAlbum.fromMap(e).setIdIfNull(useBrowseId: true))
+          .toList()
+          .asResult;
     });
   }
 
@@ -109,7 +112,7 @@ class YoutubeSearchDataSource extends BaseSearchDataSource {
       final List results = jsonDecode(response.body)['output'];
 
       List<BaseArtist> artists = [];
-      List<YoutubeAlbum> albums = [];
+      List<BaseAlbum> albums = [];
       List<YoutubeTrack> tracks = [];
       List<YoutubePlaylist> playlists = [];
 
@@ -119,7 +122,8 @@ class YoutubeSearchDataSource extends BaseSearchDataSource {
             artists
                 .add(YoutubeArtist.fromMap(map).setIdIfNull(useBrowseId: true));
           case 'Albums':
-            albums.add(YoutubeAlbum.fromMap(map));
+            albums
+                .add(YoutubeAlbum.fromMap(map).setIdIfNull(useBrowseId: true));
           case 'Songs':
             tracks.add(YoutubeTrack.fromMap(map));
           case 'Featured playlists':
@@ -132,7 +136,8 @@ class YoutubeSearchDataSource extends BaseSearchDataSource {
                 artists.add(
                     YoutubeArtist.fromMap(map).setIdIfNull(useBrowseId: true));
               case 'Albums':
-                albums.add(YoutubeAlbum.fromMap(map));
+                albums.add(
+                    YoutubeAlbum.fromMap(map).setIdIfNull(useBrowseId: true));
               case 'Songs':
                 tracks.add(YoutubeTrack.fromMap(map));
               case 'Featured playlists':
