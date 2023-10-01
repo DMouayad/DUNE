@@ -29,8 +29,8 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
       viewShape: const RoundedRectangleBorder(borderRadius: kBorderRadius),
       isFullScreen: false,
       viewConstraints: BoxConstraints.expand(
-        width: context.screenWidth * .7,
-        height: context.screenHeight * .8,
+        width: context.screenWidth,
+        height: context.screenHeight * .9,
       ),
       viewTrailing: const [SearchMusicSourceOptionButton()],
       viewElevation: 10,
