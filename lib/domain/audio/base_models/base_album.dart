@@ -39,24 +39,6 @@ class BaseAlbum extends Equatable {
     required this.albumArtist,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'artists': artists.map((e) => e.toMap()).toList(),
-      'browseId': browseId,
-      'category': category,
-      'duration': duration,
-      'isExplicit': isExplicit,
-      'thumbnails': thumbnails.toMap(),
-      'albumArtist': albumArtist?.toMap(),
-      'title': title,
-      'type': type,
-      'id': id,
-      'musicSource': musicSource.name,
-      'tracks': tracks.map((e) => e.toMap()).toList(),
-      'releaseDate': releaseDate?.toIso8601String(),
-    };
-  }
-
   @override
   List<Object?> get props => [
         id,
@@ -110,6 +92,42 @@ class BaseAlbum extends Equatable {
       artists: artists ?? this.artists,
       tracks: tracks ?? this.tracks,
       musicSource: musicSource ?? this.musicSource,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'browseId': browseId,
+      'category': category,
+      'duration': duration,
+      'isExplicit': isExplicit,
+      'title': title,
+      'type': type,
+      'releaseDate': releaseDate,
+      'thumbnails': thumbnails,
+      'albumArtist': albumArtist,
+      'artists': artists,
+      'tracks': tracks,
+      'musicSource': musicSource,
+    };
+  }
+
+  factory BaseAlbum.fromMap(Map<String, dynamic> map) {
+    return BaseAlbum(
+      id: map['id'] as String,
+      browseId: map['browseId'] as String,
+      category: map['category'] as String,
+      duration: map['duration'] as String,
+      isExplicit: map['isExplicit'] as bool,
+      title: map['title'] as String,
+      type: map['type'] as String,
+      releaseDate: map['releaseDate'] as DateTime,
+      thumbnails: map['thumbnails'] as ThumbnailsSet,
+      albumArtist: map['albumArtist'] as BaseArtist,
+      artists: map['artists'] as List<BaseArtist>,
+      tracks: map['tracks'] as List<BaseTrack>,
+      musicSource: map['musicSource'] as MusicSource,
     );
   }
 }
