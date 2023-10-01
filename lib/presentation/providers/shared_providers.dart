@@ -21,8 +21,7 @@ final materialSearchBarControllerProvider = Provider((_) => SearchController());
 
 late final StateProvider<TabsState> tabsStateProvider;
 
-final StateProvider<double?> navigationRailSizeProvider =
-    StateProvider((_) => null);
+final StateProvider<double?> sidePanelSideProvider = StateProvider((_) => null);
 
 final StateProvider<MusicSource> explorePageMusicSourceProvider =
     StateProvider((ref) {

@@ -14,14 +14,11 @@ class SidePanelResizer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final railWidth =
-        ref.watch(navigationRailSizeProvider) ?? _kSidePanelMinWidth;
+    final panelWidth = ref.watch(sidePanelSideProvider) ?? _kSidePanelMinWidth;
     final double maxWidth = context.maxNavRailWidth;
     void setRailWidth(double newWidth) {
-      if (newWidth != railWidth) {
-        ref
-            .read(navigationRailSizeProvider.notifier)
-            .update((state) => newWidth);
+      if (newWidth != panelWidth) {
+        ref.read(sidePanelSideProvider.notifier).update((state) => newWidth);
       }
     }
 
@@ -29,9 +26,9 @@ class SidePanelResizer extends ConsumerWidget {
       /// If the resizer is being dragged to the left
       final isExpanding = !d.localPosition.dx.isNegative;
 
-      /// New rail width is the sum of old width [railWidth]
+      /// New rail width is the sum of old width [panelWidth]
       /// and new dx position of the resizer
-      double newWidth = railWidth + d.localPosition.dx;
+      double newWidth = panelWidth + d.localPosition.dx;
       // asserting its not bigger than the minimum rail width
       newWidth = max(_kSidePanelMinWidth, newWidth);
 
@@ -54,7 +51,7 @@ class SidePanelResizer extends ConsumerWidget {
       }
     }
 
-    final isExtended = railWidth == maxWidth;
+    final isExtended = panelWidth == maxWidth;
     return fluent_ui.Tooltip(
       message: isExtended ? "Double Tap to collapse" : "Double Tap to expand",
       style: FluentAppThemes.getTooltipTheme(context.isDarkMode),

@@ -24,10 +24,9 @@ class AppWindowSizeListener extends WindowListener {
   Future<void> onWindowResize() async {
     var size = (await windowManager.getSize());
     if (size.width < 600.0) {
-      if (_ref.watch(navigationRailSizeProvider) != size.width &&
-          _ref.watch(navigationRailSizeProvider) != kSidePanelMinWidth) {
-        _ref.read(navigationRailSizeProvider.notifier).state =
-            kSidePanelMinWidth;
+      if (_ref.watch(sidePanelSideProvider) != size.width &&
+          _ref.watch(sidePanelSideProvider) != kSidePanelMinWidth) {
+        _ref.read(sidePanelSideProvider.notifier).state = kSidePanelMinWidth;
       }
     }
     super.onWindowResize();

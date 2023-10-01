@@ -95,10 +95,11 @@ class WideHomeScreen extends ConsumerWidget {
 
   double _getBodyLeftMargin(WidgetRef ref) {
     final panelIsPinned = ref.read(appPreferencesController).sidePanelPinned;
-    final railWidth = ref.watch(navigationRailSizeProvider);
-    // return panelIsPinned ? (railWidth ?? kSidePanelMinWidth) + 6 : 6;
+    final panelWidth = ref.watch(sidePanelSideProvider);
+
+    // return panelIsPinned ? (panelWidth ?? kSidePanelMinWidth) + 6 : 6;
     return panelIsPinned
-        ? (railWidth ?? kSidePanelMinWidth) + 12
+        ? (panelWidth ?? kSidePanelMinWidth) + 12
         : kSidePanelMinWidth + 12;
   }
 
