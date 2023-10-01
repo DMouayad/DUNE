@@ -5,6 +5,7 @@ import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/controllers/explore_music_categories_controller.dart';
 import 'package:dune/presentation/custom_widgets/cards_grid_view.dart';
 import 'package:dune/presentation/custom_widgets/custom_card.dart';
+import 'package:dune/presentation/custom_widgets/page_title.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
@@ -25,7 +26,7 @@ class ExploreMusicCategoryPage extends ConsumerStatefulWidget {
 class _ExploreMusicCategoryPageState
     extends ConsumerState<ExploreMusicCategoryPage>
     with AutomaticKeepAliveClientMixin<ExploreMusicCategoryPage> {
-  ExploreMusicCategoriesControllerState playlistState =
+  ExploreMusicCategoriesControllerState categoryState =
       const AsyncValue.loading();
   List<BasePlaylist> playlists = [];
 
@@ -33,27 +34,45 @@ class _ExploreMusicCategoryPageState
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (ref.watch(exploreMusicCategoriesControllerProvider).hasValue) {
-      final newCategoryPlaylists =
-          ref.watch(exploreMusicCategoriesControllerProvider).value;
+    final newState = ref.watch(exploreMusicCategoriesControllerProvider);
+    if (newState.hasError) {
+      categoryState = categoryState;
+      updateKeepAlive();
+    } else if (newState.hasValue) {
+      final newCategoryPlaylists = newState.value;
       if (newCategoryPlaylists?.categoryId == widget.categoryId) {
         if (_hasSamePlaylists(newCategoryPlaylists?.playlists, playlists)) {
-          playlistState = AsyncData(playlistState.value!);
+          categoryState = AsyncData(categoryState.value!);
           updateKeepAlive();
         } else {
-          playlistState = ref.watch(exploreMusicCategoriesControllerProvider);
-          playlists = playlistState.value!.playlists;
+          categoryState = newState;
+          playlists = categoryState.value!.playlists;
           updateKeepAlive();
         }
       }
     }
     final itemCardWidth =
         min(250.0, context.screenWidth * (context.screenWidth < 750 ? .5 : .3));
-    return CardsGridView(
-      itemCardWidth: itemCardWidth,
-      itemCount: playlists.length,
-      itemBuilder: (index) =>
-          _PlaylistCard(playlist: playlists.elementAt(index)),
+    return Column(
+      children: [
+        PageTitle(
+          widget.title ?? '',
+          padding: const EdgeInsets.symmetric(vertical: 10),
+        ),
+        if (categoryState.hasError)
+          Center(child: Text(categoryState.error.toString()))
+        else
+          Expanded(
+            child: CardsGridView(
+              gridPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              itemCardWidth: itemCardWidth,
+              itemCount: playlists.length,
+              itemBuilder: (index) =>
+                  _PlaylistCard(playlist: playlists.elementAt(index)),
+            ),
+          ),
+      ],
     );
   }
 

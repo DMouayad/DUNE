@@ -7,11 +7,13 @@ class CardsGridView extends StatelessWidget {
     required this.itemCount,
     required this.itemBuilder,
     required this.itemCardWidth,
+    this.gridPadding,
   });
 
   final int itemCount;
   final Widget Function(int index) itemBuilder;
   final double itemCardWidth;
+  final EdgeInsets? gridPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class CardsGridView extends StatelessWidget {
       builder: (context, constraints) {
         return AnimationLimiter(
           child: GridView.builder(
+            padding: gridPadding,
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: itemCardWidth,
               mainAxisSpacing: 15.0,
