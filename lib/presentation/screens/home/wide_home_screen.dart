@@ -60,7 +60,7 @@ class WideHomeScreen extends ConsumerWidget {
                   ),
                 Positioned(
                   top: topSpacing,
-                  left: _getBodyLeftMargin(ref),
+                  left: _getBodyLeftMargin(ref, context),
                   right: 6,
                   bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
                   child: navigationShell,
@@ -93,11 +93,15 @@ class WideHomeScreen extends ConsumerWidget {
     );
   }
 
-  double _getBodyLeftMargin(WidgetRef ref) {
+  double _getBodyLeftMargin(WidgetRef ref, BuildContext context) {
     final panelIsPinned = ref.read(appPreferencesController).sidePanelPinned;
     final panelWidth = ref.watch(sidePanelSideProvider);
-
-    // return panelIsPinned ? (panelWidth ?? kSidePanelMinWidth) + 6 : 6;
+    if (panelIsPinned && panelWidth == kSidePanelMinWidth) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref.read(sidePanelSideProvider.notifier).state =
+            context.maxNavRailWidth;
+      });
+    }
     return panelIsPinned
         ? (panelWidth ?? kSidePanelMinWidth) + 12
         : kSidePanelMinWidth + 12;
