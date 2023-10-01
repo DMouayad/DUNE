@@ -1,3 +1,4 @@
+import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +22,8 @@ final materialSearchBarControllerProvider = Provider((_) => SearchController());
 
 late final StateProvider<TabsState> tabsStateProvider;
 
-final StateProvider<double?> sidePanelSideProvider = StateProvider((_) => null);
+final StateProvider<double?> sidePanelSideProvider =
+    StateProvider((_) => kSidePanelMinWidth);
 
 final StateProvider<MusicSource> explorePageMusicSourceProvider =
     StateProvider((ref) {

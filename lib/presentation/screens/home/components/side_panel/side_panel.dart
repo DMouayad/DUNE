@@ -1,4 +1,5 @@
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
+import 'package:dune/presentation/utils/constants.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,6 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'quick_nav_section.dart';
 import 'side_panel_now_playing_section.dart';
 import 'vertical_tabs_list.dart';
-
-const kSidePanelMinWidth = 50.0;
 
 class SidePanel extends ConsumerStatefulWidget {
   const SidePanel({

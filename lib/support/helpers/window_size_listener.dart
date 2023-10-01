@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/screens/home/components/side_panel/side_panel.dart';
+import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
