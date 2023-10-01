@@ -79,14 +79,15 @@ class _SidePanelState extends ConsumerState<SidePanel>
         borderRadius: kBorderRadius,
         child: Stack(
           children: [
-            Positioned.fill(
-              child: Material(
-                color: extended
-                    ? context.colorScheme.background
-                    : Colors.transparent,
-                elevation: 0,
+            if (!pinned)
+              Positioned.fill(
+                child: Material(
+                  color: extended
+                      ? context.colorScheme.background
+                      : Colors.transparent,
+                  elevation: 0,
+                ),
               ),
-            ),
             AnimatedSize(
               curve: Curves.fastEaseInToSlowEaseOut,
               duration: const Duration(milliseconds: 450),
@@ -97,7 +98,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
                   top: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: extended
+                  color: extended && !pinned
                       ? ref.watch(appThemeControllerProvider).cardColor
                       : Colors.transparent,
                 ),

@@ -1,3 +1,4 @@
+import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/utils/tabs_helper.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
@@ -131,7 +132,11 @@ class _VerticalTab extends ConsumerWidget {
             MaterialStateProperty.all(const Size.fromHeight(_kTabHeight)),
         padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
-          return selected ? context.backgroundOnCard : Colors.transparent;
+          return selected
+              ? ref.watch(appThemeControllerProvider).acrylicWindowEffectEnabled
+                  ? context.colorScheme.backgroundOnAcrylicCard
+                  : context.colorScheme.backgroundOnCard
+              : Colors.transparent;
         }),
         textStyle: MaterialStateProperty.all(context.textTheme.bodyMedium),
         foregroundColor: MaterialStateProperty.resolveWith((states) {

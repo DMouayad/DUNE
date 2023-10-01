@@ -40,7 +40,11 @@ class TopSearchBar extends ConsumerWidget with SearchHelper {
       viewHintText: "Search",
       barElevation: MaterialStateProperty.all(0),
       barBackgroundColor: MaterialStateProperty.resolveWith(
-          (states) => context.backgroundOnCard),
+        (states) =>
+            ref.watch(appThemeControllerProvider).acrylicWindowEffectEnabled
+                ? context.colorScheme.backgroundOnAcrylicCard
+                : context.colorScheme.backgroundOnCard,
+      ),
       viewBackgroundColor: context.colorScheme.background,
       suggestionsBuilder: (context, controller) {
         if (controller.text != searchState.requireValue.query) {

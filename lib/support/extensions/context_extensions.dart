@@ -104,15 +104,19 @@ extension ContextThemeExtension on BuildContext {
     );
   }
 
-  /// The background color of a surface on the [AppTheme.cardColor]
-  Color get backgroundOnCard => colorScheme.background.withOpacity(.71);
-
   BorderRadius get platformBorderRadius =>
       BorderRadius.circular(isWindowsPlatform
           ? 10
           : isIOSPlatform
               ? 8
               : 20);
+}
+
+extension ColorSchemeExtension on ColorScheme {
+  /// The background color of a surface on the [AppTheme.cardColor]
+  Color get backgroundOnCard => background.withOpacity(.71);
+
+  Color get backgroundOnAcrylicCard => background.withOpacity(.34);
 }
 
 extension ContextPlatformExtension on BuildContext {
