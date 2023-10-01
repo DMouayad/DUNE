@@ -37,9 +37,8 @@ class YoutubePlaylist extends BasePlaylist {
           map.whereKey("playlistId") ??
           map.whereKey("browseId"),
       thumbnails: ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
-          (map['thumbnails'] as List)
-              .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
-              .toList()),
+              (map['thumbnails']).map((e) => BaseThumbnail.fromMap(e)).toList())
+          .setIsNetwork(true),
       title: map["title"],
       tracks:
           tracksDataList is Iterable ? _getPlaylistTracks(tracksDataList) : [],

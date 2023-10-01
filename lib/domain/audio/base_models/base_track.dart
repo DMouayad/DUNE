@@ -46,23 +46,6 @@ class BaseTrack<AlbumType extends BaseAlbum, ArtistType extends BaseArtist>
         : null;
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'album': album?.toMap(),
-      'length': duration?.inSeconds,
-      'title': title,
-      'year': year,
-      'views': views,
-      'audioInfoSet': audioInfoSet?.toMap(),
-      'category': category,
-      'isExplicit': isExplicit,
-      'artists': artists.map((e) => e.toMap()).toList(),
-      'thumbnails': thumbnails.toMap(),
-      'source': source.name,
-    };
-  }
-
   @override
   List<Object?> get props => [
         id,
@@ -114,4 +97,38 @@ class BaseTrack<AlbumType extends BaseAlbum, ArtistType extends BaseArtist>
   }
 
   String get _generateId => shortHash(title);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'album': album?.toMap(),
+      'length': duration?.inSeconds,
+      'title': title,
+      'year': year,
+      'views': views,
+      'audioInfoSet': audioInfoSet?.toMap(),
+      'category': category,
+      'isExplicit': isExplicit,
+      'artists': artists.map((e) => e.toMap()).toList(),
+      'thumbnails': thumbnails.toMap(),
+      'source': source.name,
+    };
+  }
+
+  factory BaseTrack.fromMap(Map<String, dynamic> map) {
+    return BaseTrack(
+      id: map['id'] as String,
+      audioInfoSet: map['audioInfoSet'] as AudioInfoSet,
+      album: map['album'] as AlbumType,
+      artists: map['artists'] as List<ArtistType>,
+      duration: map['duration'] as Duration,
+      title: map['title'] as String,
+      year: map['year'] as String?,
+      views: map['views'] as int,
+      category: map['category'] as String?,
+      isExplicit: map['isExplicit'] as bool,
+      thumbnails: ThumbnailsSet.fromMap(map['thumbnails']),
+      source: map['source'] as MusicSource,
+    );
+  }
 }

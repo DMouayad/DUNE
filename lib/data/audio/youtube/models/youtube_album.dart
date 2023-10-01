@@ -39,9 +39,10 @@ class YoutubeAlbum extends BaseAlbum {
       isExplicit: map.whereKey("isExplicit") ?? false,
       thumbnails: map.whereKey('thumbnails') != null
           ? ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
-              (map['thumbnails'] as List)
-                  .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
-                  .toList())
+                  (map['thumbnails'] as List)
+                      .map((e) => BaseThumbnail.fromMap(e))
+                      .toList())
+              .setIsNetwork(true)
           : const ThumbnailsSet(),
       type: map.whereKey("type"),
       releaseDate: map.whereKey("year") != null &&

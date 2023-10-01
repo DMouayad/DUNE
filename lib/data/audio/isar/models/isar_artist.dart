@@ -69,9 +69,14 @@ class IsarArtist extends BaseArtist {
     final thumbnailsMap = map.whereKey('thumbnails');
     final tracksListMap = map.whereKey('tracks');
     final albumsListMap = map.whereKey('albums');
+
     return IsarArtist(
       musicSource: MusicSource.byNameOrUnknown(map.whereKey('musicSource')),
       id: map.whereKey('id'),
+      browseId: map.whereKey('browseId'),
+      radioId: map.whereKey('radioId'),
+      shuffleId: map.whereKey('shuffleId'),
+      category: map.whereKey('category'),
       name: map.whereKey('name'),
       description: map.whereKey('description'),
       isarThumbnails: thumbnailsMap is Map<String, dynamic>
@@ -83,10 +88,6 @@ class IsarArtist extends BaseArtist {
       albums: albumsListMap is List
           ? albumsListMap.map((e) => IsarAlbum.fromMap(e)).toList()
           : [],
-      browseId: map.whereKey('browseId'),
-      radioId: map.whereKey('radioId'),
-      shuffleId: map.whereKey('shuffleId'),
-      category: map.whereKey('category'),
     );
   }
 

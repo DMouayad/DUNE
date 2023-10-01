@@ -39,10 +39,10 @@ class YoutubeTrack extends BaseTrack {
           : [],
       duration: _getDuration(map.whereKey('duration')),
       thumbnails: ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
-        (map.whereKey('thumbnails') as List)
-            .map((e) => BaseThumbnail.fromMap(e, isNetwork: true))
+        (map.whereKey('thumbnails'))
+            .map((e) => BaseThumbnail.fromMap(e))
             .toList(),
-      ),
+      ).setIsNetwork(true),
       title: map.whereKey('title'),
       year: map.whereKey('year'),
       views: map.whereKey('views'),

@@ -70,28 +70,29 @@ class IsarAlbum extends BaseAlbum {
     final thumbnailsMap = map.whereKey('thumbnails');
     final tracksListMap = map.whereKey('tracks');
     final artistsListMap = map.whereKey('artists');
+
     return IsarAlbum(
-      id: map.whereKey('id'),
+      id: map.whereKey('id') as String?,
+      browseId: map.whereKey('browseId') as String?,
+      category: map.whereKey('category') as String?,
+      duration: map.whereKey('duration') as String?,
+      isExplicit: map.whereKey('isExplicit') as bool? ?? false,
+      title: map.whereKey('title') as String,
+      type: map.whereKey('type') as String?,
+      releaseDate: map.whereKey('releaseDate') != null
+          ? DateTime.tryParse(map.whereKey('releaseDate'))
+          : null,
       musicSource: MusicSource.byNameOrUnknown(map.whereKey('musicSource')),
       artists: artistsListMap is List
           ? artistsListMap.map((e) => IsarArtist.fromMap(e)).toList()
           : [],
       albumArtist: IsarArtist.tryFromMap(map.whereKey('albumArtist')),
-      browseId: map.whereKey('browseId'),
-      category: map.whereKey('category'),
-      duration: map.whereKey('duration'),
       isarThumbnails: thumbnailsMap is Map<String, dynamic>
           ? IsarThumbnailsSet.fromMap(thumbnailsMap)
           : const IsarThumbnailsSet(),
       tracks: tracksListMap is List
           ? tracksListMap.map((e) => IsarTrack.fromMap(e)).toList()
           : [],
-      title: map.whereKey('title'),
-      type: map.whereKey('type'),
-      isExplicit: map.whereKey('isExplicit'),
-      releaseDate: map.whereKey('releaseDate') != null
-          ? DateTime.tryParse(map.whereKey('releaseDate'))
-          : null,
     );
   }
 

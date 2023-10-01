@@ -1,6 +1,7 @@
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -104,30 +105,30 @@ class BaseAlbum extends Equatable {
       'isExplicit': isExplicit,
       'title': title,
       'type': type,
-      'releaseDate': releaseDate,
-      'thumbnails': thumbnails,
-      'albumArtist': albumArtist,
-      'artists': artists,
-      'tracks': tracks,
-      'musicSource': musicSource,
+      'releaseDate': releaseDate?.toIso8601String(),
+      'albumArtist': albumArtist?.toMap(),
+      'musicSource': musicSource.name,
+      'thumbnails': thumbnails.toMap(),
+      'tracks': tracks.map((e) => e.toMap()).toList(),
+      'artists': artists.map((e) => e.toMap()).toList(),
     };
   }
 
   factory BaseAlbum.fromMap(Map<String, dynamic> map) {
     return BaseAlbum(
-      id: map['id'] as String,
-      browseId: map['browseId'] as String,
-      category: map['category'] as String,
-      duration: map['duration'] as String,
-      isExplicit: map['isExplicit'] as bool,
-      title: map['title'] as String,
-      type: map['type'] as String,
-      releaseDate: map['releaseDate'] as DateTime,
-      thumbnails: map['thumbnails'] as ThumbnailsSet,
-      albumArtist: map['albumArtist'] as BaseArtist,
-      artists: map['artists'] as List<BaseArtist>,
-      tracks: map['tracks'] as List<BaseTrack>,
-      musicSource: map['musicSource'] as MusicSource,
+      id: map.whereKey('id') as String?,
+      browseId: map.whereKey('browseId') as String?,
+      category: map.whereKey('category') as String?,
+      duration: map.whereKey('duration') as String?,
+      isExplicit: map.whereKey('isExplicit') as bool,
+      title: map.whereKey('title') as String,
+      type: map.whereKey('type') as String?,
+      releaseDate: map.whereKey('releaseDate') as DateTime,
+      thumbnails: map.whereKey('thumbnails') as ThumbnailsSet,
+      albumArtist: map.whereKey('albumArtist') as BaseArtist,
+      musicSource: map.whereKey('musicSource') as MusicSource,
+      artists: map.whereKey('artists') as List<BaseArtist>,
+      tracks: map.whereKey('tracks') as List<BaseTrack>,
     );
   }
 }

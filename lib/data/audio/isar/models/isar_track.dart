@@ -95,9 +95,7 @@ class IsarTrack extends BaseTrack<IsarAlbum, IsarArtist> {
       views: map.whereKey('views'),
       category: map.whereKey('category'),
       isExplicit: map.whereKey('isExplicit'),
-      source: map.whereKey('source') != null
-          ? MusicSource.values.byName(map.whereKey('source'))
-          : MusicSource.unknown,
+      source: MusicSource.byNameOrUnknown(map.whereKey('source')),
       isarThumbnails: IsarThumbnailsSet.fromMap(map.whereKey('thumbnails')),
     );
   }

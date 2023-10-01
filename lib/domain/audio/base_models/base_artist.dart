@@ -2,6 +2,7 @@ import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -98,18 +99,28 @@ class BaseArtist extends Equatable {
   }
 
   factory BaseArtist.fromMap(Map<String, dynamic> map) {
+    final tracksListMap = map.whereKey('tracks');
+    final albumsListMap = map.whereKey('albums');
+    final thumbnailsMap = map.whereKey('thumbnails');
+
     return BaseArtist(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      browseId: map['browseId'] as String,
-      radioId: map['radioId'] as String,
-      shuffleId: map['shuffleId'] as String,
-      category: map['category'] as String,
-      thumbnails: map['thumbnails'] as ThumbnailsSet,
-      tracks: map['tracks'] as List<BaseTrack>,
-      albums: map['albums'] as List<BaseAlbum>,
-      musicSource: map['musicSource'] as MusicSource,
+      id: map.whereKey('id') as String?,
+      name: map.whereKey('name') as String?,
+      description: map.whereKey('description') as String? ?? '',
+      browseId: map.whereKey('browseId') as String?,
+      radioId: map.whereKey('radioId') as String?,
+      shuffleId: map.whereKey('shuffleId') as String?,
+      category: map.whereKey('category') as String?,
+      thumbnails: thumbnailsMap is Map<String, dynamic>
+          ? ThumbnailsSet.fromMap(thumbnailsMap)
+          : const ThumbnailsSet(),
+      tracks: tracksListMap is List
+          ? tracksListMap.map((e) => BaseTrack.fromMap(e)).toList()
+          : [],
+      albums: albumsListMap is List
+          ? albumsListMap.map((e) => BaseAlbum.fromMap(e)).toList()
+          : [],
+      musicSource: map.whereKey('musicSource') as MusicSource,
     );
   }
 }
