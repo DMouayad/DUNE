@@ -17,8 +17,8 @@ import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'routes/base_route.dart';
-import 'routes/page_with_transition_builder.dart';
+import 'base_route.dart';
+import 'page_with_transition_builder.dart';
 
 class DesktopSplashScreenRoute extends GoRoute {
   DesktopSplashScreenRoute()
@@ -145,10 +145,12 @@ class ExploreMusicCategoryPageRoute extends BaseRoute {
   ExploreMusicCategoryPageRoute({super.isSubRoute})
       : super(
           path: RoutePath.exploreMusicCategoryPage,
-          page: (context, state) => ExploreMusicCategoryPage(
-            key: state.pageKey,
-            categoryId: state.pathParameters['categoryId'],
-            title: state.pathParameters['title'],
-          ),
+          page: (context, state) {
+            return ExploreMusicCategoryPage(
+              key: state.pageKey,
+              categoryId: state.pathParameters['categoryId'],
+              title: state.extra is String ? state.extra as String : null,
+            );
+          },
         );
 }

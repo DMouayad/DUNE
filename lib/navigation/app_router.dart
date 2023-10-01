@@ -11,7 +11,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../env.dart';
-import 'routes.dart';
+import 'routes/routes.dart';
 part 'constants.dart';
 
 typedef InitialAppPage = ({String name, String path});

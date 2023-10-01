@@ -1,6 +1,5 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/themes/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,20 +59,12 @@ class NavigationHelper {
         .read(exploreMusicCategoriesControllerProvider.notifier)
         .get(exploreItem.sourceId, exploreItem.source);
 
-    final String path;
     final base = RoutePath.exploreMusicCategoryPage
         .replaceAll(':categoryId', exploreItem.sourceId);
-    if (AppRouter.tabsModeEnabled) {
-      final currentTab = ref.watch(tabsStateProvider).selectedTabIndex;
-      path = '/tabs/$currentTab$base';
-    } else {
-      path = base;
-    }
+    final path = _getPath(base);
+
     if (path != AppRouter.currentLocation) {
-      context.push(
-        path,
-        extra: (categoryId: exploreItem.sourceId, title: exploreItem.title),
-      );
+      context.push(path, extra: exploreItem.title);
     }
   }
 
