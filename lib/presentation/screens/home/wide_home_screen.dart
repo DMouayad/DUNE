@@ -39,12 +39,8 @@ class WideHomeScreen extends ConsumerWidget {
                 if (context.isMobile)
                   const Positioned(
                       bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: WideHomeScreenAppBar(tabsEnabled: tabsMode.isEnabled),
-                ),
+                const Positioned(
+                    top: 0, right: 0, left: 0, child: WideHomeScreenAppBar()),
                 if (tabsMode.isHorizontal)
                   Positioned(
                     right: 0,

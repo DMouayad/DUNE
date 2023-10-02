@@ -11,9 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WideHomeScreenAppBar extends StatelessWidget {
-  const WideHomeScreenAppBar({super.key, required this.tabsEnabled});
-
-  final bool tabsEnabled;
+  const WideHomeScreenAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
