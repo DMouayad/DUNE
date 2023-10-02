@@ -43,11 +43,9 @@ class YoutubeExploreMusicItem extends BaseExploreMusicItem {
           : null,
       title: map['title'] as String,
       sourceId: map['sourceId'] as String,
-      thumbnails: map.whereKey('thumbnails') is Map<String, dynamic>
-          ? ThumbnailsSet.fromMap(
-              map.whereKey('thumbnails') as Map<String, dynamic>,
-            ).setIsNetwork(true)
-          : const ThumbnailsSet(),
+      thumbnails: ThumbnailsSet.tryFromMap(map.whereKey('thumbnails'))
+              ?.setIsNetwork(true) ??
+          const ThumbnailsSet(),
       count: map.whereKey('count'),
       description: map.whereKey('description') ?? '',
     );

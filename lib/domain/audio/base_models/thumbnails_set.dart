@@ -15,6 +15,11 @@ class ThumbnailsSet extends Equatable {
     return {'thumbnails': thumbnails.map((e) => e.toMap()).toList()};
   }
 
+  static ThumbnailsSet? tryFromMap(Map<String, dynamic>? map) {
+    if (map == null) return null;
+    return ThumbnailsSet.fromMap(map);
+  }
+
   factory ThumbnailsSet.fromMap(Map<String, dynamic> map) {
     final thumbsList = map.whereKey('thumbnails');
     return ThumbnailsSet(
@@ -76,7 +81,7 @@ class ThumbnailsSet extends Equatable {
   factory ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
     List<BaseThumbnail>? list,
   ) {
-    if (list == null) return const ThumbnailsSet();
+    if (list == null || list.isEmpty) return const ThumbnailsSet();
     List<BaseThumbnail> _thumbnails = [];
     BaseThumbnail? lowQualityThumb;
     BaseThumbnail? mediumQualityThumb;

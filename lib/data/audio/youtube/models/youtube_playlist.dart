@@ -24,6 +24,7 @@ class YoutubePlaylist extends BasePlaylist {
   factory YoutubePlaylist.fromMap(Map<String?, dynamic> map) {
     final tracksDataList = map.whereKey('tracks');
     final authorData = map.whereKey('author');
+
     return YoutubePlaylist(
       author: authorData is String
           ? PlaylistAuthor(name: authorData)
@@ -37,7 +38,9 @@ class YoutubePlaylist extends BasePlaylist {
           map.whereKey("playlistId") ??
           map.whereKey("browseId"),
       thumbnails: ThumbnailsSet.fromThumbnailsListWithUnknownQuality(
-              (map['thumbnails']).map((e) => BaseThumbnail.fromMap(e)).toList())
+              (map['thumbnails'] as List)
+                  .map((e) => BaseThumbnail.fromMap(e))
+                  .toList())
           .setIsNetwork(true),
       title: map["title"],
       tracks:
