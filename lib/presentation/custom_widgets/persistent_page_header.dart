@@ -209,7 +209,7 @@ class _Header extends StatelessWidget {
                     runAlignment: WrapAlignment.center,
                     alignment: onShuffle != null
                         ? WrapAlignment.spaceBetween
-                        : WrapAlignment.end,
+                        : WrapAlignment.start,
                     crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
                       if (description != null)
