@@ -28,64 +28,66 @@ class WideHomeScreen extends ConsumerWidget {
     final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
     final topSpacing = tabsMode.isHorizontal ? 80.0 : kWideScreenAppBarHeight;
-    final screen = Theme(
-      data: appTheme.materialThemeData,
-      child: Material(
-        color: ref.watch(appThemeControllerProvider).cardColor,
-        child: Builder(
-          builder: (context) {
-            return Stack(
-              children: [
-                if (context.isMobile)
-                  const Positioned(
-                      bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
-                const Positioned(
-                    top: 0, right: 0, left: 0, child: WideHomeScreenAppBar()),
-                if (tabsMode.isHorizontal)
-                  Positioned(
-                    right: 0,
-                    left: 0,
-                    top: 36,
-                    child: SizedBox(
-                      height: 42,
-                      child: TabsBar(
-                        onTabChanged: (i) => _onTabChanged(i, ref),
-                        onAddNewTab: () => _onAddNewTab(ref),
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  top: topSpacing,
-                  left: _getBodyLeftMargin(ref, context),
-                  right: 6,
-                  bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
-                  child: navigationShell,
-                ),
-                Positioned(
-                  top: topSpacing,
-                  left: 6,
-                  bottom: context.isMobile ? context.bottomPlayerBarHeight : 0,
-                  child: SidePanel(
-                    onTabChanged: (i) => _onTabChanged(i, ref),
-                    onAddNewTab: () => _onAddNewTab(ref),
-                    onDestinationSelected: (dest) {
-                      AppRouter.onQuickNavDestinationSelected(
-                        dest,
-                        navigationShell,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
+
     return OptionalParentWidget(
       condition: context.isDesktopPlatform,
       parentWidgetBuilder: (child) => DesktopHomeScreenWrapper(child),
-      childWidget: screen,
+      childWidget: Theme(
+        data: appTheme.materialThemeData,
+        child: Material(
+          color: ref.watch(appThemeControllerProvider).cardColor,
+          child: Builder(
+            builder: (context) {
+              return Stack(
+                children: [
+                  if (context.isMobile)
+                    const Positioned(
+                        bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
+                  const Positioned(
+                      top: 0, right: 0, left: 0, child: WideHomeScreenAppBar()),
+                  if (tabsMode.isHorizontal)
+                    Positioned(
+                      right: 0,
+                      left: 0,
+                      top: 36,
+                      child: SizedBox(
+                        height: 42,
+                        child: TabsBar(
+                          onTabChanged: (i) => _onTabChanged(i, ref),
+                          onAddNewTab: () => _onAddNewTab(ref),
+                        ),
+                      ),
+                    ),
+                  Positioned(
+                    top: topSpacing,
+                    left: _getBodyLeftMargin(ref, context),
+                    right: 6,
+                    bottom:
+                        context.isMobile ? context.bottomPlayerBarHeight : 0,
+                    child: navigationShell,
+                  ),
+                  Positioned(
+                    top: topSpacing,
+                    left: 6,
+                    bottom:
+                        context.isMobile ? context.bottomPlayerBarHeight : 0,
+                    child: SidePanel(
+                      onTabChanged: (i) => _onTabChanged(i, ref),
+                      onAddNewTab: () => _onAddNewTab(ref),
+                      onDestinationSelected: (dest) {
+                        AppRouter.onQuickNavDestinationSelected(
+                          dest,
+                          navigationShell,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
