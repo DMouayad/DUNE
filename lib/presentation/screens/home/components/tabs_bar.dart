@@ -43,7 +43,16 @@ class TabsBar extends ConsumerWidget {
         tabs: ref
             .watch(tabsStateProvider.select((s) => s.tabs.asMap().entries))
             .map((entry) => CustomTab(
-                  text: Text(entry.value.selectedPage?.title ?? 'New tab'),
+                  text: Consumer(builder: (context, ref, _) {
+                    final tabTitle = ref
+                        .watch(tabsStateProvider)
+                        .tabs
+                        .firstWhere(
+                            (tab) => tab.tabIndex == entry.value.tabIndex)
+                        .selectedPage
+                        ?.title;
+                    return Text(tabTitle ?? 'New Tab');
+                  }),
                   onClosed: () => _onCloseTab(entry.key, ref),
                 ))
             .toList(),
