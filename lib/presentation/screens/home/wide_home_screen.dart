@@ -63,7 +63,7 @@ class WideHomeScreen extends ConsumerWidget {
                     left: _getBodyLeftMargin(ref, context),
                     right: 6,
                     bottom:
-                        context.isMobile ? context.bottomPlayerBarHeight : 0,
+                        context.isMobile ? context.bottomPlayerBarHeight : 6,
                     child: navigationShell,
                   ),
                   Positioned(

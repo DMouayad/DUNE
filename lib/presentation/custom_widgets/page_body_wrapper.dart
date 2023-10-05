@@ -9,10 +9,7 @@ import 'package:dune/support/themes/theme_constants.dart';
 class PageBodyWrapper extends ConsumerWidget {
   final Widget child;
 
-  const PageBodyWrapper({
-    super.key,
-    required this.child,
-  });
+  const PageBodyWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, ref) {
