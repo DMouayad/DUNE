@@ -42,7 +42,7 @@ class _CustomCardState extends State<CustomCard> {
     super.initState();
   }
 
-  final rectangleBorderRadius = BorderRadius.circular(10);
+  final rectangleBorderRadius = BorderRadius.circular(8);
 
   @override
   Widget build(BuildContext context) {

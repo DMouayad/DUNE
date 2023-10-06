@@ -4,7 +4,6 @@ import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/support/logger_service.dart';
-import 'package:dune/support/themes/theme_constants.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,7 +67,7 @@ class ThumbnailWidget extends ConsumerWidget {
     }
     if (imageProvider != null) {
       return ExtendedImage(
-        borderRadius: kBorderRadius,
+        borderRadius: BorderRadius.circular(8),
         image: imageProvider,
         fit: BoxFit.cover,
         shape: shape,
