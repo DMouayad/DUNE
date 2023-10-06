@@ -157,6 +157,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: context.colorScheme.background,
         border: Border(
@@ -209,7 +210,9 @@ class _Header extends StatelessWidget {
                     runAlignment: WrapAlignment.center,
                     alignment: onShuffle != null
                         ? WrapAlignment.spaceBetween
-                        : WrapAlignment.start,
+                        : actions.isEmpty
+                            ? WrapAlignment.start
+                            : WrapAlignment.end,
                     crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
                       if (description != null)
