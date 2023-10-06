@@ -37,8 +37,10 @@ class IsarTestingUtils {
   }
 
   static Future<void> refreshDatabase() async {
-    _isarMusicRepo = IsarMusicRepository(isar: _isar);
-    await _isar.writeTxn(() async => await _isar.clear());
+    if (GetIt.instance.isRegistered<Isar>()) {
+      _isarMusicRepo = IsarMusicRepository(isar: _isar);
+      await _isar.writeTxn(() async => await _isar.clear());
+    }
   }
 
   static IsarTrackListeningHistorySeeder get trackListeningHistorySeeder {
