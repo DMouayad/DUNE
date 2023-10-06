@@ -72,7 +72,7 @@ class TracksListView extends ConsumerWidget {
     } else if (tracksState.isLoading) {
       return isSliverList
           ? SliverPadding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               sliver: SliverList.builder(
                 itemCount: 6,
                 itemBuilder: (context, index) => const Padding(
@@ -86,7 +86,7 @@ class TracksListView extends ConsumerWidget {
             )
           : ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               itemCount: 6,
               itemBuilder: (context, index) => const ShimmerWidget(
                 enabled: true,

@@ -4,7 +4,7 @@ import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/custom_widgets/thumbnail_widget.dart';
 import 'package:dune/presentation/models/selection_state.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class TrackCard extends ConsumerWidget {
         margin: margin ??
             (context.isPortraitTablet
                 ? const EdgeInsets.fromLTRB(6, 12, 6, 0)
-                : const EdgeInsets.fromLTRB(12, 3, 12, 3)),
+                : const EdgeInsets.fromLTRB(18, 3, 18, 3)),
         child: SelectableCard<BaseTrack>(
           selectionKey: track.id,
           onTap: onPlayTrack ??
@@ -139,8 +139,8 @@ class TrackCardMainContent extends StatelessWidget {
                                 ? _ClickableText(
                                     text: e.name!,
                                     onClicked: () {
-                                      NavigationHelper.onGoToArtistPage(
-                                          context, e);
+                                      AppNavigation.instance
+                                          .onGoToArtistPage(context, e);
                                     },
                                   )
                                 : const SizedBox.shrink(),
@@ -180,8 +180,8 @@ class TrackCardMainContent extends StatelessWidget {
                               text: text,
                               onClicked: () {
                                 if (track.album != null) {
-                                  NavigationHelper.onGoToAlbumPage(
-                                      context, track.album!);
+                                  AppNavigation.instance
+                                      .onGoToAlbumPage(context, track.album!);
                                 }
                               }),
                         ),
