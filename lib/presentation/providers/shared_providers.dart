@@ -1,7 +1,6 @@
 import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 //
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
@@ -21,8 +20,7 @@ final nowPlayingSectionDisplayModeProvider =
 final materialSearchBarControllerProvider = Provider((_) => SearchController());
 
 late final StateProvider<TabsState> tabsStateProvider;
-
-final StateProvider<double?> sidePanelSideProvider =
+final StateProvider<double> sidePanelWidthProvider =
     StateProvider((_) => kSidePanelMinWidth);
 
 final StateProvider<MusicSource> explorePageMusicSourceProvider =
