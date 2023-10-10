@@ -13,7 +13,6 @@ class AppWindowHelper {
     await acrylic.Window.initialize();
 
     await windowManager.ensureInitialized();
-    await windowManager.hide();
     final initialSize = appPreferences.rememberLastWindowSize &&
             appPreferences.lastWindowSize != null
         ? appPreferences.lastWindowSize
