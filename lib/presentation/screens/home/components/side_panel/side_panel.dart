@@ -34,41 +34,33 @@ class SidePanel extends ConsumerStatefulWidget {
 
 class _SidePanelState extends ConsumerState<SidePanel>
     with AutomaticKeepAliveClientMixin {
-  double? panelWidth;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    ref.listen(appPreferencesController.select((s) => s.sidePanelPinned),
-        (wasPinned, shouldPin) {
-      ref.read(sidePanelSideProvider.notifier).state =
-          shouldPin ? context.maxNavRailWidth : kSidePanelMinWidth;
-    });
     final tabsMode = ref.read(appPreferencesController).tabsMode;
-    if (panelWidth != ref.watch(sidePanelSideProvider)) {
-      if (context.isMobile) {
-        if (panelWidth != kSidePanelMinWidth) {
-          ref.read(sidePanelSideProvider.notifier).state = kSidePanelMinWidth;
-          panelWidth = kSidePanelMinWidth;
-        }
-      } else {
-        panelWidth = ref.watch(sidePanelSideProvider);
-      }
-      updateKeepAlive();
-    }
-    panelWidth ??= (ref.watch(appPreferencesController).sidePanelPinned
-        ? context.maxNavRailWidth
-        : kSidePanelMinWidth);
+    ref.listen(appPreferencesController.select((s) => s.sidePanelPinned),
+        (wasPinned, pinned) {
+      ref.read(sidePanelWidthProvider.notifier).state =
+          pinned ? context.maxNavRailWidth : kSidePanelMinWidth;
+    });
+    final panelWidth = ref.watch(sidePanelWidthProvider);
     final pinned = ref.watch(appPreferencesController).sidePanelPinned;
-    final extended = panelWidth == context.maxNavRailWidth;
+    final extended = pinned ? true : panelWidth == context.maxNavRailWidth;
+
+    if (pinned && panelWidth != context.maxNavRailWidth) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref.read(sidePanelWidthProvider.notifier).state =
+            context.maxNavRailWidth;
+      });
+    }
 
     return OptionalParentWidget(
       condition: !ref.watch(appPreferencesController).sidePanelPinned,
       parentWidgetBuilder: (child) {
         return MouseRegion(
-          onEnter: (_) => ref.read(sidePanelSideProvider.notifier).state =
+          onEnter: (_) => ref.read(sidePanelWidthProvider.notifier).state =
               context.maxNavRailWidth,
-          onExit: (_) => ref.read(sidePanelSideProvider.notifier).state =
+          onExit: (_) => ref.read(sidePanelWidthProvider.notifier).state =
               kSidePanelMinWidth,
           child: child,
         );
@@ -90,7 +82,7 @@ class _SidePanelState extends ConsumerState<SidePanel>
               curve: Curves.fastEaseInToSlowEaseOut,
               duration: const Duration(milliseconds: 450),
               child: Container(
-                constraints: BoxConstraints.tight(Size.fromWidth(panelWidth!)),
+                constraints: BoxConstraints.tight(Size.fromWidth(panelWidth)),
                 padding: EdgeInsets.only(
                   right: extended && !pinned ? 6 : 0,
                   top: 10,
