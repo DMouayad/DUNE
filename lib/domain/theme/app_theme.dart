@@ -1,5 +1,5 @@
 import 'package:dune/support/themes/theme_constants.dart';
-import 'package:dune/support/themes/material_themes.dart';
+import 'package:dune/support/themes/material_app_themes.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class AppTheme extends Equatable {
     required this.primaryColor,
     this.windowEffect = WindowEffect.solid,
   }) {
-    _materialThemeData = MaterialThemes.themeDataFromAppTheme(this);
+    _materialThemeData = MaterialAppThemes.themeDataFromAppTheme(this);
     _colorScheme = _materialThemeData.colorScheme;
   }
 

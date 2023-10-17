@@ -60,6 +60,7 @@ dev_dependencies:
   msix: ^3.15.0
   go_router_builder: ^2.2.3
   isar_generator: ^3.1.0+1
+  meta: ^1.9.1
 
 flutter:
   uses-material-design: true

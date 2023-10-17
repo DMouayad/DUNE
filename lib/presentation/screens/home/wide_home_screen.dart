@@ -1,20 +1,19 @@
-import 'package:dune/navigation/tabs_state.dart';
-import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+
 //
 import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:dune/navigation/app_router.dart';
+import 'package:dune/navigation/navigation.dart';
+import 'package:dune/presentation/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 //
 import 'components/wide_home_screen_app_bar.dart';
 import 'components/player_bottom_bar/player_bottom_bar.dart';
 import 'components/side_panel/side_panel.dart';
-import 'components/tabs_bar.dart';
 import 'desktop_home_screen_wrapper.dart';
 
 class WideHomeScreen extends ConsumerWidget {
@@ -25,9 +24,8 @@ class WideHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     // [ref.read] is used since enabling/disabling tabs layout will only takes
     // effect on the next time the app is opened
-    final tabsMode = ref.read(appPreferencesController).tabsMode;
     final appTheme = ref.watch(appThemeControllerProvider);
-    final topSpacing = tabsMode.isHorizontal ? 80.0 : kWideScreenAppBarHeight;
+    const topSpacing = kWideScreenAppBarHeight;
 
     return OptionalParentWidget(
       condition: context.isDesktopPlatform,
@@ -45,19 +43,6 @@ class WideHomeScreen extends ConsumerWidget {
                         bottom: 0, right: 0, left: 0, child: PlayerBottomBar()),
                   const Positioned(
                       top: 0, right: 0, left: 0, child: WideHomeScreenAppBar()),
-                  if (tabsMode.isHorizontal)
-                    Positioned(
-                      right: 0,
-                      left: 0,
-                      top: 36,
-                      child: SizedBox(
-                        height: 42,
-                        child: TabsBar(
-                          onTabChanged: (i) => _onTabChanged(i, ref),
-                          onAddNewTab: () => _onAddNewTab(ref),
-                        ),
-                      ),
-                    ),
                   Positioned(
                     top: topSpacing,
                     left: _getBodyLeftMargin(ref, context),
@@ -72,13 +57,9 @@ class WideHomeScreen extends ConsumerWidget {
                     bottom:
                         context.isMobile ? context.bottomPlayerBarHeight : 0,
                     child: SidePanel(
-                      onTabChanged: (i) => _onTabChanged(i, ref),
-                      onAddNewTab: () => _onAddNewTab(ref),
                       onDestinationSelected: (dest) {
-                        AppRouter.onQuickNavDestinationSelected(
-                          dest,
-                          navigationShell,
-                        );
+                        AppNavigation.instance
+                            .onGoToQuickNavDestination(dest, navigationShell);
                       },
                     ),
                   ),
@@ -93,32 +74,8 @@ class WideHomeScreen extends ConsumerWidget {
 
   double _getBodyLeftMargin(WidgetRef ref, BuildContext context) {
     final panelIsPinned = ref.read(appPreferencesController).sidePanelPinned;
-    final panelWidth = ref.watch(sidePanelSideProvider);
-    if (panelIsPinned && panelWidth == kSidePanelMinWidth) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        ref.read(sidePanelSideProvider.notifier).state =
-            context.maxNavRailWidth;
-      });
-    }
-    return panelIsPinned
-        ? (panelWidth ?? kSidePanelMinWidth) + 12
-        : kSidePanelMinWidth + 12;
-  }
+    final panelWidth = ref.watch(sidePanelWidthProvider);
 
-  void _onTabChanged(int index, WidgetRef ref) {
-    if (ref.watch(tabsStateProvider).selectedTabIndex != index) {
-      ref
-          .read(tabsStateProvider.notifier)
-          .update((state) => state.withNewSelectedTab(index));
-      navigationShell.goBranch(index);
-    }
-  }
-
-  void _onAddNewTab(WidgetRef ref) {
-    ref.read(tabsStateProvider.notifier).update(
-          (state) => state.withTabAdded(
-            TabData.withEmptyPage(tabIndex: navigationShell.currentIndex + 1),
-          ),
-        );
+    return panelIsPinned ? panelWidth + 12 : kSidePanelMinWidth + 12;
   }
 }

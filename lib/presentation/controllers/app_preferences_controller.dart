@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/domain/app_preferences/base_app_preferences_data_source.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
-import 'package:dune/support/enums/initial_page_on_startup.dart';
+import 'package:dune/support/enums/quick_nav_destination.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,9 +61,9 @@ class AppPreferencesController extends StateNotifier<BaseAppPreferences> {
         .fold(onSuccess: (prefs) => state = prefs);
   }
 
-  Future<void> setInitialPageOnStartup(InitialPageOnStartup page) async {
+  Future<void> setQuickNavDestination(QuickNavDestination page) async {
     await _handleUpdatingAppPreferences(
-        state.copyWith(initialPageOnStartup: page));
+        state.copyWith(initialStartupDestination: page));
   }
 
   Future<void> setAudioStreamingQualityOption(

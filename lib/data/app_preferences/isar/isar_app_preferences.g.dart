@@ -35,11 +35,11 @@ const IsarAppPreferencesSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _IsarAppPreferencesexploreMusicSourceEnumValueMap,
     ),
-    r'initialPageOnStartup': PropertySchema(
+    r'initialStartupDestination': PropertySchema(
       id: 3,
-      name: r'initialPageOnStartup',
+      name: r'initialStartupDestination',
       type: IsarType.byte,
-      enumMap: _IsarAppPreferencesinitialPageOnStartupEnumValueMap,
+      enumMap: _IsarAppPreferencesinitialStartupDestinationEnumValueMap,
     ),
     r'lastWindowHeight': PropertySchema(
       id: 4,
@@ -137,7 +137,7 @@ void _isarAppPreferencesSerialize(
   writer.writeByte(offsets[0], object.audioStreamingQuality.index);
   writer.writeBool(offsets[1], object.autoHideWideScreenAppBarButtons);
   writer.writeByte(offsets[2], object.exploreMusicSource.index);
-  writer.writeByte(offsets[3], object.initialPageOnStartup.index);
+  writer.writeByte(offsets[3], object.initialStartupDestination.index);
   writer.writeDouble(offsets[4], object.lastWindowHeight);
   writer.writeDouble(offsets[5], object.lastWindowWidth);
   writer.writeObjectList<IsarMusicFolder>(
@@ -170,9 +170,10 @@ IsarAppPreferences _isarAppPreferencesDeserialize(
             reader.readByteOrNull(offsets[2])] ??
         MusicSource.youtube,
     id: id,
-    initialPageOnStartup: _IsarAppPreferencesinitialPageOnStartupValueEnumMap[
-            reader.readByteOrNull(offsets[3])] ??
-        InitialPageOnStartup.exploreMusic,
+    initialStartupDestination:
+        _IsarAppPreferencesinitialStartupDestinationValueEnumMap[
+                reader.readByteOrNull(offsets[3])] ??
+            QuickNavDestination.explorePage,
     lastWindowHeight: reader.readDoubleOrNull(offsets[4]),
     lastWindowWidth: reader.readDoubleOrNull(offsets[5]),
     localMusicFoldersList: reader.readObjectList<IsarMusicFolder>(
@@ -218,9 +219,9 @@ P _isarAppPreferencesDeserializeProp<P>(
               reader.readByteOrNull(offset)] ??
           MusicSource.youtube) as P;
     case 3:
-      return (_IsarAppPreferencesinitialPageOnStartupValueEnumMap[
+      return (_IsarAppPreferencesinitialStartupDestinationValueEnumMap[
               reader.readByteOrNull(offset)] ??
-          InitialPageOnStartup.exploreMusic) as P;
+          QuickNavDestination.explorePage) as P;
     case 4:
       return (reader.readDoubleOrNull(offset)) as P;
     case 5:
@@ -286,13 +287,21 @@ const _IsarAppPreferencesexploreMusicSourceValueEnumMap = {
   2: MusicSource.local,
   3: MusicSource.unknown,
 };
-const _IsarAppPreferencesinitialPageOnStartupEnumValueMap = {
-  'exploreMusic': 0,
-  'myLibrary': 1,
+const _IsarAppPreferencesinitialStartupDestinationEnumValueMap = {
+  'explorePage': 0,
+  'listeningHistoryPage': 1,
+  'libraryTracksPage': 2,
+  'libraryAlbumsPage': 3,
+  'libraryArtistsPage': 4,
+  'libraryFoldersPage': 5,
 };
-const _IsarAppPreferencesinitialPageOnStartupValueEnumMap = {
-  0: InitialPageOnStartup.exploreMusic,
-  1: InitialPageOnStartup.myLibrary,
+const _IsarAppPreferencesinitialStartupDestinationValueEnumMap = {
+  0: QuickNavDestination.explorePage,
+  1: QuickNavDestination.listeningHistoryPage,
+  2: QuickNavDestination.libraryTracksPage,
+  3: QuickNavDestination.libraryAlbumsPage,
+  4: QuickNavDestination.libraryArtistsPage,
+  5: QuickNavDestination.libraryFoldersPage,
 };
 const _IsarAppPreferencessearchEngineEnumValueMap = {
   'youtube': 0,
@@ -620,53 +629,53 @@ extension IsarAppPreferencesQueryFilter
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      initialPageOnStartupEqualTo(InitialPageOnStartup value) {
+      initialStartupDestinationEqualTo(QuickNavDestination value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'initialPageOnStartup',
+        property: r'initialStartupDestination',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      initialPageOnStartupGreaterThan(
-    InitialPageOnStartup value, {
+      initialStartupDestinationGreaterThan(
+    QuickNavDestination value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'initialPageOnStartup',
+        property: r'initialStartupDestination',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      initialPageOnStartupLessThan(
-    InitialPageOnStartup value, {
+      initialStartupDestinationLessThan(
+    QuickNavDestination value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'initialPageOnStartup',
+        property: r'initialStartupDestination',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterFilterCondition>
-      initialPageOnStartupBetween(
-    InitialPageOnStartup lower,
-    InitialPageOnStartup upper, {
+      initialStartupDestinationBetween(
+    QuickNavDestination lower,
+    QuickNavDestination upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'initialPageOnStartup',
+        property: r'initialStartupDestination',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1255,16 +1264,16 @@ extension IsarAppPreferencesQuerySortBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByInitialPageOnStartup() {
+      sortByInitialStartupDestination() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'initialPageOnStartup', Sort.asc);
+      return query.addSortBy(r'initialStartupDestination', Sort.asc);
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      sortByInitialPageOnStartupDesc() {
+      sortByInitialStartupDestinationDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'initialPageOnStartup', Sort.desc);
+      return query.addSortBy(r'initialStartupDestination', Sort.desc);
     });
   }
 
@@ -1454,16 +1463,16 @@ extension IsarAppPreferencesQuerySortThenBy
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByInitialPageOnStartup() {
+      thenByInitialStartupDestination() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'initialPageOnStartup', Sort.asc);
+      return query.addSortBy(r'initialStartupDestination', Sort.asc);
     });
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QAfterSortBy>
-      thenByInitialPageOnStartupDesc() {
+      thenByInitialStartupDestinationDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'initialPageOnStartup', Sort.desc);
+      return query.addSortBy(r'initialStartupDestination', Sort.desc);
     });
   }
 
@@ -1618,9 +1627,9 @@ extension IsarAppPreferencesQueryWhereDistinct
   }
 
   QueryBuilder<IsarAppPreferences, IsarAppPreferences, QDistinct>
-      distinctByInitialPageOnStartup() {
+      distinctByInitialStartupDestination() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'initialPageOnStartup');
+      return query.addDistinctBy(r'initialStartupDestination');
     });
   }
 
@@ -1717,10 +1726,10 @@ extension IsarAppPreferencesQueryProperty
     });
   }
 
-  QueryBuilder<IsarAppPreferences, InitialPageOnStartup, QQueryOperations>
-      initialPageOnStartupProperty() {
+  QueryBuilder<IsarAppPreferences, QuickNavDestination, QQueryOperations>
+      initialStartupDestinationProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'initialPageOnStartup');
+      return query.addPropertyName(r'initialStartupDestination');
     });
   }
 

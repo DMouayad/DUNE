@@ -1,30 +1,19 @@
-import 'package:dune/navigation/app_router.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 //
-import 'navigation/tabs_state.dart';
 import 'presentation/providers/state_controllers.dart';
 import 'support/themes/fluent_app_themes.dart';
+import 'support/themes/material_app_themes.dart';
+import 'navigation/navigation.dart';
 
-class DuneApp extends ConsumerStatefulWidget {
+class DuneApp extends ConsumerWidget {
   const DuneApp({super.key});
 
   @override
-  ConsumerState<DuneApp> createState() => _DuneAppState();
-}
-
-class _DuneAppState extends ConsumerState<DuneApp>
-    with AutomaticKeepAliveClientMixin {
-  int? tabsCount;
-  GoRouter? router;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
+  Widget build(BuildContext context, ref) {
     ref.listen(
         appPreferencesController.select((value) => value.audioStreamingQuality),
         (previous, next) {
@@ -33,76 +22,43 @@ class _DuneAppState extends ConsumerState<DuneApp>
           .player
           .setAudioStreamingQuality(next);
     });
+    return context.isDesktopPlatform
+        ? const _FluentDuneApp()
+        : const _MaterialDuneApp();
+  }
+}
+
+class _FluentDuneApp extends ConsumerWidget {
+  const _FluentDuneApp();
+
+  @override
+  Widget build(BuildContext context, ref) {
     final appTheme = ref.watch(appThemeControllerProvider);
-    final appPrefs = ref.watch(appPreferencesController);
-
-    final shouldUseTabs =
-        context.isNotMobileDevice && appPrefs.tabsMode.isEnabled;
-    // at the app start we assign it to one if [shouldUseTabs]
-    tabsCount ??= shouldUseTabs ? 1 : null;
-    if (router == null) {
-      final initialAppPage =
-          AppRouter.getInitialAppPage(appPrefs.initialPageOnStartup);
-      final initialTabsState =
-          shouldUseTabs ? _getInitialTabsState(initialAppPage) : null;
-      // initialize the [AppRouter.router]
-      AppRouter.init(
-        // the first-ever location for the app
-        RoutePath.desktopSplashScreenPage,
-        initialAppPage,
-        initialTabsState,
-      );
-      if (shouldUseTabs) {
-        _registerTabsStateProvider(initialTabsState!);
-      }
-      router = AppRouter.router;
-      if (context.isNotMobileDevice) {
-        router?.routerDelegate.addListener(() {
-          try {
-            ref.read(showBackButtonProvider.notifier).state =
-                AppRouter.router.canPop();
-          } catch (_) {
-            ref.read(showBackButtonProvider.notifier).state = false;
-          }
-        });
-      }
-      updateKeepAlive();
-    }
-    if (shouldUseTabs) {
-      if (tabsCount != ref.watch(tabsStateProvider).tabsCount) {
-        tabsCount = ref.watch(tabsStateProvider).tabsCount;
-        final selectedTab = ref.watch(tabsStateProvider).selectedTab;
-        final newInitialLocation = selectedTab?.selectedPage?.path;
-        // update the app router
-        AppRouter.updateTabs(ref.watch(tabsStateProvider), newInitialLocation);
-        router = AppRouter.router;
-        updateKeepAlive();
-      }
-    }
-
-    return FluentApp.router(
-      routerConfig: router!,
-      title: 'dune',
+    return fluent.FluentApp.router(
+      routerConfig: AppNavigation.instance.appRouter,
+      title: 'DUNE',
       themeMode: appTheme.themeMode,
       debugShowCheckedModeBanner: false,
       theme: FluentAppThemes.lightTheme(appTheme),
       darkTheme: FluentAppThemes.darkTheme(appTheme),
     );
   }
+}
 
-  TabsState _getInitialTabsState(InitialAppPage initialAppPage) {
-    return TabsState(tabs: [
-      TabData.withEmptyPage(tabIndex: 0).copyWithPageAdded(
-        path: '/tabs/0${initialAppPage.path}',
-        title: initialAppPage.name,
-      )
-    ]);
-  }
-
-  void _registerTabsStateProvider(TabsState initialState) {
-    tabsStateProvider = StateProvider((ref) => initialState);
-  }
+class _MaterialDuneApp extends ConsumerWidget {
+  const _MaterialDuneApp();
 
   @override
-  bool get wantKeepAlive => true;
+  Widget build(BuildContext context, ref) {
+    final appTheme = ref.watch(appThemeControllerProvider);
+
+    return MaterialApp.router(
+      routerConfig: AppNavigation.instance.appRouter,
+      title: 'DUNE',
+      themeMode: appTheme.themeMode,
+      debugShowCheckedModeBanner: false,
+      theme: MaterialAppThemes.lightTheme(appTheme),
+      darkTheme: MaterialAppThemes.darkTheme(appTheme),
+    );
+  }
 }

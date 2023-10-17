@@ -6,7 +6,7 @@ import 'package:dune/presentation/custom_widgets/error_widget.dart';
 import 'package:dune/presentation/custom_widgets/explore_music_collection_widget.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -106,7 +106,7 @@ class MoodsAndCategoriesSectionState
   }
 
   void _onTap(BaseExploreMusicItem item, BuildContext context) {
-    NavigationHelper.onExploreMusicCategoryCardPressed(
+    AppNavigation.instance.onExploreMusicCategoryCardPressed(
       context,
       ref,
       exploreItem: item,

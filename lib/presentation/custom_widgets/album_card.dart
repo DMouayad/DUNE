@@ -1,6 +1,6 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_card.dart';
@@ -38,7 +38,7 @@ class AlbumCard extends StatelessWidget {
       shape: BoxShape.rectangle,
       onTap: navigateToDetailsPageOnPressed
           ? () {
-              NavigationHelper.onGoToAlbumPage(context, album);
+              AppNavigation.instance.onGoToAlbumPage(context, album);
             }
           : null,
     );
@@ -71,7 +71,7 @@ class _SelectableAlbumCard extends AlbumCard {
     return SelectableCard<BaseAlbum>(
       selectionKey: selectionKey,
       popupMenu: const SizedBox(),
-      onTap: () => NavigationHelper.onGoToAlbumPage(context, album),
+      onTap: () => AppNavigation.instance.onGoToAlbumPage(context, album),
       selectionState: selectionState,
       onSelected: () => onSelected(selectionKey),
       child: AlbumCard(

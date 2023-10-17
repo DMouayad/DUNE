@@ -40,6 +40,7 @@ AudioPlayer registerAudioPlayer(Ref ref) {
         .addToTodayTrackUncompletedListensDuration,
   );
   final notAlreadyRegistered = !GetIt.instance.isRegistered<AudioPlayer>();
+
   if (notAlreadyRegistered) {
     GetIt.instance.registerSingleton<AudioPlayer>(
       MediaKitAudioPlayer(
@@ -60,14 +61,11 @@ AudioPlayer registerAudioPlayer(Ref ref) {
 }
 
 void registerControllersProviders() {
-  final libraryController = LocalLibraryController()..loadLibraryFromStorage();
-  localLibraryControllerProvider =
-      StateNotifierProvider((ref) => libraryController);
+  localLibraryControllerProvider = StateNotifierProvider(
+      (ref) => LocalLibraryController()..loadLibraryFromStorage());
   playbackControllerProvider = StateNotifierProvider((ref) {
     return PlaybackController(registerAudioPlayer(ref));
   });
-
-  searchControllerProvider = StateNotifierProvider((ref) => SearchController());
 
   exploreMusicControllerProvider = StateNotifierProvider(
     (ref) {
@@ -75,7 +73,7 @@ void registerControllersProviders() {
       return ExploreMusicController()..fetchAll(musicSource);
     },
   );
-
+  searchControllerProvider = StateNotifierProvider((ref) => SearchController());
   playlistControllerProvider =
       StateNotifierProvider((ref) => PlaylistPageController());
   artistPageControllerProvider =
@@ -84,7 +82,6 @@ void registerControllersProviders() {
       StateNotifierProvider((ref) => AlbumPageController());
   exploreMusicCategoriesControllerProvider =
       StateNotifierProvider((ref) => ExploreMusicCategoriesController());
-
   listeningHistoryControllerProvider = StateNotifierProvider(
     (ref) => ListeningHistoryController(),
   );

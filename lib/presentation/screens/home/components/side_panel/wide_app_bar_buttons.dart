@@ -1,7 +1,5 @@
-import 'package:dune/navigation/app_router.dart';
-import 'package:dune/presentation/providers/shared_providers.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
@@ -19,10 +17,10 @@ class WideAppBarButtons extends ConsumerWidget {
         spacing: 1,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          _CustomIconButton(
+          AppBarIconButton(
             tooltip: ref.watch(appPreferencesController).sidePanelPinned
-                ? 'Minimize panel'
-                : 'Expand panel',
+                ? 'Un-pin side panel'
+                : 'Pin side panel',
             iconData: fluent.FluentIcons.side_panel,
             onPressed: () {
               ref
@@ -30,55 +28,48 @@ class WideAppBarButtons extends ConsumerWidget {
                   .toggleSidePanelPinMode();
             },
           ),
-          _CustomIconButton(
+          AppBarIconButton(
             tooltip: 'Show Settings',
             iconData: context.isDesktopPlatform
                 ? fluent.FluentIcons.settings
                 : Icons.settings_outlined,
-            onPressed: () => NavigationHelper.showSettingsDialog(context),
+            onPressed: () => AppNavigation.instance.showSettingsDialog(context),
           ),
           if (tabsMode.isEnabled)
-            _CustomIconButton(
+            AppBarIconButton(
               tooltip: 'Browsing history',
               onPressed: () {},
               iconData: fluent.FluentIcons.history,
             ),
-          Consumer(
-            builder: (context, ref, child) {
-              return _CustomIconButton(
+          ValueListenableBuilder(
+            valueListenable: AppNavigation.instance.hasPrevious,
+            builder: (context, state, _) {
+              return AppBarIconButton(
                 tooltip: 'Go back',
                 iconData: fluent.FluentIcons.back,
-                onPressed: _onBackButtonPressed(ref),
+                onPressed: state ? AppNavigation.instance.onGoBack : null,
               );
             },
           ),
-          if (tabsMode.isEnabled)
-            _CustomIconButton(
-              tooltip: 'Go forward',
-              iconData: fluent.FluentIcons.forward,
-              onPressed: () {},
-            ),
+          ValueListenableBuilder(
+            valueListenable: AppNavigation.instance.hasForward,
+            builder: (context, state, _) {
+              return AppBarIconButton(
+                tooltip: 'Go forward',
+                iconData: fluent.FluentIcons.forward,
+                onPressed: state ? AppNavigation.instance.onGoForward : null,
+              );
+            },
+          ),
         ],
       ),
     );
   }
-
-  void Function()? _onBackButtonPressed(WidgetRef ref) {
-    return () {
-      if (AppRouter.router.canPop()) {
-        AppRouter.router.pop();
-        if (AppRouter.tabsModeEnabled) {
-          ref
-              .read(tabsStateProvider.notifier)
-              .update((state) => state.withPreviousPageSelected());
-        }
-      }
-    };
-  }
 }
 
-class _CustomIconButton extends StatelessWidget {
-  const _CustomIconButton({
+class AppBarIconButton extends StatelessWidget {
+  const AppBarIconButton({
+    super.key,
     required this.onPressed,
     required this.iconData,
     required this.tooltip,
@@ -90,23 +81,40 @@ class _CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fluent.Tooltip(
-      message: tooltip,
-      child: fluent.IconButton(
-        iconButtonMode: fluent.IconButtonMode.small,
-        style: fluent.ButtonStyle(
-          padding: fluent.ButtonState.all(
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
-          foregroundColor: fluent.ButtonState.resolveWith((states) {
-            return states.isDisabled ? null : context.colorScheme.secondary;
-          }),
-          shape: fluent.ButtonState.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          ),
-        ),
-        icon: fluent.Icon(iconData),
-        onPressed: onPressed,
-      ),
-    );
+    return context.isDesktopPlatform
+        ? fluent.Tooltip(
+            message: tooltip,
+            child: fluent.IconButton(
+              iconButtonMode: fluent.IconButtonMode.small,
+              style: fluent.ButtonStyle(
+                padding: fluent.ButtonState.all(
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
+                foregroundColor: fluent.ButtonState.resolveWith((states) {
+                  return states.isDisabled
+                      ? null
+                      : context.colorScheme.secondary;
+                }),
+                shape: fluent.ButtonState.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6))),
+                backgroundColor: fluent.ButtonState.all(Colors.transparent),
+              ),
+              icon: fluent.Icon(iconData),
+              onPressed: onPressed,
+            ),
+          )
+        : IconButton(
+            tooltip: tooltip,
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith((states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : context.colorScheme.secondary;
+              }),
+              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            ),
+            iconSize: 14,
+            icon: Icon(iconData),
+            onPressed: onPressed,
+          );
   }
 }

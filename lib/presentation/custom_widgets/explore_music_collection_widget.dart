@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
 import 'package:dune/domain/audio/base_models/base_explore_music_item.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -102,8 +102,8 @@ class ExploreMusicItemCard extends ConsumerWidget {
                 .playSingleTrack(item.track!);
           }
         } else {
-          NavigationHelper.onPlaylistItemCardPressed(context,
-              exploreItem: item);
+          AppNavigation.instance
+              .onPlaylistItemCardPressed(context, exploreItem: item);
         }
       },
     );

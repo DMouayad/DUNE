@@ -52,3 +52,4 @@ app.*.map.json
 /test/unit/presentation/models/libmpv-2.dll
 /test/utils/constants.dart
 /taggy.dll
+/libmpv-2.dll

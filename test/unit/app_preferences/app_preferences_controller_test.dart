@@ -13,35 +13,41 @@ import '../../utils/isar_testing_utils.dart';
 void main() {
   late AppPreferencesController controller;
   late final BaseAppPreferencesDataSource dataSource;
+  const initialAppPrefs = BaseAppPreferences();
   setUpAll(() async {
     await IsarTestingUtils.initIsarForTesting();
     dataSource = IsarAppPreferencesDataSource(IsarTestingUtils.isar);
   });
   setUp(() {
-    controller =
-        AppPreferencesController(dataSource, const BaseAppPreferences());
+    controller = AppPreferencesController(dataSource, initialAppPrefs);
   });
   group('updating [BaseAppPreferences.TabsMode]', () {
-    //TODO: find out why this test is failing thought it's working in the app
-    // test(
-    //   "switching from vertical to horizontal [TabsMode] updates the state's [tabsMode]",
-    //   () async {
-    //     const modes =
-    //         (initialMode: TabsMode.vertical, newMode: TabsMode.horizontal);
-    //     // act
-    //     await controller.setTabMode(modes.newMode);
-    //     expectLater(controller.state.tabsMode, modes.newMode);
-    //   },
-    // );
+    test(
+      "switching from vertical to horizontal [TabsMode] updates the state's [tabsMode]",
+      () async {
+        controller = AppPreferencesController(
+          dataSource,
+          const BaseAppPreferences(tabsMode: TabsMode.vertical),
+        );
+        // act
+        await controller.setTabMode(TabsMode.horizontal);
+        expect(controller.debugState.tabsMode, TabsMode.horizontal);
+      },
+    );
 
     test("[setTabMode] SHOULD NOT update the state's [tabsMode]", () async {
+      controller = AppPreferencesController(
+        dataSource,
+        const BaseAppPreferences(tabsMode: TabsMode.vertical),
+      );
+
+      expect(controller.debugState.tabsMode, TabsMode.vertical);
       const newTabsMode = TabsMode.disabled;
-      expect(controller.state.tabsMode != newTabsMode, true);
       // act
       await controller.setTabMode(newTabsMode);
       // Until now, enabling\disabling tabs mode will only take effect
       // on the next app-start. so it shouldn't update the state.
-      expect(controller.state.tabsMode != newTabsMode, true);
+      expect(controller.debugState.tabsMode != newTabsMode, true);
     });
   });
 
@@ -54,15 +60,15 @@ void main() {
         final newFolder = MusicFolderHelper.createInstance(
             kPathToMusicFolderWithoutSubFolders, {});
         await controller.addMusicFolder(newFolder!);
-        expect(controller.state.localMusicFolders.single, newFolder);
+        expect(controller.debugState.localMusicFolders.single, newFolder);
       });
       test('it adds sub-folders of specified music folder', () async {
         final newFolder = MusicFolderHelper.createInstance(
             kPathToMusicFolderWithSubFolders, {});
         await controller.addMusicFolder(newFolder!);
 
-        expect(
-            controller.state.localMusicFolders.single.subFolders, isNotEmpty);
+        expect(controller.debugState.localMusicFolders.single.subFolders,
+            isNotEmpty);
       });
     },
   );
@@ -70,36 +76,36 @@ void main() {
   test("[setExploreMusicSource] updates the state's [exploreMusicSource]",
       () async {
     const newSource = MusicSource.spotify;
-    expect(controller.state.exploreMusicSource != newSource, true);
+    expect(controller.debugState.exploreMusicSource != newSource, true);
     // act
     await controller.setExploreMusicSource(newSource);
 
-    expect(controller.state.exploreMusicSource, newSource);
+    expect(controller.debugState.exploreMusicSource, newSource);
   });
   test("[setSearchEngine] updates the state's [searchEngine]", () async {
     const newSource = MusicSource.spotify;
-    expect(controller.state.searchEngine != newSource, true);
+    expect(controller.debugState.searchEngine != newSource, true);
     // act
     await controller.setSearchEngine(newSource);
 
-    expect(controller.state.searchEngine, newSource);
+    expect(controller.debugState.searchEngine, newSource);
   });
   test(
       "[setThumbnailQualitiesOrderOption] updates the state's [thumbnailQualitiesOrder]",
       () async {
     const newSource = ThumbnailQualitiesOrderOption.lowest;
-    expect(controller.state.thumbnailQualitiesOrder != newSource, true);
+    expect(controller.debugState.thumbnailQualitiesOrder != newSource, true);
     // act
     await controller.setThumbnailQualitiesOrderOption(newSource);
-    expect(controller.state.thumbnailQualitiesOrder, newSource);
+    expect(controller.debugState.thumbnailQualitiesOrder, newSource);
   });
   test(
       "[setAudioStreamingQualityOption] updates the state's [audioStreamingQuality]",
       () async {
     const newSource = AudioStreamingQuality.lowest;
-    expect(controller.state.audioStreamingQuality != newSource, true);
+    expect(controller.debugState.audioStreamingQuality != newSource, true);
     // act
     await controller.setAudioStreamingQualityOption(newSource);
-    expect(controller.state.audioStreamingQuality, newSource);
+    expect(controller.debugState.audioStreamingQuality, newSource);
   });
 }

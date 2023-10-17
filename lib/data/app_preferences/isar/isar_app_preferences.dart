@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
-import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/now_playing_section_display_mode.dart';
+import 'package:dune/support/enums/quick_nav_destination.dart';
 import 'package:isar/isar.dart';
 
 import 'isar_music_folder.dart';
@@ -27,7 +27,8 @@ class IsarAppPreferences extends BaseAppPreferences {
 
   @override
   @enumerated
-  InitialPageOnStartup get initialPageOnStartup => super.initialPageOnStartup;
+  QuickNavDestination get initialStartupDestination =>
+      super.initialStartupDestination;
 
   @override
   @enumerated
@@ -69,7 +70,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     this.localMusicFoldersList = const [],
     super.exploreMusicSource,
     super.rememberLastWindowSize,
-    super.initialPageOnStartup,
+    super.initialStartupDestination,
     super.usePrimaryColorInCardColor,
     super.searchEngine,
     super.volumeStep,
@@ -86,7 +87,7 @@ class IsarAppPreferences extends BaseAppPreferences {
     NowPlayingSectionDisplayMode? defaultNowPlayingSectionDisplayMode,
     bool? usePrimaryColorInCardColor,
     TabsMode? tabsMode,
-    InitialPageOnStartup? initialPageOnStartup,
+    QuickNavDestination? initialStartupDestination,
     MusicSource? exploreMusicSource,
     MusicSource? searchEngine,
     double? volumeStep,
@@ -105,7 +106,8 @@ class IsarAppPreferences extends BaseAppPreferences {
           rememberLastWindowSize ?? this.rememberLastWindowSize,
       usePrimaryColorInCardColor:
           usePrimaryColorInCardColor ?? this.usePrimaryColorInCardColor,
-      initialPageOnStartup: initialPageOnStartup ?? this.initialPageOnStartup,
+      initialStartupDestination:
+          initialStartupDestination ?? this.initialStartupDestination,
       exploreMusicSource: exploreMusicSource ?? this.exploreMusicSource,
       volumeStep: volumeStep ?? this.volumeStep,
       tabsMode: tabsMode ?? this.tabsMode,
@@ -120,6 +122,27 @@ class IsarAppPreferences extends BaseAppPreferences {
               localMusicFoldersList,
       audioStreamingQuality:
           audioStreamingQuality ?? this.audioStreamingQuality,
+    );
+  }
+
+  factory IsarAppPreferences.fromBase(BaseAppPreferences base) {
+    return IsarAppPreferences(
+      exploreMusicSource: base.exploreMusicSource,
+      sidePanelPinned: base.sidePanelPinned,
+      rememberLastWindowSize: base.rememberLastWindowSize,
+      usePrimaryColorInCardColor: base.usePrimaryColorInCardColor,
+      initialStartupDestination: base.initialStartupDestination,
+      autoHideWideScreenAppBarButtons: base.autoHideWideScreenAppBarButtons,
+      volumeStep: base.volumeStep,
+      tabsMode: base.tabsMode,
+      thumbnailQualitiesOrder: base.thumbnailQualitiesOrder,
+      lastWindowHeight: base.lastWindowSize?.height,
+      lastWindowWidth: base.lastWindowSize?.width,
+      audioStreamingQuality: base.audioStreamingQuality,
+      searchEngine: base.searchEngine,
+      localMusicFoldersList: base.localMusicFolders
+          .map((e) => IsarMusicFolder.fromBase(e))
+          .toList(),
     );
   }
 }

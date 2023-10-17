@@ -5,7 +5,7 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 const MaterialColor kDefaultPrimaryColor = Colors.blueGrey;
 final fluent.AccentColor kFluentDefaultPrimaryColor =
-    Colors.blueGrey.toAccentColor();
+    kDefaultPrimaryColor.toAccentColor();
 
 const supportedDesktopWindowEffects = [
   WindowEffect.solid,

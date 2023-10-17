@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:dune/domain/app_preferences/base_app_preferences.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
-import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/enums/quick_nav_destination.dart';
 import 'package:faker/faker.dart';
 
 import '../base_model_factory.dart';
@@ -11,7 +11,7 @@ import '../base_model_factory.dart';
 final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
   late final bool? usePrimaryColorInCardColor;
 
-  late final InitialPageOnStartup? initialPageOnStartup;
+  late final QuickNavDestination? initialStartupDestination;
 
   late final MusicSource? exploreMusicSource;
 
@@ -33,10 +33,10 @@ final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
   late final Set<MusicFolder>? localMusicFolders;
 
   AppPreferencesFactory() {
-    usePrimaryColorInCardColor = initialPageOnStartup = exploreMusicSource =
-        searchEngine = volumeStep = tabsMode = rememberLastWindowSize =
-            lastWindowSize = sidePanelPinned = lastSidePanelWidth =
-                thumbnailQualitiesOrder =
+    usePrimaryColorInCardColor = initialStartupDestination =
+        exploreMusicSource = searchEngine = volumeStep = tabsMode =
+            rememberLastWindowSize = lastWindowSize = sidePanelPinned =
+                lastSidePanelWidth = thumbnailQualitiesOrder =
                     audioStreamingQuality = localMusicFolders = null;
   }
 
@@ -52,8 +52,8 @@ final class AppPreferencesFactory extends BaseModelFactory<BaseAppPreferences> {
           rememberLastWindowSize ?? faker.randomGenerator.boolean(),
       exploreMusicSource: exploreMusicSource ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
-      initialPageOnStartup:
-          faker.randomGenerator.element(InitialPageOnStartup.values),
+      initialStartupDestination:
+          faker.randomGenerator.element(QuickNavDestination.values),
       searchEngine: searchEngine ??
           faker.randomGenerator.element(MusicSource.valuesWithoutUnknown),
       tabsMode: tabsMode ?? faker.randomGenerator.element(TabsMode.values),

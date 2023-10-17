@@ -4,14 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //
 import 'package:dune/domain/audio/base_models/base_track.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
-import 'package:dune/navigation/tabs_state.dart';
 import 'package:dune/support/enums/music_source.dart';
 import 'package:dune/support/enums/now_playing_section_display_mode.dart';
 
 import 'state_controllers.dart';
 
-/// Provide whether a back button should be visible or not.
+/// Provide whether a back button should be visible in [WideAppBarButtons].
 final showBackButtonProvider = StateProvider((_) => false);
+
+/// Provide whether a forward button should be visible in [WideAppBarButtons].
+final showForwardButtonProvider = StateProvider((_) => false);
+
+/// Indicates if the user is dragging a [VerticalTab] from vertical tabs list.
+final isReorderingVerticalTabsProvider = StateProvider((_) => false);
 
 /// used to determine the current display mode of the [NowPlayingCard] widget.
 final nowPlayingSectionDisplayModeProvider =
@@ -19,7 +24,6 @@ final nowPlayingSectionDisplayModeProvider =
 
 final materialSearchBarControllerProvider = Provider((_) => SearchController());
 
-late final StateProvider<TabsState> tabsStateProvider;
 final StateProvider<double> sidePanelWidthProvider =
     StateProvider((_) => kSidePanelMinWidth);
 
