@@ -198,48 +198,52 @@ class _Header extends StatelessWidget {
                   child: Text(
                     title,
                     softWrap: true,
-                    style: context.textTheme.titleLarge?.copyWith(
-                      color: context.colorScheme.primary,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: context.colorScheme.secondary,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
                 trailingPositionBuilder(
                   isMinimized,
-                  Wrap(
-                    spacing: 30,
-                    runAlignment: WrapAlignment.center,
-                    alignment: onShuffle != null
-                        ? WrapAlignment.spaceBetween
-                        : actions.isEmpty
-                            ? WrapAlignment.start
-                            : WrapAlignment.end,
-                    crossAxisAlignment: WrapCrossAlignment.end,
-                    children: [
-                      if (description != null)
-                        SizedBox(
-                          width: context.screenWidth * .3,
-                          child: Text(
-                            description!,
-                            maxLines: isMinimized ? 1 : 3,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Wrap(
+                      spacing: 30,
+                      runAlignment: WrapAlignment.center,
+                      alignment: onShuffle != null
+                          ? WrapAlignment.spaceBetween
+                          : actions.isEmpty
+                              ? WrapAlignment.start
+                              : WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      children: [
+                        if (description != null)
+                          SizedBox(
+                            width: context.screenWidth * .3,
+                            child: Text(
+                              description!,
+                              maxLines: isMinimized ? 1 : 3,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
                           ),
-                        ),
-                      if (onShuffle != null)
-                        TextButton.icon(
-                          onPressed: onShuffle,
-                          style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all(
-                                context.colorScheme.secondary),
+                        if (onShuffle != null)
+                          TextButton.icon(
+                            onPressed: onShuffle,
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all(
+                                  context.colorScheme.secondary),
+                            ),
+                            icon: const Icon(Icons.shuffle, size: 20),
+                            label: Text("shuffle (${itemsCount ?? 0} items)"),
                           ),
-                          icon: const Icon(Icons.shuffle, size: 20),
-                          label: Text("shuffle (${itemsCount ?? 0} items)"),
-                        ),
-                      ...actions,
-                    ],
+                        ...actions,
+                      ],
+                    ),
                   ),
                 ),
                 if (isFetchingItems)

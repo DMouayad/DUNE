@@ -1,7 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/presentation/controllers/selection_controller.dart';
 import 'package:dune/presentation/custom_widgets/placeholders.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_card.dart';
@@ -32,7 +32,7 @@ class ArtistCard extends StatelessWidget {
       width: width,
       onTap: navigateToDetailsPageOnPressed
           ? () {
-              NavigationHelper.onGoToArtistPage(context, artist);
+              AppNavigation.instance.onGoToArtistPage(context, artist);
             }
           : null,
       tag: artist.id ?? artist.browseId ?? artist.hashCode.toString(),
@@ -63,7 +63,7 @@ class _SelectableArtistCard extends ArtistCard {
       selectionKey: selectionKey,
       popupMenu: const SizedBox(),
       onTap: () {
-        NavigationHelper.onGoToArtistPage(context, artist);
+        AppNavigation.instance.onGoToArtistPage(context, artist);
       },
       selectionState: selectionState,
       onSelected: () => onSelected(selectionKey),

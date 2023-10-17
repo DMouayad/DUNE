@@ -1,7 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_album.dart';
 import 'package:dune/domain/audio/base_models/base_artist.dart';
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
-import 'package:dune/navigation/app_router.dart';
+import 'package:dune/presentation/custom_widgets/new_tab_page.dart';
 import 'package:dune/presentation/pages/album_page.dart';
 import 'package:dune/presentation/pages/artist_page.dart';
 import 'package:dune/presentation/pages/explore_music_category_page.dart';
@@ -12,39 +12,14 @@ import 'package:dune/presentation/pages/library_page/library_folders_page.dart';
 import 'package:dune/presentation/pages/library_page/library_tracks_page.dart';
 import 'package:dune/presentation/pages/listening_history_page/listening_history_page.dart';
 import 'package:dune/presentation/pages/playlist_page.dart';
-import 'package:dune/presentation/screens/desktop_splash_screen.dart';
-import 'package:dune/support/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import 'base_route.dart';
+import 'package:dune/navigation/navigation.dart';
 import 'page_with_transition_builder.dart';
 
-class DesktopSplashScreenRoute extends GoRoute {
-  DesktopSplashScreenRoute()
-      : super(
-          path: RoutePath.desktopSplashScreenPage,
-          builder: _build,
-          redirect: (context, state) async {
-            if (context.isDesktopPlatform) {
-              return null;
-            } else {
-              return AppRouter.initialAppPage.path;
-            }
-          },
-        );
-
-  static Widget _build(BuildContext context, GoRouterState state) {
-    return const DesktopSplashScreen();
-  }
-}
-
 class LibraryTracksPageRoute extends BaseQuickNavDestinationRoute {
-  LibraryTracksPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  LibraryTracksPageRoute()
+      : super(
+          name: RouteName.libraryTracksPage,
           index: QuickNavDestination.libraryTracksPage,
           path: RoutePath.libraryTracksPage,
           page: (context, state) => const LibraryTracksPage(),
@@ -52,11 +27,9 @@ class LibraryTracksPageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class LibraryAlbumsPageRoute extends BaseQuickNavDestinationRoute {
-  LibraryAlbumsPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  LibraryAlbumsPageRoute()
+      : super(
+          name: RouteName.libraryAlbumsPage,
           index: QuickNavDestination.libraryAlbumsPage,
           path: RoutePath.libraryAlbumsPage,
           page: (context, state) => const LibraryAlbumsPage(),
@@ -64,11 +37,9 @@ class LibraryAlbumsPageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class LibraryArtistsPageRoute extends BaseQuickNavDestinationRoute {
-  LibraryArtistsPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  LibraryArtistsPageRoute()
+      : super(
+          name: RouteName.libraryArtistsPage,
           index: QuickNavDestination.libraryArtistsPage,
           path: RoutePath.libraryArtistsPage,
           page: (context, state) => const LibraryArtistsPage(),
@@ -76,11 +47,9 @@ class LibraryArtistsPageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class LibraryFoldersPageRoute extends BaseQuickNavDestinationRoute {
-  LibraryFoldersPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  LibraryFoldersPageRoute()
+      : super(
+          name: RouteName.libraryFoldersPage,
           index: QuickNavDestination.libraryFoldersPage,
           path: RoutePath.libraryFoldersPage,
           page: (context, state) => const LibraryFoldersPage(),
@@ -88,11 +57,9 @@ class LibraryFoldersPageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class ExplorePageRoute extends BaseQuickNavDestinationRoute {
-  ExplorePageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  ExplorePageRoute()
+      : super(
+          name: RouteName.explorePage,
           index: QuickNavDestination.explorePage,
           path: RoutePath.explorePage,
           page: (context, state) => const ExplorePage(),
@@ -100,11 +67,9 @@ class ExplorePageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class ListeningHistoryPageRoute extends BaseQuickNavDestinationRoute {
-  ListeningHistoryPageRoute({
-    super.name,
-    super.isSubRoute,
-    super.routes,
-  }) : super(
+  ListeningHistoryPageRoute()
+      : super(
+          name: RouteName.listeningHistoryPage,
           index: QuickNavDestination.listeningHistoryPage,
           path: RoutePath.listeningHistoryPage,
           page: (context, state) => const ListeningHistoryPage(),
@@ -112,7 +77,7 @@ class ListeningHistoryPageRoute extends BaseQuickNavDestinationRoute {
 }
 
 class AlbumPageRoute extends BaseRoute {
-  AlbumPageRoute({super.isSubRoute})
+  AlbumPageRoute()
       : super(
           pageBuilder: const PageWithSlideInTransitionBuilder(),
           path: RoutePath.albumPage,
@@ -122,7 +87,7 @@ class AlbumPageRoute extends BaseRoute {
 }
 
 class ArtistPageRoute extends BaseRoute {
-  ArtistPageRoute({super.isSubRoute})
+  ArtistPageRoute()
       : super(
           path: RoutePath.artistPage,
           page: (context, state) =>
@@ -132,7 +97,7 @@ class ArtistPageRoute extends BaseRoute {
 }
 
 class PlaylistPageRoute extends BaseRoute {
-  PlaylistPageRoute({super.isSubRoute})
+  PlaylistPageRoute()
       : super(
           pageBuilder: const PageWithSlideInTransitionBuilder(),
           path: RoutePath.playlistPage,
@@ -142,7 +107,7 @@ class PlaylistPageRoute extends BaseRoute {
 }
 
 class ExploreMusicCategoryPageRoute extends BaseRoute {
-  ExploreMusicCategoryPageRoute({super.isSubRoute})
+  ExploreMusicCategoryPageRoute()
       : super(
           path: RoutePath.exploreMusicCategoryPage,
           page: (context, state) {
@@ -152,5 +117,15 @@ class ExploreMusicCategoryPageRoute extends BaseRoute {
               title: state.extra is String ? state.extra as String : null,
             );
           },
+        );
+}
+
+class NewTabPageRoute extends BaseRoute {
+  NewTabPageRoute()
+      : super(
+          name: RouteName.newTabPage,
+          pageBuilder: const PageWithSlideInTransitionBuilder(),
+          path: RoutePath.newTabPage,
+          page: (context, state) => const NewTabPage(),
         );
 }

@@ -3,7 +3,7 @@ import 'package:dune/presentation/custom_widgets/custom_card.dart';
 import 'package:dune/presentation/custom_widgets/placeholders.dart';
 import 'package:dune/presentation/custom_widgets/scrollable_cards_view.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:dune/support/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -91,8 +91,8 @@ class _PlaylistsGridViewState extends ConsumerState<_PlaylistsGridView> {
           shape: BoxShape.rectangle,
           thumbImagePlaceholder: const PlaylistCoverPlaceholder(),
           onTap: () {
-            NavigationHelper.onPlaylistItemCardPressed(context,
-                playlist: playlist);
+            AppNavigation.instance
+                .onPlaylistItemCardPressed(context, playlist: playlist);
           },
         );
       },

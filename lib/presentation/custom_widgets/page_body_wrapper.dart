@@ -1,3 +1,5 @@
+import 'package:dune/navigation/navigation.dart';
+import 'package:dune/presentation/custom_widgets/optional_parent_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,8 +28,33 @@ class PageBodyWrapper extends ConsumerWidget {
                     : context.colorScheme.background,
                 borderRadius: kBorderRadius,
               ),
-              child: child,
+              child: OptionalParentWidget(
+                parentWidgetBuilder: (child) => _StatefulWrapper(child),
+                condition: AppNavigation.instance.tabsEnabled,
+                childWidget: child,
+              ),
             ),
           );
   }
+}
+
+class _StatefulWrapper extends StatefulWidget {
+  const _StatefulWrapper(this.child);
+
+  final Widget child;
+
+  @override
+  State<_StatefulWrapper> createState() => _StatefulWrapperState();
+}
+
+class _StatefulWrapperState extends State<_StatefulWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

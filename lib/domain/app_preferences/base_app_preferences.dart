@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:dune/domain/audio/base_models/base_explore_music_collection.dart';
 import 'package:dune/domain/audio/base_models/thumbnails_set.dart';
 import 'package:dune/support/enums/audio_streaming_quality.dart';
-import 'package:dune/support/enums/initial_page_on_startup.dart';
 import 'package:dune/support/enums/music_source.dart';
+import 'package:dune/support/enums/quick_nav_destination.dart';
 import 'package:dune/support/extensions/extensions.dart';
 import 'package:equatable/equatable.dart';
 part 'music_folder.dart';
@@ -15,8 +15,8 @@ class BaseAppPreferences extends Equatable {
   /// [ColorScheme.primary] and otherwise it's the default.
   final bool usePrimaryColorInCardColor;
 
-  /// Initial app route
-  final InitialPageOnStartup initialPageOnStartup;
+  /// Initial page to display on startup (after splash screen)
+  final QuickNavDestination initialStartupDestination;
 
   /// The source from which a list of [BaseExploreMusicCollection] will be
   /// obtained for the explore page.
@@ -59,11 +59,11 @@ class BaseAppPreferences extends Equatable {
   const BaseAppPreferences({
     this.usePrimaryColorInCardColor = true,
     this.autoHideWideScreenAppBarButtons = true,
-    this.initialPageOnStartup = InitialPageOnStartup.exploreMusic,
+    this.initialStartupDestination = QuickNavDestination.explorePage,
     this.exploreMusicSource = MusicSource.youtube,
     this.searchEngine = MusicSource.youtube,
     this.volumeStep = 5.0,
-    this.tabsMode = TabsMode.vertical,
+    this.tabsMode = TabsMode.disabled,
     this.rememberLastWindowSize = true,
     this.lastWindowSize,
     this.sidePanelPinned = true,
@@ -75,7 +75,7 @@ class BaseAppPreferences extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'usePrimaryColorInCardColor': usePrimaryColorInCardColor,
-      'initialPageOnStartup': initialPageOnStartup.name,
+      'initialStartupDestination': initialStartupDestination.name,
       'exploreMusicSource': exploreMusicSource.name,
       'searchEngine': searchEngine.name,
       'volumeStep': volumeStep,
@@ -92,13 +92,13 @@ class BaseAppPreferences extends Equatable {
 
   @override
   String toString() {
-    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialPageOnStartup: $initialPageOnStartup, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, sidePanelPinned: $sidePanelPinned, thumbnailQualitiesOrder: $thumbnailQualitiesOrder, audioStreamingQuality: $audioStreamingQuality, localMusicFolders: $localMusicFolders}';
+    return 'BaseAppPreferences{usePrimaryColorInCardColor: $usePrimaryColorInCardColor, initialStartupDestination: $initialStartupDestination, exploreMusicSource: $exploreMusicSource, searchEngine: $searchEngine, volumeStep: $volumeStep, tabsMode: $tabsMode, rememberLastWindowSize: $rememberLastWindowSize, lastWindowSize: $lastWindowSize, sidePanelPinned: $sidePanelPinned, thumbnailQualitiesOrder: $thumbnailQualitiesOrder, audioStreamingQuality: $audioStreamingQuality, localMusicFolders: $localMusicFolders}';
   }
 
   @override
   List<Object?> get props => [
         usePrimaryColorInCardColor,
-        initialPageOnStartup,
+        initialStartupDestination,
         exploreMusicSource,
         searchEngine,
         volumeStep,
@@ -114,7 +114,7 @@ class BaseAppPreferences extends Equatable {
 
   BaseAppPreferences copyWith({
     bool? usePrimaryColorInCardColor,
-    InitialPageOnStartup? initialPageOnStartup,
+    QuickNavDestination? initialStartupDestination,
     MusicSource? exploreMusicSource,
     MusicSource? searchEngine,
     double? volumeStep,
@@ -130,7 +130,8 @@ class BaseAppPreferences extends Equatable {
     return BaseAppPreferences(
       usePrimaryColorInCardColor:
           usePrimaryColorInCardColor ?? this.usePrimaryColorInCardColor,
-      initialPageOnStartup: initialPageOnStartup ?? this.initialPageOnStartup,
+      initialStartupDestination:
+          initialStartupDestination ?? this.initialStartupDestination,
       exploreMusicSource: exploreMusicSource ?? this.exploreMusicSource,
       searchEngine: searchEngine ?? this.searchEngine,
       volumeStep: volumeStep ?? this.volumeStep,
@@ -188,7 +189,7 @@ enum TabsMode {
   /// Tabs are enabled and displayed horizontally below the title bar.
   horizontal;
 
-  bool get isEnabled => this != disabled;
+  bool get isEnabled => this != TabsMode.disabled;
 
   bool get isVertical => this == vertical;
 

@@ -1,8 +1,6 @@
 import 'package:dune/presentation/custom_widgets/page_title.dart';
 import 'package:dune/presentation/providers/state_controllers.dart';
-import 'package:dune/presentation/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //
@@ -45,65 +43,71 @@ class _ListeningHistoryPageState extends ConsumerState<ListeningHistoryPage>
 
   @override
   Widget build(BuildContext context) {
-    return fluent.ScaffoldPage(
-      padding: kPagePadding,
-      header: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const PageTitle("Your listening history", padding: EdgeInsets.zero),
-            IconButton(
-              onPressed: () {
-                ref
-                    .read(listeningHistoryControllerProvider.notifier)
-                    .loadListeningHistoryOverLastMonth();
-              },
-              icon: Icon(
-                Icons.refresh,
-                size: 20,
-                color: context.colorScheme.secondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          fluent.SizedBox(
-            height: 70,
-            width: 350,
-            child: Material(
-              type: MaterialType.transparency,
-              child: TabBar(
-                controller: tabController,
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorColor: Colors.transparent,
-                labelColor: context.colorScheme.onPrimaryContainer,
-                unselectedLabelColor:
-                    context.colorScheme.onPrimaryContainer.withOpacity(.6),
-                labelStyle: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const PageTitle("Your listening history",
+                  padding: EdgeInsets.zero),
+              IconButton(
+                onPressed: () {
+                  ref
+                      .read(listeningHistoryControllerProvider.notifier)
+                      .loadListeningHistoryOverLastMonth();
+                },
+                icon: Icon(
+                  Icons.refresh,
+                  size: 20,
+                  color: context.colorScheme.secondary,
                 ),
-                tabs: tabs,
               ),
-            ),
+            ],
           ),
-          // const Divider(),
-          Expanded(
-            child: TabBarView(
-              controller: tabController,
-              children: const [
-                ListeningHistorySummaryTab(),
-                TracksListeningHistoryTab(),
-                AlbumsListeningHistoryTab(),
-                PlaylistsListeningHistoryTab(),
-              ],
-            ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 60,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: TabBar(
+                    controller: tabController,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicatorColor: Colors.transparent,
+                    labelColor: context.colorScheme.onPrimaryContainer,
+                    unselectedLabelColor:
+                        context.colorScheme.onPrimaryContainer.withOpacity(.6),
+                    unselectedLabelStyle: context.textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    labelStyle: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    tabs: tabs,
+                  ),
+                ),
+              ),
+              // const Divider(),
+              Expanded(
+                child: TabBarView(
+                  controller: tabController,
+                  children: const [
+                    ListeningHistorySummaryTab(),
+                    TracksListeningHistoryTab(),
+                    AlbumsListeningHistoryTab(),
+                    PlaylistsListeningHistoryTab(),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

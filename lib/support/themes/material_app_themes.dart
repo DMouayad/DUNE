@@ -2,7 +2,7 @@ import 'package:dune/domain/theme/app_theme.dart';
 import 'package:dune/support/helpers/platform_helpers.dart';
 import 'package:flutter/material.dart';
 
-final class MaterialThemes {
+final class MaterialAppThemes {
   static final _baseTheme = ThemeData(
     buttonTheme: ButtonThemeData(
       shape: isDesktopPlatform
@@ -12,12 +12,10 @@ final class MaterialThemes {
   );
 
   static ThemeData themeDataFromAppTheme(AppTheme appTheme) {
-    return appTheme.isDarkMode
-        ? _getDarkTheme(appTheme)
-        : _getLightTheme(appTheme);
+    return appTheme.isDarkMode ? darkTheme(appTheme) : lightTheme(appTheme);
   }
 
-  static ThemeData _getDarkTheme(AppTheme appTheme) {
+  static ThemeData darkTheme(AppTheme appTheme) {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: appTheme.primaryColor,
       brightness: Brightness.dark,
@@ -33,7 +31,7 @@ final class MaterialThemes {
     );
   }
 
-  static ThemeData _getLightTheme(AppTheme appTheme) {
+  static ThemeData lightTheme(AppTheme appTheme) {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: appTheme.primaryColor,
       brightness: Brightness.light,

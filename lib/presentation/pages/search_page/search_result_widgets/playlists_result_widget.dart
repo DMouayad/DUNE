@@ -1,7 +1,7 @@
 import 'package:dune/domain/audio/base_models/base_playlist.dart';
 import 'package:dune/presentation/custom_widgets/shimmer_widget.dart';
 import 'package:dune/presentation/providers/shared_providers.dart';
-import 'package:dune/presentation/utils/navigation_helper.dart';
+import 'package:dune/navigation/src/app_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,7 +25,8 @@ class _PlaylistCard extends ConsumerWidget {
         ref
             .read(materialSearchBarControllerProvider)
             .closeView(ref.watch(materialSearchBarControllerProvider).text);
-        NavigationHelper.onPlaylistItemCardPressed(context, playlist: playlist);
+        AppNavigation.instance
+            .onPlaylistItemCardPressed(context, playlist: playlist);
       },
     );
   }
